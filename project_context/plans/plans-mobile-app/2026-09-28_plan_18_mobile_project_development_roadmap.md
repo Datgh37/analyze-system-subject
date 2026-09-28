@@ -3,7 +3,7 @@
 > **Ngày lập:** 2026-09-28  
 > **Người lập:** Trịnh Thành Đạt (Trưởng nhóm) & Council Orchestrator  
 > **Đối tượng áp dụng:** Nhóm sinh viên thực hiện (Đạt & Đại)  
-> **Tệp thực thi chính:** [`mobile-project/ROADMAP.md`](../../mobile-project/ROADMAP.md) | [`mobile-project/README.md`](../../mobile-project/README.md)
+> **Tệp thực thi chính:** [`mobile-project/ROADMAP.md`](../../../mobile-project/ROADMAP.md) | [`mobile-project/README.md`](../../../mobile-project/README.md)
 
 ---
 
@@ -40,6 +40,6 @@
 
 ## 4. Kiểm Toán Độc Lập & Xác Nhận Lưu Ngữ Cảnh
 
-- Kế hoạch đã được xuất bản nguyên văn tại: [`mobile-project/ROADMAP.md`](../../mobile-project/ROADMAP.md).
-- Đã liên kết tham chiếu vào [`mobile-project/README.md`](../../mobile-project/README.md).
-- Ghi nhận quyết định phê duyệt vào [`project_context/decisions_and_changes_log.md`](../decisions_and_changes_log.md) (Quyết định 59).
+- Kế hoạch đã được xuất bản nguyên văn tại: [`mobile-project/ROADMAP.md`](../../../mobile-project/ROADMAP.md).
+- Đã liên kết tham chiếu vào [`mobile-project/README.md`](../../../mobile-project/README.md).
+- Ghi nhận quyết định phê duyệt vào [`project_context/decisions_and_changes_log.md`](../../decisions_and_changes_log.md) (Quyết định 59).

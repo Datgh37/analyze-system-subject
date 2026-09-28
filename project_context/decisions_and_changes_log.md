@@ -1179,8 +1179,19 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   2. **Cấu hình mã nguồn thông minh:**
      - `config/database.php`: Bổ sung thuộc tính `$is_local = true / false` tự động chuyển đổi thông tin kết nối giữa WAMP và Server trường.
      - `src/api/config.js`: Khởi tạo object `API_ENDPOINTS` phân định rõ 3 môi trường `WAMP_EMULATOR`, `WAMP_DEVICE`, `SERVER_PRODUCTION`.
-  3. **Đồng bộ hóa tài liệu:** Đã cập nhật toàn bộ vào `mobile-project/README.md`, `mobile-project/ROADMAP.md` và snapshot `project_context/plans/2026-09-28_plan_18_mobile_project_development_roadmap.md`.
+  3. **Đồng bộ hóa tài liệu:** Đã cập nhật toàn bộ vào `mobile-project/README.md`, `mobile-project/ROADMAP.md` và snapshot `project_context/plans/plans-mobile-app/2026-09-28_plan_18_mobile_project_development_roadmap.md`.
 - **Trạng thái:** `ACCEPTED & LOCKED`.
+
+---
+
+## [2026-09-28 21:25] - Quyết Định 62: Ban Hành Kế Hoạch Hành Động Chi Tiết (PLAN-19) Cho Trịnh Thành Đạt (Lead)
+- **Vấn đề:** 
+  1. Sau khi thống nhất Roadmap tổng thể với thành viên nhóm (Trần Trọng Đại), Trịnh Thành Đạt (Trưởng nhóm phụ trách 70% khối lượng kỹ thuật cốt lõi) cần một kế hoạch hành động cụ thể, chi tiết từng bước (Chặng 1 đến Chặng 4) để bắt tay vào hiện thực hóa mã nguồn.
+  2. Cần ưu tiên làm phần "xương sống" (CSDL, kết nối PDO đa môi trường, Auth API chuẩn) để làm mẫu (boilerplate) cho bạn Đại tiếp nối viết các API CRUD nghiệp vụ và UI components.
+- **Quyết định:**
+  1. Ban hành kế hoạch hành động 4 chặng tại [`project_context/plans/plans-mobile-app/2026-09-28_plan_19_dat_lead_implementation_action_plan.md`](plans/plans-mobile-app/2026-09-28_plan_19_dat_lead_implementation_action_plan.md).
+  2. Bắt đầu ngay Chặng 1: Tạo DDL MySQL `database_schema.sql` (kèm Seed Data) và thiết kế sơ đồ ERD trực quan chuẩn bị đưa vào Trang 7 của `BaoCaoLTMB.docx`.
+- **Trạng thái:** `ACCEPTED & IN-PROGRESS`.
 
 
 
