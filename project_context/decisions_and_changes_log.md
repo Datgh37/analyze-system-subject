@@ -1287,3 +1287,15 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   2. **Tạo `.gitignore` chuyên dụng trong `mobile-project/FE/`:** Tạo tệp [`mobile-project/FE/.gitignore`](../mobile-project/FE/.gitignore) theo chuẩn dự án React Native / Expo.
   3. **Kiểm tra xác thực:** Lệnh `git check-ignore -v` đã kiểm tra và xác nhận 100% các file trong `mobile-project/FE/node_modules/` và `mobile-project/FE/.expo/` được loại trừ hoàn toàn khỏi Git.
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-09-28 22:28] - Quyết Định 70: Thêm `.npmrc` & Các Tệp Cấu Hình pnpm Vào Gitignore Để Tránh Xung Đột Môi Trường
+- **Vấn đề:** 
+  1. Người dùng sử dụng trình quản lý gói `pnpm` trên máy cá nhân và cần tệp cấu hình `.npmrc` (`node-linker=hoisted`) để React Native Metro Bundler hoạt động ổn định.
+  2. Thành viên nhóm (Trần Trọng Đại) không cài `pnpm` mà sử dụng `npm` tiêu chuẩn. Nếu tệp `.npmrc` hoặc `pnpm-lock.yaml` được commit và đẩy lên Git, có thể gây xung đột hành vi quản lý gói trên máy của Đại.
+- **Quyết định & Thực thi:**
+  1. **Thêm quy tắc vào [`mobile-project/FE/.gitignore`](../mobile-project/FE/.gitignore):** Bổ sung `.npmrc`, `pnpm-lock.yaml`, `pnpm-debug.log*`.
+  2. **Bổ sung vào `.gitignore` gốc:** Bổ sung `.npmrc`, `pnpm-lock.yaml`.
+  3. **Kiểm tra xác thực:** Lệnh `git status --short` xác nhận tệp `.npmrc` đã được Git bỏ qua hoàn toàn, chỉ giữ lại trên máy cục bộ của người dùng để phục vụ quá trình chạy lệnh pnpm.
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
