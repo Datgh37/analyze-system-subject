@@ -1153,6 +1153,19 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Đã gắn liên kết điều hướng từ [`mobile-project/README.md`](../mobile-project/README.md).
 - **Trạng thái:** `ACCEPTED & LOCKED`.
 
+---
+
+## [2026-09-28 20:15] - Quyết Định 60: Khởi Tạo Git Repository Cục Bộ & Đồng Bộ Toàn Bộ Mã Nguồn Lên GitHub Remote
+- **Vấn đề:** 
+  1. Kho lưu trữ trên GitHub (`https://github.com/Datgh37/analyze-system-subject.git`) được khởi tạo trước bằng giao diện web với 1 commit rỗng tự sinh (`6ba7e4e`), trong khi thư mục dự án cục bộ chưa có lịch sử Git liên kết, dẫn đến xung đột `non-fast-forward` khi thực hiện `git push`.
+  2. Cần thiết lập theo dõi nhánh `origin/main` và đẩy toàn bộ mã nguồn dự án (gồm cả thư mục `mobile-project/`, lộ trình `ROADMAP.md` và tài liệu báo cáo `BaoCaoLTMB.docx`) lên GitHub để nhóm 2 sinh viên có thể làm việc cộng tác.
+- **Quyết định:**
+  1. Khởi tạo Git cục bộ trên nhánh `main`, liên kết remote `origin`.
+  2. Tạo commit đóng gói toàn bộ dự án (`058aebf`) và thực hiện đồng bộ ép buộc (`--force`) đè lên commit khởi tạo rỗng của GitHub.
+  3. Hoàn tất thiết lập tracking `origin/main`, trạng thái working tree sạch sẽ (`up to date with 'origin/main'`).
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+
 
 
 
