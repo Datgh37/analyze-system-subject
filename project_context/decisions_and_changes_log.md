@@ -1193,26 +1193,18 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   2. Bắt đầu ngay Chặng 1: Tạo DDL MySQL `database_schema.sql` (kèm Seed Data) và thiết kế sơ đồ ERD trực quan chuẩn bị đưa vào Trang 7 của `BaoCaoLTMB.docx`.
 - **Trạng thái:** `ACCEPTED & IN-PROGRESS`.
 
+---
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## [2026-09-28 21:50] - Quyết Định 63: Chuẩn Hóa Cơ Chế NTFS Directory Junction Cho WampServer & Tự Động Hóa Thiết Lập Cho Đội Ngũ / AI Agent
+- **Vấn đề:** 
+  1. Cần một cơ chế liên kết thư mục mã nguồn Backend PHP ([`mobile-project/BE`](../mobile-project/BE)) với thư mục `www` của WampServer (`D:\WampServer\www\expense_api` hoặc `C:\wamp64\www\expense_api`) mà không phải copy/paste thủ công hay làm sai lệch lịch sử Git.
+  2. Thành viên nhóm (Trần Trọng Đại) và các AI Coding Agent của bạn ấy khi clone repo về máy cá nhân cần có tài liệu và công cụ tự động để thiết lập liên kết này trong vòng 10 giây mà không cần thao tác phức tạp.
+- **Quyết định:**
+  1. **Áp dụng NTFS Directory Junction:** Sử dụng tính năng liên kết cấp Kernel của Windows (`New-Item -ItemType Junction` trên PowerShell hoặc `mklink /J` trên CMD) để Apache đọc trực tiếp từ thư mục `BE` với độ trễ 0ms.
+  2. **Ban hành tài liệu hướng dẫn chuyên sâu:** Tạo tệp [`mobile-project/BE/README.md`](../mobile-project/BE/README.md) hướng dẫn toàn diện từ cơ chế kỹ thuật, cách chạy lệnh, kiểm tra liên kết và các lưu ý an toàn.
+  3. **Tự động hóa 1-click script:** Tạo tệp [`mobile-project/BE/setup_wamp_junction.ps1`](../mobile-project/BE/setup_wamp_junction.ps1) tự động dò tìm thư mục WampServer trên máy và thiết lập Junction Point.
+  4. **Cập nhật tài liệu tổng thể:** Bổ sung **Bước 2** trong quy trình khởi chạy tại [`mobile-project/README.md`](../mobile-project/README.md).
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
 
 
 

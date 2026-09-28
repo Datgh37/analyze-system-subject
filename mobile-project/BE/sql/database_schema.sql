@@ -3,31 +3,23 @@
 -- ĐỀ TÀI: ỨNG DỤNG QUẢN LÝ CHI TIÊU CÁ NHÂN (PERSONAL EXPENSE TRACKER)
 -- NHÓM THỰC HIỆN: TRỊNH THÀNH ĐẠT & TRẦN TRỌNG ĐẠI
 -- ==============================================================================
--- Tệp DDL Khởi tạo Cơ sở Dữ liệu & Dữ liệu mẫu (Schema & Seed Data)
--- Tương thích: MySQL 8.x / MariaDB 10.x (WAMP Server Local & Hosting Trường cấp)
--- Bộ mã: UTF-8 Unicode (utf8mb4_unicode_ci)
+-- Tệp DDL Khởi tạo Cơ sở Dữ liệu & Dữ liệu mẫu (An toàn - Chống xung đột)
+-- Tương thích 100%: Cả WAMP Server Local & Hosting Server được cấp (Không bị lỗi quyền)
+-- Cơ chế an toàn: 
+--   1. Không dùng lệnh CREATE/DROP DATABASE (Tránh lỗi phân quyền Access Denied trên Hosting)
+--   2. Dùng CREATE TABLE IF NOT EXISTS (Không xóa đè bảng đang chạy)
+--   3. Dùng INSERT IGNORE INTO (Chống lỗi Duplicate Key khi chạy lại nhiều lần)
 -- ==============================================================================
 
--- 1. Khởi tạo Database nếu chưa tồn tại
-CREATE DATABASE IF NOT EXISTS `sql_nhom46_itimi` 
-CHARACTER SET utf8mb4 
-COLLATE utf8mb4_unicode_ci;
-
-USE `sql_nhom46_itimi`;
-
--- 2. Dọn dẹp bảng cũ theo thứ tự ràng buộc khóa ngoại (Clean up)
-DROP TABLE IF EXISTS `budgets`;
-DROP TABLE IF EXISTS `transactions`;
-DROP TABLE IF EXISTS `categories`;
-DROP TABLE IF EXISTS `wallets`;
-DROP TABLE IF EXISTS `users`;
+-- Tạm thời vô hiệu hóa kiểm tra khóa ngoại để quá trình khởi tạo diễn ra trơn tru
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ==============================================================================
--- 3. KHỞI TẠO CÁC BẢNG QUAN HỆ (TABLE DEFINITIONS)
+-- 1. KHỞI TẠO CÁC BẢNG QUAN HỆ (NẾU CHƯA TỒN TẠI)
 -- ==============================================================================
 
 -- BẢNG 1: NGƯỜI DÙNG (USERS)
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `full_name` VARCHAR(100) NOT NULL COMMENT 'Họ và tên người dùng',
   `email` VARCHAR(150) NOT NULL UNIQUE COMMENT 'Email đăng nhập duy nhất',
@@ -36,7 +28,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- BẢNG 2: VÍ TÀI CHÍNH (WALLETS)
-CREATE TABLE `wallets` (
+CREATE TABLE IF NOT EXISTS `wallets` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL COMMENT 'Mã người dùng sở hữu ví',
   `name` VARCHAR(100) NOT NULL COMMENT 'Tên ví (Ví dụ: Tiền mặt, Vietcombank)',
@@ -47,7 +39,7 @@ CREATE TABLE `wallets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- BẢNG 3: DANH MỤC THU / CHI (CATEGORIES)
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NULL COMMENT 'NULL nếu là danh mục mặc định của hệ thống; có ID nếu user tự tạo',
   `name` VARCHAR(100) NOT NULL COMMENT 'Tên danh mục (Ví dụ: Ăn uống, Tiền lương)',
@@ -58,7 +50,7 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- BẢNG 4: GIAO DỊCH THU / CHI (TRANSACTIONS)
-CREATE TABLE `transactions` (
+CREATE TABLE IF NOT EXISTS `transactions` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL COMMENT 'Mã người dùng thực hiện giao dịch',
   `wallet_id` INT NOT NULL COMMENT 'Ví nguồn phát sinh biến động tiền',
@@ -74,7 +66,7 @@ CREATE TABLE `transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- BẢNG 5: HẠN MỨC NGÂN SÁCH THÁNG (BUDGETS)
-CREATE TABLE `budgets` (
+CREATE TABLE IF NOT EXISTS `budgets` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL COMMENT 'Mã người dùng thiết lập ngân sách',
   `category_id` INT NULL COMMENT 'NULL nếu là ngân sách tổng thể của cả tháng; có ID nếu giới hạn riêng hạng mục',
@@ -86,25 +78,24 @@ CREATE TABLE `budgets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ==============================================================================
--- 4. DỮ LIỆU MẪU KHỞI TẠO (SEED DATA FOR TESTING)
+-- 2. DỮ LIỆU MẪU KHỞI TẠO (SEED DATA) - DÙNG INSERT IGNORE ĐỂ CHỐNG TRÙNG LẶP
 -- ==============================================================================
 
--- 4.1. Thêm người dùng mẫu
--- Mật khẩu ban đầu là: Password123@ (được băm bằng Bcrypt tiêu chuẩn PHP)
-INSERT INTO `users` (`id`, `full_name`, `email`, `password_hash`, `created_at`) VALUES
+-- 2.1. Thêm người dùng mẫu (Mật khẩu: Password123@ đã băm Bcrypt)
+INSERT IGNORE INTO `users` (`id`, `full_name`, `email`, `password_hash`, `created_at`) VALUES
 (1, 'Trịnh Thành Đạt', 'thanhdat@gmail.com', '$2y$10$eO0.f8RlhXbT5a2W0N/0rOH5fomHl112PzZ4VjRz4YqL6XgJ2tIeG', NOW()),
 (2, 'Trần Trọng Đại', 'trongdai@gmail.com', '$2y$10$eO0.f8RlhXbT5a2W0N/0rOH5fomHl112PzZ4VjRz4YqL6XgJ2tIeG', NOW());
 
--- 4.2. Thêm 2 ví tài chính cho tài khoản 1
-INSERT INTO `wallets` (`id`, `user_id`, `name`, `balance`, `wallet_type`, `created_at`) VALUES
+-- 2.2. Thêm ví tài chính mẫu
+INSERT IGNORE INTO `wallets` (`id`, `user_id`, `name`, `balance`, `wallet_type`, `created_at`) VALUES
 (1, 1, 'Tiền Mặt Trong Ví', 2500000.00, 'CASH', NOW()),
 (2, 1, 'Tài Khoản Vietcombank', 18500000.00, 'BANK', NOW()),
 (3, 2, 'Tiền Mặt', 1200000.00, 'CASH', NOW()),
 (4, 2, 'Ngân Hàng MB Bank', 8500000.00, 'BANK', NOW());
 
--- 4.3. Danh mục mặc định của hệ thống (user_id = NULL)
+-- 2.3. Danh mục mặc định của hệ thống (user_id = NULL)
+INSERT IGNORE INTO `categories` (`id`, `user_id`, `name`, `type`, `icon_name`, `color_code`) VALUES
 -- Danh mục CHI TIÊU (EXPENSE)
-INSERT INTO `categories` (`id`, `user_id`, `name`, `type`, `icon_name`, `color_code`) VALUES
 (1, NULL, 'Ăn uống & Cà phê', 'EXPENSE', 'fast-food-outline', '#FF6B6B'),
 (2, NULL, 'Mua sắm & Đồ dùng', 'EXPENSE', 'cart-outline', '#4ECDC4'),
 (3, NULL, 'Di chuyển & Xăng xe', 'EXPENSE', 'car-sport-outline', '#FFE66D'),
@@ -117,8 +108,8 @@ INSERT INTO `categories` (`id`, `user_id`, `name`, `type`, `icon_name`, `color_c
 (9, NULL, 'Thưởng & Làm thêm', 'INCOME', 'trending-up-outline', '#38B000'),
 (10, NULL, 'Thu nhập khác', 'INCOME', 'wallet-outline', '#70E000');
 
--- 4.4. Thêm các giao dịch mẫu cho user 1
-INSERT INTO `transactions` (`id`, `user_id`, `wallet_id`, `category_id`, `amount`, `transaction_type`, `note`, `transaction_date`, `created_at`) VALUES
+-- 2.4. Giao dịch mẫu tháng hiện tại cho user 1
+INSERT IGNORE INTO `transactions` (`id`, `user_id`, `wallet_id`, `category_id`, `amount`, `transaction_type`, `note`, `transaction_date`, `created_at`) VALUES
 (1, 1, 2, 8, 15000000.00, 'INCOME', 'Nhận lương tháng qua chuyển khoản Vietcombank', '2026-09-05', NOW()),
 (2, 1, 1, 1, 55000.00, 'EXPENSE', 'Ăn trưa cơm văn phòng', '2026-09-20', NOW()),
 (3, 1, 1, 1, 35000.00, 'EXPENSE', 'Cà phê sáng cùng đồng nghiệp', '2026-09-21', NOW()),
@@ -127,7 +118,10 @@ INSERT INTO `transactions` (`id`, `user_id`, `wallet_id`, `category_id`, `amount
 (6, 1, 2, 4, 380000.00, 'EXPENSE', 'Thanh toán tiền điện và nước sinh hoạt', '2026-09-27', NOW()),
 (7, 1, 1, 9, 500000.00, 'INCOME', 'Tiền thưởng dự án nhỏ', '2026-09-28', NOW());
 
--- 4.5. Thêm ngân sách mẫu tháng 9/2026 cho user 1
-INSERT INTO `budgets` (`id`, `user_id`, `category_id`, `amount_limit`, `month`, `year`) VALUES
+-- 2.5. Ngân sách mẫu tháng 9/2026 cho user 1
+INSERT IGNORE INTO `budgets` (`id`, `user_id`, `category_id`, `amount_limit`, `month`, `year`) VALUES
 (1, 1, NULL, 6000000.00, 9, 2026), -- Ngân sách tổng chi cả tháng là 6 triệu
 (2, 1, 1, 2500000.00, 9, 2026);   -- Hạn mức riêng cho ăn uống là 2.5 triệu
+
+-- Kích hoạt lại kiểm tra khóa ngoại sau khi hoàn tất
+SET FOREIGN_KEY_CHECKS = 1;

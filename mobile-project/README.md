@@ -206,7 +206,37 @@ Toàn bộ API được triển khai tại thư mục web trên máy chủ (Ví 
 
 ---
 
-### Bước 2: Cấu hình Kết nối CSDL Đa Môi Trường (`config/database.php`)
+### Bước 2: Thiết Lập Cầu Nối Backend Vào WAMP Server (NTFS Directory Junction - 0 Giây Đồng Bộ)
+
+> [!TIP]
+> **Tuyệt đối KHÔNG copy/paste thư mục `BE/` sang `www/` của WampServer.** Hãy sử dụng **NTFS Directory Junction** (liên kết thư mục cấp Hệ điều hành của Windows). Mã nguồn chỉ nằm trong Repo Git, Apache tự động nhận diện thời gian thực (0 giây) và tuyệt đối an toàn (xóa link không mất code gốc).
+
+* 📄 **Chi tiết hướng dẫn kỹ thuật:** Xem tại [`BE/README.md`](BE/README.md).
+
+#### Cách 1: Chạy Script Tự Động (Khuyến nghị cho cả Dev & AI Agent)
+Mở PowerShell tại thư mục `mobile-project/BE/` và chạy:
+```powershell
+.\setup_wamp_junction.ps1
+```
+*(Script sẽ tự phát hiện thư mục `www` của WampServer trên máy bạn và tạo link `expense_api` trỏ về `BE`)*.
+
+#### Cách 2: Chạy Lệnh Thủ Công Bằng PowerShell
+```powershell
+# Chạy trên máy bạn Đạt (WAMP cài ổ D):
+New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\BE"
+
+# Hoặc trên máy bạn Đại (Nếu WAMP cài ổ C):
+New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\To\Your\Repo\mobile-project\BE"
+```
+
+#### Cách 3: Chạy Lệnh Bằng Command Prompt (CMD)
+```cmd
+mklink /J "D:\WampServer\www\expense_api" "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\BE"
+```
+
+---
+
+### Bước 3: Cấu hình Kết nối CSDL Đa Môi Trường (`config/database.php`)
 Sử dụng cờ `$is_local` để chuyển đổi 1 chạm giữa máy cá nhân (WAMP) và Server trường mà không lo lỗi code:
 
 ```php
@@ -254,7 +284,7 @@ class Database {
 
 ---
 
-### Bước 3: Cấu hình CORS Header cho các file API PHP
+### Bước 4: Cấu hình CORS Header cho các file API PHP
 Đảm bảo đầu mỗi file PHP API luôn có các header cho phép React Native gọi vào:
 ```php
 <?php
@@ -271,9 +301,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ---
 
-### Bước 4: Kiểm thử API bằng Postman
+### Bước 5: Kiểm thử API bằng Postman
 1. **Nếu test WAMP Local:**
-   - Bạn có thể liên kết thư mục `mobile-project/BE` vào `C:/wamp64/www/expense_api/` (xem hướng dẫn tạo Symbolic Link hoặc copy thư mục ở bên dưới).
+   - Đảm bảo đã tạo Junction ở Bước 2.
    - Biến môi trường `BASE_URL`: `http://localhost/expense_api/api`.
 2. **Nếu test Server trường cấp (khi đã upload):**
    - Biến môi trường `BASE_URL`: `http://nhom46.itimit.id.vn/api` (hoặc IP công khai `http://103.139.203.43/...`).
@@ -289,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ---
 
-### Bước 5: Cấu hình & Khởi Chạy React Native (Trong Thư Mục `FE`)
+### Bước 6: Cấu hình & Khởi Chạy React Native (Trong Thư Mục `FE`)
 1. Trong ứng dụng React Native, tạo file `src/api/config.js`:
    ```javascript
    // Chọn chế độ môi trường đang chạy:
@@ -328,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ---
 
-### Bước 6: Hướng Dẫn Đẩy Code Lên Server Trường Bằng FileZilla FTP (Khi Được Phép)
+### Bước 7: Hướng Dẫn Đẩy Code Lên Server Trường Bằng FileZilla FTP (Khi Được Phép)
 1. Tải và mở phần mềm **FileZilla Client**.
 2. Nhập thông tin kết nối nhanh (Quickconnect):
    - **Host:** `nhom46.itimit.id.vn`
