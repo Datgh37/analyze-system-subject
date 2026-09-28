@@ -1,7 +1,7 @@
 # 🗺️ LỘ TRÌNH TRIỂN KHAI DỰ ÁN (PROJECT DEVELOPMENT ROADMAP)
 ## ĐỒ ÁN MÔN HỌC: LẬP TRÌNH THIẾT BỊ DI ĐỘNG (MOBILE APPLICATION DEVELOPMENT)
 > **Tên đề tài:** Ứng dụng Quản lý Chi tiêu Cá nhân (Personal Expense Tracker)  
-> **Ngăn xếp công nghệ:** React Native (Frontend) + PHP RESTful API (Backend) + MySQL Server (`103.139.203.43:887`)  
+> **Ngăn xếp công nghệ:** React Native (Frontend) + PHP RESTful API (Backend) + MySQL (WAMP Localhost / Server trường cấp `103.139.203.43:887` qua FTP `nhom46.itimit.id.vn`)  
 > **Tài liệu tham chiếu:** [README.md](README.md) | [BaoCaoLTMB.docx](BaoCaoLTMB.docx)
 
 ---
@@ -20,11 +20,12 @@
 
 | Hạng mục công việc | Trịnh Thành Đạt | Trần Trọng Đại | Sản phẩm bàn giao (Deliverables) |
 | :--- | :---: | :---: | :--- |
-| **Thiết kế & Khởi tạo CSDL MySQL** | **A / R** | **C** | File `database_schema.sql`, ERD Diagram trên Draw.io, DB trên server `103.139.203.43` |
-| **Xây dựng Backend PHP Core (Database, Auth)** | **A / R** | **C** | `config/database.php`, `api/auth/register.php`, `login.php` |
+| **Thiết kế & Khởi tạo CSDL MySQL** | **A / R** | **C** | File `database_schema.sql`, ERD Diagram trên Draw.io, CSDL trên WAMP & Server trường |
+| **Xây dựng Backend PHP Core (Database, Auth)** | **A / R** | **C** | `config/database.php` (Đa môi trường), `api/auth/register.php`, `login.php` |
 | **Xây dựng Backend PHP Nghiệp vụ (Wallets, Transactions)** | **A** | **R** | `api/wallets/*`, `api/categories/*`, `api/transactions/*` |
 | **Xây dựng Backend PHP Báo cáo (Reports & Charts)** | **A / R** | **C** | `api/reports/monthly_summary.php`, `category_chart.php` |
-| **Kiểm thử API trên Postman & Chụp minh chứng** | **A** | **R** | Postman Collection JSON, Bộ ảnh chụp màn hình JSON response |
+| **Kiểm thử API trên Postman & Chụp minh chứng** | **A** | **R** | Postman Collection JSON, Bộ ảnh chụp màn hình JSON response (WAMP & Server) |
+| **Triển khai Server trường qua FTP & phpMyAdmin** | **A / R** | **R** | Deploy code qua FileZilla (`nhom46.itimit.id.vn`), DB sống trên phpMyAdmin trường |
 | **Khởi tạo React Native & Luồng Điều hướng Navigation** | **A / R** | **C** | Source React Native, BottomTabNavigator, StackNavigator |
 | **Thiết kế Linh kiện UI dùng chung (Components)** | **C** | **A / R** | Header, Card Ví, TransactionItem, CustomButton, NumberKeypad |
 | **Hiện thực các Màn hình (Dashboard, Add, History)** | **A / R** | **R** | HomeScreen, AddTransactionScreen, TransactionListScreen |
@@ -41,27 +42,27 @@
 ├─────────────────┬─────────────────┬─────────────────┬─────────────────┬────────────────┤
 │   GIAI ĐOẠN 1   │   GIAI ĐOẠN 2   │   GIAI ĐOẠN 3   │   GIAI ĐOẠN 4   │   GIAI ĐOẠN 5  │
 │  Thiết Kế CSDL  │  Backend PHP &  │ React Native UI │  Ghép Nối API & │ Báo Cáo Word & │
-│   & Môi Trường  │  Postman Tests  │    Khung App    │ Hoàn Thiện App  │    Đóng Gói    │
-│    (Tuần 1)     │    (Tuần 2)     │    (Tuần 3)     │  (Tuần 4 - 5)   │    (Tuần 5)    │
+│  & WAMP Server  │  Postman Tests  │    Khung App    │ Hoàn Thiện App  │ Deploy Server  │
+│    (Tuần 1)     │    (Tuần 2)     │    (Tuần 3)     │  (Tuần 4 - 5)   │  (Tuần 5 - 6)  │
 └─────────────────┴─────────────────┴─────────────────┴─────────────────┴────────────────┘
 ```
 
 ---
 
-### Giai Đoạn 1: Thiết Kế CSDL & Chuẩn Bị Môi Trường (Tuần 1)
-> **Mục tiêu:** Có sẵn database sống trên máy chủ trường cấp và kho lưu trữ Git để cả 2 thành viên cùng làm việc.
+### Giai Đoạn 1: Thiết Kế CSDL & Chuẩn Bị Môi Trường WAMP Local (Tuần 1)
+> **Mục tiêu:** Có sẵn database chạy mượt trên WAMP Server máy cá nhân và Git repository sẵn sàng cộng tác. (Chưa can thiệp server trường do thầy chưa cho phép).
 
-- [ ] **Task 1.1 (Đạt):** Vẽ sơ đồ thực thể liên kết (ERD) cho 5 bảng (`users`, `wallets`, `categories`, `transactions`, `budgets`) trên Draw.io, xuất file ảnh độ nét cao để chuẩn bị cho Trang 7 của báo cáo.
-- [ ] **Task 1.2 (Đạt):** Truy cập phpMyAdmin máy chủ `https://103.139.203.43:887/`, chọn CSDL `sql_nhom46_itimi`, chạy file SQL tạo 5 bảng thực tế.
+- [ ] **Task 1.1 (Đạt):** Vẽ sơ đồ thực thể liên kết (ERD) cho 5 bảng (`users`, `wallets`, `categories`, `transactions`, `budgets`) trên Draw.io, xuất file ảnh nét cao cho Trang 7 báo cáo.
+- [ ] **Task 1.2 (Đạt):** Cài đặt/Khởi động WAMP Server, vào phpMyAdmin local (`http://localhost/phpmyadmin`), tạo CSDL `sql_nhom46_itimi` và chạy mã SQL tạo 5 bảng.
 - [ ] **Task 1.3 (Đại):** Soạn thảo dữ liệu mẫu (Seed Data) gồm: 1 user test, 2 ví (Tiền mặt, Ngân hàng), 8 danh mục chi tiêu, 4 danh mục thu nhập, 5 giao dịch mẫu để kiểm tra hiển thị.
-- [ ] **Task 1.4 (Đạt & Đại):** Khởi tạo Git repository trên GitHub, thiết lập branch `main` (chính), `develop` (nhánh phát triển) và phân quyền cộng tác viên cho cả 2 người.
+- [ ] **Task 1.4 (Đạt & Đại):** Đồng bộ mã nguồn lên Git repository GitHub (`analyze-system-subject`), thiết lập branch `main` và phân quyền cho cả 2 người.
 
 ---
 
-### Giai Đoạn 2: Xây Dựng Backend PHP API & Kiểm Thử Postman (Tuần 2)
-> **Mục tiêu:** 100% các API hoạt động ổn định trên máy chủ, có file Postman Collection để test độc lập trước khi gắn vào Mobile.
+### Giai Đoạn 2: Xây Dựng Backend PHP API & Kiểm Thử Postman Trên WAMP (Tuần 2)
+> **Mục tiêu:** 100% các API hoạt động ổn định trên môi trường WAMP Local, có file Postman Collection để test độc lập trước khi gắn vào Mobile.
 
-- [ ] **Task 2.1 (Đạt):** Viết module kết nối CSDL PDO `config/database.php` và cấu hình Header CORS chung cho phép mọi nguồn gọi API.
+- [ ] **Task 2.1 (Đạt):** Viết module kết nối CSDL `config/database.php` đa môi trường (sử dụng cờ `$is_local` để chuyển đổi linh hoạt giữa WAMP và Server trường) và cấu hình Header CORS chung cho phép mọi nguồn gọi API.
 - [ ] **Task 2.2 (Đạt):** Hiện thực API Xác thực người dùng:
   - `POST /api/auth/register.php`: Băm mật khẩu bằng `password_hash()`, kiểm tra trùng lặp email.
   - `POST /api/auth/login.php`: Kiểm tra `password_verify()`, trả về thông tin user.
@@ -75,7 +76,7 @@
 - [ ] **Task 2.5 (Đạt):** Hiện thực API Báo cáo & Thống kê:
   - `GET /api/reports/monthly_summary.php`: Trả về `total_income`, `total_expense`, `net_balance`.
   - `GET /api/reports/category_chart.php`: Gom nhóm chi tiêu theo danh mục để vẽ biểu đồ tròn.
-- [ ] **Task 2.6 (Đại):** Tạo Postman Collection `Expense_Tracker_API.postman_collection.json`, chạy test 100% endpoints, **chụp ảnh toàn bộ màn hình kết quả JSON** lưu vào thư mục `assets/postman_screenshots/` để chuẩn bị cho Trang 8 báo cáo Word.
+- [ ] **Task 2.6 (Đại):** Tạo Postman Collection `Expense_Tracker_API.postman_collection.json`, chạy test 100% endpoints trên `http://localhost/expense_api/api`, **chụp ảnh toàn bộ màn hình kết quả JSON** lưu vào thư mục `assets/postman_screenshots/` để chuẩn bị cho Trang 8 báo cáo Word.
 
 ---
 
@@ -90,7 +91,10 @@
   npm install @expo/vector-icons # hoặc react-native-vector-icons
   ```
 - [ ] **Task 3.2 (Đạt):** Cấu hình tầng mạng (Network Layer):
-  - Tạo file `src/api/config.js` chứa hằng số `API_BASE_URL = "http://103.139.203.43/sql_nhom46_itimi/api";`.
+  - Tạo file `src/api/config.js` hỗ trợ cấu hình đa môi trường:
+    - Android Emulator: `http://10.0.2.2/expense_api/api`
+    - Thiết bị thật chung Wifi: `http://192.168.1.X/expense_api/api`
+    - Server trường cấp: `http://nhom46.itimit.id.vn/api`
   - Tạo Axios instance cấu hình timeout, error interceptor chung.
 - [ ] **Task 3.3 (Đạt):** Thiết lập kiến trúc điều hướng React Navigation:
   - `AuthNavigator`: Màn hình Đăng nhập (LoginScreen) & Đăng ký (RegisterScreen).
@@ -108,7 +112,7 @@
 ---
 
 ### Giai Đoạn 4: Ghép Nối API & Hoàn Thiện Chức Năng Ứng Dụng (Tuần 4 - 5)
-> **Mục tiêu:** App chạy thật trên điện thoại di động, gọi API trực tiếp vào máy chủ `103.139.203.43`, dữ liệu cập nhật tức thì.
+> **Mục tiêu:** App chạy thật trên máy ảo / điện thoại di động, gọi API trực tiếp vào WAMP Server, dữ liệu cập nhật tức thì.
 
 - [ ] **Task 4.1 (Đại):** Hoàn thiện Luồng Đăng nhập / Đăng ký:
   - Form validation: Kiểm tra email hợp lệ, mật khẩu tối thiểu 6 ký tự.
@@ -131,16 +135,21 @@
   - **Biểu đồ tròn (Pie Chart):** Thể hiện tỷ trọng % chi tiêu theo từng danh mục trong tháng bằng thư viện `react-native-chart-kit`.
   - **Biểu đồ cột (Bar Chart):** So sánh tổng Thu nhập vs Tổng Chi tiêu qua các tháng.
   - Bảng thống kê số dư ròng cuối kỳ.
-- [ ] **Task 4.6 (Đại):** Kiểm thử toàn diện trên thiết bị di động thật (chạy trên mạng 4G và Wifi), **chụp toàn bộ ảnh chụp màn hình các chức năng** lưu vào thư mục `assets/mobile_screenshots/`.
+- [ ] **Task 4.6 (Đại):** Kiểm thử toàn diện trên thiết bị di động thật và máy ảo, **chụp toàn bộ ảnh chụp màn hình các chức năng** lưu vào thư mục `assets/mobile_screenshots/`.
 
 ---
 
-### Giai Đoạn 5: Hoàn Thiện Báo Cáo Word & Đóng Gói Dự Án (Tuần 5 - 6)
-> **Mục tiêu:** Tệp báo cáo Word `BaoCaoLTMB.docx` được điền đầy đủ hình ảnh, thuyết minh và sẵn sàng nộp cho Giảng viên.
+### Giai Đoạn 5: Triển Khai Server Trường, Báo Cáo Word & Đóng Gói (Tuần 5 - 6)
+> **Mục tiêu:** Triển khai lên server trường (khi được phép), hoàn thiện tệp báo cáo Word `BaoCaoLTMB.docx` và sẵn sàng nộp cho Giảng viên.
 
+- [ ] **Task 5.0 (Đạt & Đại) - KHI ĐƯỢC GIẢNG VIÊN CHO PHÉP:**
+  - Truy cập phpMyAdmin server trường (`https://103.139.203.43:887/`, user `sql_nhom46_itimi`), import database `sql_nhom46_itimi`.
+  - Dùng **FileZilla** (Host: `nhom46.itimit.id.vn`, User: `ftp_nhom46_itimit_id_vn`, Pass: `e5e971e19bbb18`) upload mã nguồn `backend_api/` lên thư mục web trên server.
+  - Chuyển cấu hình `$is_local = false` trong `config/database.php`.
+  - Test kiểm tra lại 1 lượt các API trên domain server qua Postman.
 - [ ] **Task 5.1 (Đạt):** Mở tệp `mobile-project/BaoCaoLTMB.docx`:
   - Tại Trang 7 (*Xây dựng mô hình DB*): Chèn ảnh sơ đồ ERD, mô tả chi tiết 5 bảng dữ liệu MySQL.
-  - Chèn ảnh chụp giao diện phpMyAdmin trên server trường cấp đã có đủ 5 bảng.
+  - Chèn ảnh chụp giao diện phpMyAdmin đã có đủ 5 bảng.
 - [ ] **Task 5.2 (Đại):**
   - Tại Trang 8 (*API tương ứng các chức năng*): Chèn ảnh chụp Postman các API (Auth, Wallets, Transactions, Reports) kèm đoạn code logic PHP tiêu biểu.
 - [ ] **Task 5.3 (Đạt & Đại):**

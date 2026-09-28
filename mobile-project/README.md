@@ -46,18 +46,18 @@ Dự án này tập trung xây dựng một **ứng dụng di động quản lý
 │                                                                        │
 │                       ▲ RESTful API (JSON / HTTP)                      │
 │                       │                                                │
-│  [ BACKEND SERVER - MÁY CHỦ TRƯỜNG CẤP (REMOTE HOSTING) ]              │
-│  - Server IP: 103.139.203.43                                           │
-│  - Web Service: Apache / Nginx + PHP 8.x                               │
-│  - Quản lý CSDL: phpMyAdmin (Cổng 887 - SSL)                          │
-│  - Test Tools: Postman (Test trực tiếp qua IP Internet công khai)      │
+│  [ BACKEND API - GIAI ĐOẠN 1: DEV & TEST LOCAL (WAMP SERVER) ]         │
+│  - Web Service: WAMP Server (Apache 2.4.x + PHP 8.x) trên Windows      │
+│  - MySQL Local: localhost:3306 (Quản lý qua phpMyAdmin của WAMP)       │
+│  - Test Tools: Postman (Test trên localhost / 10.0.2.2 / IP LAN)       │
 │                                                                        │
-│                       ▲ PDO Connection (Prepared Statements)           │
-│                       │                                                │
-│  [ DATABASE - MYSQL TRÊN MÁY CHỦ ]                                     │
-│  - Tên CSDL: sql_nhom46_itimi                                          │
-│  - Tài khoản DB: sql_nhom46_itimi                                      │
-│  - 5 Bảng cốt lõi: users, wallets, categories, transactions, budgets   │
+│                       ▼ KHI ĐƯỢC GIẢNG VIÊN CHO PHÉP TRIỂN KHAI        │
+│                                                                        │
+│  [ BACKEND API - GIAI ĐOẠN 2: PRODUCTION SERVER TRƯỜNG CẤP ]           │
+│  - Server IP: 103.139.203.43 (Domain: nhom46.itimit.id.vn)            │
+│  - Quản lý CSDL: phpMyAdmin (Cổng 887 - CSDL: sql_nhom46_itimi)        │
+│  - Upload mã nguồn: FileZilla FTP (Host: nhom46.itimit.id.vn)          │
+│  - Test Tools: Postman (Test trực tiếp qua Internet công khai)         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -73,18 +73,21 @@ Dự án này tập trung xây dựng một **ứng dụng di động quản lý
    - **Bảo mật cơ bản:** Băm mật khẩu bằng `password_hash()` (Bcrypt), chống SQL Injection bằng `PDO Prepared Statements`, cấu hình Header CORS cho phép Mobile Client gọi vào từ bất kỳ đâu.
    - **Xác thực:** Token-based authentication đơn giản (Bearer Token / API Key) lưu ở AsyncStorage trên React Native.
 
-3. **Cơ sở dữ liệu & Máy chủ (Database & Remote Server):**
-   - **Địa chỉ máy chủ (Server IP):** `103.139.203.43`
-   - **Cổng & Đường dẫn phpMyAdmin:** `https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en`
-   - **Tài khoản phpMyAdmin / Database User:** `sql_nhom46_itimi`
-   - **Mật khẩu (Password):** `0a530d0c23153`
-   - **Tên Database:** `sql_nhom46_itimi`
-   - **Bảng mã:** `utf8mb4_unicode_ci` hỗ trợ đầy đủ tiếng Việt có dấu và emoji icon.
-
-4. **Ưu điểm của Môi trường Server trường cấp:**
-   - **Không phụ thuộc mạng LAN / WAMP nội bộ:** Máy tính dev, điện thoại thật (chạy 4G/Wifi) hay máy ảo đều gọi chung vào 1 server cố định.
-   - **Kiểm thử API dễ dàng bằng Postman:** Test trực tiếp qua địa chỉ IP công khai của server.
-   - **Làm việc nhóm thuận lợi:** Cả nhóm cùng kết nối vào một CSDL thống nhất, không bị phân mảnh dữ liệu giữa các máy cá nhân.
+3. **Môi trường Cơ sở Dữ liệu & Máy chủ (Chiến lược 2 Giai đoạn):**
+   - **Giai đoạn 1 (Hiện tại - Dev & Test trên Local WAMP Server):**
+     - Do giảng viên chưa cho phép thao tác trực tiếp trên server trường, nhóm chủ động dựng và test toàn bộ trên **WAMP Server** cục bộ.
+     - CSDL MySQL chạy trên WAMP (`localhost:3306`), tạo database cùng tên `sql_nhom46_itimi` để khi migrate lên server trường không phải sửa tên trong code.
+     - Kiểm thử API nội bộ qua Postman và chạy Mobile App qua máy ảo Android (`10.0.2.2`) hoặc điện thoại thật chung mạng Wifi (`192.168.x.x`).
+   - **Giai đoạn 2 (Sau khi Giảng viên cho phép - Triển khai lên Server trường cấp):**
+     - **Địa chỉ máy chủ (Server IP):** `103.139.203.43` | **Domain:** `nhom46.itimit.id.vn`
+     - **Đường dẫn phpMyAdmin:** `https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en`
+     - **Tài khoản phpMyAdmin / DB:** `sql_nhom46_itimi` | **Mật khẩu:** `0a530d0c23153`
+     - **Kết nối FileZilla (FTP):**
+       - **Host:** `nhom46.itimit.id.vn`
+       - **Username:** `ftp_nhom46_itimit_id_vn`
+       - **Password:** `e5e971e19bbb18`
+       - **Port:** `21` (Mặc định)
+     - **Bảng mã:** `utf8mb4_unicode_ci` hỗ trợ đầy đủ tiếng Việt có dấu và emoji icon.
 
 ---
 
@@ -184,36 +187,60 @@ Toàn bộ API được triển khai tại thư mục web trên máy chủ (Ví 
 
 ---
 
-## 6. Hướng Dẫn Thiết Lập & Khởi Chạy
+## 6. Hướng Dẫn Thiết Lập & Khởi Chạy (2 Giai Đoạn)
 
-### Bước 1: Khởi tạo Cơ sở Dữ liệu trên Server Trường cấp
-1. Mở trình duyệt, truy cập đường dẫn phpMyAdmin:
-   `https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en`
-   *(Nếu trình duyệt cảnh báo chứng chỉ SSL tự ký, chọn **Advanced $\rightarrow$ Proceed to 103.139.203.43**)*.
-2. Đăng nhập với thông tin:
-   - **Username:** `sql_nhom46_itimi`
-   - **Password:** `0a530d0c23153`
-3. Chọn database `sql_nhom46_itimi` ở menu bên trái.
-4. Mở tab **SQL**, dán toàn bộ đoạn mã DDL ở **Mục 4** và nhấn **Go** để khởi tạo 5 bảng.
+### Bước 1: Khởi tạo Cơ sở Dữ liệu
 
-### Bước 2: Cấu hình Kết nối CSDL trong Backend PHP (`config/database.php`)
+#### 👉 Trường hợp 1: Chạy trên WAMP Server (Giai đoạn hiện tại)
+1. Bật **WAMP Server** (đảm bảo icon WAMP chuyển màu xanh lá cây).
+2. Mở trình duyệt, truy cập `http://localhost/phpmyadmin`.
+3. Đăng nhập (thường User là `root`, Password để trống).
+4. Tạo CSDL mới tên: `sql_nhom46_itimi` với Collation `utf8mb4_unicode_ci`.
+5. Chọn CSDL vừa tạo, mở tab **SQL**, dán toàn bộ mã DDL ở **Mục 4** và nhấn **Go** để khởi tạo 5 bảng.
+
+#### 👉 Trường hợp 2: Khi được Giảng viên cho phép triển khai lên Server trường
+1. Truy cập phpMyAdmin máy chủ: `https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en`
+   *(Nếu trình duyệt cảnh báo SSL, chọn **Advanced → Proceed to 103.139.203.43**)*.
+2. Đăng nhập: Username: `sql_nhom46_itimi` | Password: `0a530d0c23153`.
+3. Chọn database `sql_nhom46_itimi` bên trái, mở tab **SQL**, dán mã DDL và nhấn **Go**.
+
+---
+
+### Bước 2: Cấu hình Kết nối CSDL Đa Môi Trường (`config/database.php`)
+Sử dụng cờ `$is_local` để chuyển đổi 1 chạm giữa máy cá nhân (WAMP) và Server trường mà không lo lỗi code:
+
 ```php
 <?php
 class Database {
-    // Khi mã nguồn PHP chạy trực tiếp trên cùng server với MySQL:
-    private $host = "localhost"; // hoặc "127.0.0.1"
-    private $db_name = "sql_nhom46_itimi";
-    private $username = "sql_nhom46_itimi";
-    private $password = "0a530d0c23153";
+    // Đổi thành FALSE khi upload code lên Server trường cấp
+    private $is_local = true; 
+
+    // Cấu hình WAMP Server (Chạy ở máy cá nhân)
+    private $local_host = "localhost";
+    private $local_db   = "sql_nhom46_itimi";
+    private $local_user = "root";
+    private $local_pass = ""; // Mặc định WAMP để trống, nếu có mật khẩu thì điền vào đây
+
+    // Cấu hình Server trường cấp (Production Hosting)
+    private $remote_host = "localhost";
+    private $remote_db   = "sql_nhom46_itimi";
+    private $remote_user = "sql_nhom46_itimi";
+    private $remote_pass = "0a530d0c23153";
+
     public $conn;
 
     public function getConnection() {
         $this->conn = null;
+        $host = $this->is_local ? $this->local_host : $this->remote_host;
+        $db   = $this->is_local ? $this->local_db   : $this->remote_db;
+        $user = $this->is_local ? $this->local_user : $this->remote_user;
+        $pass = $this->is_local ? $this->local_pass : $this->remote_pass;
+
         try {
             $this->conn = new PDO(
-                "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8mb4",
-                $this->username,
-                $this->password
+                "mysql:host=" . $host . ";dbname=" . $db . ";charset=utf8mb4",
+                $user,
+                $pass
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $exception) {
@@ -225,8 +252,10 @@ class Database {
 ?>
 ```
 
+---
+
 ### Bước 3: Cấu hình CORS Header cho các file API PHP
-Đảm bảo đầu mỗi file PHP API luôn có các header cho phép React Native gọi vào mà không bị chặn CORS:
+Đảm bảo đầu mỗi file PHP API luôn có các header cho phép React Native gọi vào:
 ```php
 <?php
 header("Access-Control-Allow-Origin: *");
@@ -240,9 +269,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 ```
 
+---
+
 ### Bước 4: Kiểm thử API bằng Postman
-1. Mở **Postman**, tạo Collection mới: `Personal Expense Tracker - Server Test`.
-2. Tạo biến môi trường `BASE_URL`: trỏ đến thư mục API trên server (Ví dụ: `http://103.139.203.43/.../api`).
+1. **Nếu test WAMP Local:**
+   - Đặt thư mục `backend_api` vào `C:/wamp64/www/expense_api/` (hoặc tạo Virtual Host).
+   - Biến môi trường `BASE_URL`: `http://localhost/expense_api/api`.
+2. **Nếu test Server trường cấp (khi đã upload):**
+   - Biến môi trường `BASE_URL`: `http://nhom46.itimit.id.vn/api` (hoặc IP công khai `http://103.139.203.43/...`).
 3. Gửi request `POST {{BASE_URL}}/auth/register.php` kèm raw JSON body:
    ```json
    {
@@ -253,17 +287,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
    ```
 4. Kiểm tra response trả về mã `200 OK` hoặc `201 Created` và dữ liệu được ghi nhận chính xác trong phpMyAdmin.
 
-### Bước 5: Cấu hình React Native kết nối Server
+---
+
+### Bước 5: Cấu hình & Khởi Chạy React Native
 1. Trong ứng dụng React Native, tạo file `src/api/config.js`:
    ```javascript
-   // Cấu hình URL server thực tế của trường cấp
-   export const API_BASE_URL = "http://103.139.203.43/sql_nhom46_itimi/api"; 
+   // Chọn chế độ môi trường đang chạy:
+   // - 'WAMP_EMULATOR': Khi chạy trên Android Studio Emulator
+   // - 'WAMP_DEVICE': Khi cắm cáp / kết nối Wifi điện thoại thật chung mạng với máy tính
+   // - 'SERVER_PRODUCTION': Khi giảng viên cho phép triển khai lên server trường
+
+   const CURRENT_ENV = 'WAMP_EMULATOR'; 
+
+   const API_ENDPOINTS = {
+     // 10.0.2.2 là địa chỉ loopback đặc biệt để Android Emulator gọi về máy chủ dev
+     WAMP_EMULATOR: 'http://10.0.2.2/expense_api/api',
+
+     // Thay 192.168.1.X bằng IPv4 máy tính của bạn (xem bằng ipconfig)
+     WAMP_DEVICE: 'http://192.168.1.15:80/expense_api/api', 
+
+     // Địa chỉ server trường cấp
+     SERVER_PRODUCTION: 'http://nhom46.itimit.id.vn/api',
+   };
+
+   export const API_BASE_URL = API_ENDPOINTS[CURRENT_ENV];
    ```
-   *(Lợi thế: Ứng dụng chạy trên thiết bị thật, máy ảo, dùng Wifi hoặc 4G đều kết nối thông suốt mà không cần chung mạng LAN)*.
 2. Cài đặt các gói thư viện cần thiết:
    ```bash
    npm install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack
+   npm install react-native-screens react-native-safe-area-context
    npm install react-native-chart-kit react-native-svg axios
+   npm install @expo/vector-icons # hoặc react-native-vector-icons
    ```
 3. Khởi chạy ứng dụng:
    ```bash
@@ -271,6 +325,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
    # hoặc với Expo:
    # npx expo start
    ```
+
+---
+
+### Bước 6: Hướng Dẫn Đẩy Code Lên Server Trường Bằng FileZilla FTP (Khi Được Phép)
+1. Tải và mở phần mềm **FileZilla Client**.
+2. Nhập thông tin kết nối nhanh (Quickconnect):
+   - **Host:** `nhom46.itimit.id.vn`
+   - **Username:** `ftp_nhom46_itimit_id_vn`
+   - **Password:** `e5e971e19bbb18`
+   - **Port:** `21`
+3. Nhấn **Quickconnect** để kết nối vào máy chủ.
+4. Ở khung bên phải (Remote site): Di chuyển vào thư mục web gốc (`public_html` hoặc `www`).
+5. Ở khung bên trái (Local site): Chọn toàn bộ mã nguồn thư mục `backend_api/` trên máy tính và kéo thả sang bên phải để tải lên máy chủ.
+6. Mở file `config/database.php` trên máy chủ và chuyển sang chế độ server: `$is_local = false;`.
+
 
 ---
 

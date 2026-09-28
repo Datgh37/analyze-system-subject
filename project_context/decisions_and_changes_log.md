@@ -1165,6 +1165,24 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   3. Hoàn tất thiết lập tracking `origin/main`, trạng thái working tree sạch sẽ (`up to date with 'origin/main'`).
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
 
+---
+
+## [2026-09-28 21:10] - Quyết Định 61: Áp Dụng Chiến Lược Môi Trường 2 Giai Đoạn (WAMP Server Localhost $\rightarrow$ Production Server Trường Cấp)
+- **Vấn đề:** 
+  1. Giảng viên hướng dẫn chưa cho phép sinh viên thao tác hoặc triển khai trực tiếp mã nguồn lên máy chủ hosting của trường (`103.139.203.43:887` & FTP `nhom46.itimit.id.vn`).
+  2. Cần điều chỉnh tài liệu hướng dẫn ([`mobile-project/README.md`](../mobile-project/README.md)) và lộ trình ([`mobile-project/ROADMAP.md`](../mobile-project/ROADMAP.md)) để nhóm tiến hành phát triển và kiểm thử API độc lập trên **WAMP Server** cục bộ trước.
+  3. Cần kiến trúc hóa module kết nối CSDL PHP (`config/database.php`) và cấu hình API React Native (`src/api/config.js`) theo cơ chế **đa môi trường (Multi-environment configuration)** để khi được giảng viên cho phép triển khai, nhóm có thể chuyển đổi sang server trường chỉ với 1 cờ cấu hình duy nhất mà không phải sửa lại code logic.
+- **Quyết định:**
+  1. **Phân định 2 giai đoạn triển khai:**
+     - **Giai đoạn 1 (Hiện tại):** Khởi tạo CSDL MySQL và chạy REST API trên WAMP Server (`localhost:3306`, DB: `sql_nhom46_itimi`). Kiểm thử bằng Postman trên `http://localhost/...`. Mobile App kết nối qua IP `10.0.2.2` (máy ảo) hoặc `192.168.x.x` (máy thật chung Wifi).
+     - **Giai đoạn 2 (Khi được phép):** Import CSDL lên phpMyAdmin máy chủ trường, upload toàn bộ `backend_api/` qua FileZilla FTP (`host: nhom46.itimit.id.vn`, `user: ftp_nhom46_itimit_id_vn`, `pass: e5e971e19bbb18`).
+  2. **Cấu hình mã nguồn thông minh:**
+     - `config/database.php`: Bổ sung thuộc tính `$is_local = true / false` tự động chuyển đổi thông tin kết nối giữa WAMP và Server trường.
+     - `src/api/config.js`: Khởi tạo object `API_ENDPOINTS` phân định rõ 3 môi trường `WAMP_EMULATOR`, `WAMP_DEVICE`, `SERVER_PRODUCTION`.
+  3. **Đồng bộ hóa tài liệu:** Đã cập nhật toàn bộ vào `mobile-project/README.md`, `mobile-project/ROADMAP.md` và snapshot `project_context/plans/2026-09-28_plan_18_mobile_project_development_roadmap.md`.
+- **Trạng thái:** `ACCEPTED & LOCKED`.
+
+
 
 
 

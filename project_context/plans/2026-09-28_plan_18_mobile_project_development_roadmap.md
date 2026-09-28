@@ -21,11 +21,11 @@
 
 | Giai đoạn | Nội dung trọng tâm | Trách nhiệm chính | Sản phẩm đầu ra (Deliverables) |
 | :---: | :--- | :---: | :--- |
-| **Giai đoạn 1 (Tuần 1)** | Thiết kế ERD CSDL & Khởi tạo môi trường Server | Đạt & Đại | File `database_schema.sql`, ERD Draw.io, DB sống trên server `103.139.203.43`, Git repo. |
-| **Giai đoạn 2 (Tuần 2)** | Xây dựng Backend PHP REST API & Test Postman | Đại (CRUD) & Đạt (Auth/Reports) | Toàn bộ file PHP API trên server, Postman Collection JSON, bộ ảnh chụp kết quả JSON. |
-| **Giai đoạn 3 (Tuần 3)** | Khởi tạo React Native & Dựng khung Navigation | Đạt (Lõi) & Đại (Components) | Shell App React Native chạy trên máy ảo/máy thật, thanh Bottom Tabs 4 tab mượt mà. |
+| **Giai đoạn 1 (Tuần 1)** | Thiết kế ERD CSDL & Khởi tạo CSDL WAMP Local | Đạt & Đại | File `database_schema.sql`, ERD Draw.io, CSDL `sql_nhom46_itimi` trên WAMP local, Git repo. |
+| **Giai đoạn 2 (Tuần 2)** | Xây dựng Backend PHP REST API & Test Postman trên WAMP | Đại (CRUD) & Đạt (Auth/Reports) | Toàn bộ file PHP API trên WAMP, Postman Collection JSON, bộ ảnh chụp kết quả JSON. |
+| **Giai đoạn 3 (Tuần 3)** | Khởi tạo React Native & Dựng khung Navigation | Đạt (Lõi) & Đại (Components) | Shell App React Native chạy trên máy ảo/máy thật gọi WAMP API, thanh Bottom Tabs 4 tab mượt mà. |
 | **Giai đoạn 4 (Tuần 4–5)** | Ghép nối API & Hoàn thiện các Màn hình App | Đạt & Đại | App hoàn chỉnh chạy thực tế trên điện thoại, đồng bộ số dư và vẽ biểu đồ tròn/cột. |
-| **Giai đoạn 5 (Tuần 5–6)** | Tích hợp Báo cáo Word (`BaoCaoLTMB.docx`) & Nghiệm thu | Đạt & Đại | Tệp Word nộp bài hoàn chỉnh, cập nhật mục lục tự động F9, slide thuyết trình demo. |
+| **Giai đoạn 5 (Tuần 5–6)** | Triển khai Server trường (khi được phép) & Báo cáo Word | Đạt & Đại | Upload CSDL & code lên Server trường qua FTP/phpMyAdmin, tệp Word `BaoCaoLTMB.docx` nộp bài hoàn chỉnh (F9 TOC/TOF/TOT). |
 
 ---
 
