@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ### Bước 4: Kiểm thử API bằng Postman
 1. **Nếu test WAMP Local:**
-   - Đặt thư mục `backend_api` vào `C:/wamp64/www/expense_api/` (hoặc tạo Virtual Host).
+   - Bạn có thể liên kết thư mục `mobile-project/BE` vào `C:/wamp64/www/expense_api/` (xem hướng dẫn tạo Symbolic Link hoặc copy thư mục ở bên dưới).
    - Biến môi trường `BASE_URL`: `http://localhost/expense_api/api`.
 2. **Nếu test Server trường cấp (khi đã upload):**
    - Biến môi trường `BASE_URL`: `http://nhom46.itimit.id.vn/api` (hoặc IP công khai `http://103.139.203.43/...`).
@@ -289,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ---
 
-### Bước 5: Cấu hình & Khởi Chạy React Native
+### Bước 5: Cấu hình & Khởi Chạy React Native (Trong Thư Mục `FE`)
 1. Trong ứng dụng React Native, tạo file `src/api/config.js`:
    ```javascript
    // Chọn chế độ môi trường đang chạy:
@@ -337,21 +337,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
    - **Port:** `21`
 3. Nhấn **Quickconnect** để kết nối vào máy chủ.
 4. Ở khung bên phải (Remote site): Di chuyển vào thư mục web gốc (`public_html` hoặc `www`).
-5. Ở khung bên trái (Local site): Chọn toàn bộ mã nguồn thư mục `backend_api/` trên máy tính và kéo thả sang bên phải để tải lên máy chủ.
+5. Ở khung bên trái (Local site): Chọn toàn bộ mã nguồn thư mục `BE/` trên máy tính và kéo thả sang bên phải để tải lên máy chủ.
 6. Mở file `config/database.php` trên máy chủ và chuyển sang chế độ server: `$is_local = false;`.
 
 
 ---
 
-## 7. Cấu Trúc Thư Mục Dự Án Khuyến Nghị
+## 7. Cấu Trúc Thư Mục Dự Án Chuẩn
 
 ```text
 mobile-project/
 ├── README.md                     # Tài liệu hướng dẫn đồ án mobile & thông tin server
-├── BaoCaoLTMB.docx               # Báo cáo học thuật môn Lập trình Mobile
-├── backend_api/                  # Mã nguồn PHP API (Upload lên server)
+├── ROADMAP.md                    # Kế hoạch lộ trình 5 Sprint và RACI Matrix
+├── huongdanvietbaocao.txt        # Yêu cầu hướng dẫn viết báo cáo của Giảng viên
+├── BaoCaoLTMB.docx               # Báo cáo học thuật môn Lập trình Mobile (Word)
+│
+├── BE/                           # Backend PHP RESTful API
 │   ├── config/
-│   │   └── database.php          # Kết nối CSDL MySQL (sql_nhom46_itimi)
+│   │   ├── database.php          # Kết nối CSDL MySQL (Hỗ trợ WAMP & Server trường)
+│   │   └── helpers.php           # CORS headers & Chuẩn hóa JSON Response
 │   ├── api/
 │   │   ├── auth/                 # login.php, register.php
 │   │   ├── wallets/              # list.php, create.php
@@ -359,12 +363,12 @@ mobile-project/
 │   │   ├── transactions/         # list.php, create.php, delete.php
 │   │   └── reports/              # monthly_summary.php, category_chart.php
 │   └── sql/
-│       └── database_schema.sql   # File DDL import phpMyAdmin
+│       └── database_schema.sql   # DDL khởi tạo 5 bảng & Dữ liệu mẫu (Seed Data)
 │
-└── mobile_app/                   # Mã nguồn ứng dụng React Native
+└── FE/                           # Frontend Ứng dụng React Native
     ├── package.json
     ├── src/
-    │   ├── api/                  # Axios instance trỏ tới 103.139.203.43
+    │   ├── api/                  # Axios instance & config.js (Đa môi trường)
     │   ├── components/           # TransactionCard, CustomButton, ChartWrapper
     │   ├── navigation/           # AppNavigator, TabNavigator
     │   ├── screens/              # HomeScreen, AddTransactionScreen, ReportScreen, WalletScreen

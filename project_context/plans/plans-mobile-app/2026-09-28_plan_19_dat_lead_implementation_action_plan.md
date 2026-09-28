@@ -18,34 +18,34 @@
 ## 2. Danh Sách 4 Chặng Hành Động (Action Checklist)
 
 ### 📌 CHẶNG 1: Thiết Kế & Đóng Gói CSDL MySQL (Sprint 1)
-- [ ] **Task 1.1:** Khởi tạo thư mục `mobile-project/backend_api/sql/`.
-- [ ] **Task 1.2:** Viết tệp DDL hoàn chỉnh [`mobile-project/backend_api/sql/database_schema.sql`](../../../mobile-project/backend_api/sql/database_schema.sql) gồm 5 bảng quan hệ chuẩn:
+- [x] **Task 1.1:** Khởi tạo thư mục `mobile-project/BE/sql/`.
+- [x] **Task 1.2:** Viết tệp DDL hoàn chỉnh [`mobile-project/BE/sql/database_schema.sql`](../../../mobile-project/BE/sql/database_schema.sql) gồm 5 bảng quan hệ chuẩn:
   - `users` (Định danh, email unique, password_hash)
   - `wallets` (Tiền mặt, Ngân hàng, balance DECIMAL 15,2)
   - `categories` (Icon, màu sắc, phân loại Thu / Chi)
   - `transactions` (Khóa ngoại wallet, category, user, CASCADE/RESTRICT chặt chẽ)
   - `budgets` (Hạn mức chi tiêu theo tháng)
-- [ ] **Task 1.3:** Tích hợp dữ liệu mẫu (Seed Data) chuẩn vào file SQL để khi import vào WAMP/phpMyAdmin là có ngay dữ liệu test trực quan.
+- [x] **Task 1.3:** Tích hợp dữ liệu mẫu (Seed Data) chuẩn vào file SQL để khi import vào WAMP/phpMyAdmin là có ngay dữ liệu test trực quan.
 - [ ] **Task 1.4:** Thiết kế sơ đồ ERD trực quan (Mermaid & hình ảnh) sẵn sàng đưa vào **Trang 7** của báo cáo Word.
 
 ---
 
 ### 📌 CHẶNG 2: Xây Dựng Backend PHP Core & API Báo Cáo (Sprint 2)
-- [ ] **Task 2.1:** Xây dựng module kết nối CSDL đa môi trường [`mobile-project/backend_api/config/database.php`](../../../mobile-project/backend_api/config/database.php) (cờ `$is_local`).
-- [ ] **Task 2.2:** Xây dựng module tiện ích dùng chung [`mobile-project/backend_api/config/helpers.php`](../../../mobile-project/backend_api/config/helpers.php) (CORS headers, chuẩn hóa JSON response `send_json_response($status, $message, $data, $code)`).
-- [ ] **Task 2.3:** Hiện thực API Xác thực (Auth Endpoints):
-  - `backend_api/api/auth/register.php`: Validate đầu vào, mã hóa `password_hash()`, kiểm tra trùng lặp email.
-  - `backend_api/api/auth/login.php`: Kiểm tra `password_verify()`, trả về thông tin user và token định danh.
-- [ ] **Task 2.4:** Hiện thực API Báo cáo & Thống kê (Reports Endpoints):
-  - `backend_api/api/reports/monthly_summary.php`: Tính toán `total_income`, `total_expense`, `net_balance`.
-  - `backend_api/api/reports/category_chart.php`: Gom nhóm chi tiêu theo danh mục để vẽ biểu đồ tròn (Pie Chart).
-  - `backend_api/api/reports/income_vs_expense_chart.php`: Thống kê thu - chi theo tháng để vẽ biểu đồ cột (Bar Chart).
+- [x] **Task 2.1:** Xây dựng module kết nối CSDL đa môi trường [`mobile-project/BE/config/database.php`](../../../mobile-project/BE/config/database.php) (cờ `$is_local`).
+- [x] **Task 2.2:** Xây dựng module tiện ích dùng chung [`mobile-project/BE/config/helpers.php`](../../../mobile-project/BE/config/helpers.php) (CORS headers, chuẩn hóa JSON response `send_json_response($status, $message, $data, $code)`).
+- [x] **Task 2.3:** Hiện thực API Xác thực (Auth Endpoints):
+  - `BE/api/auth/register.php`: Validate đầu vào, mã hóa `password_hash()`, kiểm tra trùng lặp email.
+  - `BE/api/auth/login.php`: Kiểm tra `password_verify()`, trả về thông tin user và token định danh.
+- [x] **Task 2.4:** Hiện thực API Báo cáo & Thống kê (Reports Endpoints):
+  - `BE/api/reports/monthly_summary.php`: Tính toán `total_income`, `total_expense`, `net_balance`.
+  - `BE/api/reports/category_chart.php`: Gom nhóm chi tiêu theo danh mục để vẽ biểu đồ tròn (Pie Chart).
+- [ ] **Task 2.5:** Viết API `BE/api/reports/income_vs_expense_chart.php`: Thống kê thu - chi theo tháng để vẽ biểu đồ cột (Bar Chart).
 
 ---
 
 ### 📌 CHẶNG 3: Khởi Tạo Ứng Dụng React Native & Khung Điều Hướng (Sprint 3 & 4)
-- [ ] **Task 3.1:** Khởi tạo cấu trúc thư mục client `mobile-project/mobile_app/src/`.
-- [ ] **Task 3.2:** Viết cấu hình kết nối API đa môi trường `src/api/config.js` (hỗ trợ `10.0.2.2`, IP Wifi LAN, và Domain server).
+- [ ] **Task 3.1:** Khởi tạo cấu trúc thư mục client `mobile-project/FE/src/`.
+- [ ] **Task 3.2:** Viết cấu hình kết nối API đa môi trường `FE/src/api/config.js` (hỗ trợ `10.0.2.2`, IP Wifi LAN, và Domain server).
 - [ ] **Task 3.3:** Xây dựng kiến trúc điều hướng React Navigation (BottomTabNavigator 4 tab + Auth Stack).
 - [ ] **Task 3.4:** Hiện thực hóa màn hình chính **HomeScreen** (Hiển thị thẻ ví, thanh tiến độ ngân sách, giao dịch gần đây).
 - [ ] **Task 3.5:** Hiện thực hóa màn hình **ReportScreen** (Tích hợp thư viện `react-native-chart-kit` vẽ Pie Chart & Bar Chart).

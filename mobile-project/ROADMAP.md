@@ -144,7 +144,7 @@
 
 - [ ] **Task 5.0 (Đạt & Đại) - KHI ĐƯỢC GIẢNG VIÊN CHO PHÉP:**
   - Truy cập phpMyAdmin server trường (`https://103.139.203.43:887/`, user `sql_nhom46_itimi`), import database `sql_nhom46_itimi`.
-  - Dùng **FileZilla** (Host: `nhom46.itimit.id.vn`, User: `ftp_nhom46_itimit_id_vn`, Pass: `e5e971e19bbb18`) upload mã nguồn `backend_api/` lên thư mục web trên server.
+  - Dùng **FileZilla** (Host: `nhom46.itimit.id.vn`, User: `ftp_nhom46_itimit_id_vn`, Pass: `e5e971e19bbb18`) upload mã nguồn `BE/` lên thư mục web trên server.
   - Chuyển cấu hình `$is_local = false` trong `config/database.php`.
   - Test kiểm tra lại 1 lượt các API trên domain server qua Postman.
 - [ ] **Task 5.1 (Đạt):** Mở tệp `mobile-project/BaoCaoLTMB.docx`:
