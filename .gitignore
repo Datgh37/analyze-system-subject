@@ -28,3 +28,11 @@ desktop.ini
 .system_generated/
 tmp/
 temp/
+
+# Node.js & React Native / Expo
+node_modules/
+.expo/
+.expo-shared/
+web-build/
+dist/
+*.tsbuildinfo

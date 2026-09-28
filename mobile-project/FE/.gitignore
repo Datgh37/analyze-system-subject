@@ -1,0 +1,21 @@
+# React Native & Expo Gitignore
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Native builds
+android/
+ios/
+*.orig.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.production

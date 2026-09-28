@@ -1276,5 +1276,14 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Cập nhật tài liệu hướng dẫn xuất ảnh trong [`mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md`](../mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md).
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
 
+---
 
-
+## [2026-09-28 22:23] - Quyết Định 69: Bổ Sung Quy Tắc Gitignore Bỏ Qua `node_modules/` & Thư Mục Rác Của React Native / Expo
+- **Vấn đề:** 
+  1. Tệp `.gitignore` ban đầu ở gốc dự án chỉ cấu hình cho Python bytecode và môi trường ảo, chưa có quy tắc loại trừ `node_modules/` và các thư mục sinh tự động của React Native/Expo.
+  2. Khi bạn Đại hoặc lập trình viên chạy lệnh `npm install`, hàng chục nghìn file thư viện nặng hàng trăm Megabytes sẽ bị Git theo dõi, gây phình to repo và làm tắc nghẽn quá trình đồng bộ lên GitHub.
+- **Quyết định & Thực thi:**
+  1. **Cập nhật `.gitignore` ở thư mục gốc:** Thêm `node_modules/`, `.expo/`, `.expo-shared/`, `web-build/`, `dist/`, `*.tsbuildinfo`.
+  2. **Tạo `.gitignore` chuyên dụng trong `mobile-project/FE/`:** Tạo tệp [`mobile-project/FE/.gitignore`](../mobile-project/FE/.gitignore) theo chuẩn dự án React Native / Expo.
+  3. **Kiểm tra xác thực:** Lệnh `git check-ignore -v` đã kiểm tra và xác nhận 100% các file trong `mobile-project/FE/node_modules/` và `mobile-project/FE/.expo/` được loại trừ hoàn toàn khỏi Git.
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
