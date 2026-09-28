@@ -27,7 +27,8 @@ $db = $database->getConnection();
 try {
     // Lấy danh mục hệ thống (user_id IS NULL) HOẶC danh mục do chính user tạo
     $sql = "
-        SELECT id, user_id, name, type, icon_name, color_code, is_system
+        SELECT id, user_id, name, type, icon_name, color_code, 
+               (CASE WHEN user_id IS NULL THEN 1 ELSE 0 END) AS is_system
         FROM `categories`
         WHERE (user_id IS NULL OR user_id = :uid)
     ";
@@ -36,7 +37,7 @@ try {
         $sql .= " AND `type` = :type";
     }
 
-    $sql .= " ORDER BY `is_system` DESC, `id` ASC";
+    $sql .= " ORDER BY (user_id IS NULL) DESC, `id` ASC";
 
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':uid', $user_id);

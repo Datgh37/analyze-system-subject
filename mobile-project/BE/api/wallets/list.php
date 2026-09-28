@@ -24,7 +24,7 @@ $db = $database->getConnection();
 
 try {
     $stmt = $db->prepare("
-        SELECT id, user_id, wallet_name, wallet_type, balance, currency, icon_name, created_at
+        SELECT id, user_id, name, name AS wallet_name, wallet_type, balance, 'VND' AS currency, 'wallet' AS icon_name, created_at
         FROM `wallets`
         WHERE `user_id` = :uid
         ORDER BY `id` ASC

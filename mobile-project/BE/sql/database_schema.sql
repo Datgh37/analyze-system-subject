@@ -81,10 +81,10 @@ CREATE TABLE IF NOT EXISTS `budgets` (
 -- 2. DỮ LIỆU MẪU KHỞI TẠO (SEED DATA) - DÙNG INSERT IGNORE ĐỂ CHỐNG TRÙNG LẶP
 -- ==============================================================================
 
--- 2.1. Thêm người dùng mẫu (Mật khẩu: Password123@ đã băm Bcrypt)
+-- 2.1. Thêm người dùng mẫu (Mật khẩu: password123 đã băm Bcrypt)
 INSERT IGNORE INTO `users` (`id`, `full_name`, `email`, `password_hash`, `created_at`) VALUES
-(1, 'Trịnh Thành Đạt', 'thanhdat@gmail.com', '$2y$10$eO0.f8RlhXbT5a2W0N/0rOH5fomHl112PzZ4VjRz4YqL6XgJ2tIeG', NOW()),
-(2, 'Trần Trọng Đại', 'trongdai@gmail.com', '$2y$10$eO0.f8RlhXbT5a2W0N/0rOH5fomHl112PzZ4VjRz4YqL6XgJ2tIeG', NOW());
+(1, 'Trịnh Thành Đạt', 'thanhdat@gmail.com', '$2y$10$WehxfePSQA7OFuP3.ooiCuIFiJyFE5FQZOAU.jasJiE.Ta1P2S7.i', NOW()),
+(2, 'Trần Trọng Đại', 'trongdai@gmail.com', '$2y$10$WehxfePSQA7OFuP3.ooiCuIFiJyFE5FQZOAU.jasJiE.Ta1P2S7.i', NOW());
 
 -- 2.2. Thêm ví tài chính mẫu
 INSERT IGNORE INTO `wallets` (`id`, `user_id`, `name`, `balance`, `wallet_type`, `created_at`) VALUES

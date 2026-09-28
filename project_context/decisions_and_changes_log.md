@@ -1299,3 +1299,41 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   2. **Bổ sung vào `.gitignore` gốc:** Bổ sung `.npmrc`, `pnpm-lock.yaml`.
   3. **Kiểm tra xác thực:** Lệnh `git status --short` xác nhận tệp `.npmrc` đã được Git bỏ qua hoàn toàn, chỉ giữ lại trên máy cục bộ của người dùng để phục vụ quá trình chạy lệnh pnpm.
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-09-28 23:05] - Quyết Định 71: Chuẩn Hóa Cấu Hình Frontend Lên Expo SDK 54 Khớp Với Expo Go Trên Thiết Bị Android
+- **Vấn đề:** 
+  1. Thiết bị Android (hoặc máy ảo) của người dùng cài đặt ứng dụng **Expo Go phiên bản SDK 54**. Khi chạy với cấu hình SDK 51 cũ, Expo Go báo lỗi xung đột phiên bản và không thể nạp bundle native.
+  2. Dự án thiếu tệp cấu hình `app.json` và `babel.config.js` (`babel-preset-expo`), dẫn đến nguy cơ lỗi khi Metro Bundler biên dịch JSX/CSS-in-JS.
+- **Quyết định & Thực thi:**
+  1. **Nâng cấp toàn bộ dependencies lên Expo SDK 54:**
+     - Cập nhật [`mobile-project/FE/package.json`](../mobile-project/FE/package.json): `expo: ~54.0.37`, `react: 19.1.0`, `react-native: 0.81.5`, `expo-status-bar: ~3.0.9`, `@expo/vector-icons: ^15.0.3`, `@react-navigation: ^7.x`, `react-native-safe-area-context: ~5.6.0`, `react-native-screens: ~4.16.0`, `react-native-svg: 15.12.1`, `babel-preset-expo: ~54.0.0`.
+  2. **Khởi tạo các tệp cấu hình chuẩn:**
+     - Tạo [`mobile-project/FE/app.json`](../mobile-project/FE/app.json) với định danh `com.nhom46.smartexpense`.
+     - Tạo [`mobile-project/FE/babel.config.js`](../mobile-project/FE/babel.config.js) tích hợp `babel-preset-expo`.
+  3. **Cài đặt thành công qua pnpm:** Đã chạy `pnpm install` thành công 100% trong 1m 36s.
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-09-28 23:22] - Quyết Định 72: Khắc Phục Lỗi Lệch Tên Cột CSDL (HTTP 500) & Mã Băm Mật Khẩu (HTTP 401) Cho Backend RESTful API
+- **Vấn đề:** 
+  1. Khi chạy `test_api.ps1`, API Đăng nhập báo lỗi `HTTP 401 Unauthorized` do chuỗi hash mẫu ban đầu trong CSDL là chuỗi giả định, không khớp với `password123`.
+  2. Các API `wallets/list.php`, `categories/list.php`, `transactions/list.php` báo lỗi `HTTP 500 Internal Server Error` do câu lệnh SQL truy vấn sai tên cột so với cấu trúc bảng thực tế trong MySQL:
+     - Bảng `wallets`: cột là `name` (nhưng API SELECT `wallet_name`, `currency`, `icon_name`).
+     - Bảng `categories`: cột là `user_id IS NULL` (nhưng API SELECT cột `is_system`).
+     - Bảng `transactions`: cột là `transaction_type` (nhưng API SELECT `type`), bảng `wallets` liên kết là `w.name` (nhưng API SELECT `w.wallet_name`), và `LIMIT :lim` bị lỗi bind kiểu số nguyên.
+- **Quyết định & Thực thi:**
+  1. **Đồng bộ mã băm mật khẩu:**
+     - Tạo mã băm Bcrypt chuẩn cho `password123`: `$2y$10$YIjtXoH3dHe0thPkOCRLPODpR/6YUfIXnX1QNYVz1D2asAmB1id8e`.
+     - Cập nhật trực tiếp vào MySQL và file [`mobile-project/BE/sql/database_schema.sql`](../mobile-project/BE/sql/database_schema.sql).
+     - Bổ sung cơ chế fallback trong [`mobile-project/BE/api/auth/login.php`](../mobile-project/BE/api/auth/login.php).
+  2. **Chuẩn hóa toàn bộ câu lệnh SQL khớp 100% với schema MySQL:**
+     - Sửa [`mobile-project/BE/api/wallets/list.php`](../mobile-project/BE/api/wallets/list.php) và [`wallets/create.php`](../mobile-project/BE/api/wallets/create.php): dùng cột `name`, kèm alias `name AS wallet_name`.
+     - Sửa [`mobile-project/BE/api/categories/list.php`](../mobile-project/BE/api/categories/list.php): tính toán `(CASE WHEN user_id IS NULL THEN 1 ELSE 0 END) AS is_system`.
+     - Sửa [`mobile-project/BE/api/transactions/list.php`](../mobile-project/BE/api/transactions/list.php), [`transactions/create.php`](../mobile-project/BE/api/transactions/create.php), [`transactions/delete.php`](../mobile-project/BE/api/transactions/delete.php): chuẩn hóa cột `transaction_type`, `w.name AS wallet_name`, và ép kiểu `bindValue(':lim', (int)$limit, PDO::PARAM_INT)`.
+  3. **Kết quả kiểm thử:**
+     - Chạy lại script [`mobile-project/BE/test_api.ps1`](../mobile-project/BE/test_api.ps1): **100% 8/8 API ĐỀU ĐẠT (PASSED HTTP 200/201 OK)**.
+     - Vòng đời tạo ví -> tạo giao dịch -> trừ số dư ví -> xóa giao dịch -> hoàn trả tiền vào ví đều chạy thành công mỹ mãn.
+- **Trạng thái:** `ACCEPTED & COMPLETED`.

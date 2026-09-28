@@ -35,14 +35,13 @@ $db = $database->getConnection();
 
 try {
     $stmt = $db->prepare("
-        INSERT INTO `wallets` (`user_id`, `wallet_name`, `wallet_type`, `balance`, `currency`, `icon_name`)
-        VALUES (:uid, :wname, :wtype, :bal, 'VND', :icon)
+        INSERT INTO `wallets` (`user_id`, `name`, `wallet_type`, `balance`)
+        VALUES (:uid, :wname, :wtype, :bal)
     ");
     $stmt->bindParam(':uid', $user_id);
     $stmt->bindParam(':wname', $wallet_name);
     $stmt->bindParam(':wtype', $wallet_type);
     $stmt->bindParam(':bal', $initial_balance);
-    $stmt->bindParam(':icon', $icon_name);
     $stmt->execute();
 
     $new_id = (int)$db->lastInsertId();

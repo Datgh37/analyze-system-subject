@@ -31,13 +31,14 @@ try {
             t.id,
             t.user_id,
             t.wallet_id,
-            w.wallet_name,
+            w.name AS wallet_name,
             t.category_id,
             c.name AS category_name,
             c.icon_name AS category_icon,
             c.color_code AS category_color,
             t.amount,
             t.transaction_type,
+            t.transaction_type AS `type`,
             t.note,
             t.transaction_date,
             t.created_at
@@ -54,12 +55,12 @@ try {
     $sql .= " ORDER BY t.transaction_date DESC, t.id DESC LIMIT :lim";
 
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':uid', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':uid', (int)$user_id, PDO::PARAM_INT);
     if ($month && $year) {
-        $stmt->bindParam(':month', $month, PDO::PARAM_INT);
-        $stmt->bindParam(':year', $year, PDO::PARAM_INT);
+        $stmt->bindValue(':month', (int)$month, PDO::PARAM_INT);
+        $stmt->bindValue(':year', (int)$year, PDO::PARAM_INT);
     }
-    $stmt->bindParam(':lim', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
     $stmt->execute();
     $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
