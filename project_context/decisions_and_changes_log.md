@@ -1206,8 +1206,75 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   4. **Cập nhật tài liệu tổng thể:** Bổ sung **Bước 2** trong quy trình khởi chạy tại [`mobile-project/README.md`](../mobile-project/README.md).
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
 
+---
 
+## [2026-09-28 21:57] - Quyết Định 64: Ban Hành Kế Hoạch Thực Thi Chi Tiết (PLAN-20) Cho Các Bước Tiếp Theo Của Trưởng Nhóm
+- **Vấn đề:** 
+  1. Sau khi hoàn tất nền tảng CSDL `database_schema.sql`, cấu hình Junction WAMP và tài liệu hướng dẫn `BE/README.md`, cần xác định chính xác trình tự thực hiện các bước tiếp theo để hoàn thành 100% trách nhiệm của Trưởng nhóm (Trịnh Thành Đạt).
+  2. Cần phân định rõ 4 giai đoạn: Hoàn tất nốt API Báo cáo cột & Boilerplate cho bạn Đại $\rightarrow$ Khởi động WampServer & Test API tự động $\rightarrow$ Xuất bản sơ đồ ERD cho báo cáo Word $\rightarrow$ Dựng khung React Native trong `FE/`.
+- **Quyết định:**
+  1. Ban hành kế hoạch hành động 4 giai đoạn tại [`project_context/plans/plans-mobile-app/2026-09-28_plan_20_lead_next_steps_and_fe_scaffolding.md`](plans/plans-mobile-app/2026-09-28_plan_20_lead_next_steps_and_fe_scaffolding.md).
+  2. Tạo bản Artifact tương tác với nút **Proceed** để người dùng kiểm duyệt trước khi bắt đầu thực thi Giai đoạn 1.
+- **Trạng thái:** `ACCEPTED & LOCKED`.
 
+---
+
+## [2026-09-28 22:01] - Quyết Định 65: Tái Phân Định Trách Nhiệm Phân Hệ Frontend (Setup FE vs. UI Implementation)
+- **Vấn đề:** 
+  1. Trong phân công công việc ban đầu của [`mobile-project/ROADMAP.md`](../mobile-project/ROADMAP.md), việc gán ghép chung Đạt và Đại cùng làm màn hình UI dẫn đến chồng chéo trách nhiệm và không phản ánh đúng định hướng chuyên môn của nhóm.
+  2. Trịnh Thành Đạt (Trưởng nhóm / Full-stack Lead) chỉ phụ trách **Setting up Frontend** (khởi tạo project React Native, cấu hình tầng mạng đa môi trường `config.js`, dựng khung kiến trúc điều hướng React Navigation).
+  3. Toàn bộ phần **Giao diện người dùng (UI)**, linh kiện dùng chung (Components) và hiện thực hóa các Màn hình chức năng (Login, Register, Home, Add, History, Report Charts) thuộc về trách nhiệm của Trần Trọng Đại.
+- **Quyết định:**
+  1. **Điều chỉnh ma trận RACI và tiến trình 5 Giai đoạn:** Cập nhật bảng RACI, Giai đoạn 3, Giai đoạn 4, Giai đoạn 5 trong [`mobile-project/ROADMAP.md`](../mobile-project/ROADMAP.md).
+  2. **Đồng bộ hóa các kế hoạch hành động:** Cập nhật Chặng 3 của [`project_context/plans/plans-mobile-app/2026-09-28_plan_19_dat_lead_implementation_action_plan.md`](plans/plans-mobile-app/2026-09-28_plan_19_dat_lead_implementation_action_plan.md) và Giai đoạn 4 của [`project_context/plans/plans-mobile-app/2026-09-28_plan_20_lead_next_steps_and_fe_scaffolding.md`](plans/plans-mobile-app/2026-09-28_plan_20_lead_next_steps_and_fe_scaffolding.md) cũng như Artifact `implementation_plan_lead_next_steps.md`.
+- **Trạng thái:** `ACCEPTED & LOCKED`.
+
+---
+
+## [2026-09-28 22:04] - Quyết Định 66: Thiết Lập Quy Chuẩn Viết Code Phục Vụ Thi Vấn Đáp Môn Học (No External CSS, Pure StyleSheet & Const)
+- **Vấn đề:** 
+  1. Đây là môn **Nhập môn Lập trình Thiết bị Di động**. Giảng viên chấm điểm bằng hình thức thi vấn đáp (oral defense) trực tiếp trên mã nguồn.
+  2. Nếu sử dụng các thư viện styling cao siêu (như TailwindCSS/NativeWind, Styled-Components, Paper, Tamagui...) hoặc kiến trúc quá trừu tượng, sinh viên sẽ rất khó giải thích bản chất khi bị Giảng viên hỏi xoáy, dễ bị đánh giá là dùng template copy hoặc AI sinh code vượt quá chuẩn mực môn học.
+- **Quyết định:**
+  1. **Tuyệt đối cấm dùng thư viện CSS bên ngoài:** Cấm cài Tailwind/NativeWind, Paper, UI Kitten, Tamagui, Styled-Components.
+  2. **Áp dụng StyleSheet thuần & Hằng số Const:** Sử dụng `StyleSheet.create({...})` nguyên bản của React Native, tổ chức bảng màu và kích thước tập trung qua `const COLORS = {...}`, `const SIZES = {...}`.
+  3. **Tối đa hóa các thành phần cơ bản trong giáo trình:** Ưu tiên dùng `View`, `Text`, `TouchableOpacity`, `TextInput`, `FlatList`, `Modal`, `Alert`, `ActivityIndicator`, cùng 2 hook nền tảng `useState` và `useEffect`.
+  4. **Code mộc mạc, rõ ràng, chú thích tiếng Việt đầy đủ:** Đảm bảo mọi dòng code đều có thể giải thích trôi chảy khi Giảng viên chất vấn.
+  5. **Đồng bộ hóa tài liệu:** Đã bổ sung **Mục 1.3** trong [`mobile-project/ROADMAP.md`](../mobile-project/ROADMAP.md), mục Frontend trong [`mobile-project/README.md`](../mobile-project/README.md), [`project_context/plans/plans-mobile-app/2026-09-28_plan_20_lead_next_steps_and_fe_scaffolding.md`](plans/plans-mobile-app/2026-09-28_plan_20_lead_next_steps_and_fe_scaffolding.md) và Artifact kế hoạch.
+- **Trạng thái:** `ACCEPTED & LOCKED`.
+
+---
+
+## [2026-09-28 22:10] - Quyết Định 67: Hoàn Thành Toàn Diện 100% Khối Lượng Kỹ Thuật Của Lead (PLAN-20)
+- **Vấn đề:** 
+  1. Trịnh Thành Đạt (Lead) cần hoàn thành trọn vẹn khối lượng công việc cốt lõi đã cam kết trong PLAN-20 để chuẩn bị sẵn sàng toàn bộ tài nguyên chuyển giao cho thành viên nhóm (Trần Trọng Đại).
+- **Quyết định & Kết quả bàn giao:**
+  1. **Hoàn tất API Báo cáo & Boilerplate CRUD:**
+     - Viết mới [`mobile-project/BE/api/reports/income_vs_expense_chart.php`](../mobile-project/BE/api/reports/income_vs_expense_chart.php) (Bar Chart 6 tháng).
+     - Khởi tạo đầy đủ 6 API mẫu chuẩn RESTful cho Đại: `wallets/list.php`, `wallets/create.php`, `categories/list.php`, `transactions/list.php`, `transactions/create.php`, `transactions/delete.php`.
+  2. **Tự động hóa kiểm thử WAMP Local:**
+     - Viết script PowerShell [`mobile-project/BE/test_api.ps1`](../mobile-project/BE/test_api.ps1) kiểm thử tự động toàn bộ 8 endpoint chính.
+  3. **Xuất bản ERD & Từ điển CSDL phục vụ Báo cáo Word:**
+     - Viết [`mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md`](../mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md) gồm sơ đồ Mermaid 5 bảng quan hệ và từ điển dữ liệu chi tiết cho Trang 7 của `BaoCaoLTMB.docx`.
+  4. **Khởi tạo bộ khung Frontend React Native (Setup FE Scaffolding):**
+     - Thiết lập hoàn chỉnh thư mục [`mobile-project/FE/`](../mobile-project/FE/) với `package.json`, `App.js`, cấu hình mạng `src/api/config.js`, `src/api/client.js`, bảng theme `src/constants/theme.js`, điều hướng `src/navigation/AppNavigator.js` & `TabNavigator.js`.
+     - Dựng 5 màn hình khung: `HomeScreen.js`, `AddTransactionScreen.js`, `HistoryScreen.js`, `ReportScreen.js`, `LoginScreen.js` tuân thủ nghiêm ngặt quy tắc code mộc mạc phục vụ thi vấn đáp.
+     - Ban hành tài liệu hướng dẫn phát triển UI [`mobile-project/FE/README.md`](../mobile-project/FE/README.md) cho bạn Đại.
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-09-28 22:15] - Quyết Định 68: Tinh Giản Frontend Thành Bộ Khung Sườn (Skeleton Screens) & Xuất Sơ Đồ CSDL Định Dạng Draw.io
+- **Vấn đề:** 
+  1. Trưởng nhóm (Đạt) chỉ chịu trách nhiệm Setup FE (kiến trúc, điều hướng, theme và cấu hình API). Nếu triển khai chi tiết toàn bộ UI của 5 màn hình thì thành viên nhóm (Trần Trọng Đại) sẽ không còn khối lượng công việc thực tế để code.
+  2. Báo cáo Word học thuật không dùng Mermaid thuần văn bản mà cần sơ đồ thực thể dạng tệp đồ họa Draw.io (`.drawio`) để có thể mở chỉnh sửa trực quan trên diagrams.net và xuất ảnh PNG độ nét cao chèn vào Trang 7.
+- **Quyết định & Thực thi:**
+  1. **Tinh giản 5 màn hình Frontend thành Skeleton Screens:**
+     - Các màn hình `HomeScreen.js`, `AddTransactionScreen.js`, `HistoryScreen.js`, `ReportScreen.js`, `LoginScreen.js` được tinh giản về cấu trúc khung sườn (Skeleton), giữ nguyên điều hướng và bổ sung danh sách công việc (`TODO`) cụ thể để bạn Đại tự tay vẽ linh kiện UI (`src/components/`), kết nối API và xử lý Form.
+  2. **Xuất bản sơ đồ Draw.io XML (`database_erd.drawio`):**
+     - Đã tạo tệp [`mobile-project/BE/sql/database_erd.drawio`](../mobile-project/BE/sql/database_erd.drawio) và bản sao tại [`mobile-project/database_erd.drawio`](../mobile-project/database_erd.drawio) chứa đầy đủ 5 bảng quan hệ phân màu sắc chuẩn mực, các khóa PK, FK và liên kết 1:N.
+     - Cập nhật tài liệu hướng dẫn xuất ảnh trong [`mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md`](../mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md).
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
 
 
 

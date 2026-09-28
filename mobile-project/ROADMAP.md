@@ -18,19 +18,58 @@
 - **C (Consulted):** Người đóng góp ý kiến, cùng thảo luận giải pháp.
 - **I (Informed):** Người được thông báo kết quả.
 
-| Hạng mục công việc | Trịnh Thành Đạt | Trần Trọng Đại | Sản phẩm bàn giao (Deliverables) |
+| Hạng mục công việc | Trịnh Thành Đạt (Lead) | Trần Trọng Đại (UI/FE) | Sản phẩm bàn giao (Deliverables) |
 | :--- | :---: | :---: | :--- |
-| **Thiết kế & Khởi tạo CSDL MySQL** | **A / R** | **C** | File `database_schema.sql`, ERD Diagram trên Draw.io, CSDL trên WAMP & Server trường |
+| **Thiết kế & Khởi tạo CSDL MySQL** | **A / R** | **C** | File `database_schema.sql`, ERD Diagram, CSDL trên WAMP & Server trường |
 | **Xây dựng Backend PHP Core (Database, Auth)** | **A / R** | **C** | `config/database.php` (Đa môi trường), `api/auth/register.php`, `login.php` |
 | **Xây dựng Backend PHP Nghiệp vụ (Wallets, Transactions)** | **A** | **R** | `api/wallets/*`, `api/categories/*`, `api/transactions/*` |
-| **Xây dựng Backend PHP Báo cáo (Reports & Charts)** | **A / R** | **C** | `api/reports/monthly_summary.php`, `category_chart.php` |
-| **Kiểm thử API trên Postman & Chụp minh chứng** | **A** | **R** | Postman Collection JSON, Bộ ảnh chụp màn hình JSON response (WAMP & Server) |
+| **Xây dựng Backend PHP Báo cáo (Reports & Charts API)** | **A / R** | **C** | `api/reports/monthly_summary.php`, `category_chart.php`, `income_vs_expense_chart.php` |
+| **Kiểm thử API trên Postman & Chụp minh chứng** | **A** | **R** | Postman Collection JSON, Bộ ảnh chụp màn hình JSON response (Trang 8 báo cáo) |
 | **Triển khai Server trường qua FTP & phpMyAdmin** | **A / R** | **R** | Deploy code qua FileZilla (`nhom46.itimit.id.vn`), DB sống trên phpMyAdmin trường |
-| **Khởi tạo React Native & Luồng Điều hướng Navigation** | **A / R** | **C** | Source React Native, BottomTabNavigator, StackNavigator |
-| **Thiết kế Linh kiện UI dùng chung (Components)** | **C** | **A / R** | Header, Card Ví, TransactionItem, CustomButton, NumberKeypad |
-| **Hiện thực các Màn hình (Dashboard, Add, History)** | **A / R** | **R** | HomeScreen, AddTransactionScreen, TransactionListScreen |
-| **Hiện thực Màn hình Báo cáo Biểu đồ (Charts Screen)** | **A / R** | **C** | ReportScreen tích hợp `react-native-chart-kit` |
-| **Hoàn thiện Báo cáo Word (`BaoCaoLTMB.docx`)** | **A / R** | **R** | Tệp Word nộp bài hoàn chỉnh, cập nhật mục lục tự động F9 |
+| **Khởi tạo & Cấu hình Kiến trúc Frontend (Setup FE)** | **A / R** | **C** | Setup project React Native, cấu hình API network (`config.js`), Root & Tab Navigation |
+| **Thiết kế Linh kiện UI dùng chung (Components)** | **C** | **A / R** | Card Ví, Thanh ngân sách BudgetBar, TransactionRow, CustomButton, HeaderBar |
+| **Hiện thực các Màn hình Ứng dụng (UI Screens)** | **C** | **A / R** | LoginScreen, RegisterScreen, HomeScreen, AddTransactionScreen, HistoryScreen |
+| **Hiện thực Màn hình Báo cáo Biểu đồ (ReportScreen UI)** | **C (Hỗ trợ data API)** | **A / R** | ReportScreen tích hợp `react-native-chart-kit` (PieChart & BarChart) |
+| **Kiểm thử giao diện App & Chụp ảnh minh chứng Mobile** | **I** | **A / R** | Bộ ảnh chụp màn hình ứng dụng di động cho Trang 9–10 báo cáo Word |
+| **Hoàn thiện Báo cáo Word (`BaoCaoLTMB.docx`)** | **A / R (Trang 7, Tổng hợp, F9)** | **R (Trang 8, 9, 10)** | Tệp Word nộp bài hoàn chỉnh, cập nhật mục lục tự động F9 |
+
+### 1.3. Quy Chuẩn Viết Code Phục Vụ Thi Vấn Đáp Môn Học (Oral Defense Guidelines)
+
+> [!CAUTION]
+> **LƯU Ý ĐẶC BIỆT DÀNH CHO CẢ 2 BẠN (ĐẠT & ĐẠI) VÀ AI AGENT:**  
+> Đồ án này thuộc môn **Nhập môn Lập trình Thiết bị Di động**. Mục tiêu cao nhất là **hiểu rõ bản chất, bảo vệ đồ án và trả lời trôi chảy trước Hội đồng Vấn đáp của Giảng viên**. Vì vậy, tuyệt đối tuân thủ các quy tắc sau:
+
+1. **Tuyệt đối KHÔNG sử dụng thư viện CSS bên thứ 3:**
+   - CẤM dùng: `TailwindCSS / NativeWind`, `Styled Components`, `React Native Paper`, `Tamagui`, `UI Kitten`...
+   - **Lý do:** Khi vấn đáp, giảng viên sẽ hỏi về cơ chế Styling native của React Native. Nếu dùng thư viện trung gian phức tạp sẽ rất khó giải thích và dễ bị đánh giá là đi copy template có sẵn.
+2. **Khai báo Styles thuần bằng `StyleSheet.create({...})` và Hằng số `const`:**
+   - Định nghĩa bảng màu và kích thước dùng chung bằng các hằng số rõ ràng:
+     ```javascript
+     export const COLORS = {
+       primary: '#2E7D32',   // Xanh lá chủ đạo
+       expense: '#D32F2F',   // Đỏ chi tiêu
+       income: '#388E3C',    // Xanh thu nhập
+       background: '#F5F5F5',
+       card: '#FFFFFF',
+       text: '#212121',
+       textSecondary: '#757575',
+       border: '#E0E0E0'
+     };
+     ```
+   - Cuối mỗi file component/screen luôn viết styles rõ ràng:
+     ```javascript
+     const styles = StyleSheet.create({
+       container: { flex: 1, backgroundColor: COLORS.background, padding: 16 },
+       card: { backgroundColor: COLORS.card, borderRadius: 12, padding: 16, marginBottom: 12 },
+       title: { fontSize: 18, fontWeight: 'bold', color: COLORS.text }
+     });
+     ```
+3. **Tận dụng tối đa các Thành phần & Cấu trúc cơ bản đã học:**
+   - **Components cơ bản:** `View`, `Text`, `TouchableOpacity` (hoặc `Pressable`), `TextInput`, `FlatList` (cho danh sách giao dịch), `ScrollView`, `Modal`, `Alert`, `ActivityIndicator`.
+   - **Hooks cơ bản:** Chỉ dùng `useState` (quản lý form, modal, dữ liệu) và `useEffect` (gọi API khi load màn hình). KHÔNG dùng Redux Toolkit hay State Machine cao siêu.
+4. **Viết Code trong sáng, tuần tự và có chú thích (Comment):**
+   - Mọi hàm xử lý (thêm giao dịch, tính tổng tiền, đăng nhập) phải có chú thích tiếng Việt ngắn gọn mô tả luồng chạy.
+   - Khi Giảng viên chỉ tay vào bất kỳ dòng nào (ví dụ: `fetch()`, `useEffect`, `FlatList renderItem`), sinh viên phải tự tin giải thích được ngay bản chất hoạt động.
 
 ---
 
@@ -52,90 +91,95 @@
 ### Giai Đoạn 1: Thiết Kế CSDL & Chuẩn Bị Môi Trường WAMP Local (Tuần 1)
 > **Mục tiêu:** Có sẵn database chạy mượt trên WAMP Server máy cá nhân và Git repository sẵn sàng cộng tác. (Chưa can thiệp server trường do thầy chưa cho phép).
 
-- [ ] **Task 1.1 (Đạt):** Vẽ sơ đồ thực thể liên kết (ERD) cho 5 bảng (`users`, `wallets`, `categories`, `transactions`, `budgets`) trên Draw.io, xuất file ảnh nét cao cho Trang 7 báo cáo.
-- [ ] **Task 1.2 (Đạt):** Cài đặt/Khởi động WAMP Server, vào phpMyAdmin local (`http://localhost/phpmyadmin`), tạo CSDL `sql_nhom46_itimi` và chạy mã SQL tạo 5 bảng.
-- [ ] **Task 1.3 (Đại):** Soạn thảo dữ liệu mẫu (Seed Data) gồm: 1 user test, 2 ví (Tiền mặt, Ngân hàng), 8 danh mục chi tiêu, 4 danh mục thu nhập, 5 giao dịch mẫu để kiểm tra hiển thị.
-- [ ] **Task 1.4 (Đạt & Đại):** Đồng bộ mã nguồn lên Git repository GitHub (`analyze-system-subject`), thiết lập branch `main` và phân quyền cho cả 2 người.
+- [x] **Task 1.1 (Đạt):** Vẽ sơ đồ thực thể liên kết (ERD) cho 5 bảng (`users`, `wallets`, `categories`, `transactions`, `budgets`) trên Draw.io (`mobile-project/database_erd.drawio`), xuất file ảnh nét cao cho Trang 7 báo cáo.
+- [x] **Task 1.2 (Đạt):** Soạn thảo mã CSDL `BE/sql/database_schema.sql`, thiết lập cầu nối NTFS Directory Junction `www/expense_api` vào WAMP Server, sẵn sàng import phpMyAdmin.
+- [ ] **Task 1.3 (Đại):** Soạn thảo dữ liệu mẫu (Seed Data) gồm: 1 user test, 2 ví (Tiền mặt, Ngân hàng), 8 danh mục chi tiêu, 4 danh mục thu nhập, 5 giao dịch mẫu để kiểm tra hiển thị. *(Đạt đã hỗ trợ viết sẵn mẫu trong database_schema.sql)*.
+- [x] **Task 1.4 (Đạt & Đại):** Đồng bộ mã nguồn lên Git repository GitHub (`analyze-system-subject`), thiết lập branch `main` và liên kết remote `origin`.
 
 ---
 
 ### Giai Đoạn 2: Xây Dựng Backend PHP API & Kiểm Thử Postman Trên WAMP (Tuần 2)
 > **Mục tiêu:** 100% các API hoạt động ổn định trên môi trường WAMP Local, có file Postman Collection để test độc lập trước khi gắn vào Mobile.
 
-- [ ] **Task 2.1 (Đạt):** Viết module kết nối CSDL `config/database.php` đa môi trường (sử dụng cờ `$is_local` để chuyển đổi linh hoạt giữa WAMP và Server trường) và cấu hình Header CORS chung cho phép mọi nguồn gọi API.
-- [ ] **Task 2.2 (Đạt):** Hiện thực API Xác thực người dùng:
+- [x] **Task 2.1 (Đạt):** Viết module kết nối CSDL `config/database.php` đa môi trường (sử dụng cờ `$is_local` để chuyển đổi linh hoạt giữa WAMP và Server trường) và cấu hình Header CORS chung `config/helpers.php` cho phép mọi nguồn gọi API.
+- [x] **Task 2.2 (Đạt):** Hiện thực API Xác thực người dùng:
   - `POST /api/auth/register.php`: Băm mật khẩu bằng `password_hash()`, kiểm tra trùng lặp email.
   - `POST /api/auth/login.php`: Kiểm tra `password_verify()`, trả về thông tin user.
 - [ ] **Task 2.3 (Đại):** Hiện thực API Quản lý Ví và Danh mục:
   - `GET /api/wallets/list.php?user_id=...` & `POST /api/wallets/create.php`.
   - `GET /api/categories/list.php?user_id=...`.
+  *(Đạt đã tạo sẵn toàn bộ file boilerplate trong `BE/api/`)*.
 - [ ] **Task 2.4 (Đại):** Hiện thực API Quản lý Giao dịch Thu / Chi:
   - `POST /api/transactions/create.php`: Thêm giao dịch, **đồng thời tự động cộng/trừ số dư** trong bảng `wallets`.
   - `GET /api/transactions/list.php?user_id=...&month=...&year=...`: Lấy lịch sử giao dịch theo tháng.
   - `DELETE /api/transactions/delete.php?id=...`: Xóa giao dịch và hoàn lại số dư ví tương ứng.
-- [ ] **Task 2.5 (Đạt):** Hiện thực API Báo cáo & Thống kê:
+  *(Đạt đã tạo sẵn toàn bộ file boilerplate trong `BE/api/`)*.
+- [x] **Task 2.5 (Đạt):** Hiện thực API Báo cáo & Thống kê:
   - `GET /api/reports/monthly_summary.php`: Trả về `total_income`, `total_expense`, `net_balance`.
   - `GET /api/reports/category_chart.php`: Gom nhóm chi tiêu theo danh mục để vẽ biểu đồ tròn.
-- [ ] **Task 2.6 (Đại):** Tạo Postman Collection `Expense_Tracker_API.postman_collection.json`, chạy test 100% endpoints trên `http://localhost/expense_api/api`, **chụp ảnh toàn bộ màn hình kết quả JSON** lưu vào thư mục `assets/postman_screenshots/` để chuẩn bị cho Trang 8 báo cáo Word.
+  - `GET /api/reports/income_vs_expense_chart.php`: Thống kê Thu vs Chi qua các tháng vẽ biểu đồ cột.
+- [ ] **Task 2.6 (Đại):** Tạo Postman Collection `Expense_Tracker_API.postman_collection.json`, chạy test 100% endpoints trên `http://localhost/expense_api/api` *(hoặc chạy script `BE/test_api.ps1`)*, **chụp ảnh toàn bộ màn hình kết quả JSON** lưu vào thư mục `assets/postman_screenshots/` để chuẩn bị cho Trang 8 báo cáo Word.
 
 ---
 
 ### Giai Đoạn 3: Khởi Tạo Ứng Dụng React Native & Dựng Khung Giao Diện (Tuần 3)
-> **Mục tiêu:** Dựng xong bộ khung ứng dụng (Shell App), điều hướng mượt mà giữa các màn hình, có các linh kiện UI đẹp mắt.
+> **Mục tiêu:** Đạt hoàn tất thiết lập khung sườn dự án (FE Setup & Navigation Architecture), Đại xây dựng bộ linh kiện UI dùng chung.
 
-- [ ] **Task 3.1 (Đạt):** Khởi tạo project React Native (sử dụng React Native CLI hoặc Expo), cài đặt các thư viện thiết yếu:
+- [x] **Task 3.1 (Đạt - Lead Setup FE):** Khởi tạo project React Native trong thư mục `mobile-project/FE/`, cài đặt các thư viện thiết yếu:
   ```bash
   npm install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack
   npm install react-native-screens react-native-safe-area-context
   npm install axios react-native-chart-kit react-native-svg
   npm install @expo/vector-icons # hoặc react-native-vector-icons
   ```
-- [ ] **Task 3.2 (Đạt):** Cấu hình tầng mạng (Network Layer):
+- [x] **Task 3.2 (Đạt - Lead Setup FE):** Cấu hình tầng mạng (Network Layer):
   - Tạo file `src/api/config.js` hỗ trợ cấu hình đa môi trường:
     - Android Emulator: `http://10.0.2.2/expense_api/api`
     - Thiết bị thật chung Wifi: `http://192.168.1.X/expense_api/api`
     - Server trường cấp: `http://nhom46.itimit.id.vn/api`
-  - Tạo Axios instance cấu hình timeout, error interceptor chung.
-- [ ] **Task 3.3 (Đạt):** Thiết lập kiến trúc điều hướng React Navigation:
-  - `AuthNavigator`: Màn hình Đăng nhập (LoginScreen) & Đăng ký (RegisterScreen).
-  - `MainTabNavigator` (Bottom Tabs 4 tab):
-    1. 🏠 **Trang chủ (HomeScreen):** Xem số dư ví, ngân sách và giao dịch gần đây.
-    2. ➕ **Thêm mới (AddTransactionScreen):** Form nhập nhanh thu/chi.
-    3. 📜 **Lịch sử (HistoryScreen):** Danh sách giao dịch theo tháng.
-    4. 📊 **Báo cáo (ReportScreen):** Biểu đồ tròn và biểu đồ cột.
-- [ ] **Task 3.4 (Đại):** Thiết kế bộ linh kiện UI tái sử dụng (`src/components/`):
-  - `WalletCard.js`: Hiển thị thẻ số dư ví tiền mặt / ngân hàng.
+  - Tạo Axios instance `src/api/client.js` cấu hình timeout, error interceptor và hàm đính kèm Token tự động.
+- [x] **Task 3.3 (Đạt - Lead Setup FE):** Thiết lập kiến trúc điều hướng React Navigation & Theme chuẩn vấn đáp:
+  - Bảng màu & kích thước tập trung `src/constants/theme.js` (không dùng CSS ngoài).
+  - `AuthNavigator`: Luồng Đăng nhập (`LoginScreen.js`).
+  - `MainTabNavigator` (`TabNavigator.js` với 4 màn hình: `HomeScreen`, `AddTransactionScreen`, `HistoryScreen`, `ReportScreen`).
+- [ ] **Task 3.4 (Đại - UI Specialist):** Thiết kế bộ linh kiện UI tái sử dụng (`src/components/`):
+  - `WalletCard.js`: Hiển thị thẻ số dư ví tiền mặt / ngân hàng bo góc đẹp mắt.
+  - `BudgetBar.js`: Thanh tiến độ ngân sách tháng (đổi màu Xanh -> Vàng -> Đỏ).
   - `TransactionItem.js`: Dòng hiển thị giao dịch (Icon danh mục, tên, số tiền màu xanh/đỏ, ngày tháng).
   - `CustomButton.js`: Nút bấm bo góc chuẩn hiện đại.
-  - `HeaderBar.js`: Thanh tiêu đề đầu trang.
+  - `HeaderBar.js`: Thanh tiêu đề đầu trang và nút quay lại.
 
 ---
 
-### Giai Đoạn 4: Ghép Nối API & Hoàn Thiện Chức Năng Ứng Dụng (Tuần 4 - 5)
-> **Mục tiêu:** App chạy thật trên máy ảo / điện thoại di động, gọi API trực tiếp vào WAMP Server, dữ liệu cập nhật tức thì.
+### Giai Đoạn 4: Hiện Thực Toàn Bộ Giao Diện (UI) & Ghép Nối API (Tuần 4 - 5)
+> **Mục tiêu:** Đại hiện thực toàn bộ các màn hình ứng dụng React Native, gọi API trực tiếp vào WAMP Server; Đạt hỗ trợ tích hợp luồng dữ liệu và rà soát kỹ thuật.
 
-- [ ] **Task 4.1 (Đại):** Hoàn thiện Luồng Đăng nhập / Đăng ký:
+- [ ] **Task 4.1 (Đại - UI/FE):** Hoàn thiện Màn hình Đăng nhập / Đăng ký (`LoginScreen`, `RegisterScreen`):
   - Form validation: Kiểm tra email hợp lệ, mật khẩu tối thiểu 6 ký tự.
   - Gọi API login/register, lưu thông tin user vào `AsyncStorage`, tự động đăng nhập khi mở lại app.
-- [ ] **Task 4.2 (Đạt):** Hoàn thiện Màn hình Trang Chủ (HomeScreen):
-  - Gọi API lấy danh sách ví và tổng số dư khả dụng.
-  - Hiển thị thanh tiến độ ngân sách tháng (Progress Bar đổi màu: Xanh lá khi < 70%, Vàng khi 70-90%, Đỏ khi > 90%).
-  - Danh sách 5 giao dịch phát sinh gần nhất kèm nút "Xem tất cả".
-- [ ] **Task 4.3 (Đạt & Đại):** Hoàn thiện Màn hình Thêm Giao Dịch (AddTransactionScreen):
+- [ ] **Task 4.2 (Đại - UI/FE):** Hoàn thiện Màn hình Trang Chủ (`HomeScreen`):
+  - Dựng layout hiển thị thẻ ví (`WalletCard`) và thanh ngân sách tháng (`BudgetBar`).
+  - Gọi API lấy danh sách ví và tổng số dư khả dụng từ WAMP Server.
+  - Hiển thị danh sách 5 giao dịch phát sinh gần nhất kèm nút "Xem tất cả".
+- [ ] **Task 4.3 (Đại - UI/FE):** Hoàn thiện Màn hình Thêm Giao Dịch (`AddTransactionScreen`):
   - Chuyển đổi tab: "Khoản Chi" (Mặc định) vs "Khoản Thu".
   - Bàn phím số nhập tiền nhanh chóng, tự động format tiền tệ (Ví dụ: `50,000 đ`).
   - Lưới chọn danh mục (Grid View) có icon và màu sắc trực quan.
   - Chọn ngày giao dịch (DateTimePicker).
   - Bấm "Lưu giao dịch" $\rightarrow$ gọi API tạo mới $\rightarrow$ cập nhật ngay lập tức về Trang chủ.
-- [ ] **Task 4.4 (Đại):** Hoàn thiện Màn hình Lịch Sử (HistoryScreen):
+- [ ] **Task 4.4 (Đại - UI/FE):** Hoàn thiện Màn hình Lịch Sử (`HistoryScreen`):
   - Bộ chọn Tháng / Năm để lọc dữ liệu.
-  - Danh sách giao dịch gom nhóm theo ngày.
+  - Danh sách giao dịch gom nhóm theo ngày (`FlatList`).
   - Thao tác vuốt/bấm để Xóa giao dịch (kèm hộp thoại xác nhận) $\rightarrow$ gọi API xóa.
-- [ ] **Task 4.5 (Đạt):** Hoàn thiện Màn hình Báo Cáo Biểu Đồ (ReportScreen):
+- [ ] **Task 4.5 (Đại - UI/FE):** Hoàn thiện Màn hình Báo Cáo Biểu Đồ (`ReportScreen`):
+  - Lấy dữ liệu từ các API báo cáo của Đạt (`monthly_summary`, `category_chart`, `income_vs_expense_chart`).
   - **Biểu đồ tròn (Pie Chart):** Thể hiện tỷ trọng % chi tiêu theo từng danh mục trong tháng bằng thư viện `react-native-chart-kit`.
   - **Biểu đồ cột (Bar Chart):** So sánh tổng Thu nhập vs Tổng Chi tiêu qua các tháng.
   - Bảng thống kê số dư ròng cuối kỳ.
-- [ ] **Task 4.6 (Đại):** Kiểm thử toàn diện trên thiết bị di động thật và máy ảo, **chụp toàn bộ ảnh chụp màn hình các chức năng** lưu vào thư mục `assets/mobile_screenshots/`.
+- [ ] **Task 4.6 (Đạt - Integration & Review):** Hỗ trợ kiểm thử tích hợp (End-to-End Integration):
+  - Rà soát luồng gọi API giữa React Native và WAMP Server, xử lý lỗi định dạng ngày tháng hoặc CORS nếu phát sinh.
+  - Tối ưu hóa hiệu năng render danh sách giao dịch.
+- [ ] **Task 4.7 (Đại - UI Screenshots):** Kiểm thử toàn diện trên thiết bị di động thật và máy ảo, **chụp toàn bộ ảnh chụp màn hình các chức năng** lưu vào thư mục `assets/mobile_screenshots/` để đưa vào báo cáo Word.
 
 ---
 
@@ -148,12 +192,12 @@
   - Chuyển cấu hình `$is_local = false` trong `config/database.php`.
   - Test kiểm tra lại 1 lượt các API trên domain server qua Postman.
 - [ ] **Task 5.1 (Đạt):** Mở tệp `mobile-project/BaoCaoLTMB.docx`:
-  - Tại Trang 7 (*Xây dựng mô hình DB*): Chèn ảnh sơ đồ ERD, mô tả chi tiết 5 bảng dữ liệu MySQL.
+  - Tại Trang 7 (*Xây dựng mô hình DB*): Chèn ảnh sơ đồ ERD, bảng từ điển dữ liệu mô tả chi tiết 5 bảng dữ liệu MySQL.
   - Chèn ảnh chụp giao diện phpMyAdmin đã có đủ 5 bảng.
 - [ ] **Task 5.2 (Đại):**
-  - Tại Trang 8 (*API tương ứng các chức năng*): Chèn ảnh chụp Postman các API (Auth, Wallets, Transactions, Reports) kèm đoạn code logic PHP tiêu biểu.
-- [ ] **Task 5.3 (Đạt & Đại):**
-  - Tại Trang 9–10 (*Xây dựng Front-End React Native*): Chèn bộ ảnh chụp màn hình app di động thực tế (Dashboard, Thêm giao dịch, Lịch sử, Biểu đồ) kèm thuyết minh từng màn hình.
+  - Tại Trang 8 (*API tương ứng các chức năng*): Chèn ảnh chụp Postman các API (Auth, Wallets, Transactions, Reports) kèm đoạn code logic PHP tiêu biểu do Đại test.
+- [ ] **Task 5.3 (Đại):**
+  - Tại Trang 9–10 (*Xây dựng Front-End React Native*): Chèn bộ ảnh chụp màn hình app di động thực tế (Dashboard, Thêm giao dịch, Lịch sử, Biểu đồ do Đại code) kèm bài thuyết minh chi tiết từng màn hình.
 - [ ] **Task 5.4 (Đạt):** Cập nhật toàn bộ tài liệu bằng phím **`F9`** trong Microsoft Word để làm mới tự động:
   - **Mục lục chung (TOC)**
   - **Mục lục hình ảnh (TOF)** (tất cả các hình ERD, Postman, App UI tự động nhảy đúng trang)

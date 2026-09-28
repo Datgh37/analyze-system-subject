@@ -66,7 +66,8 @@ Dự án này tập trung xây dựng một **ứng dụng di động quản lý
    - **Framework:** `React Native` (Hỗ trợ chạy mượt trên Android & iOS).
    - **Quản lý điều hướng:** `React Navigation` (Gồm Bottom Tab Bar cho 4 màn chính: Trang chủ, Lịch sử giao dịch, Báo cáo biểu đồ, Cài đặt).
    - **Thư viện biểu đồ:** `react-native-chart-kit` kết hợp `react-native-svg` để vẽ biểu đồ tròn và biểu đồ cột.
-   - **Giao diện & Thành phần UI:** Kết hợp Flexbox layout với bộ Icon `@expo/vector-icons` hoặc `react-native-vector-icons`.
+   - **Giao diện & Thành phần UI:** Sử dụng các thành phần cơ bản của React Native (`View`, `Text`, `TouchableOpacity`, `TextInput`, `FlatList`, `Modal`) kết hợp Flexbox layout và bộ Icon `@expo/vector-icons`.
+   - **Định kiểu (Styling) - Phục vụ Vấn Đáp:** Sử dụng thuần `StyleSheet.create({...})` kết hợp các hằng số màu sắc `const COLORS`. Tuyệt đối **KHÔNG** dùng các thư viện CSS bên thứ 3 (TailwindCSS/NativeWind, Styled-Components, Paper...) để giữ code mộc mạc, chuẩn giáo trình nhập môn, giúp sinh viên tự tin giải thích trôi chảy khi Giảng viên hỏi vấn đáp.
 
 2. **Backend (REST API):**
    - **Ngôn ngữ:** `PHP` (Viết dạng các API endpoints hướng dịch vụ, trả về JSON thuần).

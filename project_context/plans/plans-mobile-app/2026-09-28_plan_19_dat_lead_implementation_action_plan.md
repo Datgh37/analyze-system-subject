@@ -26,7 +26,7 @@
   - `transactions` (Khóa ngoại wallet, category, user, CASCADE/RESTRICT chặt chẽ)
   - `budgets` (Hạn mức chi tiêu theo tháng)
 - [x] **Task 1.3:** Tích hợp dữ liệu mẫu (Seed Data) chuẩn vào file SQL để khi import vào WAMP/phpMyAdmin là có ngay dữ liệu test trực quan.
-- [ ] **Task 1.4:** Thiết kế sơ đồ ERD trực quan (Mermaid & hình ảnh) sẵn sàng đưa vào **Trang 7** của báo cáo Word.
+- [x] **Task 1.4:** Thiết kế sơ đồ ERD trực quan dạng tệp Draw.io ([`mobile-project/database_erd.drawio`](../../../mobile-project/database_erd.drawio)) và từ điển dữ liệu ([`BE/sql/ERD_AND_DATA_DICTIONARY.md`](../../../mobile-project/BE/sql/ERD_AND_DATA_DICTIONARY.md)) sẵn sàng đưa vào **Trang 7** của báo cáo Word.
 
 ---
 
@@ -39,20 +39,21 @@
 - [x] **Task 2.4:** Hiện thực API Báo cáo & Thống kê (Reports Endpoints):
   - `BE/api/reports/monthly_summary.php`: Tính toán `total_income`, `total_expense`, `net_balance`.
   - `BE/api/reports/category_chart.php`: Gom nhóm chi tiêu theo danh mục để vẽ biểu đồ tròn (Pie Chart).
-- [ ] **Task 2.5:** Viết API `BE/api/reports/income_vs_expense_chart.php`: Thống kê thu - chi theo tháng để vẽ biểu đồ cột (Bar Chart).
+- [x] **Task 2.5:** Viết API [`BE/api/reports/income_vs_expense_chart.php`](../../../mobile-project/BE/api/reports/income_vs_expense_chart.php): Thống kê thu - chi theo tháng để vẽ biểu đồ cột (Bar Chart).
+- [x] **Bonus:** Viết sẵn 6 API Boilerplate cho bạn Đại (`wallets/*`, `categories/*`, `transactions/*`) và script test tự động [`BE/test_api.ps1`](../../../mobile-project/BE/test_api.ps1).
 
 ---
 
-### 📌 CHẶNG 3: Khởi Tạo Ứng Dụng React Native & Khung Điều Hướng (Sprint 3 & 4)
-- [ ] **Task 3.1:** Khởi tạo cấu trúc thư mục client `mobile-project/FE/src/`.
-- [ ] **Task 3.2:** Viết cấu hình kết nối API đa môi trường `FE/src/api/config.js` (hỗ trợ `10.0.2.2`, IP Wifi LAN, và Domain server).
-- [ ] **Task 3.3:** Xây dựng kiến trúc điều hướng React Navigation (BottomTabNavigator 4 tab + Auth Stack).
-- [ ] **Task 3.4:** Hiện thực hóa màn hình chính **HomeScreen** (Hiển thị thẻ ví, thanh tiến độ ngân sách, giao dịch gần đây).
-- [ ] **Task 3.5:** Hiện thực hóa màn hình **ReportScreen** (Tích hợp thư viện `react-native-chart-kit` vẽ Pie Chart & Bar Chart).
+### 📌 CHẶNG 3: Khởi Tạo Ứng Dụng React Native & Khung Điều Hướng (Setup FE) (Sprint 3 & 4)
+- [x] **Task 3.1:** Khởi tạo project React Native và cấu trúc thư mục client `mobile-project/FE/` (`package.json`, `App.js`).
+- [x] **Task 3.2:** Viết cấu hình kết nối API đa môi trường `FE/src/api/config.js` (hỗ trợ `10.0.2.2`, IP Wifi LAN, và Domain server) kèm Axios instance `FE/src/api/client.js`.
+- [x] **Task 3.3:** Xây dựng bảng theme hằng số `src/constants/theme.js` chuẩn vấn đáp và kiến trúc điều hướng React Navigation (`AppNavigator.js` và `TabNavigator.js`).
+- [x] **Task 3.4:** Thiết lập sẵn 5 màn hình cơ bản kết nối API để bạn Đại có thể add nốt UI và chạy test (`HomeScreen`, `AddTransactionScreen`, `HistoryScreen`, `ReportScreen`, `LoginScreen`).
+- [ ] **Task 3.5:** Hỗ trợ kiểm thử tích hợp (Integration Review) khi bạn Đại hoàn thành các màn hình UI.
 
 ---
 
 ### 📌 CHẶNG 4: Điền Nội Dung Kỹ Thuật Vào Báo Cáo Word `BaoCaoLTMB.docx` (Sprint 5)
 - [ ] **Task 4.1 (Trang 7):** Điền phần *Xây dựng mô hình DB* (Chèn sơ đồ ERD, bảng đặc tả chi tiết 5 bảng, ảnh chụp phpMyAdmin).
-- [ ] **Task 4.2 (Trang 9–10):** Điền phần *Xây dựng Front-End (React Native)* (Chèn ảnh chụp màn hình HomeScreen, ReportScreen kèm mô tả luồng logic).
+- [ ] **Task 4.2 (Tổng hợp & Rà soát):** Rà soát phần Trang 8 (API do Đại chụp) và Trang 9–10 (Ảnh UI và mô tả màn hình do Đại thực hiện).
 - [ ] **Task 4.3:** Nhấn **`F9`** trong Word để làm mới tự động Mục lục TOC, Danh mục hình ảnh TOF và Danh mục bảng biểu TOT.
