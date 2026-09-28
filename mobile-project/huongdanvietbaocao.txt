@@ -1,0 +1,34 @@
+Tài khoản phpadmin:
+sql_nhom46_itimi
+0a530d0c23153
+
+Kết nối filezilla:
+host: nhom46.itimit.id.vn
+username: ftp_nhom46_itimit_id_vn
+password: e5e971e19bbb18
+
+
+link server: https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en
+
+
+Yêu cầu bài báo cáo:
+
+-Font chữ : times new roman -Font-size:13 pt -Line spacing: 1.5 lines -Canh đều 
+Trang 1, bìa (bộ giáo dục và đào tạo, logo, tên đề tài, nhóm sv thực hiện, người hướng dẫn) 
+Trang 2, mục lục tự động 
+Trang 3, Mục lục hình ảnh 
+Trang 4, Mục lục bảng biểu 
+Trang 5 
+Đặt vấn đề bài toán:( 1 trang) 
+Trang 6 
+Các chức năng chính của đề tài: 
+1 trang 
+Từ trang 7 
+
+-Xây dựng Back End (MySQL và PHP) (chụp ảnh thực thi API trên postman / Cap màn hình hoặc copy code logic api) 
+→ Xây dựng mô hình DB 
+→ API tương ứng các chức năng 
+
+-Xây dựng Font-End (React native) (Chụp ảnh giao diện thực thi)
+→ Phải phù hợp với các nội dung đã dạy trên lớp 
+→ Và phù hợp với các chức năng đã mô tả

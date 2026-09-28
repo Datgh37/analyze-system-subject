@@ -1,0 +1,169 @@
+# BÁO CÁO ĐẶC TẢ USE CASE CHI TIẾT — PHÂN HỆ 2: QUẢN LÝ THU NHẬP CÁ NHÂN (INCOME MANAGEMENT)
+
+> **Mã phân hệ:** `UC-02`  
+> **Tiêu chuẩn áp dụng:** IEEE 29148 Standard & Alistair Cockburn Methodology (Agent 03 BA)  
+> **Cấu trúc biểu diễn:** Bảng Dọc 2 x N chuẩn hóa học thuật (100% dòng đơn chuẩn Markdown)  
+> **Hệ CSDL ánh xạ:** Microsoft SQL Server (MSSQL T-SQL) & Domain-Driven Design (DDD)  
+> **Mục tiêu Khóa luận:** Điền trực tiếp vào **Mục 3.2 (Đặc tả các Use Case của hệ thống)** trong Chương 3 [`KhoaLuanTotNghiep.docx`](../../files/KhoaLuanTotNghiep.docx)
+
+---
+
+## MỤC LỤC PHÂN HỆ 2
+
+1. [UC-02.01: Thêm khoản thu nhập mới](#uc-0201-thêm-khoản-thu-nhập-mới)
+2. [UC-02.02: Xem danh sách thu nhập](#uc-0202-xem-danh-sách-thu-nhập)
+3. [UC-02.03: Xem chi tiết khoản thu nhập](#uc-0203-xem-chi-tiết-khoản-thu-nhập)
+4. [UC-02.04: Chỉnh sửa khoản thu nhập](#uc-0204-chỉnh-sửa-khoản-thu-nhập)
+5. [UC-02.05: Xóa khoản thu nhập](#uc-0205-xóa-khoản-thu-nhập)
+6. [UC-02.06: Phân loại nguồn thu nhập](#uc-0206-phân-loại-nguồn-thu-nhập)
+7. [UC-02.07: Quản lý thu nhập định kỳ](#uc-0207-quản-lý-thu-nhập-định-kỳ)
+
+---
+
+### UC-02.01: Thêm khoản thu nhập mới
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Thêm khoản thu nhập mới** |
+| **2. Mã Use Case (UC ID)** | `UC-02.01` |
+| **3. Mức độ ưu tiên** | Bắt buộc |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cho phép người dùng ghi nhận một khoản tiền thu mới vào hệ thống, lựa chọn nguồn thu nhập, gắn với ví tài chính tiếp nhận và tự động tăng số dư khả dụng của ví tương ứng trong một giao dịch cơ sở dữ liệu toàn vẹn. |
+| **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn nút "Thêm thu nhập" tại trang tổng quan hoặc màn hình quản lý thu nhập. |
+| **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập thành công vào hệ thống.<br>2. Người dùng có ít nhất một ví tài chính đang ở trạng thái hoạt động (`isActive = 1`). |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Bản ghi thu nhập mới được lưu vào bảng `IncomeTransactions`; số dư của ví tiếp nhận tăng lên đúng bằng số tiền thu nhập; tổng tài sản ròng và dòng tiền ròng của người dùng được cập nhật tương ứng.<br>- *Thất bại:* Không có dữ liệu nào được lưu trữ; số dư ví tiếp nhận giữ nguyên vẹn. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Người dùng chọn chức năng "Thêm thu nhập".<br>2. Hệ thống hiển thị biểu mẫu nhập khoản thu nhập gồm các trường: Số tiền thu nhập, Ví tiếp nhận tiền, Phân loại nguồn thu nhập, Ngày giao dịch và Ghi chú chi tiết.<br>3. Người dùng nhập số tiền thu được, chọn ví nhận tiền từ danh sách ví hiện có, chọn nguồn thu (Lương chính, Thưởng, Thu nhập làm thêm, Thu nhập đầu tư, Khác), chọn ngày nhận tiền và nhập ghi chú (nếu có).<br>4. Người dùng nhấn nút "Lưu thu nhập".<br>5. Hệ thống kiểm tra tính hợp lệ của dữ liệu: Số tiền phải là số dương lớn hơn 0, ví tiếp nhận phải đang hoạt động, ngày giao dịch là ngày hợp lệ.<br>6. Hệ thống thực thi giao dịch cơ sở dữ liệu:<br>&nbsp;&nbsp;&nbsp;&nbsp;• Thêm bản ghi mới vào bảng `IncomeTransactions` với mã giao dịch `transactionId`, mã người dùng `userId`, mã ví `walletId`, số tiền `amount`, nguồn thu `sourceType`, ngày `transactionDate`.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Cập nhật số dư ví tiếp nhận trong bảng `Wallets`: `UPDATE Wallets SET balance = balance + @amount, updatedAt = GETUTCDATE() WHERE walletId = @walletId`.<br>7. Hệ thống tính toán lại tổng tài sản ròng và dòng tiền ròng trong kỳ.<br>8. Hệ thống hoàn tất giao dịch và hiển thị thông báo "Thêm khoản thu nhập thành công". |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Ghi nhận nhanh từ danh mục thu nhập định kỳ đã thiết lập):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Tại bước 2, người dùng nhấn chọn một mục trong danh sách "Thu nhập định kỳ đến hạn" (ví dụ: Lương tháng).<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Hệ thống tự động điền sẵn số tiền, ví nhận và nguồn thu theo mẫu đã cấu hình.<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.3: Người dùng kiểm tra lại và thực hiện bước 4 để lưu nhanh. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Số tiền thu nhập không hợp lệ):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Tại bước 5, nếu người dùng nhập số tiền nhỏ hơn hoặc bằng 0, hệ thống từ chối lưu.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống báo lỗi: "Số tiền thu nhập phải lớn hơn 0."<br>- *E2 (Chưa chọn ví tiếp nhận tiền):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.1: Nếu người dùng bỏ trống trường ví nhận, hệ thống hiển thị thông báo: "Vui lòng chọn ví tài chính để tiếp nhận khoản thu này."<br>- *E3 (Gián đoạn giao dịch cơ sở dữ liệu):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E3.1: Tại bước 6, nếu việc cập nhật bảng thu nhập hoặc cập nhật số dư ví gặp sự cố, hệ thống tự động hoàn tác toàn bộ giao dịch.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E3.2: Hệ thống thông báo người dùng thử lại sau, bảo đảm không có tình trạng số dư ví tăng nhưng không có lịch sử thu nhập. |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Toàn vẹn giao dịch (ACID):* Việc ghi nhận bản ghi thu nhập và tăng số dư ví tiếp nhận bắt buộc thực hiện trong cùng một Database Transaction nguyên tử.<br>- *Thời gian phản hồi:* Quá trình ghi nhận hoàn tất trong vòng 400 mili-giây. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Thêm khoản thu nhập thành công với dữ liệu hợp lệ**<br>• *Điều kiện (Given):* Người dùng đang ở màn hình Thêm thu nhập và Ví Tiền Mặt có số dư là 1,000,000 VND.<br>• *Khi (When):* Người dùng nhập số tiền 5,000,000 VND, chọn ví nhận là Ví Tiền Mặt, nguồn thu là "Lương chính" và nhấn "Lưu thu nhập".<br>• *Thì (Then):* Hệ thống lưu bản ghi thu nhập mới, cập nhật số dư Ví Tiền Mặt thành 6,000,000 VND và hiển thị thông báo "Thêm khoản thu nhập thành công".<br><br>**Kịch bản 2: Thêm khoản thu nhập thất bại do số tiền bằng 0**<br>• *Điều kiện (Given):* Người dùng đang ở màn hình Thêm thu nhập.<br>• *Khi (When):* Người dùng nhập số tiền là "0 VND" và nhấn "Lưu thu nhập".<br>• *Thì (Then):* Hệ thống từ chối lưu dữ liệu, hiển thị thông báo lỗi "Số tiền thu nhập phải lớn hơn 0" và số dư các ví giữ nguyên. |
+
+---
+
+### UC-02.02: Xem danh sách thu nhập
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Xem danh sách thu nhập** |
+| **2. Mã Use Case (UC ID)** | `UC-02.02` |
+| **3. Mức độ ưu tiên** | Bắt buộc |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cho phép người dùng tra cứu toàn bộ lịch sử các khoản thu nhập đã ghi nhận trong hệ thống; hỗ trợ lọc dữ liệu linh hoạt theo khoảng thời gian, theo từng ví tiếp nhận và theo từng nguồn thu nhập. |
+| **6. Điểm kích hoạt (Trigger)** | Người dùng chọn mục "Thu nhập" trên thanh menu điều hướng chính của ứng dụng. |
+| **7. Tiền điều kiện (Pre-conditions)** | Người dùng đã đăng nhập thành công vào hệ thống. |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Hệ thống hiển thị danh sách các khoản thu nhập thỏa mãn điều kiện lọc, tổng số tiền thu được trong kỳ và biểu đồ cơ cấu nguồn thu.<br>- *Thất bại:* Hệ thống hiển thị thông báo lỗi nếu không thể truy vấn dữ liệu. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Người dùng chọn mục "Thu nhập" từ menu điều hướng.<br>2. Hệ thống mặc định thiết lập khoảng thời gian là tháng hiện tại và truy vấn toàn bộ các khoản thu nhập của người dùng trong khoảng thời gian này.<br>3. Hệ thống tính toán tổng tiền thu nhập trong kỳ hiển thị nổi bật tại đầu trang.<br>4. Hệ thống hiển thị danh sách các khoản thu nhập được sắp xếp theo thứ tự thời gian giảm dần (khoản thu mới nhất hiển thị trên cùng). Mỗi dòng hiển thị: Ngày nhận, Nguồn thu, Tên ví tiếp nhận, Số tiền và Ghi chú vắn tắt.<br>5. Người dùng có thể cuộn danh sách để xem chi tiết từng giao dịch. |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Lọc danh sách theo tiêu chí tùy chọn):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Tại bước 4, người dùng chọn bộ lọc theo khoảng thời gian (Tuần này, Tháng này, Năm nay, hoặc Tùy chọn từ ngày... đến ngày...).<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Người dùng có thể chọn thêm bộ lọc theo Ví cụ thể hoặc Nguồn thu nhập cụ thể.<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.3: Hệ thống tự động truy vấn lại cơ sở dữ liệu, cập nhật lại tổng số tiền và kết xuất danh sách giao dịch thỏa mãn điều kiện lọc. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Không có dữ liệu thu nhập trong khoảng thời gian đã chọn):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Tại bước 2 hoặc bước A1.3, nếu kết quả truy vấn không có bản ghi nào, hệ thống không báo lỗi kỹ thuật.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống hiển thị giao diện thông báo thân thiện: "Chưa có khoản thu nhập nào trong khoảng thời gian này" kèm nút gợi ý "Thêm thu nhập mới". |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Hiệu năng truy vấn:* Danh sách thu nhập phải tải và hiển thị trong vòng dưới 300 mili-giây với tập dữ liệu lên đến 10,000 bản ghi nhờ chỉ mục (Index) trên các cột `userId`, `transactionDate`, `walletId`.<br>- *Phân trang dữ liệu:* Áp dụng cơ chế phân trang (Pagination) 20 bản ghi mỗi trang để tối ưu hóa bộ nhớ và tốc độ hiển thị. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Xem danh sách thu nhập tháng hiện tại thành công**<br>• *Điều kiện (Given):* Người dùng đã đăng nhập và có 3 khoản thu nhập trong tháng 09/2026 với tổng số tiền 15,000,000 VND.<br>• *Khi (When):* Người dùng truy cập vào mục "Thu nhập".<br>• *Thì (Then):* Hệ thống hiển thị tổng thu nhập là 15,000,000 VND và danh sách gồm đúng 3 khoản thu nhập được sắp xếp theo thời gian mới nhất.<br><br>**Kịch bản 2: Lọc danh sách thu nhập theo ví cụ thể**<br>• *Điều kiện (Given):* Người dùng đang ở màn hình danh sách thu nhập.<br>• *Khi (When):* Người dùng chọn bộ lọc ví là "Tài khoản Ngân hàng Vietcombank".<br>• *Thì (Then):* Hệ thống chỉ hiển thị các khoản thu nhập được chuyển vào ví Vietcombank và tính lại tổng tiền tương ứng. |
+
+---
+
+### UC-02.03: Xem chi tiết khoản thu nhập
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Xem chi tiết khoản thu nhập** |
+| **2. Mã Use Case (UC ID)** | `UC-02.03` |
+| **3. Mức độ ưu tiên** | Trung bình |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cho phép người dùng xem đầy đủ các thuộc tính chi tiết của một khoản thu nhập đã lưu trong hệ thống gồm số tiền, thời gian ghi nhận, ví tiếp nhận, nguồn thu, ghi chú và chứng từ đính kèm (nếu có). |
+| **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn chọn một dòng khoản thu nhập trong danh sách thu nhập. |
+| **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập vào hệ thống.<br>2. Khoản thu nhập được chọn tồn tại trong hệ thống và thuộc quyền sở hữu của người dùng. |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Hệ thống hiển thị màn hình chi tiết với toàn bộ thông tin của khoản thu nhập kèm các nút hành động "Chỉnh sửa" và "Xóa".<br>- *Thất bại:* Hệ thống hiển thị thông báo lỗi nếu không tìm thấy khoản thu. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Người dùng nhấn vào một khoản thu nhập trong danh sách thu nhập.<br>2. Hệ thống tiếp nhận mã giao dịch `transactionId` và truy xuất dữ liệu từ bảng `IncomeTransactions` kết hợp với bảng `Wallets` để lấy tên ví.<br>3. Hệ thống hiển thị màn hình chi tiết khoản thu nhập gồm:<br>&nbsp;&nbsp;&nbsp;&nbsp;• Số tiền thu nhập (định dạng tiền tệ rõ ràng).<br>&nbsp;&nbsp;&nbsp;&nbsp;• Nguồn thu nhập (kèm biểu tượng phân loại).<br>&nbsp;&nbsp;&nbsp;&nbsp;• Tên ví tiếp nhận tiền.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Ngày và giờ giao dịch được ghi nhận.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Ghi chú giải trình chi tiết.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Hình ảnh chứng từ hoặc hóa đơn đính kèm (nếu có).<br>4. Hệ thống cung cấp hai nút thao tác nhanh: "Chỉnh sửa" (điều hướng sang UC-02.04) và "Xóa" (điều hướng sang UC-02.05). |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Xem ảnh chứng từ phóng to):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Tại bước 3, người dùng nhấn vào hình ảnh chứng từ đính kèm.<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Hệ thống mở trình xem ảnh toàn màn hình với độ phân giải rõ nét để người dùng kiểm tra thông tin. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Khoản thu nhập không tồn tại hoặc đã bị xóa):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Nếu khoản thu nhập đã bị xóa từ một phiên làm việc khác, hệ thống thông báo: "Khoản thu nhập này không tồn tại hoặc đã bị xóa."<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống tự động điều hướng người dùng quay lại danh sách thu nhập đã được cập nhật mới. |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Kiểm soát quyền truy cập:* Bắt buộc kiểm tra quyền sở hữu `userId = @currentUserId`, nghiêm cấm người dùng xem chi tiết khoản thu nhập của tài khoản khác.<br>- *Thời gian phản hồi:* Màn hình chi tiết hiển thị trong vòng 200 mili-giây. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Xem chi tiết khoản thu nhập thành công**<br>• *Điều kiện (Given):* Khoản thu nhập mang mã "INC-001" có số tiền 10,000,000 VND thuộc quyền sở hữu của người dùng.<br>• *Khi (When):* Người dùng nhấn vào khoản thu nhập "INC-001" trên danh sách.<br>• *Thì (Then):* Hệ thống hiển thị đầy đủ thông tin số tiền 10,000,000 VND, tên ví tiếp nhận, ngày giao dịch và các nút thao tác "Chỉnh sửa", "Xóa". |
+
+---
+
+### UC-02.04: Chỉnh sửa khoản thu nhập
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Chỉnh sửa khoản thu nhập** |
+| **2. Mã Use Case (UC ID)** | `UC-02.04` |
+| **3. Mức độ ưu tiên** | Bắt buộc |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cho phép người dùng chỉnh sửa các thông tin của khoản thu nhập đã lưu (số tiền, ngày nhận, ví tiếp nhận, nguồn thu, ghi chú); hệ thống tự động tính toán lại chênh lệch số dư và đồng bộ chuẩn xác với các ví tài chính liên quan. |
+| **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn nút "Chỉnh sửa" tại màn hình chi tiết khoản thu nhập. |
+| **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập vào hệ thống.<br>2. Khoản thu nhập cần chỉnh sửa đang tồn tại hợp lệ trong cơ sở dữ liệu. |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Thông tin khoản thu nhập được cập nhật; số dư của ví tiếp nhận được điều chỉnh theo đúng khoản chênh lệch (hoặc hoàn trả ví cũ và cộng tiền vào ví mới nếu người dùng thay đổi ví); tổng tài sản ròng được cập nhật lại.<br>- *Thất bại:* Thông tin khoản thu nhập và số dư các ví giữ nguyên vẹn. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Người dùng nhấn nút "Chỉnh sửa" tại màn hình chi tiết khoản thu nhập.<br>2. Hệ thống hiển thị biểu mẫu chỉnh sửa với đầy đủ dữ liệu hiện tại của khoản thu nhập.<br>3. Người dùng thực hiện sửa đổi các thông tin mong muốn (ví dụ: điều chỉnh số tiền từ 5,000,000 VND lên 6,000,000 VND, hoặc đổi ví nhận tiền).<br>4. Người dùng nhấn nút "Lưu thay đổi".<br>5. Hệ thống kiểm tra tính hợp lệ của dữ liệu mới: Số tiền phải lớn hơn 0, ví tiếp nhận phải đang hoạt động.<br>6. Hệ thống mở giao dịch cơ sở dữ liệu toàn vẹn:<br>&nbsp;&nbsp;&nbsp;&nbsp;• Trường hợp 1: Không đổi ví tiếp nhận:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Tính toán khoản chênh lệch: `khoản_chênh_lệch = số_tiền_mới - số_tiền_cũ`.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Cập nhật số dư ví: `UPDATE Wallets SET balance = balance + @khoan_chênh_lệch WHERE walletId = @walletId`.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Trường hợp 2: Thay đổi ví tiếp nhận (từ Ví A sang Ví B):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Khấu trừ số tiền cũ khỏi Ví A: `UPDATE Wallets SET balance = balance - @số_tiền_cũ WHERE walletId = @ví_A`.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Cộng số tiền mới vào Ví B: `UPDATE Wallets SET balance = balance + @số_tiền_mới WHERE walletId = @ví_B`.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Cập nhật thông tin giao dịch trong bảng `IncomeTransactions`.<br>7. Hệ thống hoàn tất giao dịch lưu trữ.<br>8. Hệ thống tính toán lại tổng tài sản ròng và hiển thị thông báo "Cập nhật khoản thu nhập thành công". |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Người dùng hủy bỏ thao tác chỉnh sửa):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Tại bước 3, người dùng nhấn nút "Hủy bỏ".<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Hệ thống đóng biểu mẫu chỉnh sửa, giữ nguyên mọi dữ liệu cũ và quay về màn hình chi tiết. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Số tiền chỉnh sửa không hợp lệ):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Tại bước 5, nếu người dùng nhập số tiền $\le 0$, hệ thống dừng xử lý.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống báo lỗi: "Số tiền thu nhập phải lớn hơn 0."<br>- *E2 (Số dư ví cũ không đủ để khấu trừ khi đổi ví):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.1: Trong trường hợp thay đổi ví tiếp nhận, nếu số dư hiện tại của Ví A nhỏ hơn số tiền cũ cần khấu trừ và ví đó không hỗ trợ số dư âm, hệ thống hiển thị cảnh báo.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.2: Hệ thống yêu cầu xác nhận: "Số dư ví hiện tại không đủ để hoàn trả giao dịch cũ. Bạn có muốn tiếp tục và chấp nhận số dư ví bị âm không?".<br>- *E3 (Lỗi giao dịch cơ sở dữ liệu):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E3.1: Nếu việc cập nhật số dư hoặc giao dịch gặp lỗi, hệ thống tự động hoàn tác toàn bộ.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E3.2: Hệ thống thông báo lỗi và giữ nguyên trạng thái cũ. |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Toàn vẹn số dư (ACID):* Việc điều chỉnh số dư ví và cập nhật thông tin khoản thu nhập bắt buộc phải thực thi đồng thời trong một giao dịch cơ sở dữ liệu nguyên tử.<br>- *Thời gian phản hồi:* Xử lý lưu thay đổi hoàn tất trong vòng 400 mili-giây. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Chỉnh sửa số tiền thu nhập thành công trên cùng một ví**<br>• *Điều kiện (Given):* Khoản thu nhập 2,000,000 VND gắn với Ví Tiền Mặt (số dư hiện tại 5,000,000 VND).<br>• *Khi (When):* Người dùng chỉnh sửa số tiền thành 3,000,000 VND và nhấn "Lưu thay đổi".<br>• *Thì (Then):* Hệ thống cập nhật số tiền khoản thu thành 3,000,000 VND, tự động tăng số dư Ví Tiền Mặt lên 6,000,000 VND và thông báo thành công.<br><br>**Kịch bản 2: Thay đổi ví tiếp nhận tiền thành công**<br>• *Điều kiện (Given):* Khoản thu nhập 1,000,000 VND đang gắn với Ví A (số dư 3,000,000 VND) và Ví B có số dư 2,000,000 VND.<br>• *Khi (When):* Người dùng chuyển ví tiếp nhận từ Ví A sang Ví B với số tiền giữ nguyên 1,000,000 VND và lưu thay đổi.<br>• *Thì (Then):* Số dư Ví A giảm còn 2,000,000 VND, số dư Ví B tăng lên 3,000,000 VND và giao dịch được gắn sang Ví B. |
+
+---
+
+### UC-02.05: Xóa khoản thu nhập
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Xóa khoản thu nhập** |
+| **2. Mã Use Case (UC ID)** | `UC-02.05` |
+| **3. Mức độ ưu tiên** | Bắt buộc |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cho phép người dùng xóa một khoản thu nhập đã ghi nhận nhầm; hệ thống tự động hoàn tác và khấu trừ đúng số tiền đó khỏi ví tiếp nhận tương ứng trong một giao dịch an toàn. |
+| **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn nút "Xóa" tại màn hình chi tiết khoản thu nhập hoặc thao tác gạt xóa nhanh trên danh sách. |
+| **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập vào hệ thống.<br>2. Khoản thu nhập cần xóa tồn tại hợp lệ và thuộc quyền sở hữu của người dùng. |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Khoản thu nhập bị xóa khỏi hệ thống (hoặc đánh dấu trạng thái đã xóa); số dư của ví tiếp nhận bị giảm đi đúng bằng số tiền thu nhập vừa xóa; tổng tài sản ròng được cập nhật lại.<br>- *Thất bại:* Khoản thu nhập và số dư ví tiếp nhận được giữ nguyên trạng thái ban đầu. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Người dùng chọn chức năng "Xóa" đối với một khoản thu nhập.<br>2. Hệ thống hiển thị hộp thoại xác nhận cảnh báo: "Khoản tiền này sẽ được khấu trừ khỏi số dư của ví tiếp nhận tương ứng. Bạn có chắc chắn muốn xóa không?".<br>3. Người dùng nhấn nút "Xác nhận xóa".<br>4. Hệ thống mở giao dịch cơ sở dữ liệu:<br>&nbsp;&nbsp;&nbsp;&nbsp;• Khấu trừ số tiền thu nhập khỏi số dư của ví tiếp nhận: `UPDATE Wallets SET balance = balance - @amount WHERE walletId = @walletId`.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Thực hiện xóa bản ghi (hoặc cập nhật cờ xóa mềm `isDeleted = 1`) trong bảng `IncomeTransactions`.<br>5. Hệ thống tính toán lại tổng tài sản ròng và dòng tiền trong kỳ của người dùng.<br>6. Hệ thống hoàn tất giao dịch lưu trữ.<br>7. Hệ thống hiển thị thông báo "Xóa khoản thu nhập thành công" và điều hướng người dùng quay lại danh sách thu nhập. |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Người dùng hủy bỏ việc xóa):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Tại bước 2, người dùng nhấn nút "Hủy bỏ".<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Hệ thống đóng hộp thoại xác nhận và giữ nguyên toàn bộ dữ liệu. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Số dư ví không đủ để khấu trừ khoản thu):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Tại bước 4, nếu số dư hiện tại của ví nhỏ hơn số tiền cần khấu trừ (do người dùng đã chi tiêu hết tiền), hệ thống hiển thị cảnh báo chi tiết.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống yêu cầu xác nhận: "Số dư hiện tại của ví chỉ còn ít hơn số tiền cần trừ. Việc xóa khoản thu này sẽ làm số dư ví bị âm. Bạn có chắc chắn muốn tiếp tục?".<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.3: Nếu người dùng đồng ý, hệ thống tiếp tục xử lý; nếu không, hệ thống hủy thao tác xóa.<br>- *E2 (Lỗi kết nối cơ sở dữ liệu):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.1: Nếu quá trình xóa bị gián đoạn, hệ thống tự động hoàn tác toàn bộ giao dịch.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.2: Hệ thống hiển thị thông báo lỗi và bảo toàn số dư ví. |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Tính toàn vẹn giao dịch (ACID):* Việc giảm số dư ví và xóa bản ghi thu nhập bắt buộc thực hiện trong cùng một giao dịch nguyên tử để tránh sai lệch sổ sách kế toán.<br>- *Thời gian phản hồi:* Thao tác xóa hoàn tất trong vòng 300 mili-giây. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Xóa khoản thu nhập thành công và hoàn tác số dư ví**<br>• *Điều kiện (Given):* Khoản thu nhập 3,000,000 VND gắn với Ví Tiền Mặt (số dư hiện tại là 7,000,000 VND).<br>• *Khi (When):* Người dùng nhấn xóa khoản thu nhập này và xác nhận trong hộp thoại cảnh báo.<br>• *Thì (Then):* Hệ thống xóa bản ghi thu nhập, tự động giảm số dư Ví Tiền Mặt xuống còn 4,000,000 VND và thông báo "Xóa khoản thu nhập thành công".<br><br>**Kịch bản 2: Người dùng hủy thao tác xóa**<br>• *Điều kiện (Given):* Người dùng đang ở hộp thoại xác nhận xóa khoản thu nhập.<br>• *Khi (When):* Người dùng nhấn nút "Hủy bỏ".<br>• *Thì (Then):* Hệ thống đóng hộp thoại, khoản thu nhập không bị xóa và số dư ví được giữ nguyên vẹn. |
+
+---
+
+### UC-02.06: Phân loại nguồn thu nhập
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Phân loại nguồn thu nhập** |
+| **2. Mã Use Case (UC ID)** | `UC-02.06` |
+| **3. Mức độ ưu tiên** | Bắt buộc |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cung cấp danh mục phân loại các nguồn thu nhập chuẩn mực (Lương chính, Tiền thưởng, Thu nhập làm thêm ngoài giờ, Thu nhập đầu tư sinh lời, Thanh lý tài sản, Thu nhập khác) nhằm phục vụ công tác phân tích cơ cấu dòng tiền vào và đánh giá mức độ độc lập tài chính. |
+| **6. Điểm kích hoạt (Trigger)** | Được kích hoạt tự động khi người dùng tạo hoặc chỉnh sửa thu nhập (`<<include>>`), hoặc khi người dùng truy cập mục "Quản lý nguồn thu". |
+| **7. Tiền điều kiện (Pre-conditions)** | Người dùng đã đăng nhập thành công vào hệ thống. |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Khoản thu nhập được gắn đúng danh mục nguồn thu; hệ thống cập nhật biểu đồ tỷ trọng phân bổ nguồn tiền vào.<br>- *Thất bại:* Hệ thống giữ nguyên trạng thái danh mục nguồn thu hiện tại. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Khi người dùng thực hiện tạo mới (UC-02.01) hoặc chỉnh sửa (UC-02.04) khoản thu nhập, hệ thống tự động tải danh sách các nguồn thu nhập khả dụng.<br>2. Hệ thống hiển thị danh sách phân loại nguồn thu gồm hai nhóm chính:<br>&nbsp;&nbsp;&nbsp;&nbsp;• Thu nhập chủ động (Active Income): Lương chính thức, Tiền thưởng hiệu quả công việc, Thù lao làm thêm ngoài giờ (Freelance).<br>&nbsp;&nbsp;&nbsp;&nbsp;• Thu nhập thụ động (Passive Income): Tiền lãi gửi tiết kiệm, Cổ tức đầu tư, Tiền cho thuê nhà, Lợi nhuận kinh doanh.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Thu nhập khác: Tiền được biếu tặng, Bán thanh lý đồ cũ, Trúng thưởng.<br>3. Người dùng lựa chọn nguồn thu phù hợp nhất với khoản tiền nhận được.<br>4. Hệ thống ghi nhận mã nguồn thu tương ứng vào giao dịch thu nhập để phục vụ việc tổng hợp báo cáo tài chính đa chiều. |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Tạo thêm nguồn thu nhập tùy chỉnh):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Người dùng truy cập trang "Cài đặt nguồn thu" và nhấn "Thêm nguồn thu mới".<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Người dùng nhập tên nguồn thu tùy chỉnh (ví dụ: "Dạy kèm buổi tối"), chọn nhóm thu nhập và chọn biểu tượng hiển thị.<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.3: Hệ thống lưu nguồn thu mới vào danh mục cá nhân của người dùng để sử dụng cho các lần ghi chép tiếp theo. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Tên nguồn thu tùy chỉnh bị trùng lặp):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Nếu người dùng tạo nguồn thu có tên trùng với nguồn thu đã tồn tại, hệ thống báo lỗi.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống yêu cầu: "Tên nguồn thu này đã tồn tại trong danh mục. Vui lòng chọn tên khác."<br>- *E2 (Xóa nguồn thu đang có giao dịch phát sinh):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.1: Nếu người dùng yêu cầu xóa một nguồn thu tùy chỉnh đang được gắn với các giao dịch cũ, hệ thống từ chối xóa trực tiếp.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.2: Hệ thống yêu cầu chuyển các giao dịch cũ sang nguồn thu khác trước khi xóa. |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Tiêu chuẩn dữ liệu:* Các nhóm nguồn thu được chuẩn hóa theo nguyên lý tài chính cá nhân để hỗ trợ tính toán chỉ số độc lập tài chính (Tỷ lệ thu nhập thụ động trên tổng chi phí).<br>- *Thời gian phản hồi:* Danh mục nguồn thu tải tức thì dưới 100 mili-giây. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Chọn nguồn thu nhập chủ động khi tạo khoản thu**<br>• *Điều kiện (Given):* Người dùng đang ở biểu mẫu thêm khoản thu nhập.<br>• *Khi (When):* Người dùng mở danh sách phân loại và chọn nguồn thu "Lương chính thức".<br>• *Thì (Then):* Hệ thống gắn nguồn thu "Lương chính thức" vào giao dịch và hiển thị biểu tượng tương ứng.<br><br>**Kịch bản 2: Tạo thêm nguồn thu nhập tùy chỉnh thành công**<br>• *Điều kiện (Given):* Người dùng đang ở màn hình Quản lý nguồn thu.<br>• *Khi (When):* Người dùng thêm nguồn thu "Dạy thêm ngoại ngữ" thuộc nhóm "Thu nhập chủ động" và nhấn lưu.<br>• *Thì (Then):* Hệ thống lưu nguồn thu mới và hiển thị trong danh mục lựa chọn khi ghi nhận thu nhập. |
+
+---
+
+### UC-02.07: Quản lý thu nhập định kỳ
+
+| Thuộc tính (Mục) | Nội dung đặc tả chi tiết |
+| :--- | :--- |
+| **1. Tên Use Case** | **Quản lý thu nhập định kỳ** |
+| **2. Mã Use Case (UC ID)** | `UC-02.07` |
+| **3. Mức độ ưu tiên** | Cao |
+| **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **5. Mô tả tóm tắt** | Cho phép người dùng thiết lập các khoản thu nhập có chu kỳ lặp lại cố định (như tiền lương nhận vào ngày cố định hàng tháng, tiền cho thuê nhà định kỳ, lãi tiết kiệm); hệ thống tự động dự phóng dòng tiền vào trong chu kỳ ngân sách và hỗ trợ ghi nhận tự động hoặc gửi thông báo nhắc nhở khi đến ngày nhận tiền. |
+| **6. Điểm kích hoạt (Trigger)** | Người dùng chọn chức năng "Thu nhập định kỳ" trong màn hình quản lý thu nhập hoặc tại trang cài đặt ngân sách. |
+| **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập vào hệ thống.<br>2. Người dùng có ít nhất một ví tài chính đang hoạt động để làm ví tiếp nhận mặc định. |
+| **8. Hậu điều kiện (Post-conditions)** | - *Thành công:* Lịch thu nhập định kỳ được tạo và lưu vào bảng `RecurringIncomes`; các thuật toán dự phóng dòng tiền và tính toán hạn mức chi tiêu mỗi ngày (Adaptive DSA) tự động cập nhật mốc thu nhập dự kiến.<br>- *Thất bại:* Lịch thu nhập định kỳ không được tạo; hệ thống thông báo nguyên nhân lỗi. |
+| **9. Luồng sự kiện chính (Basic Flow)** | 1. Người dùng chọn mục "Thu nhập định kỳ" và nhấn nút "Tạo lịch thu mới".<br>2. Hệ thống hiển thị biểu mẫu thiết lập gồm: Tên khoản thu định kỳ, Số tiền dự kiến, Ví tiếp nhận mặc định, Nguồn thu nhập, Tần suất lặp (Hàng tháng, Hàng tuần, Hàng quý), Ngày đến hạn nhận tiền (ví dụ: ngày nhận lương `salaryDay` từ 1 đến 31), và Tùy chọn xử lý khi đến ngày.<br>3. Người dùng nhập số tiền (ví dụ: 15,000,000 VND), tên khoản thu ("Lương hàng tháng"), chọn ví nhận ("Tài khoản Vietcombank"), chọn tần suất "Hàng tháng" và chọn ngày nhận là ngày 05.<br>4. Người dùng chọn hình thức thực thi: "Tự động ghi nhận vào sổ sách khi đến ngày" hoặc "Gửi thông báo nhắc nhở để xác nhận số tiền thực nhận".<br>5. Người dùng nhấn nút "Lưu lịch thu định kỳ".<br>6. Hệ thống kiểm tra tính hợp lệ của dữ liệu: Số tiền lớn hơn 0, ngày nhận tiền hợp lệ từ 1 đến 31.<br>7. Hệ thống lưu bản ghi vào bảng `RecurringIncomes` và tính toán ngày đến hạn tiếp theo `nextDueDate`.<br>8. Hệ thống thông báo "Thiết lập thu nhập định kỳ thành công" và hiển thị khoản thu trong danh sách quản lý lịch thu. |
+| **10. Luồng phụ (Alternative Flows)** | - *A1 (Tạm dừng hoặc kích hoạt lại lịch thu nhập định kỳ):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.1: Người dùng chọn một lịch thu trong danh sách và gạt nút chuyển đổi trạng thái (Bật/Tắt).<br>&nbsp;&nbsp;&nbsp;&nbsp;• A1.2: Hệ thống cập nhật cờ `isActive = 0` (tạm dừng) hoặc `isActive = 1` (kích hoạt lại) và điều chỉnh lại dự phóng dòng tiền.<br>- *A2 (Hệ thống tự động kích hoạt khi đến ngày hẹn):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• A2.1: Vào ngày đến hạn, tác vụ ngầm của hệ thống kiểm tra các lịch thu có tùy chọn tự động ghi nhận.<br>&nbsp;&nbsp;&nbsp;&nbsp;• A2.2: Hệ thống tự động sinh một giao dịch thu nhập mới vào bảng `IncomeTransactions`, tăng số dư ví tiếp nhận và gửi thông báo cho người dùng. |
+| **11. Luồng ngoại lệ (Exception Flows)** | - *E1 (Ngày nhận tiền trong tháng không tồn tại đối với tháng ngắn):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.1: Nếu người dùng đặt ngày nhận lương là ngày 31, nhưng tháng hiện tại chỉ có 30 ngày (hoặc tháng 2 có 28/29 ngày), hệ thống tự động căn chỉnh ngày đến hạn về ngày cuối cùng của tháng đó.<br>&nbsp;&nbsp;&nbsp;&nbsp;• E1.2: Hệ thống ghi nhận chính xác mà không báo lỗi kỹ thuật.<br>- *E2 (Số tiền dự kiến không hợp lệ):*<br>&nbsp;&nbsp;&nbsp;&nbsp;• E2.1: Tại bước 6, nếu người dùng nhập số tiền $\le 0$, hệ thống yêu cầu nhập số tiền dương hợp lệ. |
+| **12. Yêu cầu phi chức năng & Bảo mật** | - *Tự động hóa chính xác:* Bộ lập lịch tác vụ nền (Scheduler Worker) kiểm tra định kỳ hàng ngày lúc 00:05 sáng để kích hoạt các giao dịch đến hạn, bảo đảm tính kịp thời và không trùng lặp giao dịch (Idempotency).<br>- *Thời gian phản hồi:* Thao tác tạo lịch thu hoàn tất trong vòng 300 mili-giây. |
+| **13. Tiêu chí nghiệm thu (Acceptance Criteria)** | **Kịch bản 1: Thiết lập thu nhập định kỳ thành công**<br>• *Điều kiện (Given):* Người dùng đang ở màn hình Quản lý thu nhập định kỳ.<br>• *Khi (When):* Người dùng nhập tên "Lương công ty", số tiền 20,000,000 VND, tần suất "Hàng tháng", ngày nhận là ngày 10, chọn ví Vietcombank và nhấn lưu.<br>• *Thì (Then):* Hệ thống lưu lịch thu định kỳ mới với trạng thái kích hoạt, tính ngày đến hạn tiếp theo là ngày 10 của tháng tới và hiển thị thông báo thành công.<br><br>**Kịch bản 2: Tự động căn chỉnh ngày nhận đối với tháng ngắn**<br>• *Điều kiện (Given):* Khoản thu định kỳ được thiết lập nhận vào ngày 31 hàng tháng.<br>• *Khi (When):* Đến kỳ hạn của tháng 02 (năm không nhuận có 28 ngày).<br>• *Thì (Then):* Hệ thống tự động căn chỉnh ngày đến hạn kích hoạt là ngày 28/02 và thực hiện đúng quy trình đã cấu hình. |
+
+---
+
+## TỔNG KẾT BÀN GIAO PHÂN HỆ 2
+
+Toàn bộ **7 Use Cases (UC-02.01 đến UC-02.07)** của Phân hệ Quản lý Thu nhập Cá nhân đã được đặc tả hoàn chỉnh 100% theo đúng cấu trúc **Bảng Dọc 2 x N chuẩn IEEE 29148**.
+- Tuân thủ 100% quy chuẩn văn phong học thuật KLTN tiếng Việt tự nhiên, không chêm tiếng Anh bừa bãi và không có chú thích rườm rà.
+- 100% các hàng của bảng đều nằm trên một dòng duy nhất theo chuẩn cú pháp Markdown, bảo đảm hiển thị hoàn hảo trên mọi trình xem trước (Markdown Preview).
+- Sẵn sàng chuyển giao để tích hợp trực tiếp vào **Mục 3.2 trong Chương 3 Khóa luận tốt nghiệp (`KhoaLuanTotNghiep.docx`)**.
+- Các quy tắc nghiệp vụ, ràng buộc dữ liệu khớp hoàn toàn với Sơ đồ Use Case [`files/UCD-DuoNoPro.drawio`](../../files/UCD-DuoNoPro.drawio) và Sơ đồ lớp [`files/class_diagram_pfm_lab3.drawio`](../../files/class_diagram_pfm_lab3.drawio).

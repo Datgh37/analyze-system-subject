@@ -1,0 +1,492 @@
+<mxfile host="app.diagrams.net" agent="Antigravity PFM System Designer" pages="10">
+  <diagram id="diag_ucd00" name="UCD 00 - Tổng Quát">
+    <mxGraphModel dx="1810" dy="967" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t1_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;" value="&lt;b&gt;Người dùng cá nhân&lt;/b&gt;&lt;br&gt;(Personal User)" vertex="1">
+          <mxGeometry height="120" width="60" x="60" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_ai" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;" value="&lt;b&gt;AI Service&lt;/b&gt;&lt;br&gt;(External API)" vertex="1">
+          <mxGeometry height="120" width="60" x="1450" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_ocr" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;" value="&lt;b&gt;OCR Service&lt;/b&gt;&lt;br&gt;(External API)" vertex="1">
+          <mxGeometry height="120" width="60" x="1450" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_notify" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;" value="&lt;b&gt;Notification Service&lt;/b&gt;&lt;br&gt;(Push Alert)" vertex="1">
+          <mxGeometry height="120" width="60" x="1450" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=15;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="SMART EXPENSE &amp;amp; BUDGET MANAGER (SƠ ĐỒ UCD TỔNG QUÁT HỆ THỐNG)" vertex="1">
+          <mxGeometry height="880" width="1200" x="190" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc01" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-01: Quản lý tài khoản&lt;/b&gt;&lt;br&gt;&lt;i&gt;(User Profile &amp;amp; Security)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="75" width="310" x="80" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc02" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-02: Quản lý thu nhập&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Income Streams)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="75" width="310" x="80" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc03" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-03: Quản lý chi tiêu&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Expense &amp;amp; OCR Parsing)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="75" width="310" x="500" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc04" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-04: Quản lý danh mục&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Expense Categories)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="75" width="310" x="80" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc05" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-05: Quản lý ngân sách&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Adaptive Budgeting Core)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="330" x="485" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc07" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07: Phân tích tài chính&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Cashflow &amp;amp; Spending Velocity)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="320" x="490" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc08" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-08: Dự báo chi tiêu &amp;amp; rủi ro&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Risk &amp;amp; Runout Projection)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="320" x="810" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc09" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-09: Hỗ trợ quyết định tài chính&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Decision Support &amp;amp; Nudges)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="90" width="320" x="790" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="t1_uc06" parent="t1_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-06: Quản lý mục tiêu tài chính&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Savings &amp;amp; Emergency Fund)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="330" x="80" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc08" edge="1" parent="t1_boundary" source="t1_uc06" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;" target="t1_uc08">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc01" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc02" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc03" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc03">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_u_uc04" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc05" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc05">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc06" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc06">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc07" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc07">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_uc09" edge="1" parent="1" source="t1_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="t1_uc09">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ocr_uc03" edge="1" parent="1" source="t1_ocr" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;" target="t1_uc03">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="607.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ai_uc08" edge="1" parent="1" source="t1_ai" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="t1_uc08">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_notify_uc09" edge="1" parent="1" source="t1_notify" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=15;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="t1_uc09">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd01" name="UCD 01 - Tài Khoản">
+    <mxGraphModel dx="1551" dy="829" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t2_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="80" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ TÀI KHOẢN (UC-01)" vertex="1">
+          <mxGeometry height="600" width="800" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_uc01" parent="t2_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-01.01:&lt;/b&gt; Đăng ký tài khoản" vertex="1">
+          <mxGeometry height="65" width="280" x="260" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_uc02" parent="t2_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-01.02:&lt;/b&gt; Đăng nhập" vertex="1">
+          <mxGeometry height="65" width="280" x="260" y="228" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_uc03" parent="t2_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-01.03:&lt;/b&gt; Đăng xuất" vertex="1">
+          <mxGeometry height="65" width="280" x="265" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_uc04" parent="t2_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-01.04:&lt;/b&gt; Quản lý thông tin cá nhân" vertex="1">
+          <mxGeometry height="65" width="290" x="255" y="144" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_uc05" parent="t2_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-01.05:&lt;/b&gt; Đổi mật khẩu" vertex="1">
+          <mxGeometry height="65" width="290" x="255" y="312" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_uc06" parent="t2_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-01.06:&lt;/b&gt; Quên / Khôi phục mật khẩu" vertex="1">
+          <mxGeometry height="65" width="290" x="255" y="396" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_1" edge="1" parent="1" source="t2_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_2" edge="1" parent="1" source="t2_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_3" edge="1" parent="1" source="t2_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_4" edge="1" parent="1" source="t2_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2_uc04">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_t2_5" edge="1" parent="1" source="t2_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2_uc05">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_6" edge="1" parent="1" source="t2_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2_uc06">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd02" name="UCD 02 - Thu Nhập">
+    <mxGraphModel dx="1278" dy="682" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t3_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="80" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ THU NHẬP (UC-02)" vertex="1">
+          <mxGeometry height="520" width="760" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_uc01" parent="t3_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-02.01:&lt;/b&gt; Thêm khoản thu nhập&lt;br&gt;&lt;i&gt;(Định kỳ: lương / Phát sinh: thưởng)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="60" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_uc02" parent="t3_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-02.02:&lt;/b&gt; Xem danh sách thu nhập" vertex="1">
+          <mxGeometry height="75" width="310" x="60" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_uc03" parent="t3_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-02.03:&lt;/b&gt; Cập nhật thông tin thu nhập" vertex="1">
+          <mxGeometry height="70" width="280" x="440" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_uc04" parent="t3_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-02.04:&lt;/b&gt; Xóa khoản thu nhập" vertex="1">
+          <mxGeometry height="70" width="280" x="440" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t3_1" edge="1" parent="1" source="t3_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t3_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t3_2" edge="1" parent="1" source="t3_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t3_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t3_3" edge="1" parent="1" source="t3_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t3_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t3_4" edge="1" parent="1" source="t3_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t3_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd03" name="UCD 03 - Chi Tiêu">
+    <mxGraphModel dx="1358" dy="725" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t4_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="60" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_ocr" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;OCR Service&lt;/b&gt;&lt;br&gt;(External API)" vertex="1">
+          <mxGeometry height="120" width="60" x="1000" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ CHI TIÊU (UC-03)" vertex="1">
+          <mxGeometry height="580" width="760" x="190" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_uc01" parent="t4_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-03.01:&lt;/b&gt; Ghi nhận giao dịch chi tiêu" vertex="1">
+          <mxGeometry height="85" width="310" x="40" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_uc02" parent="t4_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-03.02:&lt;/b&gt; Xem danh sách giao dịch" vertex="1">
+          <mxGeometry height="70" width="310" x="40" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_uc03" parent="t4_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-03.03:&lt;/b&gt; Cập nhật giao dịch" vertex="1">
+          <mxGeometry height="65" width="280" x="50" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_uc04" parent="t4_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-03.04:&lt;/b&gt; Xóa giao dịch" vertex="1">
+          <mxGeometry height="65" width="260" x="380" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_uc05" parent="t4_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-03.05:&lt;/b&gt; Phân loại giao dịch chi tiêu" vertex="1">
+          <mxGeometry height="70" width="270" x="450" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t4_uc06" parent="t4_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-03.06:&lt;/b&gt; Nhận dạng thông tin từ hóa đơn&lt;br&gt;&lt;i&gt;(OCR Multimodal Parsing)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="280" x="450" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="inc_t4_1" edge="1" parent="t4_boundary" source="t4_uc01" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#8e44ad;fontFamily=Times New Roman;fontSize=14;fontColor=#8e44ad;" target="t4_uc05" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_t4_1" edge="1" parent="t4_boundary" source="t4_uc06" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#27ae60;fontFamily=Times New Roman;fontSize=14;fontColor=#27ae60;" target="t4_uc01" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t4_u1" edge="1" parent="1" source="t4_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t4_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t4_u2" edge="1" parent="1" source="t4_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t4_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t4_u3" edge="1" parent="1" source="t4_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t4_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t4_u4" edge="1" parent="1" source="t4_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t4_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t4_ocr" edge="1" parent="1" source="t4_ocr" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t4_uc06">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd04" name="UCD 04 - Danh Mục">
+    <mxGraphModel dx="1207" dy="644" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t5_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="80" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="t5_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ DANH MỤC (UC-04)" vertex="1">
+          <mxGeometry height="500" width="760" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t5_uc01" parent="t5_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-04.01:&lt;/b&gt; Tạo danh mục chi tiêu" vertex="1">
+          <mxGeometry height="70" width="280" x="60" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="t5_uc04" parent="t5_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-04.04:&lt;/b&gt; Xem danh mục chi tiêu&lt;br&gt;&lt;i&gt;(Cây phân cấp cha / con)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="75" width="280" x="60" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="t5_uc02" parent="t5_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-04.02:&lt;/b&gt; Cập nhật danh mục" vertex="1">
+          <mxGeometry height="70" width="270" x="440" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="t5_uc03" parent="t5_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-04.03:&lt;/b&gt; Xóa danh mục" vertex="1">
+          <mxGeometry height="70" width="270" x="440" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t5_1" edge="1" parent="1" source="t5_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t5_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t5_2" edge="1" parent="1" source="t5_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t5_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t5_3" edge="1" parent="1" source="t5_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t5_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t5_4" edge="1" parent="1" source="t5_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t5_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd05" name="UCD 05 - Ngân Sách">
+    <mxGraphModel dx="996" dy="642" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t6_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="80" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="t6_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ NGÂN SÁCH (UC-05)" vertex="1">
+          <mxGeometry height="540" width="820" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t6_uc01" parent="t6_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-05.01:&lt;/b&gt; Tạo ngân sách kỳ mới" vertex="1">
+          <mxGeometry height="80" width="310" x="50" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t6_uc02" parent="t6_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-05.02:&lt;/b&gt; Thiết lập ngân sách theo danh mục" vertex="1">
+          <mxGeometry height="80" width="320" x="460" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t6_uc03" parent="t6_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-05.03:&lt;/b&gt; Xem tình hình ngân sách" vertex="1">
+          <mxGeometry height="70" width="310" x="50" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="t6_uc04" parent="t6_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-05.04:&lt;/b&gt; Theo dõi ngân sách&lt;br&gt;&lt;i&gt;(So khớp tiến độ &amp;amp; hạn mức ngày DSA)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="330" x="50" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="t6_uc05" parent="t6_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-05.05:&lt;/b&gt; Điều chỉnh ngân sách&lt;br&gt;&lt;i&gt;(Tái cân đối danh mục thích ứng)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="320" x="460" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="inc_t6_1" edge="1" parent="t6_boundary" source="t6_uc01" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#8e44ad;fontFamily=Times New Roman;fontSize=14;fontColor=#8e44ad;" target="t6_uc02" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t6_1" edge="1" parent="1" source="t6_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t6_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t6_3" edge="1" parent="1" source="t6_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t6_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t6_4" edge="1" parent="1" source="t6_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t6_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t6_5" edge="1" parent="1" source="t6_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t6_uc05">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd06" name="UCD 06 - Mục Tiêu">
+    <mxGraphModel dx="1207" dy="644" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t7_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="80" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ MỤC TIÊU TÀI CHÍNH (UC-06)" vertex="1">
+          <mxGeometry height="520" width="780" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_uc01" parent="t7_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-06.01:&lt;/b&gt; Tạo mục tiêu tài chính mới&lt;br&gt;&lt;i&gt;(Quỹ khẩn cấp / Mua sắm / Tiết kiệm)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="60" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_uc03" parent="t7_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-06.03:&lt;/b&gt; Theo dõi tiến độ tích lũy" vertex="1">
+          <mxGeometry height="75" width="310" x="60" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_uc02" parent="t7_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-06.02:&lt;/b&gt; Cập nhật mục tiêu tài chính" vertex="1">
+          <mxGeometry height="70" width="280" x="450" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_uc04" parent="t7_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-06.04:&lt;/b&gt; Hoàn thành / Hủy mục tiêu" vertex="1">
+          <mxGeometry height="70" width="280" x="450" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t7_1" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t7_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t7_3" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t7_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t7_2" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t7_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t7_4" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t7_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd07" name="UCD 07 - Phân Tích">
+    <mxGraphModel dx="1278" dy="682" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t8_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="80" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="t8_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ PHÂN TÍCH TÀI CHÍNH (UC-07)" vertex="1">
+          <mxGeometry height="540" width="820" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t8_uc01" parent="t8_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.01:&lt;/b&gt; Phân tích cơ cấu thu nhập" vertex="1">
+          <mxGeometry height="70" width="290" x="60" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t8_uc02" parent="t8_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.02:&lt;/b&gt; Phân tích cơ cấu chi tiêu" vertex="1">
+          <mxGeometry height="70" width="290" x="60" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="t8_uc03" parent="t8_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.8;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.03:&lt;/b&gt; Phân tích xu hướng dòng tiền" vertex="1">
+          <mxGeometry height="75" width="310" x="450" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="t8_uc04" parent="t8_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-07.04:&lt;/b&gt; Đánh giá tình trạng ngân sách&lt;br&gt;&lt;i&gt;(Đo lường Spending Velocity &amp;amp; Ngày còn lại)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="330" x="440" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t8_1" edge="1" parent="1" source="t8_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t8_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t8_2" edge="1" parent="1" source="t8_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t8_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t8_3" edge="1" parent="1" source="t8_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t8_uc03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t8_4" edge="1" parent="1" source="t8_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t8_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd08" name="UCD 08 - Dự Báo">
+    <mxGraphModel dx="1358" dy="725" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t9_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(User)" vertex="1">
+          <mxGeometry height="120" width="60" x="60" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="t9_ai" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;AI Service&lt;/b&gt;&lt;br&gt;(External API)" vertex="1">
+          <mxGeometry height="120" width="60" x="1000" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="t9_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ DỰ BÁO CHI TIÊU &amp;amp; RỦI RO (UC-08)" vertex="1">
+          <mxGeometry height="520" width="760" x="190" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t9_uc01" parent="t9_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-08.01:&lt;/b&gt; Dự báo chi tiêu cuối kỳ&lt;br&gt;&lt;i&gt;(Time-series Projection)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="310" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="t9_uc02" parent="t9_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-08.02:&lt;/b&gt; Dự báo nguy cơ vượt ngân sách&lt;br&gt;&lt;i&gt;(Overrun Probability Estimation)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="300" x="420" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t9_uc03" parent="t9_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-08.03:&lt;/b&gt; Đánh giá mức độ rủi ro thâm hụt" vertex="1">
+          <mxGeometry height="75" width="300" x="420" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="inc_t9_1" edge="1" parent="t9_boundary" source="t9_uc01" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#8e44ad;fontFamily=Times New Roman;fontSize=14;fontColor=#8e44ad;" target="t9_uc02" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_t9_1" edge="1" parent="t9_boundary" source="t9_uc03" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#27ae60;fontFamily=Times New Roman;fontSize=14;fontColor=#27ae60;" target="t9_uc02" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t9_u1" edge="1" parent="1" source="t9_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t9_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t9_ai1" edge="1" parent="1" source="t9_ai" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t9_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t9_ai2" edge="1" parent="1" source="t9_ai" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="t9_uc02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_ucd09" name="UCD 09 - Quyết Định">
+    <mxGraphModel dx="1129" dy="728" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t10_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Người dùng&lt;/b&gt;&lt;br&gt;(Decision Maker)" vertex="1">
+          <mxGeometry height="120" width="60" x="60" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="t10_notify" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;" value="&lt;b&gt;Notification Service&lt;/b&gt;&lt;br&gt;(Push Alert)" vertex="1">
+          <mxGeometry height="120" width="60" x="1020" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="t10_boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=4;fontFamily=Times New Roman;fontSize=14;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ HỖ TRỢ QUYẾT ĐỊNH TÀI CHÍNH (UC-09)" vertex="1">
+          <mxGeometry height="600" width="780" x="190" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t10_uc01" parent="t10_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-09.01:&lt;/b&gt; Nhận khuyến nghị tài chính&lt;br&gt;&lt;i&gt;(Prescriptive Nudge: Cắt giảm / Tái phân bổ)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="330" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="t10_uc02" parent="t10_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-09.02:&lt;/b&gt; Xem căn cứ &amp;amp; lý do khuyến nghị&lt;br&gt;&lt;i&gt;(Explainable AI / Logic giải trình)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="75" width="280" x="460" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t10_uc03" parent="t10_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fdfefe;strokeColor=#566573;strokeWidth=1.5;fontFamily=Times New Roman;fontSize=14;fontColor=#34495e;" value="&lt;b&gt;UC-09.03:&lt;/b&gt; Xem phương án điều chỉnh ngân sách&lt;br&gt;&lt;i&gt;(Kịch bản tái phân bổ chi tiết)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="460" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="t10_uc04" parent="t10_boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#16a085;strokeWidth=2;fontFamily=Times New Roman;fontSize=14;fontStyle=1;fontColor=#117a65;" value="&lt;b&gt;UC-09.04:&lt;/b&gt; Xác nhận điều chỉnh ngân sách&lt;br&gt;&lt;i&gt;(Người dùng phê duyệt cập nhật hệ thống)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="340" x="250" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_t10_1" edge="1" parent="t10_boundary" source="t10_uc02" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#27ae60;fontFamily=Times New Roman;fontSize=14;fontColor=#27ae60;" target="t10_uc01" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_t10_2" edge="1" parent="t10_boundary" source="t10_uc03" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#27ae60;fontFamily=Times New Roman;fontSize=14;fontColor=#27ae60;" target="t10_uc01" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_t10_3" edge="1" parent="t10_boundary" source="t10_uc04" style="endArrow=open;endSize=10;dashed=1;html=1;strokeWidth=1.5;strokeColor=#27ae60;fontFamily=Times New Roman;fontSize=14;fontColor=#27ae60;" target="t10_uc03" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t10_u1" edge="1" parent="1" source="t10_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t10_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t10_u2" edge="1" parent="1" source="t10_user" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t10_uc04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t10_notify" edge="1" parent="1" source="t10_notify" style="endArrow=none;html=1;strokeColor=#2c3e50;strokeWidth=1.5;rounded=0;fontSize=14;" target="t10_uc01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
