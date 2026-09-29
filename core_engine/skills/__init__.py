@@ -13,6 +13,7 @@ from core_engine.skills.vogels_async_skill import VogelsAsyncSkill
 from core_engine.skills.andrew_ng_ai_skill import AndrewNgAISkill
 from core_engine.skills.orchestrator_rfc_skill import OrchestratorRFCSkill
 from core_engine.skills.frost_atomic_design_skill import FrostAtomicDesignSkill
+from core_engine.skills.garnier_motion_skill import GarnierMotionSkill
 from core_engine.skills.abramov_client_state_skill import AbramovClientStateSkill
 from core_engine.skills.schneier_security_skill import SchneierSecuritySkill
 from core_engine.skills.beck_qa_strategy_skill import BeckQAStrategySkill
@@ -32,6 +33,7 @@ __all__ = [
     "AndrewNgAISkill",
     "OrchestratorRFCSkill",
     "FrostAtomicDesignSkill",
+    "GarnierMotionSkill",
     "AbramovClientStateSkill",
     "SchneierSecuritySkill",
     "BeckQAStrategySkill",

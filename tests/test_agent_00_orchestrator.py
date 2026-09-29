@@ -91,6 +91,7 @@ class TestCouncilOrchestratorAgent(unittest.TestCase):
             "10_dan_abramov.md",
             "11_bruce_schneier.md",
             "12_kent_beck.md",
+            "13_julian_garnier.md",
         ]):
             (self.workspace / "core" / name).write_text(f"Spec agent {name}", encoding="utf-8")
 
@@ -102,12 +103,13 @@ class TestCouncilOrchestratorAgent(unittest.TestCase):
         shutil.rmtree(self.test_dir, ignore_errors=True)
 
     def test_run_full_session_flow(self):
-        # Mock LLM trả về kết quả tuần tự cho 12 Agent + 1 Orchestrator
+        # Mock LLM trả về kết quả tuần tự cho 13 Agent + 1 Orchestrator
         mock_responses = [
             {"content": "[INSIGHT]: Tâm lý chi tiêu cần giảm ma sát thao tác.", "tool_calls": []}, # Thaler
             {"content": "[INSIGHT]: Quỹ chung cần hỗ trợ đóng theo tỷ lệ thu nhập.", "tool_calls": []}, # Group Leader
             {"content": "[IEEE_29148_USE_CASE_SPEC]: Use Case Quản Trị Quỹ Chung.", "tool_calls": []}, # Cockburn BA
             {"content": "[ATOMIC_DESIGN_UI_SPEC]: Design Tokens HSL & Component Tree.", "tool_calls": []}, # Brad Frost
+            {"content": "[MOTION_CHOREOGRAPHY_SPEC]: Anime.js v4 Spring Physics & Doppelrand.", "tool_calls": []}, # Julian Garnier
             {"content": "[CLIENT_STATE_OPTIMISTIC_UI]: Zustand Store & Optimistic UI 0ms.", "tool_calls": []}, # Dan Abramov
             {"content": "[CLEAN_ARCHITECTURE_ADR]: Domain Core với Money Decimal.", "tool_calls": []}, # Evans
             {"content": "[DATABASE_3NF_POLYGLOT_SPEC]: PostgreSQL 3NF & Pessimistic Lock.", "tool_calls": []}, # Kleppmann

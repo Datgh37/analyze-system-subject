@@ -27,6 +27,7 @@ class TestAntigravitySkills(unittest.TestCase):
             "council-werner-vogels",
             "council-andrew-ng",
             "council-brad-frost",
+            "council-julian-garnier",
             "council-dan-abramov",
             "council-bruce-schneier",
             "council-kent-beck",
@@ -75,6 +76,7 @@ class TestAntigravitySkills(unittest.TestCase):
             WernerVogelsAgent,
             AndrewNgAgent,
             BradFrostAgent,
+            JulianGarnierAgent,
             DanAbramovAgent,
             BruceSchneierAgent,
             KentBeckAgent,
@@ -90,6 +92,7 @@ class TestAntigravitySkills(unittest.TestCase):
             AndrewNgAISkill,
             OrchestratorRFCSkill,
             FrostAtomicDesignSkill,
+            GarnierMotionSkill,
             AbramovClientStateSkill,
             SchneierSecuritySkill,
             BeckQAStrategySkill,
@@ -98,10 +101,12 @@ class TestAntigravitySkills(unittest.TestCase):
         self.assertIsNotNone(CouncilOrchestratorAgent)
         self.assertIsNotNone(ThalerNudgeSkill)
         self.assertIsNotNone(FrostAtomicDesignSkill)
+        self.assertIsNotNone(GarnierMotionSkill)
         self.assertIsNotNone(AbramovClientStateSkill)
         self.assertIsNotNone(SchneierSecuritySkill)
         self.assertIsNotNone(BeckQAStrategySkill)
         self.assertIsNotNone(BradFrostAgent)
+        self.assertIsNotNone(JulianGarnierAgent)
         self.assertIsNotNone(DanAbramovAgent)
         self.assertIsNotNone(BruceSchneierAgent)
         self.assertIsNotNone(KentBeckAgent)

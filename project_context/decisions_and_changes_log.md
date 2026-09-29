@@ -1337,3 +1337,43 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Chạy lại script [`mobile-project/BE/test_api.ps1`](../mobile-project/BE/test_api.ps1): **100% 8/8 API ĐỀU ĐẠT (PASSED HTTP 200/201 OK)**.
      - Vòng đời tạo ví -> tạo giao dịch -> trừ số dư ví -> xóa giao dịch -> hoàn trả tiền vào ví đều chạy thành công mỹ mãn.
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-09-29 20:20] - Quyết Định 73: Thành Lập "Bộ Ba Tam Giác Vàng Frontend" (Agent 09 - 13 - 10), Bổ Sung Tác Tử Julian Garnier & Tái Phân Bổ 8 Kỹ Năng Mới
+- **Vấn đề:** 
+  1. Người dùng bổ sung 8 kỹ năng UI/UX và thiết kế đồ họa chất lượng cao vào `.agents/skills/` (`animejs-uiux`, `brandkit`, `design-taste-frontend`, `high-end-visual-design`, `imagegen-frontend-mobile`, `imagegen-frontend-web`, `minimalist-ui`, `redesign-existing-projects`).
+  2. Nếu nhồi nhét tất cả 8 kỹ năng vào Agent 09 (Brad Frost) hoặc chia đôi 09 và 10, Agent 09 sẽ bị quá tải prompt (trở thành monolithic UI), pha trộn giữa thiết kế mỹ thuật tĩnh (Visual/Atoms/Tokens), chuyển động động học vật lý (Motion Engineering/Anime.js), và kiến trúc mã nguồn client (State Store/Clean Code).
+  3. Cần thiết lập mô hình chuyên môn hóa cao theo đúng thông lệ các studio hàng đầu thế giới (như Apple/Stripe/Vercel) để chuẩn bị cho thiết kế giao diện Chương 3 KLTN.
+- **Quyết định & Thực thi:**
+  1. **Thành lập "Bộ Ba Tam Giác Vàng Frontend" (Frontend Triad):**
+     - **Agent 09 (Brad Frost, Don Norman & Jony Ive):** *Lead Design System Architect & Brand Identity Lead* (phụ trách: Visual Design Tokens, Atomic Atoms/Molecules/Organisms, WCAG AA, Brand Guidelines, Mockups & Prompts). Kỹ năng sở hữu: `brandkit`, `imagegen-frontend-mobile`, `imagegen-frontend-web`, `minimalist-ui`.
+     - **Agent 13 (Julian Garnier & Bret Victor):** *Lead Motion Choreographer & Interactive Experience Engineer* (phụ trách: Hoạt ảnh giao diện 60fps GPU, Spring Physics, Anime.js v4 `createScope`/`createLayout`/`createDraggable`, Doppelrand depth, Motion tokens). Kỹ năng sở hữu: `animejs-uiux`, `high-end-visual-design`.
+     - **Agent 10 (Dan Abramov & Christopher Chedeau):** *Lead Cross-Platform Client Architect & Code Craftsman* (phụ trách: React Native/Expo SDK 54, Zustand slices, Optimistic UI 0ms, Offline-first sync, Anti-Slop Code Taste & Design Auditing). Kỹ năng sở hữu: `design-taste-frontend`, `redesign-existing-projects`.
+  2. **Quy định Persona & Kỹ năng:**
+     - Tạo [`core/13_julian_garnier.md`](../core/13_julian_garnier.md) và skill [`.agents/skills/council-julian-garnier/SKILL.md`](../.agents/skills/council-julian-garnier/SKILL.md).
+     - Cập nhật [`core/09_brad_frost.md`](../core/09_brad_frost.md) và [`core/10_dan_abramov.md`](../core/10_dan_abramov.md) cùng skills tương ứng.
+  3. **Tích hợp Core Engine Python:**
+     - Xây dựng [`core_engine/skills/garnier_motion_skill.py`](../core_engine/skills/garnier_motion_skill.py) (`GarnierMotionSkill`).
+     - Xây dựng [`core_engine/council/julian_garnier_agent.py`](../core_engine/council/julian_garnier_agent.py) (`JulianGarnierAgent`).
+     - Tích hợp Agent 13 vào Pha 2.5 trong [`core_engine/council/council_orchestrator_agent.py`](../core_engine/council/council_orchestrator_agent.py).
+     - Mở rộng [`templates/frontend_ui_spec_template.md`](../templates/frontend_ui_spec_template.md) bổ sung mục 9 "Motion Choreography & Spring Physics".
+  4. **Cập nhật Tài liệu Điều phối:**
+     - Nâng cấp Hội đồng từ 13 lên 14 Tác tử (Agent 00 đến Agent 13) trong [`AGENTS.md`](../AGENTS.md) và [`project_context/00_MASTER_CONTEXT.md`](00_MASTER_CONTEXT.md).
+  5. **Kiểm thử Toàn diện:**
+     - Xây dựng [`tests/test_agent_13_julian_garnier.py`](../tests/test_agent_13_julian_garnier.py), cập nhật [`tests/test_antigravity_skills.py`](../tests/test_antigravity_skills.py) và [`tests/test_agent_00_orchestrator.py`](../tests/test_agent_00_orchestrator.py).
+     - **100% Bộ kiểm thử tự động 106/106 tests PASSED**.
+  6. **Đồng Bộ & Truyền Tải Chi Tiết Tri Thức Từ 8 Tệp Markdown Kỹ Năng:**
+     - Thay vì chỉ dẫn liên kết ngoài, toàn bộ kho tri thức tinh hoa từ 8 tệp kỹ năng đã được **chắt lọc, tổng hợp và nhúng trực tiếp** vào Đặc tả Tác tử (`core/09_brad_frost.md`, `core/13_julian_garnier.md`, `core/10_dan_abramov.md`) và Tệp Kỹ năng IDE (`council-brad-frost/SKILL.md`, `council-julian-garnier/SKILL.md`, `council-dan-abramov/SKILL.md`):
+       - *Agent 09:* Bảng ma trận 9 panel Brandkit 3x3, bảng màu đơn sắc ấm + spot pastels (`#FFFFFF`/`#F7F6F3`/`#111111` + `#FDEBEC`, `#EDF3EC`, `#E1F3FE`, `#FBF3DB`), viền 1px `#EAEAEA`, 17 Dials Mobile PFM, Mockup lồng khung iPhone titan viền mỏng, nguyên tắc 1 ảnh ngang/section (16:9), 9 mẫu Hero phi đối xứng, và mẫu Prompt chuẩn.
+       - *Agent 13:* Bộ module Anime.js v4 (`createScope`, `createLayout`, `createDraggable`, `createTimer`, `stagger`), công thức gia tốc lò xo Spring Physics ($m, k, c, v_0$), kiểm toán 60fps GPU (`transform`/`opacity`), kiến trúc thẻ 2 lớp đồng tâm Doppelrand (Double-Bezel), nút bấm lồng icon Nested CTA, Fluid Island Nav.
+       - *Agent 10:* Bước 0 "Read the Room" tuyên ngôn 1 dòng Design Read, 3 Con Xoay (`7 / 6 / 3`), kỷ luật chống rập khuôn AI (Anti-Default), quy trình 3 bước Scan - Diagnose - Fix, tiêu chí kiểm toán Typography/Màu sắc/Bố cục/Tương tác, Zustand Slices, Optimistic UI 0ms và Offline-first sync.
+  7. **Hợp Nhất Toàn Vẹn Cấu Trúc Thư Mục Skills Theo Đề Xuất Của Người Dùng:**
+     - Chuyển toàn bộ 8 tệp markdown gốc cùng thư mục phụ trợ vào trực tiếp bên trong 3 thư mục kỹ năng của từng Agent tương ứng:
+       - `.agents/skills/council-brad-frost/`: `brandkit.md`, `imagegen-frontend-mobile.md`, `imagegen-frontend-web.md`, `minimalist-ui.md`.
+       - `.agents/skills/council-julian-garnier/`: `animejs-uiux.md`, `high-end-visual-design.md`, cùng các thư mục `references/`, `examples/`.
+       - `.agents/skills/council-dan-abramov/`: `design-taste-frontend.md`, `redesign-existing-projects.md`.
+     - Cập nhật chỉ dẫn điều phối tự động (*Autonomous Skill Selection Directive*) trong từng `SKILL.md` để hệ thống tự động nhận diện và tra cứu đúng tệp chuyên biệt khi nhận lệnh.
+     - Dọn dẹp hoàn toàn 8 thư mục kỹ năng rời rạc cũ, đưa thư mục `.agents/skills/` về trạng thái chuẩn hóa gọn gàng tuyệt đối (đúng 15 thư mục `council-*`).
+- **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-09-29_plan_18_frontend_triad_agent_13_expansion.md`](plans/plans-general/2026-09-29_plan_18_frontend_triad_agent_13_expansion.md).
+- **Trạng thái:** `ACCEPTED & COMPLETED`.

@@ -1,8 +1,8 @@
 # ĐẶC TẢ GIAO DIỆN & TRẢI NGHIỆM NGƯỜI DÙNG (FRONTEND UI/UX SPECIFICATION)
 **Tên Tính Năng:** [TÊN TÍNH NĂNG]  
 **Mã Ca Sử Dụng (Use Case ID):** [UC-ID]  
-**Chuyên Gia Thiết Kế:** Brad Frost (Atomic Design System) & Dan Abramov (Client State & Architecture)  
-**Tiêu Chuẩn Tuân Thủ:** WCAG 2.1 AA, Atomic Design, Mobile-First Responsive, Optimistic UI (0ms)  
+**Chuyên Gia Thiết Kế:** Brad Frost & Jony Ive (Visual & Design System), Julian Garnier & Bret Victor (Motion Choreography), Dan Abramov (Client Architecture & State)  
+**Tiêu Chuẩn Tuân Thủ:** WCAG 2.1 AA, Atomic Design, Anime.js v4 60fps GPU, Mobile-First Responsive, Optimistic UI (0ms)  
 
 ---
 
@@ -193,3 +193,26 @@ export const JointPoolCard: React.FC<JointPoolCardProps> = ({
   );
 };
 ```
+
+---
+
+## 9. Đặc Tả Động Lực Học & Chuyển Động (Motion Choreography & Spring Physics Specs)
+
+### A. Kịch Bản Hoạt Ảnh Tương Tác (Anime.js v4 Choreography Table)
+
+| Linh Kiện / Thao Tác | Module Anime.js v4 | Thuộc Tính Can Thiệp (GPU-Safe) | Thời Lượng (Duration) | Gia Tốc / Vật Lý (Easing / Physics) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Nhấn Nút Thao Tác** | `animate()` | `scale: [1, 0.98]` | `120ms` | `cubicBezier(0.16, 1, 0.3, 1)` |
+| **Mở Hộp Thoại / Bottom Sheet** | `createScope()` | `translateY: ['100%', '0%'], opacity: [0, 1]` | `450ms` | `spring({ bounce: 0.2, duration: 450 })` |
+| **Xuất Hiện Danh Sách Thẻ** | `createTimeline()` | `translateY: [24, 0], opacity: [0, 1]` | `350ms` | `stagger(60, { from: 'first' })` |
+| **Morphing Bố Cục List ➔ Grid**| `createLayout()` | `dx, dy, dScale (FLIP Morphing)` | `400ms` | `spring({ bounce: 0.15, duration: 400 })` |
+
+### B. Kiến Trúc Vi Thẩm Mỹ Xúc Giác Double-Bezel (Doppelrand)
+* **Vỏ bọc ngoài (Outer Shell):** Bán kính `rounded-[2rem]`, viền `border border-white/10 dark:border-white/5`, đệm `p-1.5`.
+* **Lõi chứa nội dung (Inner Core):** Bán kính `rounded-[calc(2rem-0.375rem)]`, highlight viền trong `shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]`.
+* **Nút Đảo (Island Button):** Icon hành động đặt trong vòng tròn độc lập flush-right, hiệu ứng nổi bật `group-hover:translate-x-1`.
+
+### C. Kiểm Toán Hiệu Năng 60FPS & Giảm Chuyển Động (Reduced-Motion Compliance)
+* **Quy chuẩn GPU-safe:** 100% hoạt ảnh chỉ can thiệp trên `transform` và `opacity`. Tuyệt đối không can thiệp kích thước (`width`, `height`, `margin`, `padding`).
+* **Hỗ trợ Reduced-Motion:** Tự động fallback sang hiệu ứng mờ dần nhẹ nhàng 150ms khi hệ điều hành người dùng bật `prefers-reduced-motion`.
+

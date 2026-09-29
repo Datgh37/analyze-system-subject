@@ -31,18 +31,19 @@
 │ - Chuẩn hóa CSDL quan hệ 3NF/BCNF, Caching và Khóa tranh chấp ví.      │
 ├────────────────────────────────────────────────────────────────────────┤
 │ TRỤ CỘT 2: BỘ NHÂN AI SOFTWARE ENGINEER (core_engine/)                 │
-│ - Hội Đồng 13 Chuyên Gia Kiệt Xuất Full-Stack hóa thân các danh nhân.  │
+│ - Hội Đồng 14 Chuyên Gia Kiệt Xuất Full-Stack hóa thân các danh nhân.  │
+│ - Bộ Ba Tam Giác Vàng Frontend (Agent 09 Visual, 13 Motion, 10 State). │
 │ - Tool Layer an toàn (Filesystem Sandbox, Terminal Runner, Git Diff).  │
 │ - Chu trình làm việc chuẩn PTTKHTTT khép kín từ Khảo sát đến Final RFC.│
 │ - Tự động sinh Ma Trận Truy Vết Nguồn Gốc (Traceability Matrix).       │
 │ - Hệ thống thẩm định chất lượng sâu (Deep Content Quality Gates).      │
-│ - 14 Kỹ năng Antigravity IDE Skills (.agents/skills/) & CLI Runner.    │
+│ - 15 Kỹ năng Hội đồng + 8 Kỹ năng Frontend mở rộng (.agents/skills/).  │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 3. Bản Đồ Roster 13 Chuyên Gia Danh Nhân (Full-Stack Council Roster)
+## 3. Bản Đồ Roster 14 Chuyên Gia Danh Nhân (Full-Stack Council Roster)
 
 | Mã Agent | Tên File Quy Định | Chuyên Gia Hóa Thân | Vai Trò Chuyên Môn | Đầu Ra Chịu Trách Nhiệm |
 | :--- | :--- | :--- | :--- | :--- |
@@ -55,8 +56,9 @@
 | **Agent 06** | [`core/06_personal_debt_cashflow_optimizer.md`](core/06_personal_debt_cashflow_optimizer.md) | **Debt & Cashflow Optimizer** | Thuật toán Trả nợ (Snowball vs Avalanche) | `03_technical_adr.md` |
 | **Agent 07** | [`core/07_werner_vogels.md`](core/07_werner_vogels.md) | **Dr. Werner Vogels (Amazon)** | Kiến trúc Hướng Sự kiện, Async Queue OCR & Worker| `03_technical_adr.md` |
 | **Agent 08** | [`core/08_andrew_ng.md`](core/08_andrew_ng.md) | **Prof. Andrew Ng (AI Pioneer)** | Vision LLM OCR Hóa Đơn & Hậu Kiểm Số Học | `03_technical_adr.md` |
-| **Agent 09** | [`core/09_brad_frost.md`](core/09_brad_frost.md) | **Brad Frost & Don Norman** | Atomic Design System & UI/UX WCAG 2.1 AA | `02b_frontend_ui_spec.md` |
-| **Agent 10** | [`core/10_dan_abramov.md`](core/10_dan_abramov.md) | **Dan Abramov & Vjeux** | Frontend Client State & Dashboard Net Worth | `02b_frontend_ui_spec.md` |
+| **Agent 09** | [`core/09_brad_frost.md`](core/09_brad_frost.md) | **Brad Frost, Norman & Jony Ive**| Lead Design System & Visual Art Director | `02b_frontend_ui_spec.md` |
+| **Agent 13** | [`core/13_julian_garnier.md`](core/13_julian_garnier.md) | **Julian Garnier & Bret Victor** | Lead Motion Choreographer & Experience | `02b_frontend_ui_spec.md` |
+| **Agent 10** | [`core/10_dan_abramov.md`](core/10_dan_abramov.md) | **Dan Abramov & Vjeux** | Lead Frontend Architect & Client State | `02b_frontend_ui_spec.md` & `03_technical_adr.md` |
 | **Agent 11** | [`core/11_bruce_schneier.md`](core/11_bruce_schneier.md) | **Bruce Schneier & OWASP** | Bảo mật Dữ liệu Tài chính, Mã hóa AES-256 | `03_technical_adr.md` |
 | **Agent 12** | [`core/12_kent_beck.md`](core/12_kent_beck.md) | **Kent Beck & Martin Fowler** | Kim Tự Tháp Kiểm Thử TDD & Verification Plan | `04_final_rfc.md` |
 

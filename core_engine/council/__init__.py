@@ -13,6 +13,7 @@ from core_engine.council.debt_optimizer_agent import DebtOptimizerAgent, TarjanG
 from core_engine.council.werner_vogels_agent import WernerVogelsAgent
 from core_engine.council.andrew_ng_agent import AndrewNgAgent
 from core_engine.council.brad_frost_agent import BradFrostAgent
+from core_engine.council.julian_garnier_agent import JulianGarnierAgent
 from core_engine.council.dan_abramov_agent import DanAbramovAgent
 from core_engine.council.bruce_schneier_agent import BruceSchneierAgent
 from core_engine.council.kent_beck_agent import KentBeckAgent
@@ -31,6 +32,7 @@ __all__ = [
     "WernerVogelsAgent",
     "AndrewNgAgent",
     "BradFrostAgent",
+    "JulianGarnierAgent",
     "DanAbramovAgent",
     "BruceSchneierAgent",
     "KentBeckAgent",
