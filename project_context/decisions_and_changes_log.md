@@ -1377,3 +1377,36 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Dọn dẹp hoàn toàn 8 thư mục kỹ năng rời rạc cũ, đưa thư mục `.agents/skills/` về trạng thái chuẩn hóa gọn gàng tuyệt đối (đúng 15 thư mục `council-*`).
 - **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-09-29_plan_18_frontend_triad_agent_13_expansion.md`](plans/plans-general/2026-09-29_plan_18_frontend_triad_agent_13_expansion.md).
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-10-02 13:10] - Quyết Định 74: Tái Cấu Trúc Tinh Gọn Toàn Diện Chương 1, Loại Bỏ Phụ Chú Ngoặc Đơn Tiêu Đề và Thanh Lọc Văn Phong Học Thuật Luận Văn Tốt Nghiệp
+- **Vấn đề:** 
+  1. Chương 1 trong tài liệu khóa luận tốt nghiệp [`files/KhoaLuanTotNghiep.docx`](../files/KhoaLuanTotNghiep.docx) ban đầu gồm 7 mục lớn (1.1 đến 1.7 với 30 tiểu mục) xuất hiện nhiều đoạn trùng lặp ý niệm (đối tượng người dùng bị lặp ở 1.1, 1.4, 1.5; khó khăn/bất cập bị lặp ở 1.3, 1.4, 1.6, 1.7; mục 1.5 đưa sơ đồ tác nhân/thực thể quá sớm khi chưa phân tích; mục 1.6 áp dụng máy móc mô hình hạ tầng tin học doanh nghiệp PC/Server cho ứng dụng di động B2C).
+  2. Nhiều tiêu đề Heading chứa phụ chú tiếng Anh trong ngoặc đơn rườm rà (ví dụ: `(Problem Statement)`, `(Mathematical Audit Algorithm)`, `(Sequence Diagrams)`), không phù hợp quy chuẩn học thuật tiếng Việt.
+  3. Tồn đọng từ ngữ tiếp thị dịch thô như "điểm đau", "pain point", cùng văn phong paraphrase dài dòng mang tính hình thức.
+  4. Cần trả lời trung thực và xác thực về hiện trạng các ứng dụng thị trường (Money Lover, Spendee, Money Manager, YNAB) và độ bao phủ ngoại lệ (Edge Cases) của 60 Use Cases.
+- **Quyết định & Thực thi:**
+  1. **Tái cấu trúc tinh gọn Chương 1 thành 4 đề mục chuẩn mực (1.1 đến 1.4):**
+     - **1.1 Khảo sát các quy trình quản lý tài chính hiện có:** Đi thẳng vào bản chất nghiệp vụ (1.1.1 Quy trình theo dõi dòng tiền; 1.1.2 Quy trình lập và giám sát ngân sách).
+     - **1.2 Đánh giá các phương pháp và ứng dụng trên thị trường:** Đối chiếu khách quan (1.2.1 Phương pháp truyền thống; 1.2.2 Ứng dụng phổ biến; 1.2.3 Hạn chế cốt lõi và nguyên nhân tồn đọng).
+     - **1.3 Nghiên cứu người dùng mục tiêu và các khó khăn thực tế:** Phân nhóm người dùng khoa học (1.3.1 Sinh viên/người trẻ, Người mới đi làm, Người tích lũy & nghĩa vụ nợ; 1.3.2 Tổng hợp khó khăn và nhu cầu cấp thiết).
+     - **1.4 Kết luận khảo sát hiện trạng và phát biểu bài toán:** Khái quát lỗ hổng và định nghĩa bài toán (1.4.1 Nhận diện các khoảng trống nghiên cứu; 1.4.2 Phát biểu bài toán của hệ thống: Input, Process, Output, Phạm vi).
+  2. **Bảo toàn và nâng cấp 3 bảng dữ liệu chuẩn trong Chương 1:**
+     - **Bảng 1.1:** So sánh các phương pháp quản lý chi tiêu (Sổ tay, Excel, Phong bì, 50/30/20, Zero-based).
+     - **Bảng 1.2:** So sánh các ứng dụng (thay Splitwise bằng Money Lover có chức năng quét hóa đơn OCR cơ bản và quản lý thu chi phổ biến tại Việt Nam).
+     - **Bảng 1.3:** Đổi tên caption thành *`Bảng 1.3. Tổng hợp khó khăn và nhu cầu của người dùng`*, chuẩn hóa cấu trúc 3 cột `Vấn đề`, `Biểu hiện`, `Tác động`.
+  3. **Xóa sạch 100% chú thích tiếng Anh trong ngoặc đơn ở toàn bộ hệ thống tiêu đề:**
+     - Sửa triệt để các tiêu đề Heading 1, 2, 3 trên toàn văn bản (như mục 1.4.2, 2.2.3, 3.4...).
+  4. **Thanh lọc toàn văn cụm từ "điểm đau / pain point":**
+     - Quét sạch bóng 100% từ cả trong các đoạn văn và các ô bảng biểu, thay thế bằng các thuật ngữ học thuật chuẩn xác: *"khó khăn, vướng mắc thực tế"*, *"bất cập hiện hành"*, *"trở ngại tâm lý"*.
+  5. **Bảo toàn tuyệt đối Khối thủ tục đầu (Trang bìa, Nhiệm vụ KLTN, Nhận xét, Lời cảm ơn, Mục lục...):**
+     - Đảm bảo 80 đoạn văn đầu (P[0] đến P[79]) và các bảng biểu đi kèm không bị suy suyển hay thay đổi dù chỉ một ký tự.
+  6. **Chuẩn hóa Typo và Định dạng DNTU:**
+     - Font Times New Roman 13pt, line spacing 1.5 lines, Before/After 6pt, thụt lề bullet `- ` cách lề trái 0.75 cm, hanging -0.35 cm.
+  7. **Mở rộng bộ kiểm thử tự động:**
+     - Bổ sung [`tests/test_docx_academic_format.py`](../tests/test_docx_academic_format.py) kiểm tra tự động 5 tiêu chí: tiêu đề không ngoặc đơn, không từ ngữ "điểm đau", cấu trúc Chương 1 tinh gọn, bảo toàn bảng dữ liệu và thụt lề bullet chuẩn DNTU.
+     - Toàn bộ **111/111 unit tests PASSED (100% OK)**.
+- **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-02_plan_19_refactor_chapter_1_and_prose_purification.md`](plans/plans-general/2026-10-02_plan_19_refactor_chapter_1_and_prose_purification.md).
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
+
