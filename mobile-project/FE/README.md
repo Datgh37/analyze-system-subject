@@ -1,70 +1,126 @@
-# 📱 HƯỚNG DẪN PHÁT TRIỂN GIAO DIỆN REACT NATIVE (FRONTEND)
+# 📱 HƯỚNG DẪN DỰ ÁN FRONTEND MOBILE (EXPO SDK 54)
 
-> **Dành cho:** Trần Trọng Đại (UI Specialist & Frontend Screens) & AI Agent hỗ trợ  
-> **Kiến trúc & Setup:** Trịnh Thành Đạt (Lead)  
-> **Quy chuẩn bắt buộc:** Không dùng thư viện CSS (Tailwind, Paper...), viết thuần `StyleSheet.create({...})` và `const COLORS`, code mộc mạc phục vụ thi vấn đáp.
+> **Dành cho:** Trần Trọng Đại (UI & Mobile Frontend Lead)  
+> **Kiến trúc & Backend:** Trịnh Thành Đạt (Lead)  
+> **Đồ án môn học:** Lập trình Thiết bị Di động — Trường Đại học Công nghệ Đồng Nai (DNTU)  
+> **Đề tài:** Ứng dụng Quản lý Chi tiêu và Hoạch định Tài chính Cá nhân Thông minh  
 
 ---
 
-## 1. Cấu Trúc Thư Mục Frontend Chuẩn
+## 1. ⚙️ Thông Số Kỹ Thuật (Tech Stack)
+
+* **Khung ứng dụng:** **Expo SDK 54** (`expo: ~54.0.36`) — Hỗ trợ chính thức **Android 14 (API 34) & Android 15 (API 35)** và Node 24 LTS.
+* **Core Engines:** `react-native: 0.81.5`, `react: 19.1.0`.
+* **Điều hướng:** `@react-navigation/native: ^7.5.0`, `@react-navigation/bottom-tabs: ^7.20.0`, `@react-navigation/native-stack: ^7.20.0`.
+* **Quản lý phiên & Gọi API:** `axios: ^1.20.0`, `@react-native-async-storage/async-storage: 2.2.0`.
+* **Biểu đồ & Vector Icons:** `react-native-chart-kit: ^7.0.4`, `react-native-svg: 15.12.1`, `@expo/vector-icons: ^15.1.1`.
+* **Quy chuẩn Styling:** **100% `StyleSheet.create({...})` và hằng số `COLORS`** (Tuyệt đối không dùng Tailwind/NativeWind để bảo vệ đồ án trước buổi thi vấn đáp).
+
+---
+
+## 2. 🚀 Hướng Dẫn Khởi Chạy Ứng Dụng Trên Máy Của Đại
+
+### Bước 1: Mở Terminal tại thư mục `mobile-project/FE`
+```powershell
+cd mobile-project/FE
+```
+
+### Bước 2: Cài đặt toàn bộ thư viện (Dependencies)
+> [!IMPORTANT]
+> Dự án sử dụng **React 19 & Expo SDK 54**. Bạn Đại vui lòng sử dụng lệnh sau để tải toàn bộ package về máy:
+
+* **Cách 1 (Khuyên dùng nhất cho Đại — Chuẩn Expo):**
+  ```powershell
+  npx expo install
+  ```
+  *(Trình quản lý package chính thức của Expo sẽ tự động kiểm tra và cài đặt phiên bản tương thích nhất với Expo SDK 54)*.
+
+* **Cách 2 (Dùng lệnh `npm`):**
+  ```powershell
+  npm install --legacy-peer-deps
+  ```
+  *(⚠️ **Lưu ý:** Bắt buộc phải có cờ `--legacy-peer-deps` để tránh lỗi xung đột peerDependencies của React 19 đối với một số thư viện như `react-native-chart-kit`)*.
+
+* **Cách 3 (Nếu dùng `pnpm` trên máy của Đạt):**
+  ```powershell
+  pnpm install
+  ```
+
+### Bước 3: Chạy Expo Dev Server
+```powershell
+npm start
+
+# Hoặc khởi động xóa sạch cache (khuyên dùng khi mới tải code về):
+npx expo start -c
+```
+
+### Bước 4: Xem Ứng Dụng Trên Thiết Bị
+* **Cách 1 (Khuyên dùng - Điện thoại thật Android 14):**
+  - Mở app **Expo Go** trên điện thoại (đã kết nối cùng mạng Wifi với máy tính).
+  - Quét mã QR code hiển thị trên terminal.
+* **Cách 2 (Máy ảo Android Studio):**
+  - Nhấn phím `a` trong terminal để mở máy ảo Android.
+
+---
+
+## 3. 🌐 Cấu Hình Địa Chỉ Kết Nối Backend WAMP Server
+
+Toàn bộ cấu hình mạng nằm tại: [`src/api/config.js`](src/api/config.js)
+
+1. **Nếu bạn test trên Điện thoại thật (cùng Wifi):**
+   - Mở PowerShell gõ lệnh `ipconfig` để lấy IPv4 máy tính của bạn (Ví dụ: `192.168.1.15`).
+   - Mở file `src/api/config.js`, sửa hằng số:
+     ```javascript
+     const LOCAL_LAN_IP = '192.168.1.15'; // Đổi thành IP máy của bạn
+     ```
+2. **Nếu bạn test trên Máy ảo Android Emulator:**
+   - Hệ thống tự động nhận diện IP loopback `10.0.2.2`, không cần sửa gì thêm.
+3. **Nếu test trên Server trường cấp:**
+   - Đổi cờ `USE_PRODUCTION_SERVER = true`.
+
+---
+
+## 4. 🗂️ Cấu Trúc Thư Mục Mã Nguồn
 
 ```text
-mobile-project/FE/
-├── package.json               # Danh sách thư viện cần thiết
-├── App.js                     # Điểm khởi chạy app (NavigationContainer & Safe Area)
-└── src/
-    ├── api/
-    │   ├── config.js          # URL kết nối WAMP đa môi trường (Emulator / Device / Server)
-    │   └── client.js          # Axios instance tự động xử lý request/response
-    ├── constants/
-    │   └── theme.js           # Bảng màu COLORS và kích thước SIZES dùng chung
-    ├── navigation/
-    │   ├── AppNavigator.js    # Stack Navigator (Login -> MainTab)
-    │   └── TabNavigator.js    # BottomTab 4 tab: Trang Chủ, Thêm Mới, Lịch Sử, Báo Cáo
-    ├── components/            # Thư mục để Đại thiết kế các linh kiện UI tái sử dụng
-    │   ├── WalletCard.js      # (Đại viết) Thẻ số dư ví tiền mặt / ngân hàng
-    │   ├── BudgetBar.js       # (Đại viết) Thanh tiến độ ngân sách đổi màu
-    │   └── TransactionRow.js  # (Đại viết) Hàng hiển thị giao dịch
-    └── screens/               # Các màn hình chính (Đại hoàn thiện giao diện chi tiết)
-        ├── LoginScreen.js     # Màn hình đăng nhập
-        ├── HomeScreen.js      # Màn hình tổng quan Dashboard
-        ├── AddTransactionScreen.js # Màn hình thêm thu / chi
-        ├── HistoryScreen.js   # Màn hình lịch sử giao dịch (FlatList + Xóa)
-        └── ReportScreen.js    # Màn hình báo cáo biểu đồ (PieChart & BarChart)
+FE/
+├── App.js                     # Root Component bọc SafeAreaProvider & AuthProvider
+├── src/
+│   ├── api/
+│   │   ├── config.js          # Cấu hình IP và Base URL động
+│   │   ├── client.js          # Axios Client tự động kẹp Bearer JWT Token vào mọi request
+│   │   └── endpoints.js       # Toàn bộ 21 hàm gọi API đóng gói sẵn
+│   ├── constants/
+│   │   └── theme.js           # Bảng màu COLORS, SPACING, SIZES, SHADOWS
+│   ├── context/
+│   │   └── AuthContext.js     # Quản lý phiên đăng nhập, JWT token, user state
+│   ├── navigation/
+│   │   ├── AppNavigator.js    # Stack điều hướng (chuyển đổi giữa Auth và MainTabs)
+│   │   └── TabNavigator.js    # Bottom Tabs (Tổng quan, Giao dịch, Ngân sách, Báo cáo, Hồ sơ)
+│   └── screens/
+│       ├── auth/
+│       │   ├── LoginScreen.js          # Đăng nhập
+│       │   ├── RegisterScreen.js       # Đăng ký (tự động tạo 2 ví cơ bản)
+│       │   └── ForgotPasswordScreen.js # Quên mật khẩu 3 bước chuẩn OTP
+│       └── main/
+│           ├── HomeScreen.js           # Dashboard tổng tài sản & tiến độ ngân sách
+│           ├── TransactionsScreen.js   # Lịch sử giao dịch & lọc đa tiêu chí
+│           ├── AddTransactionScreen.js # Thêm / Sửa giao dịch (bù trừ Delta ví)
+│           ├── BudgetScreen.js         # Ngân sách tháng & chi tiêu an toàn mỗi ngày
+│           ├── ReportScreen.js         # Báo cáo tỷ trọng PieChart & đối chiếu BarChart
+│           └── ProfileScreen.js        # Đổi tên hiển thị, đổi mật khẩu & đăng xuất
 ```
 
 ---
 
-## 2. Hướng Dẫn Khởi Chạy Ứng Dụng Trên Máy Bạn Đại
+## 5. 🎨 Nhiệm Vụ Tiếp Theo Của Bạn Đại (UI & Design)
 
-### Bước 1: Cài đặt thư viện (Chỉ chạy 1 lần đầu)
-Mở terminal/cmd tại thư mục `mobile-project/FE/`:
-```bash
-npm install
-```
+Toàn bộ logic kết nối API, state management, tính toán tiền tệ và cấu trúc khung sườn đã được cài đặt hoàn chỉnh và hoạt động 100%. 
 
-### Bước 2: Khởi động WampServer trên máy tính
-- Bật WampServer, đảm bảo icon màu xanh lá cây.
-- Đảm bảo đã chạy script liên kết Junction: `..\BE\setup_wamp_junction.ps1`.
+Trong mỗi file màn hình tại thư mục `src/screens/`, tôi đã để lại khối chú thích:  
+👉 **`HƯỚNG DẪN THIẾT KẾ GIAO DIỆN (DÀNH CHO ĐẠI - UI LEAD)`**
 
-### Bước 3: Khởi chạy Expo / React Native
-```bash
-npx expo start
-```
-- Nhấn phím `a` để mở trên Android Studio Emulator (máy ảo).
-- Hoặc dùng điện thoại thật: Cài app **Expo Go** trên CH Play / App Store, quét mã QR trên màn hình terminal để chạy app trực tiếp trên điện thoại!
-
----
-
-## 3. Quy Tắc Code Dành Cho Bạn Đại (Tránh Bị Trừ Điểm Vấn Đáp)
-
-1. **Tuyệt đối không cài thêm thư viện CSS:** Mọi style viết trong `const styles = StyleSheet.create({...})` ở cuối file.
-2. **Dùng màu tập trung:** Import và dùng màu từ `src/constants/theme.js` (ví dụ: `COLORS.primary`, `COLORS.income`, `COLORS.expense`).
-3. **Gọi API bằng client có sẵn:** 
-   ```javascript
-   import apiClient from '../api/client';
-   // Gọi GET:
-   const res = await apiClient.get('/wallets/list.php?user_id=1');
-   // Gọi POST:
-   const res = await apiClient.post('/transactions/create.php', payload);
-   ```
+Đại chỉ cần:
+1. Mở từng file màn hình để xem wireframe gợi ý.
+2. Tùy chỉnh màu sắc, viền bo, icon, khoảng cách theo sở thích thẩm mỹ cá nhân bằng cách sử dụng các hằng số từ `COLORS`, `SPACING`, `SIZES` trong [`src/constants/theme.js`](src/constants/theme.js).
+3. Đảm bảo giao diện đồng bộ, trực quan để chuẩn bị tốt nhất cho buổi bảo vệ đồ án!

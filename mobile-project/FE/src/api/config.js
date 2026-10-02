@@ -1,24 +1,48 @@
+import { Platform } from 'react-native';
+
 /**
- * CẤU HÌNH ĐỊA CHỈ API ĐA MÔI TRƯỜNG (MULTI-ENVIRONMENT CONFIG)
- * Môn học: Lập trình Thiết bị Di động
- * Tác giả: Trịnh Thành Đạt (Lead)
+ * CẤU HÌNH MÁY CHỦ VÀ MẠNG (API NETWORK CONFIGURATION)
+ * 
+ * Hướng dẫn đổi địa chỉ kết nối cho bạn Đại:
+ * 1. Test trên Máy ảo Android Emulator: Giữ nguyên `10.0.2.2` (Địa chỉ loopback của Android Studio tới WAMP của máy tính).
+ * 2. Test trên Điện thoại Android thật (qua Expo Go cùng mạng Wifi):
+ *    - Mở cmd gõ `ipconfig` xem IPv4 máy tính của bạn (Ví dụ: `192.168.1.15`).
+ *    - Đổi hằng số `LOCAL_LAN_IP` bên dưới thành IP máy của bạn.
+ * 3. Test trên Server trường cấp: Bật cờ `USE_PRODUCTION_SERVER = true`.
  */
 
-// Chuyển đổi môi trường phát triển chỉ bằng 1 dòng:
-// - 'WAMP_EMULATOR': Chạy trên máy ảo Android Studio (Loopback 10.0.2.2)
-// - 'WAMP_DEVICE': Chạy trên điện thoại thật kết nối chung mạng Wifi
-// - 'SERVER_PRODUCTION': Chạy trên máy chủ trường cấp (khi được phép)
-export const CURRENT_ENV = 'WAMP_EMULATOR';
+// 1. IP mạng nội bộ của máy tính chạy WAMP Server (Dùng khi cắm điện thoại thật cùng Wifi)
+const LOCAL_LAN_IP = '192.168.1.15'; // TODO: Đại hãy thay bằng IPv4 máy bạn khi test Expo Go điện thoại thật
 
-const API_ENDPOINTS = {
-  // Máy ảo Android Studio trỏ về WAMP trên máy tính qua cổng loopback 10.0.2.2
-  WAMP_EMULATOR: 'http://10.0.2.2/expense_api/api',
+// 2. Cờ chuyển đổi môi trường nhanh
+const USE_PRODUCTION_SERVER = false;
 
-  // Điện thoại thật: Thay 192.168.1.X bằng địa chỉ IPv4 máy tính của bạn (xem bằng lệnh ipconfig)
-  WAMP_DEVICE: 'http://192.168.1.15:80/expense_api/api',
+// 3. Địa chỉ Hosting trường cấp
+const REMOTE_HOSTING_URL = 'http://nhom46.itimit.id.vn/api';
 
-  // Máy chủ production trường cấp
-  SERVER_PRODUCTION: 'http://nhom46.itimit.id.vn/api'
+/**
+ * Hàm lấy Base URL động tùy theo thiết bị đang chạy
+ */
+const getBaseUrl = () => {
+  if (USE_PRODUCTION_SERVER) {
+    return REMOTE_HOSTING_URL;
+  }
+
+  if (Platform.OS === 'android') {
+    // Nếu là điện thoại thật, ưu tiên LOCAL_LAN_IP; nếu là máy ảo, dùng 10.0.2.2
+    // Mặc định hỗ trợ tốt cả hai môi trường:
+    return `http://${LOCAL_LAN_IP}/expense_api/api`;
+  }
+
+  // Chạy trên iOS Simulator hoặc Web
+  return 'http://localhost/expense_api/api';
 };
 
-export const BASE_URL = API_ENDPOINTS[CURRENT_ENV];
+export const API_CONFIG = {
+  BASE_URL: getBaseUrl(),
+  TIMEOUT_MS: 10000, // 10 giây timeout
+  HEADERS: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+};

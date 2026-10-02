@@ -1,9 +1,11 @@
 <?php
 /**
- * API: Báo cáo tỷ trọng chi tiêu theo danh mục (Biểu đồ tròn Pie Chart)
+ * API: Báo cáo Tỷ trọng Chi tiêu theo Danh mục (Pie Chart Data)
  * Phương thức: GET
- * Params: ?user_id={id}&month={m}&year={y}
- * Tác giả: Trịnh Thành Đạt (Lead)
+ * Params: ?month={m}&year={y}
+ * Bảo mật: Bắt buộc kèm Bearer JWT Token
+ * 
+ * Tác giả: Trịnh Thành Đạt (Lead) & Trần Trọng Đại
  */
 
 require_once __DIR__ . '/../../config/helpers.php';
@@ -13,35 +15,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json_response("error", "Phương thức không được hỗ trợ. Vui lòng dùng GET.", null, 405);
 }
 
-// Lấy tham số truy vấn
-$user_id = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT);
-$month   = filter_input(INPUT_GET, 'month', FILTER_VALIDATE_INT) ?? (int)date('m');
-$year    = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT) ?? (int)date('Y');
+// 1. Xác thực người dùng qua JWT
+$user_id = get_authenticated_user_id();
 
-if (!$user_id) {
-    send_json_response("error", "Thiếu hoặc sai định dạng tham số user_id.", null, 400);
-}
+// 2. Lấy tháng và năm
+$month = filter_input(INPUT_GET, 'month', FILTER_VALIDATE_INT) ?: (int)date('m');
+$year  = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT) ?: (int)date('Y');
 
 $database = new Database();
 $db = $database->getConnection();
 
 try {
-    // 1. Tính tổng toàn bộ chi tiêu trong tháng để tính % tỷ trọng
+    // 3. Tính tổng toàn bộ chi tiêu trong tháng để tính tỷ trọng %
     $total_stmt = $db->prepare("
-        SELECT COALESCE(SUM(amount), 0) AS grand_total
+        SELECT COALESCE(SUM(amount), 0.00) AS grand_total
         FROM `transactions`
         WHERE `user_id` = :uid 
           AND `transaction_type` = 'EXPENSE'
           AND MONTH(`transaction_date`) = :month 
           AND YEAR(`transaction_date`) = :year
     ");
-    $total_stmt->bindParam(':uid', $user_id);
-    $total_stmt->bindParam(':month', $month);
-    $total_stmt->bindParam(':year', $year);
+    $total_stmt->bindParam(':uid', $user_id, PDO::PARAM_INT);
+    $total_stmt->bindParam(':month', $month, PDO::PARAM_INT);
+    $total_stmt->bindParam(':year', $year, PDO::PARAM_INT);
     $total_stmt->execute();
     $grand_total = (float)$total_stmt->fetchColumn();
 
-    // 2. Gom nhóm tổng chi theo từng danh mục
+    // 4. Gom nhóm tổng chi theo từng danh mục
     $stmt = $db->prepare("
         SELECT 
             c.id AS category_id,
@@ -58,23 +58,23 @@ try {
         GROUP BY c.id, c.name, c.icon_name, c.color_code
         ORDER BY total_amount DESC
     ");
-    $stmt->bindParam(':uid', $user_id);
-    $stmt->bindParam(':month', $month);
-    $stmt->bindParam(':year', $year);
+    $stmt->bindParam(':uid', $user_id, PDO::PARAM_INT);
+    $stmt->bindParam(':month', $month, PDO::PARAM_INT);
+    $stmt->bindParam(':year', $year, PDO::PARAM_INT);
     $stmt->execute();
 
-    $categories = $stmt->fetchAll();
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $chart_data = [];
 
     foreach ($categories as $cat) {
         $amount = (float)$cat['total_amount'];
-        $percentage = ($grand_total > 0) ? round(($amount / $grand_total) * 100, 1) : 0;
+        $percentage = ($grand_total > 0) ? round(($amount / $grand_total) * 100, 1) : 0.0;
 
-        // Định dạng dữ liệu tương thích trực tiếp với thư viện react-native-chart-kit PieChart
+        // Định dạng dữ liệu chuẩn trực tiếp tương thích thư viện react-native-chart-kit PieChart
         $chart_data[] = [
             "category_id"     => (int)$cat['category_id'],
             "name"            => $cat['category_name'],
-            "population"      => $amount, // react-native-chart-kit dùng trường population làm giá trị
+            "population"      => $amount, // react-native-chart-kit yêu cầu trường population
             "amount"          => $amount,
             "percentage"      => $percentage,
             "color"           => $cat['color_code'],
@@ -85,6 +85,7 @@ try {
     }
 
     send_json_response("success", "Lấy dữ liệu biểu đồ chi tiêu thành công!", [
+        "user_id"     => $user_id,
         "month"       => (int)$month,
         "year"        => (int)$year,
         "grand_total" => $grand_total,
@@ -92,6 +93,6 @@ try {
     ], 200);
 
 } catch (PDOException $e) {
-    send_json_response("error", "Lỗi máy chủ khi truy vấn biểu đồ chi tiêu: " . $e->getMessage(), null, 500);
+    send_json_response("error", "Lỗi CSDL khi truy vấn biểu đồ chi tiêu: " . $e->getMessage(), null, 500);
 }
 ?>

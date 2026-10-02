@@ -100,50 +100,68 @@ Remove-Item "D:\WampServer\www\expense_api"
 
 ---
 
-## 5. Kiểm Thử API Bằng Postman
+## 5. Danh Mục Toàn Bộ 21 RESTful API Hoàn Chỉnh (JWT Bearer Token)
 
-Sau khi đã tạo Junction và bật WampServer, bạn mở Postman để test các endpoint cục bộ:
-
-* **Base URL:** `http://localhost/expense_api/api`
-* **Test Đăng nhập (Login):**
-  - **Method:** `POST`
-  - **URL:** `http://localhost/expense_api/api/auth/login.php`
-  - **Headers:** `Content-Type: application/json`
-  - **Body (raw JSON):**
-    ```json
-    {
-      "email": "thanhdat@gmail.com",
-      "password": "password123"
-    }
-    ```
-* **Test Thống kê chi tiêu tháng (Monthly Summary):**
-  - **Method:** `GET`
-  - **URL:** `http://localhost/expense_api/api/reports/monthly_summary.php?user_id=1&month=2026-09`
-* **Test Biểu đồ tròn cơ cấu chi tiêu (Category Chart):**
-  - **Method:** `GET`
-  - **URL:** `http://localhost/expense_api/api/reports/category_chart.php?user_id=1&month=2026-09`
+| STT | METHOD | URI ENDPOINT | BẢO MẬT | MÔ TẢ NGHIỆP VỤ & TÍNH NĂNG |
+| :---: | :---: | :--- | :---: | :--- |
+| **1** | `POST` | `/api/auth/register.php` | Public | Đăng ký tài khoản mới & tự động cấp 2 ví cơ bản |
+| **2** | `POST` | `/api/auth/login.php` | Public | Đăng nhập & cấp Bearer JWT Access Token |
+| **3** | `POST` | `/api/auth/forgot_password.php`| Public | Yêu cầu gửi OTP 6 số (Kèm debug_otp trên Localhost) |
+| **4** | `POST` | `/api/auth/verify_otp.php` | Public | Xác thực OTP & cấp reset_token 64 ký tự |
+| **5** | `POST` | `/api/auth/reset_password.php` | Public | Đặt lại mật khẩu mới bằng reset_token |
+| **6** | `GET` | `/api/auth/profile.php` | JWT Bearer | Lấy thông tin tài khoản & thống kê cá nhân |
+| **7** | `POST` | `/api/auth/profile.php` | JWT Bearer | Đổi tên hiển thị / Đổi mật khẩu |
+| **8** | `GET` | `/api/wallets/list.php` | JWT Bearer | Danh sách ví & Tổng tài sản ròng khả dụng |
+| **9** | `POST` | `/api/wallets/create.php` | JWT Bearer | Tạo ví mới (Tiền mặt, Ngân hàng) |
+| **10**| `POST` | `/api/wallets/transfer.php` | JWT Bearer | Chuyển tiền nội bộ giữa 2 ví ACID (QOL #1) |
+| **11**| `GET` | `/api/categories/list.php` | JWT Bearer | Danh mục Thu/Chi (Icons & Mã màu Hex) |
+| **12**| `POST` | `/api/categories/create.php` | JWT Bearer | Tạo danh mục riêng của người dùng |
+| **13**| `GET` | `/api/transactions/list.php` | JWT Bearer | Lịch sử giao dịch (Lọc đa tiêu chí UX #3) |
+| **14**| `POST` | `/api/transactions/create.php` | JWT Bearer | Thêm giao dịch thu/chi (ACID & Cập nhật ví) |
+| **15**| `POST` | `/api/transactions/update.php` | JWT Bearer | Sửa giao dịch, tự bù trừ Delta số dư ví (QOL #2)|
+| **16**| `POST` | `/api/transactions/delete.php` | JWT Bearer | Xóa giao dịch, hoàn lại tiền vào ví |
+| **17**| `GET` | `/api/budgets/status.php` | JWT Bearer | Tiến độ ngân sách tháng & cảnh báo (UX #4) |
+| **18**| `POST` | `/api/budgets/set.php` | JWT Bearer | Thiết lập hạn mức chi tiêu tháng |
+| **19**| `GET` | `/api/reports/monthly_summary.php` | JWT Bearer| Báo cáo tổng quan thu - chi tháng |
+| **20**| `GET` | `/api/reports/category_chart.php` | JWT Bearer | Biểu đồ tròn tỷ trọng chi tiêu (Pie Chart) |
+| **21**| `GET` | `/api/reports/income_vs_expense_chart.php` | JWT Bearer | Biểu đồ cột đối chiếu 6 tháng (Bar Chart) |
 
 ---
 
-## 6. Lưu Ý Dành Riêng Cho Bạn Đại Khi Viết Các API Tiếp Theo
+## 6. Quy Chuẩn Bảo Mật & Lệnh Kiểm Thử Tự Động
 
-Khi bạn Đại triển khai các API CRUD trong phân công:
-- Các file API của `wallets/` (danh sách ví, tạo ví mới).
-- Các file API của `transactions/` (thêm chi tiêu, danh sách lịch sử thu chi, xóa chi tiêu).
-- Các file API của `categories/` (lấy danh mục chi tiêu/thu nhập).
+### A. Cơ chế Bảo Mật JWT (Triệt tiêu IDOR)
+- Mọi API có bảo mật `JWT Bearer` **tuyệt đối không nhận `$user_id` từ client** gửi lên.
+- Backend tự động bóc tách `$user_id` trực tiếp từ chuỗi chữ ký số Bearer Token trong Header:
+  `Authorization: Bearer <jwt_token>`
+- Nếu thiếu hoặc token không hợp lệ, hệ thống tự động trả về `HTTP 401 Unauthorized`.
 
-👉 **Quy chuẩn bắt buộc trong mỗi file API:**
-1. Đầu file luôn import 2 file cấu hình dùng chung:
-   ```php
-   require_once __DIR__ . '/../../config/database.php';
-   require_once __DIR__ . '/../../config/helpers.php';
-   ```
-2. Gọi hàm chuẩn hóa Response để trả dữ liệu cho ứng dụng React Native:
-   ```php
-   // Thành công:
-   send_json_response(200, "Lấy danh sách thành công", $data);
+### B. Kiểm thử tự động bằng PowerShell
+Chạy file kiểm thử tự động toàn diện:
+```powershell
+.\test_api.ps1
+```
+Script sẽ tự động chạy qua Bước 0.5 dọn dẹp sạch CSDL và kiểm tra toàn bộ 21 endpoint (từ chối 401, cấp JWT token, luồng OTP 3 bước, bù trừ Delta và tạo báo cáo biểu đồ).  
+*Nếu muốn chạy test mà giữ nguyên dữ liệu hiện tại không reset: gõ `.\test_api.ps1 -NoReset`.*
 
-   // Thất bại:
-   send_json_response(400, "Dữ liệu không hợp lệ");
-   ```
-3. Luôn dùng **PDO Prepared Statements** (`$stmt->prepare(...)` và `$stmt->execute(...)`) để đảm bảo không bị lỗi SQL Injection.
+---
+
+## 7. 🧹 API Nội Bộ Debug & Dọn Dẹp CSDL (Internal Reset API)
+
+> ⚠️ **Lưu ý:** API này chỉ dùng cho mục đích kiểm thử phát triển nội bộ, **không xuất hiện trên giao diện ứng dụng di động**.
+
+* **Endpoint:** `GET` hoặc `POST` `/api/debug/reset_database.php`
+* **URL:** `http://localhost/expense_api/api/debug/reset_database.php`
+* **Cơ chế hoạt động:**
+  1. **Xóa thật (Hard Delete / TRUNCATE):** Làm sạch toàn bộ dữ liệu phát sinh khi chạy test (giao dịch mới, ví mới, OTP).
+  2. **Đưa ID tự tăng về 1:** Reset Auto-Increment của tất cả các bảng.
+  3. **Tái tạo nguyên trạng bộ dữ liệu mẫu chuẩn:**
+     - 2 Tài khoản mẫu (`thanhdat@gmail.com` và `trongdai@gmail.com` / pass: `password123`).
+     - 4 Ví gốc (Tiền mặt, Vietcombank, MB Bank) với số dư nguyên vẹn.
+     - 10 Danh mục hệ thống mặc định (7 Chi tiêu, 3 Thu nhập).
+     - 7 Giao dịch mẫu theo đúng tháng hiện tại.
+     - 2 Ngân sách mẫu theo đúng tháng hiện tại.
+     - Dọn sạch bảng `password_resets`.
+* **Khóa an toàn:** Tự động chặn và trả về `HTTP 403 Forbidden` nếu phát hiện đang chạy trên máy chủ Production của trường.
+
+

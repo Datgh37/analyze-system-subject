@@ -75,11 +75,21 @@ try {
 
     $db->commit();
 
+    // 2.5. Cấp ngay JWT Token để client có thể tự động đăng nhập liền mạch
+    $auth_token = jwt_encode([
+        'user_id'   => (int)$new_user_id,
+        'email'     => $email,
+        'full_name' => $full_name
+    ]);
+
     // 3. Phản hồi thành công
     send_json_response("success", "Đăng ký tài khoản thành công!", [
-        "user_id"   => (int)$new_user_id,
-        "full_name" => $full_name,
-        "email"     => $email
+        "user" => [
+            "id"        => (int)$new_user_id,
+            "full_name" => $full_name,
+            "email"     => $email
+        ],
+        "token" => $auth_token
     ], 201);
 
 } catch (PDOException $e) {

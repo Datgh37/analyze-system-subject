@@ -77,6 +77,18 @@ CREATE TABLE IF NOT EXISTS `budgets` (
   CONSTRAINT `fk_budgets_category` FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- BẢNG 6: MÃ XÁC THỰC QUÊN MẬT KHẨU (PASSWORD_RESETS)
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `email` VARCHAR(150) NOT NULL COMMENT 'Email người dùng yêu cầu đặt lại mật khẩu',
+  `otp_code` VARCHAR(10) NOT NULL COMMENT 'Mã OTP 6 chữ số',
+  `reset_token` VARCHAR(64) NULL COMMENT 'Token tạm thời cấp sau khi xác thực OTP thành công',
+  `expires_at` DATETIME NOT NULL COMMENT 'Thời hạn hết hạn của mã OTP hoặc token',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời điểm tạo yêu cầu',
+  INDEX `idx_pwd_reset_email` (`email`),
+  INDEX `idx_pwd_reset_token` (`reset_token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ==============================================================================
 -- 2. DỮ LIỆU MẪU KHỞI TẠO (SEED DATA) - DÙNG INSERT IGNORE ĐỂ CHỐNG TRÙNG LẶP
 -- ==============================================================================

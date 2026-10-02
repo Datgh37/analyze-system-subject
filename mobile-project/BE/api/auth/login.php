@@ -54,8 +54,12 @@ try {
         send_json_response("error", "Email hoặc mật khẩu không chính xác.", null, 401);
     }
 
-    // 4. Tạo token session xác thực đơn giản (base64 định danh kèm timestamp)
-    $auth_token = base64_encode($user['id'] . ":" . $user['email'] . ":" . time());
+    // 4. Tạo JWT Token bảo mật chuẩn HMAC-SHA256
+    $auth_token = jwt_encode([
+        'user_id'   => (int)$user['id'],
+        'email'     => $user['email'],
+        'full_name' => $user['full_name']
+    ]);
 
     // 5. Lấy danh sách ví tài chính của user
     $wallet_stmt = $db->prepare("

@@ -1410,3 +1410,164 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 - **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-02_plan_19_refactor_chapter_1_and_prose_purification.md`](plans/plans-general/2026-10-02_plan_19_refactor_chapter_1_and_prose_purification.md).
 - **Trạng thái:** `ACCEPTED & COMPLETED`.
 
+---
+
+## [2026-10-02 13:50] - Quyết Định 75: Tinh Chỉnh Toàn Diện Văn Phong Học Thuật, Khắc Phục Lỗi Lệch Hình - Chữ Use Case Và Chuẩn Hóa Ngữ Nghĩa Chương 2 & Chương 3
+- **Vấn đề:** 
+  1. Khảo sát nội dung Chương 2 và Chương 3 trong [`files/KhoaLuanTotNghiep.docx`](../files/KhoaLuanTotNghiep.docx) phát hiện lỗi bố cục nghiêm trọng tại Mục 3.1.4 (off-by-one misalignment): 9 đoạn văn thuyết minh phân hệ Use Case bị lệch một bước so với 9 hình Use Case (thiếu thuyết minh cho UCD 01 Tài khoản & Đa ví, đoạn UCD 02 bị đặt trước Hình UCD 01, ..., và đoạn UCD 09 bị duplicate lặp lại 2 lần ở cuối).
+  2. Còn tồn đọng liên kết chéo cũ: đoạn P[202], P[252] và P[289] vẫn dẫn chiếu đến "Mục 1.7" (phát biểu bài toán cũ của Chương 1) thay vì "Mục 1.4".
+  3. Văn phong Chương 2 chứa nhiều câu văn ghép nối 4-5 dòng dài lê thê chỉ có 1 dấu chấm, lạm dụng các thuật ngữ tiếng Anh chắp vá thô giữa chừng câu (`Homo Economicus`, `Human-in-the-loop`, `Spatial & Contextual Understanding`, `Schema-Constrained Generation`, `Fungibility`...).
+  4. Thuyết minh 6 Bounded Contexts ở Mục 3.3.3 là các khối văn bản đặc quánh, thiếu sự phân định rõ ràng giữa cấu trúc lớp và logic nghiệp vụ miền.
+- **Quyết định & Thực thi:**
+  1. **Khắc phục triệt để lỗi lệch hình - chữ Use Case tại Mục 3.1.4:**
+     - Soạn mới đoạn văn thuyết minh chuẩn mực cho **UCD 01 (Quản lý Tài khoản & Đa Ví cá nhân)** đặt ngay trước Hình 3.2.
+     - Đưa đúng toàn bộ các đoạn thuyết minh UCD 02 (Thu nhập), UCD 03 (Chi tiêu & OCR), UCD 04 (Danh mục & Quy tắc), UCD 05 (Ngân sách & DSA), UCD 06 (Quỹ & Nợ), UCD 07 (Báo cáo & Phân tích), UCD 08 (Dự báo thâm hụt), UCD 09 (Cú hích Thaler) về vị trí trước các Hình 3.3 đến 3.10 tương ứng.
+     - Xóa bỏ hoàn toàn đoạn văn duplicate lặp lại của UCD 09.
+  2. **Xóa sạch 100% dẫn chiếu chéo cũ:**
+     - Cập nhật toàn bộ các dẫn chiếu "Mục 1.7" thành **"Mục 1.4"** tại Mục 3.1.1 (P[202]), Mục 3.3.1 (P[252]) và mở đầu Chương 4 (P[289]).
+  3. **Biên tập và gọt giũa toàn diện văn phong Chương 2:**
+     - Viết lại câu từ tự nhiên, mạch lạc, cắt ngắn các câu ghép nối phức tạp, giải thích trực giác dễ hiểu cho: Cú hích Thaler (khoảng trễ cân nhắc 24-48h), Hạch toán tâm lý (tiền thưởng vs tiền lương, gán nhãn ví ảo bảo vệ nguồn lực), 4 trường phái ngân sách, Tối ưu hóa nợ Snowball/Avalanche, AI Multimodal Vision OCR, Kỹ thuật Prompt JSON Schema, Thuật toán Hậu kiểm toán số học 3 bước, Tiêu chuẩn VietQR EMVCo & NAPAS 247, Domain-Driven Design (tránh mô hình thiếu máu Anemic), Clean Architecture (nguyên lý phụ thuộc đảo ngược), và Hàng đợi tác vụ bất đồng bộ (HTTP 202 Accepted).
+  4. **Tối ưu hóa thuyết minh Mục 3.3 (Mô hình Lớp & 6 Bounded Contexts):**
+     - Diễn giải gãy gọn 5 giai đoạn OOAD, làm rõ tiêu chí loại bỏ lớp và kết luận 18 lớp thực thể miền.
+     - Cấu trúc lại các đoạn thuyết minh 6 Bounded Contexts (Context 1 đến Context 6): phân định rõ ràng giữa cấu trúc lớp (thực thể, thuộc tính, quan hệ kế thừa/hợp thành) và logic nghiệp vụ miền (phương thức giàu hành vi, cơ chế toàn vẹn ACID).
+  5. **Bảo toàn 100% các thành phần nền tảng:**
+     - Giữ nguyên vẹn tuyệt đối Khối thủ tục đầu (P[0] đến P[79]) và Chương 1 đã tinh gọn (P[80] đến P[139]), 0 sai lệch.
+     - Giữ nguyên toàn bộ 17 hình ảnh bản vẽ kỹ thuật (10 sơ đồ Use Case và 7 sơ đồ Class Diagram) cùng 12 bảng biểu trong Chương 2 & 3.
+  6. **Mở rộng bộ unit tests tự động:**
+     - Bổ sung 2 bài test kiểm tra tự động vào [`tests/test_docx_academic_format.py`](../tests/test_docx_academic_format.py): `test_chapter_3_usecase_alignment` (xác minh 9 cặp Use Case khớp 1:1) và `test_no_stale_chapter_1_references` (bảo đảm không còn dẫn chiếu cũ).
+     - Toàn bộ **113/113 unit tests PASSED (100% OK)**.
+- **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-02_plan_20_refactor_prose_chapters_2_and_3.md`](plans/plans-general/2026-10-02_plan_20_refactor_prose_chapters_2_and_3.md).
+---
+
+## [2026-10-02 18:25] - Quyết Định 76: Làm Rõ Thiết Kế Thực Thể User/Profile Theo Chuẩn DDD & Bổ Sung API Quản Lý Hồ Sơ Cá Nhân (`api/auth/profile.php`)
+- **Vấn đề:** 
+  1. Thành viên phụ trách Frontend (Trần Trọng Đại) phản hồi rằng Backend mới chỉ có API Đăng ký (`register.php`) và Đăng nhập (`login.php`), chưa có API để lấy dữ liệu hiển thị màn hình Hồ sơ cá nhân (Profile / Account Screen) hoặc lưu trữ thay đổi thông tin cá nhân/đổi mật khẩu.
+  2. Cần làm rõ về mặt học thuật: Trong thiết kế tổng thể PTTKHTTT (Class Diagram DDD), lớp `UserProfile` có đứng độc lập hay không.
+- **Quyết định & Thực thi:**
+  1. **Làm rõ bản chất thiết kế hướng đối tượng OOAD & DDD:**
+     - Trong Báo cáo Lab 3 và Mô hình Lớp chuẩn PTTKHTTT, lớp ứng viên `UserProfile` và `RiskProfile` đã được nhóm chủ động **loại bỏ theo Tiêu chí C4 của GV ("Chỉ là thuộc tính/vai trò của một lớp khác")**.
+     - Toàn bộ thuộc tính định danh và hồ sơ cá nhân (`fullName`, `email`, `passwordHash`, `salaryDay`, `riskTolerance`...) được tích hợp thống nhất vào Thực thể gốc **`User`** thuộc **Context 1: Identity & Profile Context**. Thiết kế này tuân thủ nguyên lý thực thể giàu thuộc tính (Rich Domain Model), tránh tạo ra các lớp thừa vô nghĩa (Anemic Class).
+  2. **Bổ sung API quản lý hồ sơ cá nhân [`mobile-project/BE/api/auth/profile.php`](../mobile-project/BE/api/auth/profile.php):**
+     - Hỗ trợ phương thức `GET`: Nhận `user_id`, trả về thông tin tài khoản (`id`, `full_name`, `email`, `created_at`) kèm dữ liệu thống kê phục vụ UI Profile (`wallet_count`, `total_balance`, `transaction_count`).
+     - Hỗ trợ phương thức `POST`: Nhận payload JSON cho phép người dùng đổi `full_name` hoặc đổi `password` (xác thực `old_password` băm Bcrypt an toàn).
+  3. **Cập nhật kiểm thử tự động:**
+     - Bổ sung 2 test case cho Profile (GET & POST) vào [`mobile-project/BE/test_api.ps1`](../mobile-project/BE/test_api.ps1).
+- **Trạng thái:** `ACCEPTED & COMPLETED`.
+
+---
+
+## [2026-10-02 18:35] - Quyết Định 77: Phê Chuẩn Kế Hoạch Điều Hành PLAN-21 (Nâng Cấp Bảo Mật JWT, Triệt Tiêu IDOR & Chuẩn Hóa 16 RESTful API Mobile)
+- **Vấn đề:** 
+  1. Trưởng nhóm (Trịnh Thành Đạt) yêu cầu triệu tập Hội đồng Đa tác tử để rà soát toàn diện kiến trúc Mobile App, xác định rõ ranh giới phạm vi MVP, giải quyết dứt điểm tình trạng API sơ sài và thiếu lớp bảo mật (IDOR, truyền `user_id` tự do, token mock).
+  2. Thành viên Frontend (Trần Trọng Đại) gặp khó khăn trong việc định hướng thiết kế giao diện do thiếu chuẩn API Contract và cơ chế lưu trữ phiên.
+  3. Giảng viên mới tiếp quản môn học có thể mở rộng giới hạn công nghệ nhưng đòi hỏi sản phẩm phải chắc chắn, hoàn chỉnh và có khả năng chạy thực tế (MVP).
+- **Quyết định của Hội đồng:**
+  1. **Ban hành Kế hoạch Điều hành PLAN-21:**
+     - Lưu trữ snapshot tại [`project_context/plans/plans-mobile-app/2026-10-02_plan_21_mobile_security_jwt_and_complete_api_scoping.md`](plans/plans-mobile-app/2026-10-02_plan_21_mobile_security_jwt_and_complete_api_scoping.md).
+  2. **Xác lập ranh giới phạm vi MVP (Scope Scoping):**
+     - Đóng khung 6 phân hệ cốt lõi: (1) Xác thực & Hồ sơ JWT, (2) Quản lý Đa Ví, (3) Danh mục Thu/Chi, (4) Giao dịch Thu/Chi ACID, (5) Hạn mức Ngân sách tháng & Cảnh báo, (6) Báo cáo Tài chính Biểu đồ.
+     - Loại bỏ các bài toán phức tạp của Khóa luận lớn (AI OCR Vision đa món, tối ưu nợ DAG, Vector Clock offline-sync) để giữ ứng dụng chạy mượt mà và dễ vấn đáp.
+  3. **Kiến trúc Bảo mật Fintech (Agent 11 - Bruce Schneier):**
+     - Xây dựng bộ sinh/giải mã JWT chuẩn HMAC-SHA256 thuần PHP trong `config/helpers.php`.
+     - Xây dựng Middleware tập trung `require_authenticated_user()`, trích xuất `user_id` trực tiếp từ Token, xóa bỏ hoàn toàn việc đọc `user_id` từ URL/Body để triệt tiêu 100% lỗ hổng IDOR.
+  4. **Bổ sung phân hệ Ngân sách (Agent 05 & 02):**
+     - Hiện thực `api/budgets/status.php` và `api/budgets/set.php` dựa trên bảng CSDL `budgets` có sẵn.
+  5. **Chuẩn hóa Client State cho FE (Agent 10 - Dan Abramov):**
+     - Thiết lập Axios Interceptor tự động gắn `Authorization: Bearer <token>` và xử lý redirect Login khi nhận mã 401.
+- **Trạng thái:** `APPROVED & LOCKED BY COUNCIL`.
+
+---
+
+## [2026-10-02 19:15] - Quyết Định 78: Hoàn Tất Triển Khai Giai Đoạn A (Security Core) & Giai Đoạn B (21 RESTful API Hoàn Chỉnh & Test Suite Tự Động)
+- **Vấn đề:** 
+  1. Người dùng phê chuẩn triển khai 2 giai đoạn đầu theo phương châm "chậm mà chắc":
+     - Giai đoạn A: Bộ lõi bảo mật CSDL & JWT Token HMAC-SHA256 thuần PHP.
+     - Giai đoạn B: Toàn bộ 21 RESTful API hoàn chỉnh theo danh mục chuẩn MVP.
+- **Quyết định & Thực thi:**
+  1. **Giai đoạn A - Lõi Bảo Mật & Xác Thực (Security Core):**
+     - Đã nâng cấp [`mobile-project/BE/config/helpers.php`](../mobile-project/BE/config/helpers.php): Hiện thực thuật toán mã hóa `jwt_encode()`, giải mã và xác minh tính toàn vẹn `jwt_decode()` chuẩn HMAC-SHA256 URL-safe Base64, trích xuất Bearer Token `get_bearer_token()` và middleware cốt tử `require_authenticated_user()`, `get_authenticated_user_id()`.
+     - Triệt tiêu 100% nguy cơ tấn công IDOR: Tất cả các endpoint được bảo vệ đều lấy `$user_id` duy nhất từ chữ ký số Token, từ chối mọi trường hợp thiếu token hoặc token giả mạo bằng mã `HTTP 401 Unauthorized`.
+     - Cập nhật [`mobile-project/BE/config/database.php`](../mobile-project/BE/config/database.php) bổ sung phương thức `isLocal()` phục vụ chế độ Dual-Mode OTP.
+  2. **Giai đoạn B - Triển khai 21 RESTful API Hoàn Chỉnh:**
+     - **Phân hệ Auth & Người dùng (7 APIs):**
+       - `POST /api/auth/register.php`: Đăng ký, tạo 2 ví cơ bản, cấp ngay JWT Token.
+       - `POST /api/auth/login.php`: Đăng nhập, kiểm tra bcrypt/mật khẩu dev, cấp JWT Token.
+       - `POST /api/auth/forgot_password.php`: Yêu cầu gửi mã OTP 6 số (kèm `debug_otp` trên Localhost).
+       - `POST /api/auth/verify_otp.php`: Xác thực OTP, cấp `reset_token` 64 ký tự hex.
+       - `POST /api/auth/reset_password.php`: Đặt lại mật khẩu mới bằng `reset_token` (xóa token một lần).
+       - `GET /api/auth/profile.php`: Xem thông tin tài khoản và thống kê cá nhân (JWT Bearer).
+       - `POST /api/auth/profile.php`: Đổi tên hiển thị / đổi mật khẩu xác thực bcrypt (JWT Bearer).
+     - **Phân hệ Ví Tài Chính (3 APIs):**
+       - `GET /api/wallets/list.php`: Danh sách ví & tổng tài sản ròng khả dụng (JWT Bearer).
+       - `POST /api/wallets/create.php`: Tạo ví mới tiền mặt/ngân hàng (JWT Bearer).
+       - `POST /api/wallets/transfer.php` (QOL #1): Chuyển tiền nội bộ giữa 2 ví chuẩn ACID, khóa bi quan `FOR UPDATE`, kiểm tra số dư ví nguồn, không làm sai lệch báo cáo thu chi.
+     - **Phân hệ Danh Mục Thu/Chi (2 APIs):**
+       - `GET /api/categories/list.php`: Danh sách danh mục hệ thống + danh mục riêng của user.
+       - `POST /api/categories/create.php`: Người dùng tự tạo danh mục chi tiêu/thu nhập mới.
+     - **Phân hệ Giao Dịch & Bù Trừ Số Dư (4 APIs):**
+       - `GET /api/transactions/list.php` (UX #3): Lịch sử giao dịch kèm bộ lọc đa tiêu chí (tháng, năm, ví, danh mục, loại thu/chi, từ khóa ghi chú `keyword`, phân trang `limit`/`offset`).
+       - `POST /api/transactions/create.php`: Thêm giao dịch thu/chi nguyên tử ACID, tự động cập nhật số dư ví.
+       - `POST /api/transactions/update.php` (QOL #2): Sửa giao dịch, tự động tính chênh lệch Delta bù trừ trực tiếp vào số dư ví tương ứng (hỗ trợ cả đổi số tiền lẫn đổi ví nguồn).
+       - `POST /api/transactions/delete.php`: Xóa giao dịch và tự động hoàn trả số dư ví.
+     - **Phân hệ Hạn Mức Ngân Sách (2 APIs):**
+       - `GET /api/budgets/status.php` (UX #4): Tiến độ ngân sách tháng, tính toán % đã tiêu, phân loại cảnh báo (`NORMAL`, `WARNING`, `DANGER`), tính hạn mức an toàn mỗi ngày (`daily_safe_spending`) và danh sách ngân sách theo danh mục.
+       - `POST /api/budgets/set.php`: Thiết lập/cập nhật hạn mức ngân sách tháng hoặc theo danh mục.
+     - **Phân hệ Báo Cáo & Biểu Đồ (3 APIs):**
+       - `GET /api/reports/monthly_summary.php`: Tổng quan thu, chi, số dư ròng, tỷ lệ tiết kiệm.
+       - `GET /api/reports/category_chart.php`: Dữ liệu tỷ trọng chi tiêu chuẩn hóa cho `react-native-chart-kit` PieChart.
+       - `GET /api/reports/income_vs_expense_chart.php`: Dữ liệu cột đối chiếu 6 tháng chuẩn hóa cho BarChart.
+  3. **Bộ Script Kiểm Thử Tự Động Toàn Diện:**
+     - Nâng cấp [`mobile-project/BE/test_api.ps1`](../mobile-project/BE/test_api.ps1) kiểm thử tự động toàn diện qua 7 phân hệ: Chặn 401 không có token, Luồng OTP 3 bước, Chuyển ví ACID, Bù trừ Delta giao dịch, Ngân sách và Biểu đồ.
+     - Kiểm tra cú pháp PHP CLI (`php -l`): **100% 23/23 tệp PHP vượt qua kiểm tra, 0 lỗi cú pháp**.
+- **Kế hoạch snapshot:** [`project_context/plans/plans-mobile-app/2026-10-02_plan_21_mobile_security_jwt_and_complete_api_scoping.md`](plans/plans-mobile-app/2026-10-02_plan_21_mobile_security_jwt_and_complete_api_scoping.md).
+- **Trạng thái:** `COMPLETED (READY FOR FE SETUP & INTEGRATION)`.
+
+---
+
+## [2026-10-02 19:50] - Quyết Định 79: Hoàn Tất Cấu Hình Bộ Khung Frontend Chuẩn Expo SDK 54, Axios Interceptor & Bàn Giao Hướng Dẫn Thiết Kế Cho Bạn Đại
+- **Vấn đề:** 
+  1. Người dùng yêu cầu cấu hình bộ khung Frontend chuẩn chỉnh, an toàn ("chậm mà chắc"), kết nối hoàn chỉnh với 21 API Backend đã bảo mật JWT.
+  2. Về mặt thiết kế mỹ thuật UI: Chỉ cấu hình khung sườn logic và để lại các ghi chú (notes) hướng dẫn wireframe chi tiết để bạn Đại tự tay triển khai theo thẩm mỹ cá nhân.
+- **Quyết định & Thực thi:**
+  1. **Tối ưu hóa Môi trường & Bộ đệm:**
+     - Thiết lập vĩnh viễn `pnpm cache-dir` trỏ về `D:\Coding-IDE\pnpm-cache`.
+     - Xóa sạch 257 MB rác đệm cũ trên ổ C (`$env:LOCALAPPDATA\pnpm-cache`).
+  2. **Cài đặt Thư viện Tương thích Tuyệt đối (Expo SDK 54):**
+     - Đã cài đặt hoàn chỉnh: `expo: ~54.0.36`, `react-native: 0.81.5`, `react: 19.1.0`.
+     - Bộ điều hướng chuẩn React Navigation 7: `@react-navigation/native`, `@react-navigation/native-stack`, `@react-navigation/bottom-tabs`, `react-native-screens`, `react-native-safe-area-context`.
+     - Quản lý phiên & Lưu trữ: `axios: ^1.20.0`, `@react-native-async-storage/async-storage: 2.2.0`.
+     - Đồ họa & Biểu đồ: `react-native-svg: 15.12.1`, `react-native-chart-kit: ^7.0.4`, `@expo/vector-icons: ^15.1.1`.
+     - Toàn bộ các gói phụ thuộc được lưu trữ tập trung tại `D:\Coding-IDE\pnpm-libraries` với cờ `node-linker=hoisted`.
+  3. **Xây dựng Kiến trúc Client & Tầng Mạng (Network Layer):**
+     - [`src/api/config.js`](../mobile-project/FE/src/api/config.js): Hỗ trợ chuyển đổi IP linh hoạt giữa máy ảo Android Emulator (`10.0.2.2`), điện thoại thật cùng Wifi LAN (`LOCAL_LAN_IP`), và Hosting trường.
+     - [`src/api/client.js`](../mobile-project/FE/src/api/client.js): Axios Client tích hợp Request Interceptor tự động đọc JWT Token từ AsyncStorage đính kèm `Authorization: Bearer <token>`, và Response Interceptor xử lý mã lỗi 401 tự động thu hồi phiên.
+     - [`src/api/endpoints.js`](../mobile-project/FE/src/api/endpoints.js): Đóng gói sẵn toàn bộ 21 hàm gọi API theo 6 phân hệ (Auth, Wallets, Categories, Transactions, Budgets, Reports).
+     - [`src/context/AuthContext.js`](../mobile-project/FE/src/context/AuthContext.js): Quản lý trạng thái xác thực toàn cục (`user`, `token`, `login()`, `register()`, `logout()`, `updateUser()`).
+     - [`src/constants/theme.js`](../mobile-project/FE/src/constants/theme.js): Định nghĩa hệ thống màu sắc nhận diện (`COLORS`), khoảng cách (`SPACING`), kích thước chữ (`SIZES`), đổ bóng (`SHADOWS`).
+  4. **Hệ Thống Màn Hình & Ghi Chú Thiết Kế Chi Tiết Cho Bạn Đại:**
+     - Hoàn thiện 9 màn hình chức năng hoạt động được ngay kèm khối chú thích `HƯỚNG DẪN THIẾT KẾ GIAO DIỆN (DÀNH CHO ĐẠI - UI LEAD)`:
+       - Phân hệ Auth: [`LoginScreen.js`](../mobile-project/FE/src/screens/auth/LoginScreen.js), [`RegisterScreen.js`](../mobile-project/FE/src/screens/auth/RegisterScreen.js), [`ForgotPasswordScreen.js`](../mobile-project/FE/src/screens/auth/ForgotPasswordScreen.js) (quy trình OTP 3 bước).
+       - Phân hệ Main: [`HomeScreen.js`](../mobile-project/FE/src/screens/main/HomeScreen.js) (dashboard tổng tài sản, thẻ tiến độ ngân sách), [`TransactionsScreen.js`](../mobile-project/FE/src/screens/main/TransactionsScreen.js) (bộ lọc đa tiêu chí), [`AddTransactionScreen.js`](../mobile-project/FE/src/screens/main/AddTransactionScreen.js) (thêm/sửa bù trừ Delta ví), [`BudgetScreen.js`](../mobile-project/FE/src/screens/main/BudgetScreen.js) (hạn mức tháng & chi tiêu an toàn mỗi ngày), [`ReportScreen.js`](../mobile-project/FE/src/screens/main/ReportScreen.js) (PieChart tỷ trọng & BarChart 6 tháng), [`ProfileScreen.js`](../mobile-project/FE/src/screens/main/ProfileScreen.js) (hồ sơ, đổi mật khẩu).
+  5. **Tài Liệu Hướng Dẫn Kỹ Thuật Cho Đại:**
+     - Soạn thảo tài liệu bàn giao tại [`mobile-project/FE/README.md`](../mobile-project/FE/README.md).
+- **Trạng thái:** `COMPLETED (READY FOR UI REFINEMENT BY ĐẠI)`.
+
+---
+
+## [2026-10-02 20:09] - Quyết Định 80: Khắc Phục Lệch Múi Giờ OTP (Timezone Skew), Chuẩn Hóa UTF-8 Cho Bộ Test PowerShell & Nghiệm Thu 100% 21 RESTful API PASSED
+- **Vấn đề:**
+  1. Khi chạy kiểm thử thực tế trên WAMP Server, API 4 (`auth/verify_otp.php`) bị trả về `400 Bad Request` ("Mã OTP không chính xác hoặc đã hết thời gian hiệu lực").
+  2. Nguyên nhân kỹ thuật: Lệch múi giờ giữa PHP (`UTC`) và MySQL Server (`UTC+7` / Asia/Ho_Chi_Minh). PHP ghi nhận thời hạn hết hạn theo giờ UTC thấp hơn 7 tiếng so với hàm `NOW()` của MySQL khiến điều kiện `expires_at > NOW()` luôn trả về `false`.
+  3. Trong Windows PowerShell 5.1, `Invoke-RestMethod` khi gửi payload JSON có ký tự tiếng Việt có dấu (như tên ví, tên danh mục, họ tên) mặc định bị lỗi font nếu không chỉ định mảng byte UTF-8 và `charset=utf-8`, dẫn đến các API POST/UPDATE nhận payload rỗng và trả về mã 400.
+- **Quyết định & Thực thi:**
+  1. **Đồng Bộ Múi Giờ Hệ Thống & CSDL:**
+     - Bổ sung `date_default_timezone_set('Asia/Ho_Chi_Minh');` vào [`mobile-project/BE/config/helpers.php`](../mobile-project/BE/config/helpers.php).
+     - Trong [`forgot_password.php`](../mobile-project/BE/api/auth/forgot_password.php) và [`verify_otp.php`](../mobile-project/BE/api/auth/verify_otp.php), chuyển sang sử dụng trực tiếp hàm cộng thời gian nội tại của MySQL `DATE_ADD(NOW(), INTERVAL 15 MINUTE)` để triệt tiêu 100% sự phụ thuộc vào độ lệch đồng hồ máy chủ ứng dụng và CSDL.
+  2. **Chuẩn Hóa Mã Hóa Dữ Liệu PowerShell Test Suite:**
+     - Nâng cấp hàm `Invoke-ApiTest` trong [`test_api.ps1`](../mobile-project/BE/test_api.ps1) sử dụng `[System.Text.Encoding]::UTF8.GetBytes($jsonBody)` và Header `application/json; charset=utf-8`.
+  3. **Kết Quả Nghiệm Thu Thực Nghiệm:**
+     - Chạy lại kiểm thử tự động toàn diện: **100% 21/21 API PASSED**, toàn bộ luồng Auth JWT Bearer, IDOR Block 401, 3 bước OTP, Quản lý ví, Chuyển tiền ACID, Danh mục, Giao dịch bù trừ Delta, Ngân sách và Biểu đồ hoạt động hoàn hảo.
+- **Trạng thái:** `VERIFIED & LOCKED (READY FOR GIT PUSH)`.
+
+
+

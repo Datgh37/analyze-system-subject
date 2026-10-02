@@ -1,53 +1,86 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import HomeScreen from '../screens/main/HomeScreen';
+import TransactionsScreen from '../screens/main/TransactionsScreen';
+import BudgetScreen from '../screens/main/BudgetScreen';
+import ReportScreen from '../screens/main/ReportScreen';
+import ProfileScreen from '../screens/main/ProfileScreen';
 import { COLORS } from '../constants/theme';
-
-import HomeScreen from '../screens/HomeScreen';
-import AddTransactionScreen from '../screens/AddTransactionScreen';
-import HistoryScreen from '../screens/HistoryScreen';
-import ReportScreen from '../screens/ReportScreen';
 
 const Tab = createBottomTabNavigator();
 
-/**
- * ĐIỀU HƯỚNG TAB CHÍNH (BOTTOM TAB NAVIGATOR)
- * Thiết kế kiến trúc: Trịnh Thành Đạt (Lead)
- */
 export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: COLORS.surface,
+          elevation: 1,
+          shadowOpacity: 0.05
+        },
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          color: COLORS.primaryDark
+        },
         tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textSecondary,
+        tabBarInactiveTintColor: COLORS.textMuted,
         tabBarStyle: {
-          backgroundColor: COLORS.card,
+          backgroundColor: COLORS.surface,
+          borderTopColor: COLORS.border,
           height: 60,
           paddingBottom: 8,
-          paddingTop: 6
+          paddingTop: 8
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600'
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Trang Chủ') {
+          if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Thêm Mới') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
-          } else if (route.name === 'Lịch Sử') {
-            iconName = focused ? 'time' : 'time-outline';
-          } else if (route.name === 'Báo Cáo') {
+          } else if (route.name === 'Transactions') {
+            iconName = focused ? 'receipt' : 'receipt-outline';
+          } else if (route.name === 'Budget') {
             iconName = focused ? 'pie-chart' : 'pie-chart-outline';
+          } else if (route.name === 'Reports') {
+            iconName = focused ? 'bar-chart' : 'bar-chart-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={22} color={color} />;
         }
       })}
     >
-      <Tab.Screen name="Trang Chủ" component={HomeScreen} />
-      <Tab.Screen name="Thêm Mới" component={AddTransactionScreen} />
-      <Tab.Screen name="Lịch Sử" component={HistoryScreen} />
-      <Tab.Screen name="Báo Cáo" component={ReportScreen} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'Tổng Quan', headerTitle: 'Smart Expense' }}
+      />
+      <Tab.Screen
+        name="Transactions"
+        component={TransactionsScreen}
+        options={{ title: 'Sổ Giao Dịch', headerTitle: 'Lịch Sử Thu - Chi' }}
+      />
+      <Tab.Screen
+        name="Budget"
+        component={BudgetScreen}
+        options={{ title: 'Ngân Sách', headerTitle: 'Hạn Mức Ngân Sách' }}
+      />
+      <Tab.Screen
+        name="Reports"
+        component={ReportScreen}
+        options={{ title: 'Báo Cáo', headerTitle: 'Báo Cáo & Thống Kê' }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: 'Hồ Sơ', headerTitle: 'Tài Khoản Cá Nhân' }}
+      />
     </Tab.Navigator>
   );
 }

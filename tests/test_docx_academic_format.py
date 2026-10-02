@@ -87,5 +87,38 @@ class TestDocxAcademicFormat(unittest.TestCase):
                 self.assertAlmostEqual(p.paragraph_format.first_line_indent.cm, -0.35, delta=0.05)
         self.assertTrue(bullet_found)
 
+    def test_chapter_3_usecase_alignment(self):
+        """Bảo đảm 9 phân hệ Use Case tại Mục 3.1.4 khớp 1:1 giữa đoạn thuyết minh và hình ảnh tương ứng."""
+        expected_pairs = [
+            ("Quản lý Tài khoản & Đa Ví", "Hình 3.2: Sơ đồ Use Case Phân hệ Quản lý Tài khoản & Đa Ví"),
+            ("Quản lý Thu nhập", "Hình 3.3: Sơ đồ Use Case Phân hệ Quản lý Thu nhập"),
+            ("Quản lý Chi tiêu", "Hình 3.4: Sơ đồ Use Case Phân hệ Chi tiêu & Bóc tách Hóa đơn"),
+            ("Quản lý Danh mục", "Hình 3.5: Sơ đồ Use Case Phân hệ Quản lý Danh mục"),
+            ("Quản lý Ngân sách", "Hình 3.6: Sơ đồ Use Case Phân hệ Quản lý Ngân sách & Hạn mức"),
+            ("Quỹ tích lũy & Tối ưu hóa Nợ", "Hình 3.7: Sơ đồ Use Case Phân hệ Quỹ Tích lũy & Tối ưu"),
+            ("Báo cáo & Phân tích", "Hình 3.8: Sơ đồ Use Case Phân hệ Báo cáo & Phân tích"),
+            ("Dự báo Tài chính", "Hình 3.9: Sơ đồ Use Case Phân hệ Dự báo Tài chính"),
+            ("Cú hích Hành vi", "Hình 3.10: Sơ đồ Use Case Phân hệ Cú hích Hành vi")
+        ]
+        # Start searching from 3.1.4
+        found_pairs = []
+        for i, p in enumerate(self.doc.paragraphs):
+            for kw, fig_cap in expected_pairs:
+                if fig_cap in p.text:
+                    prev_p = self.doc.paragraphs[i - 1]
+                    self.assertIn(kw, prev_p.text, f"Mismatch at {fig_cap}: previous text was '{prev_p.text[:60]}'")
+                    found_pairs.append(kw)
+
+        self.assertEqual(len(found_pairs), 9, f"Expected 9 aligned pairs, found {len(found_pairs)}")
+
+    def test_no_stale_chapter_1_references(self):
+        """Bảo đảm không còn đoạn văn nào dẫn chiếu nhầm đến các mục cũ của Chương 1 (như Mục 1.7 hay 1.5, 1.6 cũ)."""
+        stale = []
+        for i, p in enumerate(self.doc.paragraphs):
+            for ref in ['1.7', 'Mục 1.5', 'Mục 1.6']:
+                if ref in p.text:
+                    stale.append((i, ref, p.text[:60]))
+        self.assertEqual(len(stale), 0, f"Found stale references: {stale}")
+
 if __name__ == '__main__':
     unittest.main()

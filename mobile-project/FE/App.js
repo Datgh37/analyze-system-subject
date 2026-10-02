@@ -1,23 +1,31 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
+import { AuthProvider } from './src/context/AuthContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 /**
- * ĐIỂM KHỞI CHẠY ỨNG DỤNG (ENTRY POINT)
- * Đồ án môn học: Lập trình Thiết bị Di động
- * Sinh viên thực hiện:
- * 1. Trịnh Thành Đạt (Lead - Kiến trúc Backend & Setup FE)
- * 2. Trần Trọng Đại (UI Specialist & Frontend Screens)
+ * ĐỒ ÁN MÔN HỌC: LẬP TRÌNH THIẾT BỊ DI ĐỘNG (DNTU)
+ * ĐỀ TÀI: ỨNG DỤNG QUẢN LÝ CHI TIÊU CÁ NHÂN THÔNG MINH
+ * 
+ * Nhóm thực hiện:
+ * - Trịnh Thành Đạt (Lead & Backend Architecture)
+ * - Trần Trọng Đại (UI & Mobile Frontend Lead)
+ * 
+ * Ngăn xếp công nghệ:
+ * - Expo SDK 54 (~54.0.36)
+ * - React Native 0.81.5 & React 19.1.0
+ * - React Navigation 7.x
+ * - Pure StyleSheet & COLORS tokens
  */
+
 export default function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <StatusBar style="auto" />
+      <AuthProvider>
+        <StatusBar style="dark" />
         <AppNavigator />
-      </NavigationContainer>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

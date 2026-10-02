@@ -31,6 +31,10 @@ class Database {
      * Lấy kết nối PDO an toàn với Prepared Statements
      * @return PDO|null
      */
+    public function isLocal(): bool {
+        return $this->is_local;
+    }
+
     public function getConnection() {
         $this->conn = null;
 

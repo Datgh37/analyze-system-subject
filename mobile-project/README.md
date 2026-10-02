@@ -320,41 +320,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ---
 
-### Bước 6: Cấu hình & Khởi Chạy React Native (Trong Thư Mục `FE`)
-1. Trong ứng dụng React Native, tạo file `src/api/config.js`:
-   ```javascript
-   // Chọn chế độ môi trường đang chạy:
-   // - 'WAMP_EMULATOR': Khi chạy trên Android Studio Emulator
-   // - 'WAMP_DEVICE': Khi cắm cáp / kết nối Wifi điện thoại thật chung mạng với máy tính
-   // - 'SERVER_PRODUCTION': Khi giảng viên cho phép triển khai lên server trường
+### Bước 6: Cấu hình & Khởi Chạy Frontend Mobile (Trong Thư Mục `FE`)
 
-   const CURRENT_ENV = 'WAMP_EMULATOR'; 
+> 📄 **Tài liệu hướng dẫn chi tiết dành riêng cho UI Lead:** Xem ngay tại [`FE/README.md`](FE/README.md).
 
-   const API_ENDPOINTS = {
-     // 10.0.2.2 là địa chỉ loopback đặc biệt để Android Emulator gọi về máy chủ dev
-     WAMP_EMULATOR: 'http://10.0.2.2/expense_api/api',
-
-     // Thay 192.168.1.X bằng IPv4 máy tính của bạn (xem bằng ipconfig)
-     WAMP_DEVICE: 'http://192.168.1.15:80/expense_api/api', 
-
-     // Địa chỉ server trường cấp
-     SERVER_PRODUCTION: 'http://nhom46.itimit.id.vn/api',
-   };
-
-   export const API_BASE_URL = API_ENDPOINTS[CURRENT_ENV];
+1. **Mở terminal và di chuyển vào thư mục:**
+   ```powershell
+   cd mobile-project/FE
    ```
-2. Cài đặt các gói thư viện cần thiết:
-   ```bash
-   npm install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack
-   npm install react-native-screens react-native-safe-area-context
-   npm install react-native-chart-kit react-native-svg axios
-   npm install @expo/vector-icons # hoặc react-native-vector-icons
-   ```
-3. Khởi chạy ứng dụng:
-   ```bash
-   npx react-native run-android
-   # hoặc với Expo:
-   # npx expo start
+2. **Cài đặt thư viện dependencies:**
+   * **Dùng Expo CLI (Khuyên dùng nhất cho Đại):** `npx expo install`
+   * **Dùng `npm`:** `npm install --legacy-peer-deps` *(bắt buộc cờ `--legacy-peer-deps` do React 19)*
+   * **Dùng `pnpm` (trên máy của Đạt):** `pnpm install`
+3. **Cấu hình IP Backend:** Sửa địa chỉ IPv4 máy tính tại [`src/api/config.js`](FE/src/api/config.js).
+4. **Khởi chạy ứng dụng:**
+   ```powershell
+   npm start
+   # hoặc khởi động xóa sạch cache: npx expo start -c
    ```
 
 ---
