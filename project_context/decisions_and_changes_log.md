@@ -1569,5 +1569,68 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Chạy lại kiểm thử tự động toàn diện: **100% 21/21 API PASSED**, toàn bộ luồng Auth JWT Bearer, IDOR Block 401, 3 bước OTP, Quản lý ví, Chuyển tiền ACID, Danh mục, Giao dịch bù trừ Delta, Ngân sách và Biểu đồ hoạt động hoàn hảo.
 - **Trạng thái:** `VERIFIED & LOCKED (READY FOR GIT PUSH)`.
 
+---
 
+## [2026-10-07 08:35] - Quyết Định 81: Tích Hợp Toàn Diện Bộ Kỹ Năng Kỹ Nghệ Phần Mềm ECC Universal Vào Hội Đồng Đa Tác Tử (PLAN-21)
+- **Vấn đề:** 
+  1. Người dùng yêu cầu nghiên cứu và tích hợp bộ kỹ năng ECC (Everything Claude Code - gói `ecc-universal@2.2.3`) vào Hội đồng Đa tác tử theo hướng dẫn tại [`docs/ANTIGRAVITY-ECC-SETUP-GUIDE.md`](../docs/ANTIGRAVITY-ECC-SETUP-GUIDE.md), tương tự như đợt tích hợp thành công Bộ Ba Tam Giác Vàng Frontend (Agent 09, 13, 10 ở Quyết định 73).
+  2. Nguy cơ tiềm ẩn: Nếu cài đặt nguyên khối (Unfiltered Wholesale), hơn 100 tệp rules lập trình tiếng Anh của các ngôn ngữ không sử dụng (`arkts`, `perl`, `ruby`, `swift`, `csharp`, `fsharp`, `harmonyos`...) sẽ tràn vào `.agents/rules/`, gây ô nhiễm context window và làm loãng 5 quy định học thuật khắt khe về format Luận văn DNTU (`00_mandatory_project_context_rule.md` đến `04_dntu_kltn_academic_writing_style_rules.md`).
+- **Quyết định & Thực thi:**
+  1. **Chiến Lược Cài Đặt Chọn Lọc & Cộng Sinh Chuyên Môn Hóa (Selective Install & Council Symbiosis):**
+     - Bảo vệ nguyên vẹn 100% 5 file rules học thuật DNTU.
+     - Cài đặt 9 rules lập trình chuẩn mực với tiền tố `ecc-*` (`ecc-common-coding-style.md`, `ecc-common-git-workflow.md`, `ecc-common-security.md`, `ecc-common-testing.md`, `ecc-common-performance.md`, `ecc-typescript-coding-style.md`, `ecc-python-coding-style.md`, `ecc-react-coding-style.md`, `ecc-react-native-coding-style.md`).
+     - Cài đặt 18 Workflows thực thi chuẩn Antigravity vào `.agents/workflows/` (`plan.md`, `plan-canvas.md`, `plan-prd.md`, `quality-gate.md`, `checkpoint.md`, `code-review.md`, `review-pr.md`, `pr.md`, `security-scan.md`, `test-coverage.md`, `refactor-clean.md`, `build-fix.md`, `update-docs.md`, `project-init.md`, `orch-add-feature.md`, `orch-fix-defect.md`, `orch-review.md`, `ecc-guide.md`).
+     - Chuyển đổi công cụ và mô hình (`flash`/`pro`) cho 17 Custom Subagents cốt lõi vào `.agents/agents/` (`architect.md`, `code-reviewer.md`, `database-reviewer.md`, `security-reviewer.md`, `tdd-guide.md`, `performance-optimizer.md`, `spec-miner.md`, `e2e-runner.md`, `code-simplifier.md`, `refactor-cleaner.md`, `doc-updater.md`, `planner.md`, `silent-failure-hunter.md`, `a11y-architect.md`, `react-reviewer.md`, `python-reviewer.md`, `mle-reviewer.md`).
+     - Cài đặt 36 kỹ năng ECC chuyên biệt vào `.agents/skills/` (nâng tổng số kỹ năng trong workspace lên 51 thư mục).
+  2. **Ma Trận Phân Bổ Quyền Năng Cho 14 Tác Tử Hội Đồng:**
+     - **Agent 00 (Orchestrator):** `living-docs-governance`, `intent-driven-development`, `plan-canvas`, `plan-orchestrate`, `context-budget`, `strategic-compact`, `delivery-gate`, workflows `/plan`, `/quality-gate`, `/checkpoint`.
+     - **Agent 03 (Cockburn BA Lead):** `spec-miner`, `product-lens`, `intent-driven-development`, workflow `/plan-prd`.
+     - **Agent 04 (Eric Evans):** `architect`, `architecture-decision-records`, `backend-patterns`.
+     - **Agent 05 (Martin Kleppmann):** `database-reviewer`, `database-migrations`, `postgres-patterns`, `mysql-patterns`, `redis-patterns`.
+     - **Agent 07 (Werner Vogels):** `performance-optimizer`, `docker-patterns`, `deployment-patterns`, `latency-critical-systems`, workflow `/build-fix`.
+     - **Agent 08 (Andrew Ng):** `mle-reviewer`, `prompt-optimizer`, `eval-harness`, `agent-eval`, `cost-aware-llm-pipeline`.
+     - **Agent 09 (Brad Frost):** `a11y-architect`, `click-path-audit`.
+     - **Agent 13 (Julian Garnier):** `make-interfaces-feel-better`.
+     - **Agent 10 (Dan Abramov):** `code-reviewer`, `react-reviewer`, `refactor-cleaner`, `code-simplifier`, `react-patterns`, `react-performance`, workflows `/code-review`, `/refactor-clean`.
+     - **Agent 11 (Bruce Schneier):** `security-reviewer`, `security-scan`, `security-review`, workflow `/security-scan`.
+     - **Agent 12 (Kent Beck):** `tdd-guide`, `tdd-workflow`, `verification-loop`, `e2e-runner`, `e2e-testing`, `browser-qa`, `silent-failure-hunter`, workflow `/test-coverage`.
+  3. **Đồng Bộ Tài Liệu Quy Ước & Ngữ Cảnh Hệ Thống:**
+     - Cập nhật [`AGENTS.md`](../AGENTS.md) bổ sung Mục 3: "Hệ Sinh Thái Kỹ Năng Kỹ Nghệ Toàn Diện Everything Claude Code (ECC Universal)".
+     - Cập nhật toàn bộ các tệp đặc tả tác tử [`core/*.md`](../core/) và tệp kỹ năng Antigravity [`.agents/skills/council-*/SKILL.md`](../.agents/skills/).
+     - Cập nhật [`project_context/00_MASTER_CONTEXT.md`](00_MASTER_CONTEXT.md).
+  4. **Mở Rộng Hỗ Trợ Bộ Đôi Tech Stack Chủ Lực (.NET/C# và Node.js/TypeScript):**
+     - **Bối cảnh & Yêu cầu:** Người dùng xác nhận dự án sẽ lựa chọn 1 trong 2 tech stack: Node.js hoặc hệ sinh thái .NET cho Web và Mobile App, do đó cần tích hợp đầy đủ công cụ kỹ nghệ cho cả hai nền tảng.
+     - **Bổ sung Skills (.NET & Node):** `dotnet-patterns`, `csharp-testing`, `nestjs-patterns`, `nextjs-turbopack` (nâng tổng số skills lên 55 thư mục, gồm 15 Council + 40 ECC).
+     - **Bổ sung Subagents:** `csharp-reviewer.md`, `typescript-reviewer.md` (nâng tổng số subagents lên 19 agents).
+     - **Bổ sung Rules Lập trình Chuyên sâu:** `ecc-csharp-coding-style.md`, `ecc-csharp-patterns.md`, `ecc-csharp-testing.md`, `ecc-csharp-security.md`, `ecc-typescript-patterns.md`, `ecc-typescript-testing.md`, `ecc-typescript-security.md` (nâng tổng số rules lên 21 tệp, giữ nguyên vẹn tuyệt đối 5 rules học thuật KLTN DNTU).
+     - **Cập nhật Phân quyền Tác tử:**
+       - **Agent 04 (Eric Evans):** Bổ sung `dotnet-patterns`, `nestjs-patterns` (thiết kế Clean Architecture / DDD trên cả C# .NET và Node.js/NestJS).
+       - **Agent 10 (Dan Abramov):** Bổ sung `typescript-reviewer`, `csharp-reviewer`, `nextjs-turbopack` (review mã nguồn TS/C# và tối ưu bundle).
+       - **Agent 12 (Kent Beck):** Bổ sung `csharp-testing` (kiểm thử xUnit, NUnit, FluentAssertions, Moq cho .NET).
+  5. **Kiểm Thử Toàn Diện & Nghiệm Thu:**
+     - Xây dựng bộ test case chuyên biệt [`tests/test_ecc_council_integration.py`](../tests/test_ecc_council_integration.py) kiểm tra cấu trúc, frontmatter, và liên kết năng lực.
+     - Toàn bộ bộ kiểm thử tự động hệ thống đạt kết quả mỹ mãn: **100% 119/119 unit tests PASSED**.
+- **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-07_plan_21_ecc_agent_skills_integration_study.md`](plans/plans-general/2026-10-07_plan_21_ecc_agent_skills_integration_study.md).
+- **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
 
+---
+
+## [2026-10-07 09:25] - Quyết Định 82: Tiếp Nhận Thay Đổi Giảng Viên, Dỡ Bỏ Giới Hạn Kỹ Thuật & Xác Lập Kế Hoạch Hiện Đại Hóa Công Nghệ Mobile App (.NET MAUI / React Native + .NET / Node.js)
+- **Vấn đề:** 
+  1. Giảng viên phụ trách môn học Lập trình Thiết bị Di động ban đầu đã rời đi; Thầy mới chính thức tiếp quản môn học.
+  2. Mọi giới hạn công nghệ trước đây (ép viết component thô sơ để đối phó thi vấn đáp, cấm dùng thư viện UI bên thứ 3, ép dùng PHP WAMP và server hosting FTP trường cấp `nhom46.itimit.id.vn`) được dỡ bỏ hoàn toàn.
+  3. Nhóm có toàn quyền nâng chuẩn kỹ thuật lên cấp độ ứng dụng di động hoàn chỉnh, chuyên nghiệp, đồng bộ với thiết kế hướng miền (DDD) trong Khóa luận tốt nghiệp.
+- **Quyết định & Thực thi:**
+  1. **Dỡ Bỏ Ràng Buộc & Đóng Băng Server Cũ:**
+     - Dỡ bỏ các quy định cấm thư viện CSS/UI trong [`ROADMAP.md`](../mobile-project/ROADMAP.md).
+     - Đóng băng (Freeze) việc triển khai lên máy chủ FTP `nhom46.itimit.id.vn` (`103.139.203.43`).
+  2. **Xác Lập Chiến Lược Chuyển Đổi Hai Giai Đoạn (Two-Phase Strategy):**
+     - **Giai đoạn Hiện tại (Tạm thời - Transitional):** Giữ nguyên ngăn xếp hiện tại (**React Native Expo SDK 54 + PHP PDO WAMP 21 RESTful API**) để chạy test, bảo toàn toàn bộ logic tài chính, số dư ví, bù trừ Delta và các kịch bản kiểm thử.
+     - **Giai đoạn Sắp tới (Hiện đại hóa - Modernization):** Khi Giảng viên mới chốt định hướng, sẵn sàng chuyển đổi sang 1 trong 2 phương án chuẩn công nghiệp:
+       - *Phương án A:* **.NET MAUI (C# / XAML)** kết hợp **Backend ASP.NET Core Web API (.NET 8/9, Clean Architecture)**.
+       - *Phương án B:* **React Native (Expo)** kết hợp **Backend ASP.NET Core Web API** hoặc **Node.js (NestJS)**.
+  3. **Đồng Bộ Tài Liệu Dự Án:**
+     - Cập nhật [`mobile-project/README.md`](../mobile-project/README.md) phản ánh mô hình kiến trúc chuyển tiếp và định hướng nâng cấp.
+     - Cập nhật [`mobile-project/ROADMAP.md`](../mobile-project/ROADMAP.md) thông báo dỡ bỏ rào cản công nghệ và đóng băng server cũ.
+     - Ban hành Kế hoạch hành động chi tiết: [`project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md`](plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
+- **Trạng thái:** `ACCEPTED & LOCKED (READY FOR ADAPTATION)`.

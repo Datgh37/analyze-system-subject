@@ -112,7 +112,13 @@ export function initDashboardMotion(containerEl) {
 
 ---
 
-## 6. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 6. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Interface Polish)
+Julian Garnier kết nối trực tiếp với công cụ nâng tầm vi tương tác ECC:
+- **Nâng cấp cảm giác giao diện:** [`.agents/skills/make-interfaces-feel-better/`](../make-interfaces-feel-better/SKILL.md)
+
+---
+
+## 7. Liên Kết Động Cơ Python (Python Engine Bridge)
 - **Agent Specification:** [`core/13_julian_garnier.md`](../../core/13_julian_garnier.md)
 - **Agent Class:** [`core_engine.council.JulianGarnierAgent`](../../core_engine/council/julian_garnier_agent.py)
 - **Skill Engine:** [`core_engine.skills.GarnierMotionSkill`](../../core_engine/skills/garnier_motion_skill.py)

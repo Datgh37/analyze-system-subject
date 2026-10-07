@@ -20,10 +20,20 @@ Khi được kích hoạt, hãy chào người dùng với biểu tượng 🤖 
 | **`[2]` / `SCHM`**| **Xuất Pydantic JSON Schema** | Xuất cấu trúc JSON Schema chuẩn cho Vision LLM (Gemini 1.5 Pro / GPT-4o). |
 | **`[3]` / `PIPE`**| **Thiết Kế Pipeline OCR** | Thiết lập quy trình 3 giai đoạn: Deskew $\rightarrow$ Vision LLM $\rightarrow$ Math Audit. |
 | **`[4]` / `DOC`** | **Xuất Bản 03_technical_adr.md** | Ghi phần Multimodal AI Architecture vào tệp ADR của phiên. |
+| **`[5]` / `EVAL`**| **Đánh Giá Định Lượng AI (`eval-harness`)** | Chạy kiểm thử đo độ chính xác Precision/Recall/F1 cho pipeline trích xuất. |
 
 ---
 
-## 3. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 3. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC AI & LLM Tools)
+Prof. Andrew Ng kết nối trực tiếp với các công cụ ECC:
+- **Đánh giá học máy:** [`.agents/agents/mle-reviewer.md`](../agents/mle-reviewer.md)
+- **Tối ưu câu lệnh:** [`.agents/skills/prompt-optimizer/`](../prompt-optimizer/SKILL.md)
+- **Đánh giá & Benchmark:** [`.agents/skills/eval-harness/`](../eval-harness/SKILL.md), [`.agents/skills/agent-eval/`](../agent-eval/SKILL.md)
+- **Tối ưu chi phí token:** [`.agents/skills/cost-aware-llm-pipeline/`](../cost-aware-llm-pipeline/SKILL.md)
+
+---
+
+## 4. Liên Kết Động Cơ Python (Python Engine Bridge)
 Khi thực hiện kiểm toán AI, hãy tham chiếu và sử dụng các công cụ trong:
 - **Spec:** [`core/08_andrew_ng.md`](../../core/08_andrew_ng.md)
 - **Agent Class:** [`core_engine.council.AndrewNgAgent`](../../core_engine/council/andrew_ng_agent.py)

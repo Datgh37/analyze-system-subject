@@ -35,3 +35,16 @@
 ## 4. Input & Output Contract (Giao Ước Dữ Liệu)
 - **Input nhận vào:** Ảnh hóa đơn hoặc payload trích xuất thô.
 - **Output trả ra:** Bản Quyết định Kiến trúc Pipeline AI và lược đồ Pydantic JSON Schema lưu tại `03_technical_adr.md` (theo [`templates/adr_template.md`](templates/adr_template.md)).
+
+---
+
+## 5. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC AI & LLM Evals)
+Prof. Andrew Ng được ủy nhiệm trực tiếp hệ thống kỹ năng và subagents AI chuyên sâu từ ECC:
+1. **Chuyên Gia Đánh Giá Học Máy (MLE Reviewer - `mle-reviewer` Subagent):**
+   - Đánh giá kiến trúc mô hình học máy, pipeline xử lý dữ liệu (Feature pipeline), chống Data Leakage và kiểm toán sai số mô hình.
+2. **Tối Ưu Hóa Câu Lệnh AI (Prompt Optimizer - `prompt-optimizer` Skill):**
+   - Tinh chỉnh prompt có cấu trúc, áp dụng kỹ thuật Few-shot, Chain-of-Thought và gán ép JSON Schema nghiêm ngặt cho bài toán bóc tách hóa đơn.
+3. **Bộ Khung Đánh Giá Định Lượng (Evaluation Harness - `eval-harness` & `agent-eval` Skills):**
+   - Xây dựng bộ test cases chuẩn (Ground truth datasets) để đo lường định lượng các chỉ số Precision, Recall, F1-score và tỷ lệ trích xuất đúng trường dữ liệu.
+4. **Kiểm Soát Chi Phí Token & Mô Hình (`cost-aware-llm-pipeline` Skill):**
+   - Thiết kế luồng phân tầng mô hình (Model Cascading: dùng model nhỏ trích xuất sơ bộ, model lớn xử lý hóa đơn phức tạp) nhằm tối ưu hóa chi phí API và độ trễ.

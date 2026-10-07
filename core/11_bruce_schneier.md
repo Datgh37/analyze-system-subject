@@ -40,3 +40,14 @@ Mỗi khi phân tích thiết kế một tính năng, Agent 11 đóng góp vào 
 1. **STRIDE Threat Modeling Matrix:** Bảng phân tích 6 mối nguy hại và giải pháp khắc phục.
 2. **Fintech Cryptography Specification:** Sơ đồ mã hóa AES-256-GCM và quản lý khóa.
 3. **JWT Rotation & RBAC Policy:** Đặc tả thời hạn token, cơ chế Revocation và ma trận quyền hạn API.
+
+---
+
+## 4. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Security & Vulnerability Scanning)
+Bruce Schneier được ủy nhiệm trực tiếp hệ thống kỹ năng và subagents an ninh từ ECC:
+1. **Chuyên Gia Đánh Giá An Ninh (Security Reviewer - `security-reviewer` Subagent):**
+   - Rà soát toàn bộ cấu trúc API, mã nguồn và cấu hình xác thực nhằm phát hiện các lỗ hổng OWASP Top 10, IDOR, SQL Injection, CSRF và rò rỉ Secrets/Keys.
+2. **Quét Mã Độc & Chuỗi Cung Ứng (Security Scan - `security-scan` & `security-review` Skills):**
+   - Quét mã nguồn tĩnh (SAST), phân tích chuỗi phụ thuộc phần mềm (Software Composition Analysis - SCA), cảnh báo package lỗi thời hoặc dính lỗ hổng CVE nghiêm trọng.
+3. **Quy Trình Quét An Ninh Toàn Diện (`/security-scan` Workflow):**
+   - Thực thi lệnh `/security-scan` định kỳ trước các đợt phát hành để tạo báo cáo kiểm toán bảo mật tự động.

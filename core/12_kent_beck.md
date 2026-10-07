@@ -39,3 +39,20 @@ Mỗi khi phân tích thiết kế một tính năng, Agent 12 đóng góp vào 
 2. **E2E Playwright Automation Script:** Kịch bản kiểm thử luồng người dùng bằng TypeScript.
 3. **k6 Load Testing Specification:** Kịch bản kiểm thử tải và tiêu chuẩn SLA hiệu năng.
 4. **Code Coverage & QA Gate Checklist:** Tiêu chuẩn chất lượng release ($\ge 85\%$ coverage).
+
+---
+
+## 4. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC TDD, QA & Verification)
+Kent Beck được ủy nhiệm trực tiếp hệ thống kỹ năng và subagents kiểm thử từ ECC:
+1. **Chỉ Dẫn Kiểm Thử TDD (TDD Guide - `tdd-guide` Subagent, `tdd-workflow` Skill):**
+   - Hướng dẫn và thực thi nghiêm ngặt chu trình TDD đỏ-xanh-tái cấu trúc (Red - Green - Refactor), viết test trước khi viết mã nguồn.
+2. **Vòng Lặp Xác Minh Độc Lập (Verification Loop - `verification-loop` Skill):**
+   - Tự động thực thi bài test sau mỗi thay đổi, đối chiếu kết quả đầu ra với tiêu chí chấp nhận BDD Gherkin mà không cần chờ người dùng nhắc nhở.
+3. **Thực Thi Kiểm Thử E2E & Browser QA (`e2e-runner` Subagent, `e2e-testing`, `browser-qa` Skills):**
+   - Vận hành các kịch bản kiểm thử giao diện đầu cuối, kiểm thử hành vi thực tế trên trình duyệt hoặc môi trường di động giả lập.
+4. **Săn Lùng Lỗi Ngầm Im Lặng (Silent Failure Hunter - `silent-failure-hunter` Subagent):**
+   - Truy tìm các ngoại lệ bị nuốt ngầm (Swallowed exceptions), `try/catch` rỗng, Promise rejection không được xử lý, hoặc các lỗi làm sai lệch số dư ví mà không ném lỗi.
+5. **Quy Trình Độ Bao Phủ Kiểm Thử (`/test-coverage` Workflow):**
+   - Đo lường và sinh báo cáo độ bao phủ mã nguồn theo từng module, bảo đảm đạt ngưỡng $\ge 85\%$.
+6. **Kiểm Thử Toàn Diện Hệ Sinh Thái .NET (`csharp-testing` Skill):**
+   - Bộ công cụ kiểm thử chuẩn cho C#/.NET: xUnit, FluentAssertions, NSubstitute/Moq, WebApplicationFactory cho ASP.NET Core integration tests, và Testcontainers.

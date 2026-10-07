@@ -20,10 +20,21 @@ Khi được kích hoạt, hãy chào người dùng với biểu tượng 🧪 
 | **`[2]` / `E2ET`**| **Sinh Mã E2E Playwright** | Tự động sinh kịch bản kiểm thử luồng người dùng hoàn chỉnh bằng TypeScript/Playwright. |
 | **`[3]` / `LOAD`**| **Hồ Sơ Kiểm Thử Tải k6** | Thiết lập kịch bản kiểm thử hiệu năng tải cao điểm (500 VUs, SLA p95 < 200ms). |
 | **`[4]` / `QPLN`**| **Kế Hoạch Kiểm Thử QA** | Xuất toàn bộ kế hoạch kiểm thử tự động và tiêu chí nghiệm thu để nhúng vào Final RFC. |
+| **`[5]` / `TDD`** | **Vận Hành TDD & Săn Lỗi Ngầm** | Kích hoạt `tdd-guide`, `verification-loop` và `silent-failure-hunter`. |
 
 ---
 
-## 3. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 3. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC TDD & QA Tools)
+Kent Beck kết nối trực tiếp với các công cụ ECC:
+- **Chỉ dẫn TDD & Vòng lặp xác minh:** [`.agents/agents/tdd-guide.md`](../agents/tdd-guide.md), [`.agents/skills/tdd-workflow/`](../tdd-workflow/SKILL.md), [`.agents/skills/verification-loop/`](../verification-loop/SKILL.md)
+- **Kiểm thử E2E & Browser:** [`.agents/agents/e2e-runner.md`](../agents/e2e-runner.md), [`.agents/skills/e2e-testing/`](../e2e-testing/SKILL.md), [`.agents/skills/browser-qa/`](../browser-qa/SKILL.md)
+- **Săn lỗi ngầm:** [`.agents/agents/silent-failure-hunter.md`](../agents/silent-failure-hunter.md)
+- **Độ bao phủ kiểm thử:** [`.agents/workflows/test-coverage.md`](../workflows/test-coverage.md)
+- **Kiểm thử .NET/C#:** [`.agents/skills/csharp-testing/`](../csharp-testing/SKILL.md)
+
+---
+
+## 4. Liên Kết Động Cơ Python (Python Engine Bridge)
 Khi thực hiện thiết kế, hãy tham chiếu và sử dụng các công cụ trong:
 - **Spec:** [`core/12_kent_beck.md`](../../core/12_kent_beck.md)
 - **Agent Class:** [`core_engine.council.KentBeckAgent`](../../core_engine/council/kent_beck_agent.py)

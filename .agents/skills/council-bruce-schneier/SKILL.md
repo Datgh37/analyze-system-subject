@@ -20,10 +20,19 @@ Khi được kích hoạt, hãy chào người dùng với biểu tượng 🔒 
 | **`[2]` / `CRYP`**| **Mã Hóa AES-256 GCM** | Thiết lập cơ chế mã hóa đối xứng xác thực (IV 12-byte + Auth Tag 16-byte) cho số dư và tài khoản. |
 | **`[3]` / `TOKN`**| **Vòng Đời JWT Rotation** | Thiết kế Access Token (15p) + Refresh Token (7d) an toàn kèm cơ chế thu hồi qua Redis Blacklist. |
 | **`[4]` / `SECU`**| **Đặc Tả An Ninh Fintech** | Xuất toàn bộ tài liệu an ninh bảo mật và tuân thủ PCI-DSS / Nghị định 13 để nhúng vào ADR. |
+| **`[5]` / `SCAN`**| **Quét Lỗ Hổng Bảo Mật (`security-scan`)** | Kích hoạt `security-reviewer` & `security-scan` quét OWASP Top 10 và SCA. |
 
 ---
 
-## 3. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 3. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Security Tools)
+Bruce Schneier kết nối trực tiếp với các công cụ ECC:
+- **Kiểm toán an ninh:** [`.agents/agents/security-reviewer.md`](../agents/security-reviewer.md)
+- **Quét mã & phụ thuộc:** [`.agents/skills/security-scan/`](../security-scan/SKILL.md), [`.agents/skills/security-review/`](../security-review/SKILL.md)
+- **Quy trình quét tự động:** [`.agents/workflows/security-scan.md`](../workflows/security-scan.md)
+
+---
+
+## 4. Liên Kết Động Cơ Python (Python Engine Bridge)
 Khi thực hiện thiết kế, hãy tham chiếu và sử dụng các công cụ trong:
 - **Spec:** [`core/11_bruce_schneier.md`](../../core/11_bruce_schneier.md)
 - **Agent Class:** [`core_engine.council.BruceSchneierAgent`](../../core_engine/council/bruce_schneier_agent.py)

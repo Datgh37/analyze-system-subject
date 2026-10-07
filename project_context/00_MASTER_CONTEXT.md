@@ -30,14 +30,19 @@
 │ - Quét và cảnh báo Bẫy Đăng ký định kỳ (Subscription Traps Leakage).   │
 │ - Chuẩn hóa CSDL quan hệ 3NF/BCNF, Caching và Khóa tranh chấp ví.      │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TRỤ CỘT 2: BỘ NHÂN AI SOFTWARE ENGINEER (core_engine/)                 │
+│ TRỤ CỘT 2: BỘ NHÂN AI SOFTWARE ENGINEER & HỆ SINH THÁI ECC UNIVERSAL   │
 │ - Hội Đồng 14 Chuyên Gia Kiệt Xuất Full-Stack hóa thân các danh nhân.  │
 │ - Bộ Ba Tam Giác Vàng Frontend (Agent 09 Visual, 13 Motion, 10 State). │
+│ - Hệ Sinh Thái Kỹ Nghệ Toàn Diện Everything Claude Code (ECC Universal):│
+│   * 18 Workflows chuẩn hóa quy trình (`.agents/workflows/`).          │
+│   * 19 Custom Subagents chuyên sâu (`.agents/agents/`).                │
+│   * 55 Kỹ năng (15 Council Skills + 40 ECC Specialized Skills).        │
+│   * 21 Rules (5 Rules Học thuật KLTN DNTU + 16 Rules Lập trình `ecc-*`).│
+│ - Hỗ trợ toàn diện 2 Tech Stacks chiến lược: Node.js/TypeScript & .NET │
 │ - Tool Layer an toàn (Filesystem Sandbox, Terminal Runner, Git Diff).  │
 │ - Chu trình làm việc chuẩn PTTKHTTT khép kín từ Khảo sát đến Final RFC.│
 │ - Tự động sinh Ma Trận Truy Vết Nguồn Gốc (Traceability Matrix).       │
 │ - Hệ thống thẩm định chất lượng sâu (Deep Content Quality Gates).      │
-│ - 15 Kỹ năng Hội đồng + 8 Kỹ năng Frontend mở rộng (.agents/skills/).  │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -69,13 +74,15 @@
 | Thư mục / Tệp | Vai trò cốt lõi |
 | :--- | :--- |
 | [`README.md`](README.md) | Cẩm nang tổng quan dự án, kiến trúc hệ thống và hướng dẫn khởi chạy. |
-| [`AGENTS.md`](AGENTS.md) | Luật chơi chung & quy ước điều phối Hội đồng Đa tác tử. |
+| [`AGENTS.md`](AGENTS.md) | Luật chơi chung & quy ước điều phối Hội đồng Đa tác tử & ECC Roster. |
 | [`run_council_session.py`](run_council_session.py) | CLI Runner chính thức điều phối phiên bàn thảo 4 pha. |
-| [`.agents/skills/`](.agents/skills/) | 14 Kỹ năng Antigravity IDE Customization Skills (`council-*`). |
-| [`.agents/rules/`](.agents/rules/) | Các quy tắc bắt buộc nạp tự động vào Antigravity IDE (`00_load_project_context_first.md`). |
-| [`core/`](core/) | Đặc tả 13 Persona danh nhân chuẩn Production (Agent 00 đến Agent 12). |
+| [`.agents/workflows/`](.agents/workflows/) | 18 Workflows thực thi quy trình nhanh (`/plan`, `/quality-gate`, `/code-review`...). |
+| [`.agents/agents/`](.agents/agents/) | 19 Custom Subagents chuyên sâu (`architect`, `csharp-reviewer`, `typescript-reviewer`...). |
+| [`.agents/skills/`](.agents/skills/) | 55 Kỹ năng (15 Council Skills + 40 ECC Specialized Skills bao gồm .NET & Node/TS). |
+| [`.agents/rules/`](.agents/rules/) | 5 Quy tắc học thuật KLTN DNTU + 16 Quy tắc lập trình ECC (`ecc-*`). |
+| [`core/`](core/) | Đặc tả 14 Persona danh nhân chuẩn Production (Agent 00 đến Agent 13). |
 | [`core_engine/`](core_engine/) | Bộ nhân Python Engine (Council, Skills, Tools Sandbox, Workflow, Memory). |
-| [`docs/`](docs/) | Tài liệu đề tài gốc (`specs/`) và các script giải thuật (`standalone_scripts/`). |
+| [`docs/`](docs/) | Tài liệu đề tài gốc (`specs/`) và hướng dẫn tích hợp (`ANTIGRAVITY-ECC-SETUP-GUIDE.md`). |
 | [`sessions/`](sessions/) | Các phiên bàn thảo 4 pha & 4 bộ Benchmark Sessions thực tế cá nhân (`session_01` đến `session_04`). |
 | [`templates/`](templates/) | Bộ 5 mẫu tài liệu đầu ra chuẩn IEEE 29148, Frontend UI Spec, ADR, DB 3NF, Feedback. |
 | [`tests/`](tests/) | Bộ Unit & Integration Tests tự động đạt chuẩn 100% Passed. |
@@ -86,8 +93,23 @@
 ## 5. Trạng Thái Hoàn Thành Hiện Tại (Current Status)
 
 - [x] **Tầng Công Cụ (Tool Layer):** Filesystem Sandbox, Terminal Runner (`python -B`), Git Diff.
-- [x] **Hội Đồng 13 Chuyên Gia Danh Nhân:** Hoàn tất 100% 13 Persona chuẩn đề tài tài chính cá nhân.
-- [x] **Sản Phẩm Bàn Giao Frontend Độc Lập (`02b_frontend_ui_spec.md`):** Chuẩn hóa luồng sinh mã linh kiện thực chiến đa nền tảng (React/Angular/Blazor).
+- [x] **Hội Đồng 14 Chuyên Gia Danh Nhân:** Hoàn tất 100% 14 Persona chuẩn đề tài tài chính cá nhân.
+- [x] **Bộ Ba Tam Giác Vàng Frontend (Pha 2.5):** Hoàn tất Agent 09 (Visual), Agent 13 (Motion), Agent 10 (State).
+- [x] **Hệ Sinh Thái Kỹ Nghệ Toàn Diện ECC Universal (PLAN-21):** Tích hợp hoàn tất 18 Workflows, 19 Subagents, 40 Skills ECC (bao gồm .NET & Node/NestJS), 16 Programming Rules và phân quyền chuyên môn hóa cho 14 Agent Hội đồng.e/) | Bộ nhân Python Engine (Council, Skills, Tools Sandbox, Workflow, Memory). |
+| [`docs/`](docs/) | Tài liệu đề tài gốc (`specs/`) và hướng dẫn tích hợp (`ANTIGRAVITY-ECC-SETUP-GUIDE.md`). |
+| [`sessions/`](sessions/) | Các phiên bàn thảo 4 pha & 4 bộ Benchmark Sessions thực tế cá nhân (`session_01` đến `session_04`). |
+| [`templates/`](templates/) | Bộ 5 mẫu tài liệu đầu ra chuẩn IEEE 29148, Frontend UI Spec, ADR, DB 3NF, Feedback. |
+| [`tests/`](tests/) | Bộ Unit & Integration Tests tự động đạt chuẩn 100% Passed. |
+| [`project_context/`](project_context/) | Nơi lưu trữ nhật ký quyết định, kế hoạch và snapshot ngữ cảnh bền vững. |
+
+---
+
+## 5. Trạng Thái Hoàn Thành Hiện Tại (Current Status)
+
+- [x] **Tầng Công Cụ (Tool Layer):** Filesystem Sandbox, Terminal Runner (`python -B`), Git Diff.
+- [x] **Hội Đồng 14 Chuyên Gia Danh Nhân:** Hoàn tất 100% 14 Persona chuẩn đề tài tài chính cá nhân.
+- [x] **Bộ Ba Tam Giác Vàng Frontend (Pha 2.5):** Hoàn tất Agent 09 (Visual), Agent 13 (Motion), Agent 10 (State).
+- [x] **Hệ Sinh Thái Kỹ Nghệ Toàn Diện ECC Universal (PLAN-21):** Tích hợp hoàn tất 18 Workflows, 19 Subagents, 40 Skills ECC (bao gồm .NET & Node/NestJS), 16 Programming Rules và phân quyền chuyên môn hóa cho 14 Agent Hội đồng.
 - [x] **Tái Định Hướng Cá Nhân (PLAN-09):** Hoàn thành chuyển đổi Agent 02 (Personal Budget Coach) và Agent 06 (Debt & Cashflow Optimizer).
 - [x] **Benchmark Sessions Chuẩn PFM:** Hoàn thành 4 phiên thực nghiệm tài chính cá nhân đạt 100% Quality Gates.
 - [x] **Kiểm Thử Toàn Diện:** 100% Unit Tests đã pass không lỗi.

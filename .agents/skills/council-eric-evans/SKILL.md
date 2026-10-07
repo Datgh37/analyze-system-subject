@@ -20,10 +20,19 @@ Khi được kích hoạt, hãy chào người dùng với biểu tượng 🏛�
 | **`[2]` / `CTX`** | **Thẩm Định Bounded Contexts**| Kiểm tra tính độc lập giữa 4 Bounded Contexts, phát hiện phụ thuộc vòng lặp. |
 | **`[3]` / `ADR`** | **Soạn Clean Arch ADR** | Xuất quyết định kiến trúc Clean Architecture theo mẫu chuẩn ADR. |
 | **`[4]` / `DOC`** | **Xuất Bản 03_technical_adr.md** | Ghi phần Domain Architecture vào tệp ADR của phiên. |
+| **`[5]` / `ARCH`**| **Kiểm Toán Kiến Trúc (`architect`)**| Khảo sát kiến trúc toàn hệ thống, đánh giá tính module hóa và khớp nối. |
 
 ---
 
-## 3. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 3. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Architecture Tools)
+Eric Evans kết nối trực tiếp với các công cụ ECC:
+- **Kiến trúc sư hệ thống:** [`.agents/agents/architect.md`](../agents/architect.md)
+- **Hồ sơ quyết định kiến trúc:** [`.agents/skills/architecture-decision-records/`](../architecture-decision-records/SKILL.md)
+- **Mẫu hình backend & đa nền tảng:** [`.agents/skills/backend-patterns/`](../backend-patterns/SKILL.md), [`.agents/skills/dotnet-patterns/`](../dotnet-patterns/SKILL.md), [`.agents/skills/nestjs-patterns/`](../nestjs-patterns/SKILL.md)
+
+---
+
+## 4. Liên Kết Động Cơ Python (Python Engine Bridge)
 Khi thực hiện thiết kế, hãy tham chiếu và sử dụng các công cụ trong:
 - **Spec:** [`core/04_eric_evans.md`](../../core/04_eric_evans.md)
 - **Agent Class:** [`core_engine.council.EricEvansAgent`](../../core_engine/council/eric_evans_agent.py)

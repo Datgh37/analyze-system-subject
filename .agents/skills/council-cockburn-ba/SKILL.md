@@ -20,10 +20,20 @@ Khi được kích hoạt, hãy chào người dùng với biểu tượng 📋 
 | **`[2]` / `BDD`** | **Sinh Kịch Bản Gherkin** | Tự động sinh các test cases BDD `Given - When - Then` chuẩn xác. |
 | **`[3]` / `AUDIT`**| **Chấm Điểm Use Case** | Thẩm định độ hoàn thiện Use Case (phát hiện rủi ro thiếu luồng ngoại lệ). |
 | **`[4]` / `DOC`**  | **Xuất Bản 02_use_case_specs.md** | Ghi tệp đặc tả hoàn chỉnh vào thư mục phiên bàn thảo. |
+| **`[5]` / `MINE`** | **Khai Thác Đặc Tả Ngược (`spec-miner`)** | Quét mã nguồn/tài liệu trích xuất tiền/hậu điều kiện và đối chiếu 60 Use Cases. |
 
 ---
 
-## 3. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 3. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Spec & BA Tools)
+Cockburn BA Lead kết nối trực tiếp với các công cụ ECC:
+- **Khai thác đặc tả:** [`.agents/agents/spec-miner.md`](../agents/spec-miner.md)
+- **Lăng kính sản phẩm:** [`.agents/skills/product-lens/`](../product-lens/SKILL.md)
+- **Phát triển hướng ý niệm:** [`.agents/skills/intent-driven-development/`](../intent-driven-development/SKILL.md)
+- **Quy trình PRD:** [`.agents/workflows/plan-prd.md`](../workflows/plan-prd.md)
+
+---
+
+## 4. Liên Kết Động Cơ Python (Python Engine Bridge)
 Khi thực hiện chuẩn hóa, hãy tham chiếu và sử dụng các công cụ trong:
 - **Spec:** [`core/03_cockburn_ba.md`](../../core/03_cockburn_ba.md)
 - **Agent Class:** [`core_engine.council.CockburnBAAgent`](../../core_engine/council/cockburn_ba_agent.py)

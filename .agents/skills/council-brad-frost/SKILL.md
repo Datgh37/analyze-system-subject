@@ -80,7 +80,14 @@ Swiss graphic design, museum-grade aesthetic, restrained typography.
 
 ---
 
-## 6. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 6. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC A11y & UX Tools)
+Brad Frost kết nối trực tiếp với các công cụ ECC:
+- **Kiến trúc sư tiếp cận:** [`.agents/agents/a11y-architect.md`](../agents/a11y-architect.md)
+- **Kiểm toán đường đi tương tác:** [`.agents/skills/click-path-audit/`](../click-path-audit/SKILL.md)
+
+---
+
+## 7. Liên Kết Động Cơ Python (Python Engine Bridge)
 - **Agent Specification:** [`core/09_brad_frost.md`](../../core/09_brad_frost.md)
 - **Agent Class:** [`core_engine.council.BradFrostAgent`](../../core_engine/council/brad_frost_agent.py)
 - **Skill Engine:** [`core_engine.skills.FrostAtomicDesignSkill`](../../core_engine/skills/frost_atomic_design_skill.py)

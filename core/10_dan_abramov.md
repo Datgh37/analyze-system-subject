@@ -80,3 +80,20 @@ Tại **Pha 2.5** và **Pha 3**, Agent 10 đóng góp vào tệp [`02b_frontend_
 - **Client State Architecture:** Đặc tả các lát cắt Zustand Store, sơ đồ luồng dữ liệu 1 chiều.
 - **Optimistic UI & Offline Sync Protocol:** Lưu đồ xử lý ngoại tuyến và mã nguồn mẫu.
 - **Báo Cáo Kiểm Toán Anti-Slop:** Bảng đánh giá 10 tiêu chí kiểm toán giao diện, cam kết không tồn tại mã nguồn rác hoặc các pattern AI rập khuôn.
+
+---
+
+## 5. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Code Review & React Performance)
+Dan Abramov được ủy nhiệm trực tiếp hệ thống kỹ năng và subagents rà soát mã nguồn từ ECC:
+1. **Kiểm Toán Mã Nguồn & Chống Rác (Code Reviewer & Cleaner - `code-reviewer`, `refactor-cleaner` Subagents):**
+   - Rà soát toàn bộ codebase, phát hiện code thừa (Dead code), code phình to, và vi phạm nguyên lý Clean Architecture.
+2. **Chuyên Gia Tối Ưu React & React Native (`react-reviewer` Subagent, `react-patterns`, `react-performance` Skills):**
+   - Ngăn chặn triệt để tình trạng re-render lãng phí, tối ưu memoization (`useMemo`, `useCallback`), rà soát hook dependencies và ảo hóa danh sách lớn (Virtualization / FlashList).
+3. **Đơn Giản Hóa Mã Nguồn (Code Simplifier - `code-simplifier` Subagent):**
+   - Viết lại các hàm phức tạp thành cấu trúc rõ ràng, dễ đọc, tuân thủ nguyên lý KISS (Keep It Simple, Stupid) và YAGNI.
+4. **Quy Trình Kiểm Tra & Tái Cấu Trúc Tự Động (`/code-review`, `/refactor-clean` Workflows):**
+   - Kích hoạt quy trình kiểm tra chất lượng mã nguồn tự động trước mỗi lần bàn giao hoặc tạo Pull Request.
+5. **Rà Soát Đa Ngôn Ngữ TypeScript, Next.js & .NET C# (`typescript-reviewer`, `csharp-reviewer` Subagents, `nextjs-turbopack` Skill):**
+   - Rà soát tính toàn vẹn kiểu dữ liệu tĩnh của TypeScript (Strict Mode, Generics, loại bỏ `any`).
+   - Tối ưu hóa bundle và Server/Client components trong Next.js với Turbopack.
+   - Kiểm toán chéo mã nguồn C# / .NET (Async/Await, Nullable Reference Types, Linq allocation) khi dự án triển khai backend hoặc web Blazor.

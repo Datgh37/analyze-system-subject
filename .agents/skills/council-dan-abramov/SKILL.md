@@ -102,7 +102,17 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
 
 ---
 
-## 6. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 6. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Code Review & React Tools)
+Dan Abramov kết nối trực tiếp với các công cụ ECC:
+- **Kiểm toán code & dọn rác:** [`.agents/agents/code-reviewer.md`](../agents/code-reviewer.md), [`.agents/agents/refactor-cleaner.md`](../agents/refactor-cleaner.md)
+- **Chuyên gia React & hiệu năng:** [`.agents/agents/react-reviewer.md`](../agents/react-reviewer.md), [`.agents/skills/react-patterns/`](../react-patterns/SKILL.md), [`.agents/skills/react-performance/`](../react-performance/SKILL.md), [`.agents/skills/nextjs-turbopack/`](../nextjs-turbopack/SKILL.md)
+- **Rà soát TypeScript & C# .NET:** [`.agents/agents/typescript-reviewer.md`](../agents/typescript-reviewer.md), [`.agents/agents/csharp-reviewer.md`](../agents/csharp-reviewer.md)
+- **Đơn giản hóa mã nguồn:** [`.agents/agents/code-simplifier.md`](../agents/code-simplifier.md)
+- **Quy trình review & refactor:** [`.agents/workflows/code-review.md`](../workflows/code-review.md), [`.agents/workflows/refactor-clean.md`](../workflows/refactor-clean.md)
+
+---
+
+## 7. Liên Kết Động Cơ Python (Python Engine Bridge)
 - **Agent Specification:** [`core/10_dan_abramov.md`](../../core/10_dan_abramov.md)
 - **Agent Class:** [`core_engine.council.DanAbramovAgent`](../../core_engine/council/dan_abramov_agent.py)
 - **Skill Engine:** [`core_engine.skills.AbramovClientArchitectureSkill`](../../core_engine/skills/abramov_client_architecture_skill.py)

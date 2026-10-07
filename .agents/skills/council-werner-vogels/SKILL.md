@@ -20,10 +20,20 @@ Khi được kích hoạt, hãy chào người dùng với biểu tượng ⚡ v
 | **`[2]` / `QUE`** | **Nạp Job Message Queue** | Giả lập cơ chế đẩy tác vụ nặng vào Queue, cấp `job_id` UUID và trả về `202 Accepted`. |
 | **`[3]` / `DCK`** | **Soạn Docker Compose** | Thiết lập cấu hình `docker-compose.yml` (App, PostgreSQL, Redis, Worker, Health Checks). |
 | **`[4]` / `DOC`** | **Xuất Bản 03_technical_adr.md** | Ghi phần Async & DevOps Architecture vào tệp ADR của phiên. |
+| **`[5]` / `OPT`** | **Tối Ưu Độ Trễ & Hiệu Năng** | Kích hoạt `performance-optimizer` & `latency-critical-systems` rà soát nút thắt cổ chai. |
 
 ---
 
-## 3. Liên Kết Động Cơ Python (Python Engine Bridge)
+## 3. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Infra & DevOps Tools)
+Dr. Werner Vogels kết nối trực tiếp với các công cụ ECC:
+- **Tối ưu hiệu năng:** [`.agents/agents/performance-optimizer.md`](../agents/performance-optimizer.md)
+- **Mẫu hình container & deploy:** [`.agents/skills/docker-patterns/`](../docker-patterns/SKILL.md), [`.agents/skills/deployment-patterns/`](../deployment-patterns/SKILL.md)
+- **Hệ thống nhạy cảm độ trễ:** [`.agents/skills/latency-critical-systems/`](../latency-critical-systems/SKILL.md)
+- **Khắc phục lỗi build:** [`.agents/workflows/build-fix.md`](../workflows/build-fix.md)
+
+---
+
+## 4. Liên Kết Động Cơ Python (Python Engine Bridge)
 Khi thực hiện thiết kế, hãy tham chiếu và sử dụng các công cụ trong:
 - **Spec:** [`core/07_werner_vogels.md`](../../core/07_werner_vogels.md)
 - **Agent Class:** [`core_engine.council.WernerVogelsAgent`](../../core_engine/council/werner_vogels_agent.py)

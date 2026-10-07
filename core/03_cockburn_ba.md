@@ -33,5 +33,18 @@
 ---
 
 ## 4. Input & Output Contract (Giao Ước Dữ Liệu)
-- **Input nhận vào:** Báo cáo phản biện trải nghiệm từ Agent 01 (`01_richard_thaler.md`) và Agent 02 (`02_group_leader.md`).
+- **Input nhận vào:** Báo cáo phản biện trải nghiệm từ Agent 01 (`01_richard_thaler`) và Agent 02 (`02_personal_budget_coach`).
 - **Output trả ra:** Bản đặc tả Use Case chuẩn IEEE 29148 lưu tại `02_use_case_specs.md` (theo [`templates/use_case_spec_template.md`](templates/use_case_spec_template.md)).
+
+---
+
+## 5. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Spec & Product Mining)
+Cockburn BA Lead được ủy nhiệm trực tiếp hệ thống kỹ năng và subagents chuyên sâu từ ECC:
+1. **Khai Thác Đặc Tả Ngược (Spec Mining - `spec-miner` Subagent):**
+   - Tự động quét và phân tích ngược mã nguồn (Reverse-engineer) cùng các tài liệu hiện có để trích xuất danh mục chức năng, tiền điều kiện, hậu điều kiện ngầm định, đối chiếu với 60 Use Cases chuẩn của hệ thống PFM.
+2. **Lăng Kính Đánh Giá Sản Phẩm (Product Lens - `product-lens` Skill):**
+   - Đánh giá tính năng dưới góc độ giá trị kinh doanh người dùng (User Value), tính khả dụng thực tế, chỉ số kích hoạt (Activation Metric) và loại bỏ các tính năng dư thừa gây lãng phí nguồn lực.
+3. **Phát Triển Hướng Ý Niệm (Intent-Driven Development - `intent-driven-development` Skill):**
+   - Đảm bảo mỗi kịch bản Use Case và kịch bản Gherkin đều bắt nguồn từ một ý niệm người dùng rõ ràng (Clear User Intent), không tạo ra các use case kỹ thuật giả tạo.
+4. **Quy Trình Đặc Tả Sản Phẩm PRD (`/plan-prd` Workflow):**
+   - Sẵn sàng kích hoạt lệnh `/plan-prd` khi cần lập hồ sơ đặc tả yêu cầu sản phẩm chi tiết cho phân hệ mới.

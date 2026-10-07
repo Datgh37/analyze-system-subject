@@ -138,3 +138,12 @@ Tại **Pha 2.5**, Agent 09 đóng góp trực tiếp vào tệp [`02b_frontend_
 - **Mục 3:** Phân rã linh kiện Atomic Design (Tokens $\rightarrow$ Atoms $\rightarrow$ Molecules $\rightarrow$ Organisms).
 - **Mục 6:** Danh mục Mockup Concept màn hình Mobile (lồng khung iPhone titan) & Web Dashboard kèm prompt đặc tả chi tiết.
 - **Mục 8:** Bảng kiểm toán WCAG 2.1 AA và công thái học vùng ngón cái.
+
+---
+
+## 6. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC A11y & Click-Path)
+Brad Frost được ủy nhiệm trực tiếp hệ thống kỹ năng và subagents thiết kế từ ECC:
+1. **Kiến Trúc Sư Tiếp Cận (Accessibility Architect - `a11y-architect` Subagent):**
+   - Đánh giá khả năng tiếp cận WCAG 2.1 AA / AAA, kiểm toán điều hướng bằng bàn phím (Keyboard navigation focus order), thuộc tính ARIA chuẩn mực và hỗ trợ trình đọc màn hình (Screen Readers).
+2. **Kiểm Toán Tuyến Đường Tương Tác (Click-Path Audit - `click-path-audit` Skill):**
+   - Rà soát số bước thao tác người dùng (Number of taps/clicks) cho các hành vi tài chính trọng yếu (nhập giao dịch, chuyển ví, cài đặt hạn mức), triệt tiêu các bước trung gian thừa để tối ưu hóa thời gian hoàn thành tác vụ.

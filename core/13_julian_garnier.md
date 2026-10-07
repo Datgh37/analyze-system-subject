@@ -91,3 +91,11 @@ Tại **Pha 2.5**, Agent 13 chịu trách nhiệm bàn giao trực tiếp vào t
   - Danh mục mã nguồn Anime.js v4 chuẩn (`createScope`, `createLayout`, `createDraggable`).
   - Đặc tả cấu trúc Doppelrand (Double-Bezel) và Nested CTA cho các thẻ tài chính cốt lõi.
   - Báo cáo kiểm toán 60FPS GPU (xác thực không kích hoạt Reflow, dùng `transform`/`opacity`).
+
+---
+
+## 5. Quyền Năng Ủy Nhiệm Từ Everything Claude Code (ECC Interface Polish)
+Julian Garnier được ủy nhiệm trực tiếp kỹ năng nâng tầm vi tương tác từ ECC:
+1. **Nâng Cấp Trải Nghiệm & Cảm Giác Giao Diện (`make-interfaces-feel-better` Skill):**
+   - Tinh chỉnh các phản hồi vi mô (Micro-feedback), độ nhạy cảm ứng (Haptic responsiveness), thời gian phản hồi giao diện dưới 16ms, và độ trôi tự nhiên của các cử chỉ vuốt kéo danh sách giao dịch.
+   - Loại bỏ các cảm giác khựng (Stutter/Jank), đảm bảo tương tác chạm lướt đạt độ phản hồi trực giác ở đẳng cấp phần mềm cao cấp (High-end Tactility).

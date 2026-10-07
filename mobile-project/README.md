@@ -32,63 +32,65 @@ Dự án này tập trung xây dựng một **ứng dụng di động quản lý
 
 ---
 
-## 3. Kiến Trúc & Ngăn Xếp Công Nghệ (Tech Stack)
+## 3. Kiến Trúc & Ngăn Xếp Công Nghệ (Tech Stack & Modern Evolution)
+
+> [!IMPORTANT]
+> **📢 CẬP NHẬT ĐỊNH HƯỚNG MỚI: TỰ DO CÔNG NGHỆ & LỘ TRÌNH CHUYỂN ĐỔI (07/10/2026):**  
+> Do **Giảng viên cũ đã rời đi và Giảng viên mới chính thức tiếp quản môn học**, mọi ràng buộc công nghệ trước đây đã được **dỡ bỏ hoàn toàn**:
+> 1. **Không còn bị giới hạn kỹ thuật:** Không còn phải ép mình viết các component thô sơ để đối phó thi vấn đáp. Nhóm được toàn quyền tự do áp dụng các thư viện UI tiên tiến, hoạt ảnh mượt mà và kiến trúc phần mềm chuẩn mực.
+> 2. **Dừng sử dụng server cũ của thầy trước:** Đóng băng việc triển khai lên máy chủ FTP `nhom46.itimit.id.vn` (`103.139.203.43`).
+> 3. **Chiến lược Hai Giai Đoạn:**
+>    - **Giai đoạn 1 (Hiện tại - Chuyển tiếp & Nghiệm thu):** Giữ nguyên stack tạm (**React Native Expo SDK 54 + PHP PDO WAMP 21 RESTful API**) để chạy test, bảo toàn toàn bộ logic tài chính, số dư ví, bù trừ Delta và các kịch bản kiểm thử.
+>    - **Giai đoạn 2 (Sắp tới - Trùng tu sang Stack Hiện đại):** Khi Giảng viên mới chốt yêu cầu, nhóm sẽ chuyển đổi sang 1 trong 2 phương án chuẩn công nghiệp:
+>      - *Phương án A:* **.NET MAUI (C# / XAML)** kết hợp **Backend ASP.NET Core Web API (.NET 8/9, Clean Architecture)**.
+>      - *Phương án B:* **React Native (Expo)** kết hợp **Backend ASP.NET Core Web API** hoặc **Node.js (NestJS / Express)**.
+> 📄 *Chi tiết kế hoạch chuyển đổi:* Xem tại [`project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        KIẾN TRÚC HỆ THỐNG MOBILE                       │
+│                   MÔ HÌNH KIẾN TRÚC HỆ THỐNG CHUYỂN TIẾP               │
 ├────────────────────────────────────────────────────────────────────────┤
-│  [ CLIENT - MOBILE APP ]                                               │
-│  - React Native (JavaScript / TypeScript)                              │
-│  - React Navigation (Bottom Tabs + Stack Navigator)                   │
-│  - Biểu đồ: react-native-chart-kit / victory-native                    │
-│  - HTTP Client: Axios / Fetch API                                      │
+│  [ CLIENT - MOBILE APP (ĐANG HOÀN THIỆN KHUNG LOGIC) ]                 │
+│  - React Native Expo SDK 54 (JavaScript / React 19)                    │
+│  - React Navigation v7 (Auth Stack + Bottom Tabs)                      │
+│  - Axios Interceptor (Tự động gắn Bearer JWT Token)                    │
+│  - Biểu đồ: react-native-chart-kit & react-native-svg                  │
 │                                                                        │
 │                       ▲ RESTful API (JSON / HTTP)                      │
-│                       │                                                │
-│  [ BACKEND API - GIAI ĐOẠN 1: DEV & TEST LOCAL (WAMP SERVER) ]         │
-│  - Web Service: WAMP Server (Apache 2.4.x + PHP 8.x) trên Windows      │
-│  - MySQL Local: localhost:3306 (Quản lý qua phpMyAdmin của WAMP)       │
-│  - Test Tools: Postman (Test trên localhost / 10.0.2.2 / IP LAN)       │
+│                       │ (21 Endpoints chuẩn hóa - Sẵn sàng Migrate)     │
 │                                                                        │
-│                       ▼ KHI ĐƯỢC GIẢNG VIÊN CHO PHÉP TRIỂN KHAI        │
+│  [ BACKEND API - GIAI ĐOẠN HIỆN TẠI: DEV & TEST LOCAL (WAMP SERVER) ]  │
+│  - Web Service: WAMP Server (Apache + PHP 8.x PDO) trên Windows        │
+│  - Lõi Bảo mật: Pure PHP HMAC-SHA256 JWT & Chống IDOR                  │
+│  - Nghiệp vụ: ACID Internal Transfer, Delta Reconciler, OTP 3 bước     │
+│  - MySQL Local: `sql_nhom46_itimi` (6 Bảng quan hệ chuẩn 3NF)          │
+│  - Test Suite: PowerShell tự động `test_api.ps1` (100% Passed)         │
 │                                                                        │
-│  [ BACKEND API - GIAI ĐOẠN 2: PRODUCTION SERVER TRƯỜNG CẤP ]           │
-│  - Server IP: 103.139.203.43 (Domain: nhom46.itimit.id.vn)            │
-│  - Quản lý CSDL: phpMyAdmin (Cổng 887 - CSDL: sql_nhom46_itimi)        │
-│  - Upload mã nguồn: FileZilla FTP (Host: nhom46.itimit.id.vn)          │
-│  - Test Tools: Postman (Test trực tiếp qua Internet công khai)         │
+│                       ▼ ĐỊNH HƯỚNG NÂNG CẤP (KHI THẦY MỚI CHỐT)        │
+│                                                                        │
+│  [ TARGET MODERN STACK - .NET MAUI / .NET WEB API / NODE.JS NESTJS ]   │
+│  - Option A: 100% C# .NET Ecosystem (.NET MAUI + ASP.NET Core API)     │
+│  - Option B: Full-Stack Modern JS/TS (React Native Expo + NestJS/.NET) │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Chi tiết các tầng công nghệ:
-1. **Frontend (Mobile App):**
-   - **Framework:** `React Native` (Hỗ trợ chạy mượt trên Android & iOS).
-   - **Quản lý điều hướng:** `React Navigation` (Gồm Bottom Tab Bar cho 4 màn chính: Trang chủ, Lịch sử giao dịch, Báo cáo biểu đồ, Cài đặt).
-   - **Thư viện biểu đồ:** `react-native-chart-kit` kết hợp `react-native-svg` để vẽ biểu đồ tròn và biểu đồ cột.
-   - **Giao diện & Thành phần UI:** Sử dụng các thành phần cơ bản của React Native (`View`, `Text`, `TouchableOpacity`, `TextInput`, `FlatList`, `Modal`) kết hợp Flexbox layout và bộ Icon `@expo/vector-icons`.
-   - **Định kiểu (Styling) - Phục vụ Vấn Đáp:** Sử dụng thuần `StyleSheet.create({...})` kết hợp các hằng số màu sắc `const COLORS`. Tuyệt đối **KHÔNG** dùng các thư viện CSS bên thứ 3 (TailwindCSS/NativeWind, Styled-Components, Paper...) để giữ code mộc mạc, chuẩn giáo trình nhập môn, giúp sinh viên tự tin giải thích trôi chảy khi Giảng viên hỏi vấn đáp.
+### Chi tiết các tầng công nghệ hiện tại & Kế hoạch mở rộng:
+1. **Frontend (Mobile App - Expo SDK 54):**
+   - **Framework:** `Expo SDK 54` (`react-native: 0.81.5`, `react: 19.1.0`), hỗ trợ chuẩn **Android 14 (API 34) & Android 15 (API 35)** và Node 24 LTS.
+   - **Quản lý điều hướng:** `React Navigation v7` (Bottom Tabs 5 màn hình: Tổng quan, Giao dịch, Ngân sách, Báo cáo, Hồ sơ).
+   - **Bảo mật & Phiên:** `AsyncStorage` + Axios Client tích hợp Interceptor tự động gắn JWT Token và thu hồi phiên khi hết hạn (HTTP 401).
+   - **Định kiểu (Styling):** Hệ thống Design Tokens (`theme.js`) với bảng màu `COLORS`, khoảng cách `SPACING`, bo góc và đổ bóng. Sẵn sàng tích hợp các thư viện UI Kit cao cấp (Reanimated, Native UI Components) khi chuyển sang giai đoạn sau.
 
-2. **Backend (REST API):**
-   - **Ngôn ngữ:** `PHP` (Viết dạng các API endpoints hướng dịch vụ, trả về JSON thuần).
-   - **Bảo mật cơ bản:** Băm mật khẩu bằng `password_hash()` (Bcrypt), chống SQL Injection bằng `PDO Prepared Statements`, cấu hình Header CORS cho phép Mobile Client gọi vào từ bất kỳ đâu.
-   - **Xác thực:** Token-based authentication đơn giản (Bearer Token / API Key) lưu ở AsyncStorage trên React Native.
+2. **Backend (RESTful API - 21 Endpoints):**
+   - **Ngôn ngữ:** `PHP` hướng dịch vụ, trả về JSON chuẩn hóa (bọc `status`, `message`, `data`, `timestamp`).
+   - **Bảo mật:** JWT Bearer Token bắt buộc, triệt tiêu lỗ hổng IDOR; mật khẩu Bcrypt; chống SQL Injection 100% qua PDO Prepared Statements.
+   - **Tính năng nâng cao:** Quy trình Quên mật khẩu 3 bước chuẩn OTP (hạn 15 phút, đồng bộ múi giờ Asia/Ho_Chi_Minh), Chuyển tiền nội bộ giữa các ví chuẩn ACID, và Bộ bù trừ Delta tự động khi sửa giao dịch.
+   - **Hợp đồng API (Contracts):** Được thiết kế độc lập, sẵn sàng tái sử dụng 100% khi chuyển dịch sang ASP.NET Core Web API hoặc NestJS.
 
-3. **Môi trường Cơ sở Dữ liệu & Máy chủ (Chiến lược 2 Giai đoạn):**
-   - **Giai đoạn 1 (Hiện tại - Dev & Test trên Local WAMP Server):**
-     - Do giảng viên chưa cho phép thao tác trực tiếp trên server trường, nhóm chủ động dựng và test toàn bộ trên **WAMP Server** cục bộ.
-     - CSDL MySQL chạy trên WAMP (`localhost:3306`), tạo database cùng tên `sql_nhom46_itimi` để khi migrate lên server trường không phải sửa tên trong code.
-     - Kiểm thử API nội bộ qua Postman và chạy Mobile App qua máy ảo Android (`10.0.2.2`) hoặc điện thoại thật chung mạng Wifi (`192.168.x.x`).
-   - **Giai đoạn 2 (Sau khi Giảng viên cho phép - Triển khai lên Server trường cấp):**
-     - **Địa chỉ máy chủ (Server IP):** `103.139.203.43` | **Domain:** `nhom46.itimit.id.vn`
-     - **Đường dẫn phpMyAdmin:** `https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en`
-     - **Tài khoản phpMyAdmin / DB:** `sql_nhom46_itimi` | **Mật khẩu:** `0a530d0c23153`
-     - **Kết nối FileZilla (FTP):**
-       - **Host:** `nhom46.itimit.id.vn`
-       - **Username:** `ftp_nhom46_itimit_id_vn`
-       - **Password:** `e5e971e19bbb18`
-       - **Port:** `21` (Mặc định)
-     - **Bảng mã:** `utf8mb4_unicode_ci` hỗ trợ đầy đủ tiếng Việt có dấu và emoji icon.
+3. **Cơ sở Dữ liệu & Môi trường Chạy (Đóng Băng Server Cũ):**
+   - **Môi trường Hiện tại:** CSDL MySQL chạy trên WAMP (`sql_nhom46_itimi`), gồm 6 bảng chuẩn hóa (`users`, `wallets`, `categories`, `transactions`, `budgets`, `password_resets`).
+   - **Đóng băng Server cũ:** Không upload lên máy chủ FTP cũ của trường (`nhom46.itimit.id.vn`) do Giảng viên cũ đã rời đi. Toàn bộ mã nguồn và dữ liệu kiểm thử tập trung an toàn trên Localhost và Git.
+   - **Kiểm thử tự động:** Script `BE/test_api.ps1` tích hợp API Reset CSDL tự động (`api/debug/reset_database.php`), kiểm thử 21/21 API đạt 100% Passed.
 
 ---
 
@@ -341,17 +343,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ---
 
-### Bước 7: Hướng Dẫn Đẩy Code Lên Server Trường Bằng FileZilla FTP (Khi Được Phép)
-1. Tải và mở phần mềm **FileZilla Client**.
-2. Nhập thông tin kết nối nhanh (Quickconnect):
-   - **Host:** `nhom46.itimit.id.vn`
-   - **Username:** `ftp_nhom46_itimit_id_vn`
-   - **Password:** `e5e971e19bbb18`
-   - **Port:** `21`
-3. Nhấn **Quickconnect** để kết nối vào máy chủ.
-4. Ở khung bên phải (Remote site): Di chuyển vào thư mục web gốc (`public_html` hoặc `www`).
-5. Ở khung bên trái (Local site): Chọn toàn bộ mã nguồn thư mục `BE/` trên máy tính và kéo thả sang bên phải để tải lên máy chủ.
-6. Mở file `config/database.php` trên máy chủ và chuyển sang chế độ server: `$is_local = false;`.
+### Bước 7: Trạng Thái Triển Khai Máy Chủ & Kế Hoạch Chuyển Đổi (Server Status & Migration)
+> ⚠️ **THÔNG BÁO QUAN TRỌNG:**  
+> - **Đóng băng (Frozen):** Dừng triển khai lên máy chủ FTP `nhom46.itimit.id.vn` do Giảng viên cũ đã rời đi.
+> - **Môi trường Dev & Test hiện tại:** Tiếp tục chạy trên WAMP Server Localhost (`http://localhost/expense_api/api`) và kết nối máy ảo Android (`10.0.2.2`) hoặc điện thoại thật cùng mạng Wifi.
+> - **Sẵn sàng chuyển đổi (Migration Ready):** Khi Giảng viên mới chốt định hướng công nghệ, nhóm sẽ chuyển đổi Backend sang ASP.NET Core Web API hoặc Node.js / Docker Container theo kế hoạch [`PLAN-22`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
 
 
 ---

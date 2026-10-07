@@ -1,8 +1,8 @@
 # 🗺️ LỘ TRÌNH TRIỂN KHAI DỰ ÁN (PROJECT DEVELOPMENT ROADMAP)
 ## ĐỒ ÁN MÔN HỌC: LẬP TRÌNH THIẾT BỊ DI ĐỘNG (MOBILE APPLICATION DEVELOPMENT)
-> **Tên đề tài:** Ứng dụng Quản lý Chi tiêu Cá nhân (Personal Expense Tracker)  
-> **Ngăn xếp công nghệ:** React Native (Frontend) + PHP RESTful API (Backend) + MySQL (WAMP Localhost / Server trường cấp `103.139.203.43:887` qua FTP `nhom46.itimit.id.vn`)  
-> **Tài liệu tham chiếu:** [README.md](README.md) | [BaoCaoLTMB.docx](BaoCaoLTMB.docx)
+> **Ngăn xếp công nghệ chuyển tiếp (Transitional Stack):** React Native Expo SDK 54 + PHP PDO RESTful API (21 endpoints bảo mật JWT) + MySQL WAMP Server Localhost.  
+> **Định hướng nâng cấp (Target Modern Stack):** Sẵn sàng chuyển đổi sang **.NET MAUI** hoặc **React Native** kết hợp **Backend ASP.NET Core Web API (.NET 8/9)** / **Node.js (NestJS)** theo chỉ đạo của Giảng viên mới.  
+> **Tài liệu tham chiếu:** [README.md](README.md) | [BaoCaoLTMB.docx](BaoCaoLTMB.docx) | [Kế hoạch PLAN-22](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
 
 ---
 
@@ -33,43 +33,19 @@
 | **Kiểm thử giao diện App & Chụp ảnh minh chứng Mobile** | **I** | **A / R** | Bộ ảnh chụp màn hình ứng dụng di động cho Trang 9–10 báo cáo Word |
 | **Hoàn thiện Báo cáo Word (`BaoCaoLTMB.docx`)** | **A / R (Trang 7, Tổng hợp, F9)** | **R (Trang 8, 9, 10)** | Tệp Word nộp bài hoàn chỉnh, cập nhật mục lục tự động F9 |
 
-### 1.3. Quy Chuẩn Viết Code Phục Vụ Thi Vấn Đáp Môn Học (Oral Defense Guidelines)
+### 1.3. 📢 THÔNG BÁO QUAN TRỌNG: DỠ BỎ GIỚI HẠN CÔNG NGHỆ & CHIẾN LƯỢC CHUYỂN ĐỔI
 
-> [!CAUTION]
-> **LƯU Ý ĐẶC BIỆT DÀNH CHO CẢ 2 BẠN (ĐẠT & ĐẠI) VÀ AI AGENT:**  
-> Đồ án này thuộc môn **Nhập môn Lập trình Thiết bị Di động**. Mục tiêu cao nhất là **hiểu rõ bản chất, bảo vệ đồ án và trả lời trôi chảy trước Hội đồng Vấn đáp của Giảng viên**. Vì vậy, tuyệt đối tuân thủ các quy tắc sau:
-
-1. **Tuyệt đối KHÔNG sử dụng thư viện CSS bên thứ 3:**
-   - CẤM dùng: `TailwindCSS / NativeWind`, `Styled Components`, `React Native Paper`, `Tamagui`, `UI Kitten`...
-   - **Lý do:** Khi vấn đáp, giảng viên sẽ hỏi về cơ chế Styling native của React Native. Nếu dùng thư viện trung gian phức tạp sẽ rất khó giải thích và dễ bị đánh giá là đi copy template có sẵn.
-2. **Khai báo Styles thuần bằng `StyleSheet.create({...})` và Hằng số `const`:**
-   - Định nghĩa bảng màu và kích thước dùng chung bằng các hằng số rõ ràng:
-     ```javascript
-     export const COLORS = {
-       primary: '#2E7D32',   // Xanh lá chủ đạo
-       expense: '#D32F2F',   // Đỏ chi tiêu
-       income: '#388E3C',    // Xanh thu nhập
-       background: '#F5F5F5',
-       card: '#FFFFFF',
-       text: '#212121',
-       textSecondary: '#757575',
-       border: '#E0E0E0'
-     };
-     ```
-   - Cuối mỗi file component/screen luôn viết styles rõ ràng:
-     ```javascript
-     const styles = StyleSheet.create({
-       container: { flex: 1, backgroundColor: COLORS.background, padding: 16 },
-       card: { backgroundColor: COLORS.card, borderRadius: 12, padding: 16, marginBottom: 12 },
-       title: { fontSize: 18, fontWeight: 'bold', color: COLORS.text }
-     });
-     ```
-3. **Tận dụng tối đa các Thành phần & Cấu trúc cơ bản đã học:**
-   - **Components cơ bản:** `View`, `Text`, `TouchableOpacity` (hoặc `Pressable`), `TextInput`, `FlatList` (cho danh sách giao dịch), `ScrollView`, `Modal`, `Alert`, `ActivityIndicator`.
-   - **Hooks cơ bản:** Chỉ dùng `useState` (quản lý form, modal, dữ liệu) và `useEffect` (gọi API khi load màn hình). KHÔNG dùng Redux Toolkit hay State Machine cao siêu.
-4. **Viết Code trong sáng, tuần tự và có chú thích (Comment):**
-   - Mọi hàm xử lý (thêm giao dịch, tính tổng tiền, đăng nhập) phải có chú thích tiếng Việt ngắn gọn mô tả luồng chạy.
-   - Khi Giảng viên chỉ tay vào bất kỳ dòng nào (ví dụ: `fetch()`, `useEffect`, `FlatList renderItem`), sinh viên phải tự tin giải thích được ngay bản chất hoạt động.
+> [!IMPORTANT]
+> **CẬP NHẬT ĐỊNH HƯỚNG THEO GIẢNG VIÊN MỚI TIẾP QUẢN MÔN HỌC (07/10/2026):**  
+> Giảng viên cũ đã rời đi và Thầy mới đã chính thức tiếp quản môn học. Do đó:
+> 1. **Dỡ bỏ 100% các rào cản công nghệ cũ:** Không còn bị ép buộc phải code các component đơn sơ để đối phó thi vấn đáp nhập môn. Nhóm được toàn quyền tự do sử dụng các thư viện UI hiện đại, animations mượt mà, công nghệ tiên tiến để xây dựng ứng dụng di động hoàn chỉnh, chuyên nghiệp và có chiều sâu thiết kế hệ thống.
+> 2. **Dừng triển khai lên server hosting cũ của thầy trước:** Không sử dụng server `103.139.203.43 / nhom46.itimit.id.vn`.
+> 3. **Chiến lược Hai Giai Đoạn (Two-Phase Strategy):**
+>    - **Giai đoạn Hiện tại (Tạm thời):** Giữ nguyên ngăn xếp hiện tại (**React Native Expo SDK 54 + PHP WAMP 21 RESTful API**) để chạy test, kiểm chứng trọn vẹn toàn bộ luồng nghiệp vụ tài chính cá nhân, logic tính toán ví, ngân sách và báo cáo.
+>    - **Giai đoạn Sắp tới (Trùng tu & Hiện đại hóa):** Khi Giảng viên mới chốt yêu cầu chính thức, nhóm sẽ tiến hành chuyển đổi sang stack công nghệ chuẩn công nghiệp:
+>      - *Phương án 1:* **.NET MAUI (C# / XAML)** kết hợp **Backend ASP.NET Core Web API (.NET 8/9, Clean Architecture)**.
+>      - *Phương án 2:* **React Native (Expo)** kết hợp **Backend .NET Web API** hoặc **Node.js (NestJS)**.
+> 4. **Giữ vững giá trị cốt lõi:** Đề tài vẫn giữ nguyên 100% phạm vi Quản lý Chi tiêu và Hoạch định Tài chính Cá nhân Thông minh (không quỹ nhóm); toàn bộ 21 API contracts và cấu trúc CSDL 6 bảng quan hệ sẽ được kế thừa nguyên vẹn.
 
 ---
 
@@ -186,11 +162,10 @@
 ### Giai Đoạn 5: Triển Khai Server Trường, Báo Cáo Word & Đóng Gói (Tuần 5 - 6)
 > **Mục tiêu:** Triển khai lên server trường (khi được phép), hoàn thiện tệp báo cáo Word `BaoCaoLTMB.docx` và sẵn sàng nộp cho Giảng viên.
 
-- [ ] **Task 5.0 (Đạt & Đại) - KHI ĐƯỢC GIẢNG VIÊN CHO PHÉP:**
-  - Truy cập phpMyAdmin server trường (`https://103.139.203.43:887/`, user `sql_nhom46_itimi`), import database `sql_nhom46_itimi`.
-  - Dùng **FileZilla** (Host: `nhom46.itimit.id.vn`, User: `ftp_nhom46_itimit_id_vn`, Pass: `e5e971e19bbb18`) upload mã nguồn `BE/` lên thư mục web trên server.
-  - Chuyển cấu hình `$is_local = false` trong `config/database.php`.
-  - Test kiểm tra lại 1 lượt các API trên domain server qua Postman.
+- [x] **Task 5.0 (Đạt & Đại) - ĐÓNG BĂNG TRIỂN KHAI SERVER CŨ (FROZEN):**
+  - **Dừng triển khai** lên server FTP `nhom46.itimit.id.vn` và phpMyAdmin `103.139.203.43` do Giảng viên cũ đã rời đi.
+  - Toàn bộ dữ liệu kiểm thử được chuyển sang chạy trên Localhost WAMP & script tự động `test_api.ps1`.
+  - Sẵn sàng chuyển giao cấu hình sang server mới hoặc Docker container khi Giảng viên mới yêu cầu.
 - [ ] **Task 5.1 (Đạt):** Mở tệp `mobile-project/BaoCaoLTMB.docx`:
   - Tại Trang 7 (*Xây dựng mô hình DB*): Chèn ảnh sơ đồ ERD, bảng từ điển dữ liệu mô tả chi tiết 5 bảng dữ liệu MySQL.
   - Chèn ảnh chụp giao diện phpMyAdmin đã có đủ 5 bảng.

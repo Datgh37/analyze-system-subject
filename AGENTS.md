@@ -60,9 +60,29 @@ Mỗi khi có một yêu cầu tính năng mới (Feature Request), phiên làm 
 
 ---
 
-## 3. Các Nguyên Tắc Bất Di Bất Dịch (Immutable Rules)
+## 3. Hệ Sinh Thái Kỹ Năng Kỹ Nghệ Toàn Diện ECC (Everything Claude Code Integration)
+
+Nhằm bao quát toàn bộ vòng đời phát triển phần mềm (Software Engineering Lifecycle) từ thiết kế, kiểm toán mã nguồn đến triển khai, Hội đồng tích hợp bộ kỹ năng và tác tử chuyên biệt từ repository Everything Claude Code (`ecc-universal` 2.2.3):
+
+| Mã Tác Tử | Chuyên Gia Hóa Thân | Quyền Năng & Tác Tử ECC Được Ủy Nhiệm (`.agents/skills/` & `.agents/agents/`) |
+| :--- | :--- | :--- |
+| **Agent 00** | **Council Orchestrator** | `living-docs-governance`, `intent-driven-development`, `plan-canvas`, `plan-orchestrate`, `context-budget`, `strategic-compact`, `delivery-gate`, `/plan`, `/quality-gate` |
+| **Agent 03** | **Cockburn & Debra Paul (BA Lead)** | Subagent `spec-miner.md`, `product-lens`, `market-research`, `intent-driven-development` |
+| **Agent 04** | **Eric Evans (DDD Lead)** | Subagent `architect.md`, `architecture-decision-records`, `backend-patterns`, `dotnet-patterns`, `nestjs-patterns` |
+| **Agent 10** | **Dan Abramov (Client & Craft)** | Subagent `code-reviewer.md`, Subagent `code-simplifier.md`, Subagent `refactor-cleaner.md`, Subagent `react-reviewer.md`, Subagent `typescript-reviewer.md`, Subagent `csharp-reviewer.md`, `react-patterns`, `react-performance`, `nextjs-turbopack` |
+| **Agent 05** | **Martin Kleppmann (DB Lead)** | Subagent `database-reviewer.md`, `database-migrations`, `postgres-patterns`, `mysql-patterns`, `redis-patterns` |
+| **Agent 07** | **Werner Vogels (DevOps Lead)** | `docker-patterns`, `deployment-patterns`, `latency-critical-systems`, Subagent `build-error-resolver.md` |
+| **Agent 08** | **Andrew Ng (AI Lead)** | `prompt-optimizer`, `eval-harness`, `agent-eval`, `cost-aware-llm-pipeline`, Subagent `mle-reviewer.md` |
+| **Agent 09 & 13** | **Brad Frost & Julian Garnier** | Subagent `a11y-architect.md`, `click-path-audit`, `make-interfaces-feel-better` |
+| **Agent 11** | **Bruce Schneier (Security Lead)** | Subagent `security-reviewer.md`, `security-scan`, `security-review`, `the-security-guide` |
+| **Agent 12** | **Kent Beck & Martin Fowler (QA)** | Subagent `tdd-guide.md`, `tdd-workflow`, `verification-loop`, Subagent `e2e-runner.md`, `e2e-testing`, `browser-qa`, Subagent `silent-failure-hunter.md`, `csharp-testing` |
+
+---
+
+## 4. Các Nguyên Tắc Bất Di Bất Dịch (Immutable Rules)
 1. **Durable Context (Ngữ cảnh bền vững):** Mọi giao tiếp giữa các Agent đều diễn ra thông qua việc đọc/ghi các file Markdown trong thư mục `sessions/` và `project_context/`. Không dựa vào trí nhớ hội thoại tạm thời.
 2. **Strict Role Isolation:** Agent nào làm đúng việc của Agent đó. BA không bàn về Docker, Khách hàng không bàn về thuật toán đồ thị, Motion Choreographer không can thiệp CSDL 3NF.
 3. **Evidence-Based (Dựa trên bằng chứng):** Mọi kết luận kỹ thuật đều phải có dữ liệu chứng minh (sơ đồ Mermaid, script Python chạy test hoặc bảng so sánh Trade-offs).
 4. **Mandatory Context Logging (Ghi chép kế hoạch bắt buộc):** Mỗi khi có kế hoạch mới, sửa đổi yêu cầu hoặc quyết định kỹ thuật, BẮT BUỘC phải lưu snapshot vào `project_context/plans/` và cập nhật `project_context/decisions_and_changes_log.md`.
 5. **Portability (Tính khả chuyển):** Tuyệt đối KHÔNG sử dụng đường dẫn tuyệt đối của máy cá nhân trong các tài liệu markdown. Luôn sử dụng đường dẫn tương đối để đảm bảo dự án chạy tốt trên mọi thiết bị và hệ điều hành.
+
