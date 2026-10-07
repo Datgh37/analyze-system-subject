@@ -1634,3 +1634,31 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Cập nhật [`mobile-project/ROADMAP.md`](../mobile-project/ROADMAP.md) thông báo dỡ bỏ rào cản công nghệ và đóng băng server cũ.
      - Ban hành Kế hoạch hành động chi tiết: [`project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md`](plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
 - **Trạng thái:** `ACCEPTED & LOCKED (READY FOR ADAPTATION)`.
+
+---
+
+## [2026-10-07 10:00] - Quyết Định 83: Xây Dựng & Nghiệm Thu Thành Công Proof-of-Concept Tích Hợp Socket.IO Realtime Gateway Cho App Mobile
+- **Vấn đề:** 
+  1. Theo yêu cầu nghiên cứu của Giảng viên mới về cơ chế hoạt động của ứng dụng di động (Client-Server, Full-Duplex communication) và thử nghiệm tích hợp WebSocket/Socket.IO.
+  2. Cần hiện thực hóa các bài toán thời gian thực đặc thù trong Quản lý Tài chính Cá nhân (100% Personal Finance):
+     - Đồng bộ số dư ví tức thời trên nhiều thiết bị (Multi-Device Balance Sync).
+     - Cảnh báo Cú hích chi tiêu tức thời (Realtime Budget Nudge) khi gần hoặc chạm trần hạn mức (80%, 100%+).
+     - Thu hồi phiên đăng xuất cưỡng bức vì lý do bảo mật (Force Logout Security).
+- **Quyết định & Thực thi:**
+  1. **Xây Dựng Socket.IO Gateway Server (`mobile-project/realtime-server/`):**
+     - Kiến trúc Node.js + Express + Socket.IO (Port 3001, cách ly hoàn toàn khỏi Metro Bundler 8081 và WAMP 80).
+     - Quản lý kênh kết nối theo phòng người dùng riêng biệt (`user_${userId}`) đảm bảo tính riêng tư cá nhân.
+     - Cung cấp HTTP Trigger Endpoints (`/api/notify/balance-update`, `/api/notify/budget-nudge`, `/api/notify/force-logout`) cho phép Backend PHP/Postman kích hoạt sự kiện thời gian thực.
+  2. **Tích Hợp Client React Native Expo SDK 54 (`mobile-project/FE/`):**
+     - Cài đặt `socket.io-client@^4.7.5`.
+     - Xây dựng Client Singleton [`src/api/socket.js`](../mobile-project/FE/src/api/socket.js) tự động tái kết nối và nhận diện IP mạng LAN linh hoạt.
+     - Xây dựng Context quản lý trạng thái kết nối [`src/context/RealtimeContext.js`](../mobile-project/FE/src/context/RealtimeContext.js) và tích hợp vào `App.js`.
+     - Thiết kế component giao diện [`src/components/RealtimeAlertBanner.js`](../mobile-project/FE/src/components/RealtimeAlertBanner.js) hiển thị thanh trạng thái kết nối và banner cảnh báo cú hích chi tiêu.
+     - Tích hợp cơ chế tự động nạp lại Dashboard (0ms sync) vào [`src/screens/main/HomeScreen.js`](../mobile-project/FE/src/screens/main/HomeScreen.js) khi nhận sự kiện `wallet:balance_updated`.
+  3. **Bộ Công Cụ Kiểm Thử Tự Động (Automation Testing):**
+     - Xây dựng script kiểm thử [`mobile-project/realtime-server/test_realtime.js`](../mobile-project/realtime-server/test_realtime.js) và wrapper [`test_realtime.ps1`](../mobile-project/realtime-server/test_realtime.ps1).
+     - Kiểm thử thành công 4/4 trigger: Server Health Check, Balance Update, Budget Warning (86%), Budget Danger (110%) với độ trễ <10ms.
+     - Toàn bộ 119 unit tests của kho lưu trữ tiếp tục đạt trạng thái **100% PASSED**.
+- **Tài liệu bàn giao:** Bổ sung Mục 8 vào [`mobile-project/README.md`](../mobile-project/README.md).
+- **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
+

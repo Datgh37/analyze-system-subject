@@ -1,0 +1,18 @@
+{
+  "name": "expense-realtime-server",
+  "version": "1.0.0",
+  "description": "Realtime Socket.IO Server for Personal Expense & Financial Planning Mobile App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test:trigger": "node test_realtime.js",
+    "client:listen": "node client_cli.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.8.4"
+  }
+}

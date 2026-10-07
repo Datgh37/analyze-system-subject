@@ -5,6 +5,30 @@
 
 ---
 
+> [!TIP]
+> ### ⚡ HƯỚNG DẪN KHỞI CHẠY NHANH TOÀN BỘ HỆ THỐNG (QUICK START 3 BƯỚC)
+>
+> 1. **Bước 1: Bật Backend CSDL (WAMP Server):**
+>    - Khởi chạy ứng dụng `wampmanager.exe` trên máy tính (đảm bảo icon chuyển sang màu xanh lá cây).
+>    - Địa chỉ API: `http://localhost/expense_api/api`.
+>
+> 2. **Bước 2: Bật Gateway Thời Gian Thực (Socket.IO Server):**
+>    ```bash
+>    cd mobile-project/realtime-server
+>    pnpm start
+>    ```
+>    *(Mở trình duyệt truy cập `http://localhost:3001` để xem Web Client Simulator và test bắn sự kiện).*
+>
+> 3. **Bước 3: Bật Ứng Dụng Di Động Frontend (Expo SDK 54):**
+>    ```bash
+>    cd mobile-project/FE
+>    npm start
+>    # hoặc npx expo start -c
+>    ```
+>    *(Mở app **Expo Go** trên điện thoại quét mã QR hoặc nhấn phím `a` trên bàn phím để mở máy ảo Android).*
+
+---
+
 
 ## 1. Tổng Quan & Mục Tiêu Dự Án
 
@@ -384,3 +408,32 @@ mobile-project/
     │   └── utils/                # FormatMoney, FormatDate
     └── App.js
 ```
+
+---
+
+## 8. Khởi Chạy Gateway Thời Gian Thực (Socket.IO Realtime Gateway POC)
+
+Hệ thống tích hợp cổng WebSocket song song để phục vụ tính năng đồng bộ số dư tức thì, cảnh báo cú hích chi tiêu (Nudge) và thu hồi phiên đăng nhập đa thiết bị:
+
+### 8.1. Khởi động Realtime Gateway Server
+Mở terminal riêng biệt:
+```bash
+cd mobile-project/realtime-server
+pnpm install
+pnpm start
+# Server lắng nghe tại cổng http://localhost:3001 (WS: ws://localhost:3001)
+```
+
+### 8.2. Kích hoạt sự kiện kiểm thử (Bắn sự kiện sang App Mobile)
+Mở một terminal khác và chạy lệnh kiểm thử tự động:
+```bash
+cd mobile-project/realtime-server
+pnpm test:trigger
+# hoặc: node test_realtime.js / powershell -File test_realtime.ps1
+```
+
+### 8.3. Kết quả trên App Mobile (Expo)
+- **Thanh trạng thái Realtime:** Hiển thị chấm xanh lá cây `Realtime Socket.IO: Sẵn sàng (X ms)`.
+- **Đồng bộ số dư 0ms:** Tự động reload tổng tài sản và danh sách ví ngay khi có giao dịch mới.
+- **Banner Cú hích (Nudge):** Cảnh báo màu vàng (80%) hoặc đỏ (100%+) hiển thị trực tiếp trên đầu màn hình HomeScreen.
+

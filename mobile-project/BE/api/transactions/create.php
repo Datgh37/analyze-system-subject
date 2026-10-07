@@ -94,6 +94,10 @@ try {
 
     $db->commit();
 
+    // ⚡ 6. Kích hoạt thông báo biến động số dư Realtime tới Socket.IO Gateway
+    $delta = ($transaction_type === 'EXPENSE') ? -$amount : $amount;
+    realtime_balance_update($user_id, $wallet_id, $wallet['name'] ?? 'Tiền Mặt', $new_balance, $delta, $note ?: 'Giao dịch mới');
+
     send_json_response("success", "Tạo giao dịch thành công.", [
         "transaction_id"   => $new_transaction_id,
         "wallet_id"        => $wallet_id,

@@ -38,8 +38,16 @@ const getBaseUrl = () => {
   return 'http://localhost/expense_api/api';
 };
 
+export const getSocketUrl = () => {
+  if (Platform.OS === 'android') {
+    return `http://${LOCAL_LAN_IP}:3001`;
+  }
+  return 'http://localhost:3001';
+};
+
 export const API_CONFIG = {
   BASE_URL: getBaseUrl(),
+  SOCKET_URL: getSocketUrl(),
   TIMEOUT_MS: 10000, // 10 giây timeout
   HEADERS: {
     'Content-Type': 'application/json',

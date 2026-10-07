@@ -2,6 +2,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from './src/context/AuthContext';
+import { RealtimeProvider } from './src/context/RealtimeContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 /**
@@ -16,6 +17,7 @@ import AppNavigator from './src/navigation/AppNavigator';
  * - Expo SDK 54 (~54.0.36)
  * - React Native 0.81.5 & React 19.1.0
  * - React Navigation 7.x
+ * - Socket.IO Client 4.7.5 (Realtime Full-Duplex Events)
  * - Pure StyleSheet & COLORS tokens
  */
 
@@ -23,8 +25,10 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <StatusBar style="dark" />
-        <AppNavigator />
+        <RealtimeProvider>
+          <StatusBar style="dark" />
+          <AppNavigator />
+        </RealtimeProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

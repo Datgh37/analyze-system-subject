@@ -124,3 +124,59 @@ Trong mỗi file màn hình tại thư mục `src/screens/`, tôi đã để l�
 1. Mở từng file màn hình để xem wireframe gợi ý.
 2. Tùy chỉnh màu sắc, viền bo, icon, khoảng cách theo sở thích thẩm mỹ cá nhân bằng cách sử dụng các hằng số từ `COLORS`, `SPACING`, `SIZES` trong [`src/constants/theme.js`](src/constants/theme.js).
 3. Đảm bảo giao diện đồng bộ, trực quan để chuẩn bị tốt nhất cho buổi bảo vệ đồ án!
+
+---
+
+## 6. ⚡ Hướng Dẫn Tích Hợp Realtime Socket.IO (Dành Riêng Cho Bạn Đại - UI Lead)
+
+Hệ thống đã được trang bị sẵn cơ chế WebSocket thời gian thực (Full-Duplex) để nhận thông báo biến động số dư ví (0ms sync) và cảnh báo cú hích chi tiêu (Nudge Alert). Đại **không cần viết code kết nối socket phức tạp** vì mọi thứ đã được gói sẵn vào Context và Component:
+
+### 6.1. Cách dùng Banner Cảnh báo có sẵn (RealtimeAlertBanner)
+Đại chỉ cần import và đặt component này ở đầu màn hình:
+```javascript
+import RealtimeAlertBanner from '../../components/RealtimeAlertBanner';
+
+export default function MyScreen() {
+  return (
+    <View style={{ flex: 1 }}>
+      {/* Tự động hiển thị chấm xanh kết nối + banner vàng/đỏ khi vượt ngân sách */}
+      <RealtimeAlertBanner />
+      
+      {/* Nội dung giao diện khác của Đại */}
+    </View>
+  );
+}
+```
+
+### 6.2. Cách lấy dữ liệu Realtime trực tiếp qua Hook `useRealtime()`
+Nếu Đại muốn tự vẽ UI thông báo riêng theo ý mình:
+```javascript
+import { useRealtime } from '../../context/RealtimeContext';
+
+export default function MyCustomScreen() {
+  const { 
+    isConnected,       // boolean: true nếu đang kết nối WebSocket với server
+    latencyMs,         // number: độ trễ mạng tính bằng ms (ví dụ: 12ms)
+    lastBalanceEvent,  // object: { walletName, delta, newBalance, reason }
+    activeNudge,       // object: { alertTitle, alertMessage, severity: 'warning' | 'danger' }
+    clearNudge         // hàm: đóng thông báo cảnh báo
+  } = useRealtime();
+
+  // Ví dụ: Tự động reload lại danh sách khi có sự kiện tiền về/tiền ra
+  useEffect(() => {
+    if (lastBalanceEvent) {
+      console.log('Có biến động ví:', lastBalanceEvent);
+      loadMyDataAgain();
+    }
+  }, [lastBalanceEvent]);
+}
+```
+
+### 6.3. Cách Test Thử Giao Diện Realtime Khi Đang Thiết Kế
+1. Bật Realtime Server tại thư mục `mobile-project/realtime-server`:
+   ```bash
+   pnpm start
+   ```
+2. Mở trình duyệt Web tại `http://localhost:3001` (hoặc chạy `pnpm test:trigger`).
+3. Bấm các nút thử nghiệm như *"Chi ăn trưa (-50k)"*, *"Cảnh báo 86%"*, *"Cảnh báo ĐỎ 110%"* ➔ Màn hình app Expo trên điện thoại của Đại sẽ tự động nhảy số dư và hiện banner ngay trước mắt mà không cần nạp lại trang!
+

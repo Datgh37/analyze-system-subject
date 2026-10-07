@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Expense Realtime Simulator (Socket.IO)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0B0F19;
+      --card-bg: rgba(22, 30, 49, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #3B82F6;
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --text-main: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --accent: #6366F1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.12) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      background: rgba(11, 15, 25, 0.8);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #3B82F6, #6366F1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .connection-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--danger);
+      transition: background 0.3s;
+    }
+
+    .status-dot.active {
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .main-layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 28px;
+      padding: 24px 28px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 960px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* =========================================================================
+       MOBILE SIMULATOR FRAME
+       ========================================================================= */
+    .mobile-simulator-card {
+      background: #111827;
+      border-radius: 36px;
+      border: 3px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 720px;
+      position: relative;
+    }
+
+    .phone-notch {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      background: #0D131F;
+    }
+
+    .phone-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .realtime-indicator-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #34D399;
+    }
+
+    .pill-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .nudge-banner {
+      display: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      border-left: 4px solid var(--warning);
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      position: relative;
+      animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nudge-banner.danger {
+      border-left-color: var(--danger);
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .nudge-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nudge-banner.danger .nudge-title { color: #F87171; }
+    .nudge-banner.warning .nudge-title { color: #FBBF24; }
+
+    .nudge-msg {
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .btn-close-nudge {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .balance-card {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -20%;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .balance-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .balance-amount {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 8px 0;
+      color: #FFFFFF;
+      transition: color 0.4s;
+    }
+
+    .balance-amount.flash-green {
+      color: #34D399;
+      transform: scale(1.02);
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .balance-amount.flash-red {
+      color: #F87171;
+      transform: scale(1.02);
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .balance-sub {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #60A5FA;
+    }
+
+    .wallets-preview {
+      display: flex;
+      gap: 10px;
+    }
+
+    .wallet-chip {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .wallet-chip-name {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .wallet-chip-val {
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .transaction-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tx-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 10px 12px;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tx-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tx-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .tx-info h4 {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tx-info span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tx-amount {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tx-amount.neg { color: #F87171; }
+    .tx-amount.pos { color: #34D399; }
+
+    /* =========================================================================
+       CONTROL STUDIO & LOGS PANEL
+       ========================================================================= */
+    .studio-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .studio-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .panel-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+
+    .btn-action .btn-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action .btn-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-action.primary { border-left: 3px solid var(--primary); }
+    .btn-action.success { border-left: 3px solid var(--success); }
+    .btn-action.warning { border-left: 3px solid var(--warning); }
+    .btn-action.danger  { border-left: 3px solid var(--danger); }
+
+    .log-terminal {
+      background: #080C14;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .log-entry {
+      line-height: 1.5;
+      word-break: break-all;
+    }
+
+    .log-time {
+      color: #6B7280;
+    }
+
+    .log-tag {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .tag-recv { background: rgba(16, 185, 129, 0.2); color: #34D399; }
+    .tag-send { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+    .tag-warn { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+    .tag-err  { background: rgba(239, 68, 68, 0.2); color: #F87171; }
+
+    footer {
+      padding: 12px 28px;
+      text-align: center;
+      font-size: 12px;
+      color: #6B7280;
+      border-top: 1px solid var(--card-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-group">
+      <div class="logo-badge">⚡</div>
+      <div>
+        <div class="brand-title">Financial Realtime Gateway Studio</div>
+        <div class="brand-sub">Hệ thống Quản lý Chi tiêu Cá nhân Thông minh (Socket.IO POC)</div>
+      </div>
+    </div>
+    <div class="connection-status">
+      <div id="statusDot" class="status-dot"></div>
+      <span id="statusText">Đang kết nối...</span>
+      <span id="latencyBadge" style="color: #60A5FA; margin-left: 4px; display: none;"></span>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <main class="main-layout">
+
+    <!-- 1. CỘT TRÁI: MÔ PHỎNG MÀN HÌNH MOBILE APP (EXPO HOME SCREEN) -->
+    <div class="mobile-simulator-card">
+      <div class="phone-notch">
+        <span>09:41</span>
+        <span>5G • 100%</span>
+      </div>
+
+      <div class="phone-content">
+        <!-- Live Connection Pill -->
+        <div class="realtime-indicator-pill">
+          <div class="pill-left">
+            <span style="font-size: 14px;">●</span>
+            <span id="mobilePillStatus">Socket.IO: Kết nối</span>
+          </div>
+          <span id="mobilePillPing" style="font-size: 11px; color: #9CA3AF;">-- ms</span>
+        </div>
+
+        <!-- Cảnh báo Cú hích (Nudge Alert) -->
+        <div id="nudgeCard" class="nudge-banner">
+          <div class="nudge-title">
+            <span id="nudgeTitleText">⚠️ CẢNH BÁO CHI TIÊU</span>
+            <button class="btn-close-nudge" onclick="dismissNudge()">×</button>
+          </div>
+          <div id="nudgeMessageText" class="nudge-msg">Nội dung cảnh báo...</div>
+        </div>
+
+        <!-- Thẻ Tổng Số Dư Tài Sản -->
+        <div class="balance-card">
+          <div class="balance-label">Tổng Tài Sản Khả Dụng</div>
+          <div id="totalBalanceVal" class="balance-amount">2.500.000 ₫</div>
+          <div class="balance-sub">
+            <span>⚡ Đồng bộ tức thì (0ms)</span>
+          </div>
+        </div>
+
+        <!-- Danh sách ví thành phần -->
+        <div class="section-title">Ví Của Bạn</div>
+        <div class="wallets-preview">
+          <div class="wallet-chip">
+            <div class="wallet-chip-name">Tiền Mặt</div>
+            <div id="cashWalletVal" class="wallet-chip-val">2.500.000 ₫</div>
+          </div>
+          <div class="wallet-chip">
+            <div class="wallet-chip-name">Tài Khoản Bank</div>
+            <div class="wallet-chip-val">0 ₫</div>
+          </div>
+        </div>
+
+        <!-- Danh sách giao dịch mới nhận -->
+        <div class="section-title">Biến Động Gần Đây</div>
+        <div id="transactionFeed" class="transaction-feed">
+          <div class="tx-item">
+            <div class="tx-left">
+              <div class="tx-icon">💼</div>
+              <div class="tx-info">
+                <h4>Khởi tạo ví mẫu</h4>
+                <span>Hệ thống WAMP</span>
+              </div>
+            </div>
+            <div class="tx-amount pos">+2.500.000 ₫</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CỘT PHẢI: BÀN ĐIỀU KHIỂN BẮN SỰ KIỆN & LIVE EVENT STREAM LOG -->
+    <div class="studio-panel">
+
+      <!-- Bảng nút điều khiển phát sự kiện -->
+      <div class="studio-card">
+        <div class="panel-header">
+          <h2>🎯 Bàn Điều Khiển Phát Sự Kiện (Event Triggers)</h2>
+          <span style="font-size: 11px; color: var(--text-muted);">Bắn trực tiếp vào Gateway Port 3001</span>
+        </div>
+
+        <div class="action-grid">
+          <button class="btn-action primary" onclick="triggerSpend()">
+            <div class="btn-title">🍜 Chi Ăn Trưa (-50k)</div>
+            <div class="btn-desc">Phát [wallet:balance_updated] trừ 50.000 đ ví Tiền Mặt</div>
+          </button>
+
+          <button class="btn-action success" onclick="triggerDeposit()">
+            <div class="btn-title">💵 Nạp Thêm Tiền (+500k)</div>
+            <div class="btn-desc">Phát [wallet:balance_updated] cộng 500.000 đ</div>
+          </button>
+
+          <button class="btn-action warning" onclick="triggerNudgeWarning()">
+            <div class="btn-title">⚠️ Cảnh Báo Ngân Sách 86%</div>
+            <div class="btn-desc">Phát [budget:nudge_alert] cho danh mục Ăn uống</div>
+          </button>
+
+          <button class="btn-action danger" onclick="triggerNudgeDanger()">
+            <div class="btn-title">🚨 Cảnh Báo ĐỎ Vượt Mức 110%</div>
+            <div class="btn-desc">Phát [budget:nudge_alert] danh mục Mua sắm vượt trần</div>
+          </button>
+
+          <button class="btn-action" onclick="sendPing()">
+            <div class="btn-title">⏱️ Bắn Ping Đo Độ Trễ</div>
+            <div class="btn-desc">Gửi [ping:check] và đo RTT Round-trip Time</div>
+          </button>
+
+          <button class="btn-action danger" onclick="triggerForceLogout()">
+            <div class="btn-title">🔒 Thu Hồi Phiên (Force Logout)</div>
+            <div class="btn-desc">Phát [auth:force_logout] khi đổi mật khẩu</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Terminal Event Stream -->
+      <div class="studio-card" style="flex: 1;">
+        <div class="panel-header">
+          <h2>📡 Nhật Ký Giao Tiếp Realtime (Live Event Stream)</h2>
+          <button onclick="clearLogs()" style="background:none; border:1px solid rgba(255,255,255,0.1); color:#9CA3AF; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Xóa log</button>
+        </div>
+
+        <div id="logTerminal" class="log-terminal">
+          <div class="log-entry">
+            <span class="log-time">[System]</span>
+            <span class="log-tag tag-send">READY</span>
+            <span>Khởi tạo môi trường kiểm thử Realtime Simulator...</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    Đồ án Hệ thống Quản lý Chi tiêu Cá nhân Thông minh • Hội đồng Đa tác tử & PTTKHTTT • Trịnh Thành Đạt & Trần Trọng Đại
+  </footer>
+
+  <script>
+    // State cục bộ
+    let currentBalance = 2500000;
+    const TARGET_USER_ID = 1;
+
+    // Định dạng tiền tệ
+    function formatVND(val) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+    }
+
+    // Logger
+    const logBox = document.getElementById('logTerminal');
+    function log(tag, tagClass, text) {
+      const time = new Date().toLocaleTimeString('vi-VN');
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      div.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-tag ${tagClass}">${tag}</span> <span>${text}</span>`;
+      logBox.appendChild(div);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearLogs() {
+      logBox.innerHTML = '';
+      log('INFO', 'tag-send', 'Đã làm sạch màn hình nhật ký.');
+    }
+
+    // Khởi tạo Socket.IO Client trên trình duyệt
+    const socket = io({
+      auth: {
+        userId: TARGET_USER_ID,
+        deviceName: "Web Simulator (Browser)"
+      }
+    });
+
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const latencyBadge = document.getElementById('latencyBadge');
+    const mobilePillStatus = document.getElementById('mobilePillStatus');
+    const mobilePillPing = document.getElementById('mobilePillPing');
+
+    socket.on('connect', () => {
+      statusDot.className = 'status-dot active';
+      statusText.innerText = `Đã kết nối (#User ${TARGET_USER_ID})`;
+      mobilePillStatus.innerText = 'Socket.IO: Sẵn sàng';
+      log('SOCKET', 'tag-recv', `Kết nối thành công tới Gateway! Socket ID: ${socket.id}`);
+      sendPing();
+    });
+
+    socket.on('disconnect', (reason) => {
+      statusDot.className = 'status-dot';
+      statusText.innerText = 'Mất kết nối';
+      mobilePillStatus.innerText = 'Socket.IO: Ngắt kết nối';
+      log('SOCKET', 'tag-err', `Đã ngắt kết nối. Lý do: ${reason}`);
+    });
+
+    socket.on('system:connected', (data) => {
+      log('WELCOME', 'tag-recv', `${data.message} | Server Time: ${data.serverTime}`);
+    });
+
+    // 1. Nhận sự kiện Cập nhật Số dư
+    socket.on('wallet:balance_updated', (data) => {
+      log('BALANCE', 'tag-recv', `Nhận sự kiện ví [${data.walletName}]: ${data.delta > 0 ? '+' : ''}${data.delta.toLocaleString()} đ | Lý do: ${data.reason}`);
+      
+      currentBalance = data.newBalance;
+      const balEl = document.getElementById('totalBalanceVal');
+      const cashEl = document.getElementById('cashWalletVal');
+
+      balEl.innerText = formatVND(currentBalance);
+      cashEl.innerText = formatVND(currentBalance);
+
+      // Hiệu ứng flash đổi màu
+      balEl.className = data.delta >= 0 ? 'balance-amount flash-green' : 'balance-amount flash-red';
+      setTimeout(() => { balEl.className = 'balance-amount'; }, 600);
+
+      // Thêm vào feed giao dịch
+      addFeedItem(data.reason, data.walletName, data.delta);
+    });
+
+    // 2. Nhận sự kiện Cú hích Ngân sách (Nudge)
+    socket.on('budget:nudge_alert', (data) => {
+      log('NUDGE', data.severity === 'danger' ? 'tag-err' : 'tag-warn', `[${data.alertTitle}] ${data.alertMessage}`);
+      showNudge(data.alertTitle, data.alertMessage, data.severity);
+    });
+
+    // 3. Nhận sự kiện Đăng xuất cưỡng bức
+    socket.on('auth:force_logout', (data) => {
+      log('AUTH', 'tag-err', `🚨 THU HỒI PHIÊN: ${data.reason}`);
+      alert(`[BẢO MẬT] Phiên làm việc của bạn đã bị thu hồi: ${data.reason}`);
+    });
+
+    // 4. Nhận phản hồi Pong
+    socket.on('pong:reply', (data) => {
+      if (data?.clientTimestamp) {
+        const rtt = Date.now() - data.clientTimestamp;
+        latencyBadge.style.display = 'inline';
+        latencyBadge.innerText = `(${rtt}ms)`;
+        mobilePillPing.innerText = `${rtt} ms`;
+        log('PONG', 'tag-recv', `Độ trễ khứ hồi RTT: ${rtt} ms`);
+      }
+    });
+
+    function sendPing() {
+      log('PING', 'tag-send', 'Đang gửi gói tin ping kiểm tra độ trễ...');
+      socket.emit('ping:check', { timestamp: Date.now() });
+    }
+
+    function showNudge(title, msg, severity) {
+      const banner = document.getElementById('nudgeCard');
+      const titleEl = document.getElementById('nudgeTitleText');
+      const msgEl = document.getElementById('nudgeMessageText');
+
+      titleEl.innerText = title;
+      msgEl.innerText = msg;
+      banner.className = `nudge-banner ${severity}`;
+      banner.style.display = 'block';
+    }
+
+    function dismissNudge() {
+      document.getElementById('nudgeCard').style.display = 'none';
+    }
+
+    function addFeedItem(title, wallet, amount) {
+      const feed = document.getElementById('transactionFeed');
+      const item = document.createElement('div');
+      item.className = 'tx-item';
+      item.innerHTML = `
+        <div class="tx-left">
+          <div class="tx-icon">${amount > 0 ? '💰' : '🛒'}</div>
+          <div class="tx-info">
+            <h4>${title}</h4>
+            <span>${wallet}</span>
+          </div>
+        </div>
+        <div class="tx-amount ${amount > 0 ? 'pos' : 'neg'}">
+          ${amount > 0 ? '+' : ''}${Number(amount).toLocaleString('vi-VN')} ₫
+        </div>
+      `;
+      feed.insertBefore(item, feed.firstChild);
+    }
+
+    // =========================================================================
+    // CÁC HÀM GỌI REST TRIGGER ENDPOINT CỦA BACKEND
+    // =========================================================================
+    async function triggerSpend() {
+      const newBal = currentBalance - 50000;
+      await fetch('/api/notify/balance-update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: TARGET_USER_ID,
+          walletId: 1,
+          walletName: "Tiền Mặt",
+          newBalance: newBal,
+          delta: -50000,
+          reason: "Cơm trưa văn phòng & Trà đá"
+        })
+      });
+    }
+
+    async function triggerDeposit() {
+      const newBal = currentBalance + 500000;
+      await fetch('/api/notify/balance-update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: TARGET_USER_ID,
+          walletId: 1,
+          walletName: "Tiền Mặt",
+          newBalance: newBal,
+          delta: 500000,
+          reason: "Rút tiền từ ATM vào ví tiền mặt"
+        })
+      });
+    }
+
+    async function triggerNudgeWarning() {
+      await fetch('/api/notify/budget-nudge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: TARGET_USER_ID,
+          categoryName: "Ăn uống & Cà phê",
+          currentSpent: 2150000,
+          budgetLimit: 2500000,
+          severity: "warning"
+        })
+      });
+    }
+
+    async function triggerNudgeDanger() {
+      await fetch('/api/notify/budget-nudge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: TARGET_USER_ID,
+          categoryName: "Mua sắm & Đồ công nghệ",
+          currentSpent: 3300000,
+          budgetLimit: 3000000,
+          severity: "danger"
+        })
+      });
+    }
+
+    async function triggerForceLogout() {
+      await fetch('/api/notify/force-logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: TARGET_USER_ID,
+          reason: "Mật khẩu vừa được đổi tại máy chủ bảo mật."
+        })
+      });
+    }
+  </script>
+</body>
+</html>

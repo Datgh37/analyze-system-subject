@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import { useRealtime } from '../../context/RealtimeContext';
 import { api } from '../../api/endpoints';
 import { COLORS, SPACING, SIZES } from '../../constants/theme';
+import RealtimeAlertBanner from '../../components/RealtimeAlertBanner';
 
 /**
  * ==============================================================================
@@ -35,6 +37,7 @@ import { COLORS, SPACING, SIZES } from '../../constants/theme';
 
 export default function HomeScreen({ navigation }) {
   const { user } = useAuth();
+  const { lastBalanceEvent } = useRealtime();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [walletsData, setWalletsData] = useState({ total_balance: 0, wallets: [] });
@@ -65,6 +68,14 @@ export default function HomeScreen({ navigation }) {
     fetchDashboardData();
   }, []);
 
+  // ⚡ Tự động nạp lại Dashboard khi nhận sự kiện biến động số dư từ Socket.IO (0ms sync)
+  useEffect(() => {
+    if (lastBalanceEvent) {
+      console.log('⚡ [HomeScreen] Tự động cập nhật Dashboard theo Socket.IO:', lastBalanceEvent);
+      fetchDashboardData();
+    }
+  }, [lastBalanceEvent]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchDashboardData();
@@ -85,35 +96,44 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />}
-    >
-      <View style={styles.placeholderBox}>
-        <Text style={styles.title}>Màn hình Tổng Quan (Dashboard)</Text>
-        <Text style={styles.subtitle}>[Khu vực Trần Trọng Đại tự do thiết kế giao diện UI]</Text>
-        
-        <View style={styles.dataPreviewBox}>
-          <Text style={styles.dataPreviewTitle}>Dữ liệu thực tế vừa nạp từ CSDL WAMP:</Text>
-          <Text style={styles.dataPreviewText}>• Người dùng: {user?.full_name}</Text>
-          <Text style={styles.dataPreviewText}>• Tổng tài sản: {formatCurrency(walletsData.total_balance)}</Text>
-          <Text style={styles.dataPreviewText}>• Số lượng ví: {walletsData.wallets?.length || 0} ví</Text>
-          <Text style={styles.dataPreviewText}>
-            • Tiến độ ngân sách: {budgetData?.overall_budget?.percentage || 0}% ({budgetData?.overall_budget?.status_level || 'Chưa đặt'})
-          </Text>
-          <Text style={styles.dataPreviewText}>• Giao dịch gần đây: {recentTransactions.length} bản ghi</Text>
-        </View>
+    <View style={styles.screenWrapper}>
+      {/* ⚡ Banner cảnh báo & trạng thái thời gian thực Socket.IO */}
+      <RealtimeAlertBanner />
 
-        <Text style={styles.hint}>
-          Đại xem hướng dẫn chi tiết các state và formatCurrency() trong file code này để vẽ giao diện.
-        </Text>
-      </View>
-    </ScrollView>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />}
+      >
+        <View style={styles.placeholderBox}>
+          <Text style={styles.title}>Màn hình Tổng Quan (Dashboard)</Text>
+          <Text style={styles.subtitle}>[Khu vực Trần Trọng Đại tự do thiết kế giao diện UI]</Text>
+          
+          <View style={styles.dataPreviewBox}>
+            <Text style={styles.dataPreviewTitle}>Dữ liệu thực tế vừa nạp từ CSDL WAMP:</Text>
+            <Text style={styles.dataPreviewText}>• Người dùng: {user?.full_name}</Text>
+            <Text style={styles.dataPreviewText}>• Tổng tài sản: {formatCurrency(walletsData.total_balance)}</Text>
+            <Text style={styles.dataPreviewText}>• Số lượng ví: {walletsData.wallets?.length || 0} ví</Text>
+            <Text style={styles.dataPreviewText}>
+              • Tiến độ ngân sách: {budgetData?.overall_budget?.percentage || 0}% ({budgetData?.overall_budget?.status_level || 'Chưa đặt'})
+            </Text>
+            <Text style={styles.dataPreviewText}>• Giao dịch gần đây: {recentTransactions.length} bản ghi</Text>
+          </View>
+
+          <Text style={styles.hint}>
+            Đại xem hướng dẫn chi tiết các state và formatCurrency() trong file code này để vẽ giao diện.
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screenWrapper: {
+    flex: 1,
+    backgroundColor: COLORS.background
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.background

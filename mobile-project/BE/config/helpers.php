@@ -216,3 +216,88 @@ function get_authenticated_user_id(): int {
     $user = require_authenticated_user();
     return (int)$user['user_id'];
 }
+
+/**
+ * ==============================================================================
+ * ⚡ TIỆN ÍCH KẾT NỐI REALTIME SOCKET.IO GATEWAY (NODE.JS PORT 3001)
+ * Kết nối 2 chiều giữa PHP WAMP Backend và App Mobile / Web Simulator
+ * Cơ chế Safe Degradation: Nếu Realtime Server chưa bật, API PHP vẫn chạy 100% trơn tru.
+ * ==============================================================================
+ */
+
+/**
+ * Gửi yêu cầu HTTP POST kích hoạt sự kiện tới Realtime Gateway
+ * @param string $endpoint Đường dẫn API (/api/notify/balance-update, v.v.)
+ * @param array $payload Dữ liệu sự kiện JSON
+ * @return bool
+ */
+function send_realtime_event(string $endpoint, array $payload): bool {
+    $url = "http://localhost:3001" . $endpoint;
+    $json = json_encode($payload);
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($json)
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 400); // Tối đa 400ms không làm nghẽn PHP
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
+        $result = @curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        return ($http_code === 200);
+    } else {
+        $options = [
+            'http' => [
+                'header'  => "Content-type: application/json\r\n",
+                'method'  => 'POST',
+                'content' => $json,
+                'timeout' => 0.4
+            ]
+        ];
+        $context = stream_context_create($options);
+        $result = @file_get_contents($url, false, $context);
+        return ($result !== false);
+    }
+}
+
+/**
+ * Kích hoạt sự kiện đồng bộ số dư ví tức thời trên tất cả thiết bị
+ */
+function realtime_balance_update(int $userId, int $walletId, string $walletName, float $newBalance, float $delta, string $reason): void {
+    @send_realtime_event("/api/notify/balance-update", [
+        "userId" => $userId,
+        "walletId" => $walletId,
+        "walletName" => $walletName,
+        "newBalance" => $newBalance,
+        "delta" => $delta,
+        "reason" => $reason
+    ]);
+}
+
+/**
+ * Kích hoạt sự kiện cảnh báo Cú hích chi tiêu (Nudge Alert) khi gần/vượt hạn mức ngân sách
+ */
+function realtime_budget_nudge(int $userId, string $categoryName, float $currentSpent, float $budgetLimit, string $severity = 'warning'): void {
+    @send_realtime_event("/api/notify/budget-nudge", [
+        "userId" => $userId,
+        "categoryName" => $categoryName,
+        "currentSpent" => $currentSpent,
+        "budgetLimit" => $budgetLimit,
+        "severity" => $severity
+    ]);
+}
+
+/**
+ * Kích hoạt sự kiện thu hồi phiên đăng nhập từ xa vì lý do an ninh
+ */
+function realtime_force_logout(int $userId, string $reason): void {
+    @send_realtime_event("/api/notify/force-logout", [
+        "userId" => $userId,
+        "reason" => $reason
+    ]);
+}
