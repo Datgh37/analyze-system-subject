@@ -1662,3 +1662,29 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 - **Tài liệu bàn giao:** Bổ sung Mục 8 vào [`mobile-project/README.md`](../mobile-project/README.md).
 - **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
 
+---
+
+## [2026-10-08 23:15] - Quyết Định 84: Chuẩn Hóa Caption Word (SEQ Bảng & SEQ Hình), Tích Hợp Bookmark Cross-Reference & Kích Hoạt Danh Mục Tự Động TOF / TOT Trong Luận Văn (`KhoaLuanTotNghiep.docx`)
+- **Vấn đề:** 
+  1. Người dùng phản hồi rằng toàn bộ các bảng biểu và hình ảnh trong Khóa luận tốt nghiệp (`KhoaLuanTotNghiep.docx`) hiện đang được viết tiêu đề và trình bày thủ công bằng văn bản tĩnh thông thường.
+  2. Người dùng yêu cầu gắn tính năng Insert Caption chuẩn của Microsoft Word và tạo reference cho các bảng biểu và hình ảnh, nhằm sử dụng được chức năng tạo danh mục bảng biểu (Table of Tables) và danh mục hình ảnh (Table of Figures) tự động của Word (cũng như khả năng cập nhật tự động khi nhấn phím `F9`).
+- **Quyết định & Thực thi:**
+  1. **Sao Lưu Bảo Vệ Tài Liệu An Toàn:**
+     - Tạo bản sao lưu an toàn trước khi chỉnh sửa tại [`files/KhoaLuanTotNghiep_backup_before_captions.docx`](../files/KhoaLuanTotNghiep_backup_before_captions.docx).
+  2. **Chuẩn Hóa Caption Native Microsoft Word Cho Toàn Bộ Bảng & Hình:**
+     - **15 Bảng biểu (Chương 1 và Chương 3):** Chuyển đổi toàn bộ sang Style `Caption`, tích hợp trường số phức hợp Word Native `{ SEQ Bảng \* ARABIC }` (trong đó Bảng 1.1 và Bảng 3.1 sử dụng switch `\r 1` để reset đánh số chuẩn theo chương), định dạng Times New Roman 12pt, căn giữa, in đậm nhãn và số hiệu, in nghiêng tiêu đề, màu đen tự nhiên (`#000000`), khoảng cách `Before = 12 pt`, `After = 6 pt`.
+     - **17 Hình ảnh / Sơ đồ kỹ thuật (Chương 3):** Chuyển đổi toàn bộ sang Style `Caption`, tích hợp trường số phức hợp Word Native `{ SEQ Hình \* ARABIC }` (Hình 3.1 sử dụng switch `\r 1`), định dạng Times New Roman 12pt, căn giữa, in đậm nhãn và số hiệu, in nghiêng tiêu đề, khoảng cách `Before = 6 pt`, `After = 12 pt`.
+     - Cập nhật định nghĩa style `Caption` trong `styles.xml` đồng bộ 100% với chuẩn DNTU Academic Theme (Times New Roman, 12pt, Italic, Center, Line spacing 1.5 lines).
+  3. **Tích Hợp Hệ Thống Bookmark OpenXML Phục Vụ Cross-Reference (Tham Chiếu Chéo):**
+     - Đặt 32 cặp thẻ Bookmark duy nhất (`_Ref_Bang_1_1` đến `_Ref_Bang_3_12`, `_Ref_Hinh_3_1` đến `_Ref_Hinh_3_17` với ID từ 1001 đến 1032) bao quanh từng caption.
+     - Cho phép người dùng sử dụng trọn vẹn tính năng `Insert -> Cross-reference` trong Microsoft Word để trích dẫn số hiệu hoặc toàn bộ caption ở bất kỳ vị trí nào trong bài viết.
+  4. **Kích Hoạt Trường Danh Mục Động (TOF & TOT) Tại Khối Thủ Tục Đầu:**
+     - **Trang 8 - DANH MỤC SƠ ĐỒ, HÌNH ẢNH (`BM210-KT21`):** Thay thế dòng placeholder cũ bằng mã trường Table of Figures tự động của Microsoft Word `{ TOC \h \z \c "Hình" }`.
+     - **Trang 9 - DANH MỤC BẢNG BIỂU (`BM211-KT21`):** Thay thế dòng placeholder cũ bằng mã trường Table of Tables tự động của Microsoft Word `{ TOC \h \z \c "Bảng" }`.
+     - Kích hoạt thuộc tính `<w:updateFields w:val="true"/>` trong `word/settings.xml` để Word tự động cập nhật số trang và danh mục ngay khi mở tệp.
+     - Khi người dùng nhấn `Ctrl + A` rồi bấm **`F9`** (hoặc chuột phải chọn *Update Field*), Microsoft Word sẽ tự động quét toàn bộ tài liệu và cập nhật số trang chuẩn xác 100% cho cả 3 danh mục: TOC (Mục lục), TOF (Hình ảnh) và TOT (Bảng biểu).
+  5. **Kiểm Thử Toàn Diện & Đảm Bảo Tính Toàn Vẹn:**
+     - Xây dựng bài kiểm thử tự động [`tests/test_docx_captions_and_references.py`](../tests/test_docx_captions_and_references.py) kiểm tra cấu trúc OpenXML, 15 caption SEQ Bảng, 17 caption SEQ Hình, 32 bookmarks và 2 trường TOF/TOT.
+     - Chạy toàn bộ test suite hệ thống: **100% 124/124 tests PASSED**.
+- **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md`](plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md).
+- **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
