@@ -1688,3 +1688,46 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Chạy toàn bộ test suite hệ thống: **100% 124/124 tests PASSED**.
 - **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md`](plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md).
 - **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
+
+
+### [2026-10-09] - Hoàn thiện Kịch bản Thuyết trình 21 Slide & Chuẩn hóa Lý luận Cú Hích và VietQR
+- **Kịch bản thuyết trình:** Xuất file files/Kich_Ban_Thuyet_Trinh_PTTKHTTT.txt chuẩn hóa chi tiết 21 slide, phân vai Đạt - Đại, thời lượng 15-20 phút.
+- **Lý luận Cú hích Thaler:** Phân biệt rõ ràng giữa Spam Pop-up (thông báo mù) và Cú hích hành vi (Khoảng trễ tâm lý Cooling-off 24-48h, can thiệp tại điểm chạm ra quyết định, Human-in-the-loop).
+- **Vai trò VietQR trong Ví mô phỏng:** Chuẩn hóa dữ liệu bóc tách thanh toán NAPAS 247, giải quyết bài toán nhập liệu không ma sát (Zero-friction Tracking) và sinh Deeplink chuyển khoản an toàn mà không cần can thiệp tài khoản ngân hàng.
+
+
+### [2026-10-09] - Dọn dẹp Tài nguyên Tạm thời Sau Phiên Thuyết trình
+- Đã dọn dẹp toàn bộ 3 thư mục ảnh tạm thời (scratch/media/, scratch/slide_images/, scratch/slides_rendered/).
+- Đã xóa các script trích xuất và xuất slide (scratch/export_slides.ps1, scratch/extract_slides.py, scratch/inspect_pptx_slides.py, scratch/run_ocr_slides.ps1, scratch/test_ocr.ps1).
+- Đã xóa tệp kịch bản thuyết trình tạm thời files/Kich_Ban_Thuyet_Trinh_PTTKHTTT.txt theo yêu cầu sau khi hoàn thành buổi báo cáo.
+
+
+### [2026-10-09] - Khởi tạo Kế hoạch PLAN-24: Tái cấu trúc Toàn diện UCD, CD, Use Case và Khóa luận DOCX
+- **Căn cứ:** Tiếp thu ý kiến sau báo cáo tiến độ giữa kỳ (tích hợp Voice Expense Logging, mở rộng AI OCR scan số dư ví và phiếu lương, củng cố lý luận Ví mô phỏng Ledger vs Core Banking).
+- **Kỹ thuật Word DOCX:** Nhận diện và lên phương án khắc phục triệt để lỗi Word Captions (chuyển sang mã trường OpenXML native w:fldSimple với switch SEQ Figure và SEQ Table để bảng TOF/TOT nhận diện tự động 100%).
+- **Tệp kế hoạch chi tiết:** project_context/plans/plans-general/2026-10-09_plan_24_toan_dien_ucd_cd_usecase_kltn_redesign.md.
+
+---
+
+## [2026-10-14 08:35] - Quyết Định 85: Phân Tách Hai Ngăn Xếp Mobile App (React Native Scoped Cho Môn Học vs .NET MAUI Enterprise Cho KLTN) & Tái Thiết Lập Junction WAMP Server
+- **Vấn đề:** 
+  1. Người dùng tiến hành tái cấu trúc thư mục `mobile-project/` thành hai nhánh dự án riêng biệt:
+     - `mobile-project/react-native-ver/`: Dành cho môn Lập trình Thiết bị Di động (phạm vi tinh gọn Scoped MVP, bạn Đại phụ trách UI Lead, WAMP PHP 21 APIs).
+     - `mobile-project/dotnet-maui-ver/`: Dành cho Khóa luận Tốt nghiệp & Hệ thống lớn PTTKHTTT hoàn chỉnh (không giới hạn phạm vi, .NET 9 MAUI, Clean Architecture, C# End-to-End).
+  2. Việc di chuyển thư mục làm đứt gãy liên kết NTFS Directory Junction giữa WampServer `www\expense_api` và thư mục Backend `BE/` cũ.
+  3. Cần đồng bộ tài liệu `README.md` cho cả hai phân hệ và cập nhật script tạo junction tự động.
+- **Quyết định & Thực thi:**
+  1. **Đánh Giá Chiến Lược Kiến Trúc:**
+     - Hoàn toàn ủng hộ và đánh giá cao tính hợp lý của việc tách 2 stack: Giúp nhóm môn học hoàn thành đúng hạn 10-15 tuần không bị quá tải, đồng thời giải phóng toàn bộ tiềm năng cho Khóa luận tốt nghiệp với công nghệ .NET MAUI enterprise-grade.
+  2. **Tái Thiết Lập Cầu Nối WAMP Junction Thành Công:**
+     - Nâng cấp [`setup_wamp_junction.ps1`](../mobile-project/react-native-ver/BE/setup_wamp_junction.ps1): Hỗ trợ cờ `-Force`, tự động nhận diện target hiện tại, xóa liên kết an toàn (tránh xóa nhầm file gốc) và xác nhận trạng thái.
+     - Đã thực thi liên kết trực tiếp thành công: `D:\WampServer\www\expense_api` $\rightarrow$ `mobile-project\react-native-ver\BE`.
+  3. **Đồng Bộ & Xuất Bản Tài Liệu Kỹ Thuật:**
+     - Xuất bản [`mobile-project/README.md`](../mobile-project/README.md): Hub điều hướng kiến trúc trung tâm, đối chiếu tính năng giữa 2 phiên bản.
+     - Cập nhật [`mobile-project/react-native-ver/README.md`](../mobile-project/react-native-ver/README.md): Hiệu chỉnh toàn bộ đường dẫn và lệnh sang thư mục con `react-native-ver/`.
+     - Xuất bản [`mobile-project/dotnet-maui-ver/README.md`](../mobile-project/dotnet-maui-ver/README.md): Đặc tả kiến trúc .NET 9 MAUI, MVVM CommunityToolkit, SQLite Offline-first, Refit, Polly, SignalR và Clean Architecture solution.
+  4. **Kiểm Toán & Hiệu Chỉnh Toàn Diện Đường Dẫn (Path Audit & Fixes):**
+     - Chuẩn hóa toàn bộ đường dẫn thư mục trong [`mobile-project/react-native-ver/BE/README.md`](../mobile-project/react-native-ver/BE/README.md), [`mobile-project/react-native-ver/FE/README.md`](../mobile-project/react-native-ver/FE/README.md), và [`mobile-project/react-native-ver/ROADMAP.md`](../mobile-project/react-native-ver/ROADMAP.md).
+     - Rà soát toàn bộ mã nguồn FE (`src/api/config.js`, `client.js`, `endpoints.js`), BE (`config/database.php`, `config/helpers.php`, `setup_wamp_junction.ps1`, `test_api.ps1`) và realtime-server (`server.js`, `test_realtime.ps1`): Xác nhận tất cả module sử dụng đường dẫn tương đối hoặc Base URL mạng động (`$PSScriptRoot`, `__dirname`, `__DIR__`, `http://localhost/...`), không bị đứt gãy sau khi chuyển sang thư mục `react-native-ver/`.
+- **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
+

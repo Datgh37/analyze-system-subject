@@ -1,3 +1,7 @@
+param (
+    [switch]$Force
+)
+
 # ==============================================================================
 # SCRIPT TỰ ĐỘNG THIẾT LẬP NTFS DIRECTORY JUNCTION CHO WAMP SERVER
 # Dự án: Quản lý chi tiêu cá nhân (Mobile App Backend)
@@ -51,14 +55,28 @@ $JunctionPath = Join-Path -Path $WampWwwPath -ChildPath "expense_api"
 # Kiểm tra nếu đã tồn tại
 if (Test-Path $JunctionPath) {
     $existingItem = Get-Item $JunctionPath
-    Write-Host "[!] Thu muc $JunctionPath da ton tai san (LinkType: $($existingItem.LinkType))." -ForegroundColor Yellow
-    $confirm = Read-Host "Ban co muon xoa lien ket cu va tao lai khong? (Y/N)"
-    if ($confirm -eq 'Y' -or $confirm -eq 'y') {
-        Remove-Item $JunctionPath -Force -Recurse
-        Write-Host "[+] Da xoa lien ket cu thanh cong." -ForegroundColor Green
-    } else {
-        Write-Host "[+] Giu nguyen lien ket hien tai. Hoan tat!" -ForegroundColor Green
+    $currentTarget = if ($existingItem.Target) { $existingItem.Target } else { $existingItem.LinkTarget }
+    
+    # Nếu đã trỏ đúng và không có cờ Force
+    if ($currentTarget -and ($currentTarget.TrimEnd('\') -eq $SourcePath.TrimEnd('\')) -and -not $Force) {
+        Write-Host "[+] Junction $JunctionPath da tro dung toi thu muc BE hien tai: $SourcePath" -ForegroundColor Green
+        Write-Host "`n>>> KET QUA: LIEN KET HOP LE, KHONG CAN THAY DOI! <<<" -ForegroundColor Green
         Exit 0
+    }
+
+    Write-Host "[!] Thu muc $JunctionPath da ton tai san (Target hien tai: $currentTarget)." -ForegroundColor Yellow
+    if ($Force) {
+        Remove-Item $JunctionPath -Force
+        Write-Host "[+] Da go bo lien ket cu theo co -Force." -ForegroundColor Green
+    } else {
+        $confirm = Read-Host "Ban co muon cap nhat lai lien ket tro ve $SourcePath khong? (Y/N)"
+        if ($confirm -eq 'Y' -or $confirm -eq 'y') {
+            Remove-Item $JunctionPath -Force
+            Write-Host "[+] Da go bo lien ket cu thanh cong." -ForegroundColor Green
+        } else {
+            Write-Host "[+] Giu nguyen lien ket hien tai. Hoan tat!" -ForegroundColor Green
+            Exit 0
+        }
     }
 }
 

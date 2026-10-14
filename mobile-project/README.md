@@ -1,439 +1,79 @@
-# 📱 ỨNG DỤNG QUẢN LÝ CHI TIÊU CÁ NHÂN (PERSONAL EXPENSE TRACKER)
-> **Đồ án môn học:** Lập trình Thiết bị Di động (Mobile Application Development)  
-> **Mối quan hệ đề tài:** Phân hệ ứng dụng di động tinh gọn (Mobile Client MVP) được trích xuất từ đề tài lớn môn **Phân tích Thiết kế Hệ thống Thông tin (PTTKHTTT)**.  
-> 🗺️ **Kế hoạch & Lộ trình phân công chi tiết:** Xem tại [ROADMAP.md](ROADMAP.md) | 📄 **Tài liệu Báo cáo Word:** [BaoCaoLTMB.docx](BaoCaoLTMB.docx)
+# 📱 TRUNG TÂM KIẾN TRÚC ỨNG DỤNG DI ĐỘNG (MOBILE ARCHITECTURE HUB)
+
+> **Đề tài:** Hệ thống Quản lý Chi tiêu và Hoạch định Tài chính Cá nhân Thông minh (Tích hợp AI)  
+> **Trường Đại học Công nghệ Đồng Nai (DNTU)**  
+> **Tác giả:** Trịnh Thành Đạt (Lead Architect) & Trần Trọng Đại (UI Lead)  
 
 ---
 
-> [!TIP]
-> ### ⚡ HƯỚNG DẪN KHỞI CHẠY NHANH TOÀN BỘ HỆ THỐNG (QUICK START 3 BƯỚC)
->
-> 1. **Bước 1: Bật Backend CSDL (WAMP Server):**
->    - Khởi chạy ứng dụng `wampmanager.exe` trên máy tính (đảm bảo icon chuyển sang màu xanh lá cây).
->    - Địa chỉ API: `http://localhost/expense_api/api`.
->
-> 2. **Bước 2: Bật Gateway Thời Gian Thực (Socket.IO Server):**
->    ```bash
->    cd mobile-project/realtime-server
->    pnpm start
->    ```
->    *(Mở trình duyệt truy cập `http://localhost:3001` để xem Web Client Simulator và test bắn sự kiện).*
->
-> 3. **Bước 3: Bật Ứng Dụng Di Động Frontend (Expo SDK 54):**
->    ```bash
->    cd mobile-project/FE
->    npm start
->    # hoặc npx expo start -c
->    ```
->    *(Mở app **Expo Go** trên điện thoại quét mã QR hoặc nhấn phím `a` trên bàn phím để mở máy ảo Android).*
+## 1. 🧭 Chiến Lược Phân Tách Hai Ngăn Xếp Công Nghệ (Dual-Stack Strategy)
 
----
+Để giải quyết hài hòa giữa hai mục tiêu:
+1. **Hoàn thành xuất sắc đồ án môn học Lập trình Thiết bị Di động** trong giới hạn thời gian (10–15 tuần) và phân công nhóm 2 người.
+2. **Xây dựng hệ thống hoàn chỉnh cấp doanh nghiệp (Enterprise Grade)** phục vụ **Khóa luận Tốt nghiệp (KLTN)** và đề tài lớn môn **Phân tích Thiết kế Hệ thống Thông tin (PTTKHTTT)**.
 
-
-## 1. Tổng Quan & Mục Tiêu Dự Án
-
-Dự án này tập trung xây dựng một **ứng dụng di động quản lý chi tiêu cá nhân** hoàn chỉnh, hoạt động mượt mà trên nền tảng di động với mục tiêu cốt lõi:
-- **Ghi nhận nhanh chóng:** Thêm mới khoản thu/chi với thao tác tối giản (chọn ví, danh mục, số tiền, ngày).
-- **Phân loại khoa học:** Quản lý danh mục thu/chi phân cấp trực quan với biểu tượng màu sắc.
-- **Thống kê hàng tháng:** Tổng hợp tổng thu, tổng chi và số dư biến động theo từng tháng.
-- **Trực quan hóa dữ liệu:** Hiển thị biểu đồ tròn (tỷ trọng chi tiêu theo hạng mục) và biểu đồ cột (so sánh thu - chi).
-
----
-
-## 2. Phân Định Phạm Vi: Đồ Án Mobile vs. Hệ Thống PTTKHTTT
-
-Để đảm bảo khả năng hoàn thành đúng hạn (10–15 tuần) của môn Lập trình Mobile mà vẫn giữ được tính nhất quán với môn PTTKHTTT, phạm vi của dự án Mobile được thu gọn thành một bản **MVP (Minimum Viable Product)** thực chiến:
-
-| Phân hệ / Chức năng | Hệ Thống PTTKHTTT (Đề tài lớn / Khóa luận) | Ứng Dụng Mobile Này (Môn Lập trình Mobile) | Ghi chú điều chỉnh |
-| :--- | :--- | :--- | :--- |
-| **Quản lý Tài khoản & Ví** | Đa ví chuẩn ACID, Thẻ tín dụng (hạn mức, ngày chốt sao kê), Ví điện tử, Sổ chuyển tiền nội bộ. | **2 Ví cơ bản:** Tiền mặt & Tài khoản Ngân hàng. Cập nhật số dư trực tiếp sau mỗi giao dịch. | Cắt giảm cơ chế khóa giao dịch phức tạp; tập trung vào tính trực quan trên màn hình ví. |
-| **Ghi nhận Thu / Chi** | Nhập tay, Quét AI Multimodal Vision OCR bóc tách đa món, Hậu kiểm toán số học, Quét mã VietQR. | **Nhập liệu thủ công nhanh (Fast Input):** Bàn phím số chuyên dụng, chọn ngày, danh mục, ghi chú. | Đảm bảo trải nghiệm form nhập liệu cực nhanh, validate dữ liệu chặt chẽ trên mobile. |
-| **Danh mục (Categories)** | Cây danh mục đa cấp, tự động ánh xạ ma trận Quy tắc 50/30/20 và Sổ Kakeibo 4 cột trụ. | **Danh mục 2 nhóm (Thu & Chi):** Icon đại diện, tên danh mục, mã màu phân biệt. | Giữ giao diện chọn danh mục dạng lưới (Grid View) thân thiện. |
-| **Ngân sách (Budgeting)** | Ngân sách thích ứng, Hạn mức ngày động (DSA), Cảnh báo tốc độ tiêu tiền (Spending Velocity). | **Thiết lập Ngân sách tháng:** Nhập hạn mức chi tiêu dự kiến cho tháng và thanh tiến độ cảnh báo mức tiêu. | Hiển thị thanh Progress Bar đổi màu (Xanh $\rightarrow$ Vàng $\rightarrow$ Đỏ) khi chạm ngưỡng ngân sách. |
-| **Báo cáo & Biểu đồ** | Báo cáo Net Worth, Dòng tiền ròng, Dự báo ngày cạn tiền (Out-of-Money Date), kịch bản What-If. | **2 Dạng biểu đồ trực quan:**<br>1. *Biểu đồ tròn (Pie Chart):* Cơ cấu chi tiêu theo nhóm.<br>2. *Biểu đồ cột (Bar Chart):* Đối chiếu Thu vs. Chi. | Tận dụng thư viện biểu đồ di động mượt mà, hỗ trợ lọc theo Tháng / Năm. |
-| **Tối ưu Nợ & Bẫy Thuê Bao** | Giải thuật trả nợ Debt Snowball vs. Debt Avalanche; Quét bẫy gia hạn gói định kỳ Subscription. | **TẠM THỜI ĐÓNG BĂNG (Out of Scope):** Không đưa vào app mobile ở giai đoạn này. | Tránh quá tải thời gian làm đồ án; dành trọn tài nguyên cho UI/UX và tính ổn định. |
-| **Hỗ trợ Quyết định (AI)** | Mô hình AI Nudge tâm lý học hành vi Richard Thaler, phân tích trì hoãn chi tiêu (Cooling-off). | **TẠM THỜI ĐÓNG BĂNG (Out of Scope):** Thay bằng câu thông báo nhắc nhở nội bộ đơn giản. | Giữ nguyên trên tài liệu PTTKHTTT làm điểm nhấn lý thuyết. |
-
----
-
-## 3. Kiến Trúc & Ngăn Xếp Công Nghệ (Tech Stack & Modern Evolution)
-
-> [!IMPORTANT]
-> **📢 CẬP NHẬT ĐỊNH HƯỚNG MỚI: TỰ DO CÔNG NGHỆ & LỘ TRÌNH CHUYỂN ĐỔI (07/10/2026):**  
-> Do **Giảng viên cũ đã rời đi và Giảng viên mới chính thức tiếp quản môn học**, mọi ràng buộc công nghệ trước đây đã được **dỡ bỏ hoàn toàn**:
-> 1. **Không còn bị giới hạn kỹ thuật:** Không còn phải ép mình viết các component thô sơ để đối phó thi vấn đáp. Nhóm được toàn quyền tự do áp dụng các thư viện UI tiên tiến, hoạt ảnh mượt mà và kiến trúc phần mềm chuẩn mực.
-> 2. **Dừng sử dụng server cũ của thầy trước:** Đóng băng việc triển khai lên máy chủ FTP `nhom46.itimit.id.vn` (`103.139.203.43`).
-> 3. **Chiến lược Hai Giai Đoạn:**
->    - **Giai đoạn 1 (Hiện tại - Chuyển tiếp & Nghiệm thu):** Giữ nguyên stack tạm (**React Native Expo SDK 54 + PHP PDO WAMP 21 RESTful API**) để chạy test, bảo toàn toàn bộ logic tài chính, số dư ví, bù trừ Delta và các kịch bản kiểm thử.
->    - **Giai đoạn 2 (Sắp tới - Trùng tu sang Stack Hiện đại):** Khi Giảng viên mới chốt yêu cầu, nhóm sẽ chuyển đổi sang 1 trong 2 phương án chuẩn công nghiệp:
->      - *Phương án A:* **.NET MAUI (C# / XAML)** kết hợp **Backend ASP.NET Core Web API (.NET 8/9, Clean Architecture)**.
->      - *Phương án B:* **React Native (Expo)** kết hợp **Backend ASP.NET Core Web API** hoặc **Node.js (NestJS / Express)**.
-> 📄 *Chi tiết kế hoạch chuyển đổi:* Xem tại [`project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
-
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                   MÔ HÌNH KIẾN TRÚC HỆ THỐNG CHUYỂN TIẾP               │
-├────────────────────────────────────────────────────────────────────────┤
-│  [ CLIENT - MOBILE APP (ĐANG HOÀN THIỆN KHUNG LOGIC) ]                 │
-│  - React Native Expo SDK 54 (JavaScript / React 19)                    │
-│  - React Navigation v7 (Auth Stack + Bottom Tabs)                      │
-│  - Axios Interceptor (Tự động gắn Bearer JWT Token)                    │
-│  - Biểu đồ: react-native-chart-kit & react-native-svg                  │
-│                                                                        │
-│                       ▲ RESTful API (JSON / HTTP)                      │
-│                       │ (21 Endpoints chuẩn hóa - Sẵn sàng Migrate)     │
-│                                                                        │
-│  [ BACKEND API - GIAI ĐOẠN HIỆN TẠI: DEV & TEST LOCAL (WAMP SERVER) ]  │
-│  - Web Service: WAMP Server (Apache + PHP 8.x PDO) trên Windows        │
-│  - Lõi Bảo mật: Pure PHP HMAC-SHA256 JWT & Chống IDOR                  │
-│  - Nghiệp vụ: ACID Internal Transfer, Delta Reconciler, OTP 3 bước     │
-│  - MySQL Local: `sql_nhom46_itimi` (6 Bảng quan hệ chuẩn 3NF)          │
-│  - Test Suite: PowerShell tự động `test_api.ps1` (100% Passed)         │
-│                                                                        │
-│                       ▼ ĐỊNH HƯỚNG NÂNG CẤP (KHI THẦY MỚI CHỐT)        │
-│                                                                        │
-│  [ TARGET MODERN STACK - .NET MAUI / .NET WEB API / NODE.JS NESTJS ]   │
-│  - Option A: 100% C# .NET Ecosystem (.NET MAUI + ASP.NET Core API)     │
-│  - Option B: Full-Stack Modern JS/TS (React Native Expo + NestJS/.NET) │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-### Chi tiết các tầng công nghệ hiện tại & Kế hoạch mở rộng:
-1. **Frontend (Mobile App - Expo SDK 54):**
-   - **Framework:** `Expo SDK 54` (`react-native: 0.81.5`, `react: 19.1.0`), hỗ trợ chuẩn **Android 14 (API 34) & Android 15 (API 35)** và Node 24 LTS.
-   - **Quản lý điều hướng:** `React Navigation v7` (Bottom Tabs 5 màn hình: Tổng quan, Giao dịch, Ngân sách, Báo cáo, Hồ sơ).
-   - **Bảo mật & Phiên:** `AsyncStorage` + Axios Client tích hợp Interceptor tự động gắn JWT Token và thu hồi phiên khi hết hạn (HTTP 401).
-   - **Định kiểu (Styling):** Hệ thống Design Tokens (`theme.js`) với bảng màu `COLORS`, khoảng cách `SPACING`, bo góc và đổ bóng. Sẵn sàng tích hợp các thư viện UI Kit cao cấp (Reanimated, Native UI Components) khi chuyển sang giai đoạn sau.
-
-2. **Backend (RESTful API - 21 Endpoints):**
-   - **Ngôn ngữ:** `PHP` hướng dịch vụ, trả về JSON chuẩn hóa (bọc `status`, `message`, `data`, `timestamp`).
-   - **Bảo mật:** JWT Bearer Token bắt buộc, triệt tiêu lỗ hổng IDOR; mật khẩu Bcrypt; chống SQL Injection 100% qua PDO Prepared Statements.
-   - **Tính năng nâng cao:** Quy trình Quên mật khẩu 3 bước chuẩn OTP (hạn 15 phút, đồng bộ múi giờ Asia/Ho_Chi_Minh), Chuyển tiền nội bộ giữa các ví chuẩn ACID, và Bộ bù trừ Delta tự động khi sửa giao dịch.
-   - **Hợp đồng API (Contracts):** Được thiết kế độc lập, sẵn sàng tái sử dụng 100% khi chuyển dịch sang ASP.NET Core Web API hoặc NestJS.
-
-3. **Cơ sở Dữ liệu & Môi trường Chạy (Đóng Băng Server Cũ):**
-   - **Môi trường Hiện tại:** CSDL MySQL chạy trên WAMP (`sql_nhom46_itimi`), gồm 6 bảng chuẩn hóa (`users`, `wallets`, `categories`, `transactions`, `budgets`, `password_resets`).
-   - **Đóng băng Server cũ:** Không upload lên máy chủ FTP cũ của trường (`nhom46.itimit.id.vn`) do Giảng viên cũ đã rời đi. Toàn bộ mã nguồn và dữ liệu kiểm thử tập trung an toàn trên Localhost và Git.
-   - **Kiểm thử tự động:** Script `BE/test_api.ps1` tích hợp API Reset CSDL tự động (`api/debug/reset_database.php`), kiểm thử 21/21 API đạt 100% Passed.
-
----
-
-## 4. Thiết Kế CSDL Tinh Gọn (MySQL Schema Blueprint)
-
-CSDL gồm đúng **5 bảng quan hệ** trích xuất từ Class Diagram của môn PTTKHTTT, được import trực tiếp vào database **`sql_nhom46_itimi`**:
-
-```sql
--- Sử dụng CSDL do trường cấp
-USE `sql_nhom46_itimi`;
-
--- 1. Bảng người dùng
-CREATE TABLE `users` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `full_name` VARCHAR(100) NOT NULL,
-  `email` VARCHAR(150) NOT NULL UNIQUE,
-  `password_hash` VARCHAR(255) NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- 2. Bảng ví tài chính (Tiền mặt, Ngân hàng)
-CREATE TABLE `wallets` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `user_id` INT NOT NULL,
-  `name` VARCHAR(100) NOT NULL,
-  `balance` DECIMAL(15,2) DEFAULT 0.00,
-  `wallet_type` ENUM('CASH', 'BANK') DEFAULT 'CASH',
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- 3. Bảng danh mục thu chi
-CREATE TABLE `categories` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `user_id` INT NULL, -- NULL nếu là danh mục mặc định của hệ thống
-  `name` VARCHAR(100) NOT NULL,
-  `type` ENUM('INCOME', 'EXPENSE') NOT NULL,
-  `icon_name` VARCHAR(50) DEFAULT 'wallet',
-  `color_code` VARCHAR(20) DEFAULT '#2B4C7E'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- 4. Bảng giao dịch thu / chi
-CREATE TABLE `transactions` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `user_id` INT NOT NULL,
-  `wallet_id` INT NOT NULL,
-  `category_id` INT NOT NULL,
-  `amount` DECIMAL(15,2) NOT NULL,
-  `transaction_type` ENUM('INCOME', 'EXPENSE') NOT NULL,
-  `note` TEXT NULL,
-  `transaction_date` DATE NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`wallet_id`) REFERENCES `wallets`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- 5. Bảng ngân sách hàng tháng
-CREATE TABLE `budgets` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `user_id` INT NOT NULL,
-  `category_id` INT NULL, -- NULL nếu là ngân sách tổng thể
-  `amount_limit` DECIMAL(15,2) NOT NULL,
-  `month` INT NOT NULL,
-  `year` INT NOT NULL,
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-```
-
----
-
-## 5. Danh Sách Endpoint RESTful API (PHP API Blueprint)
-
-Toàn bộ API được triển khai tại thư mục web trên máy chủ (Ví dụ: `http://103.139.203.43/sql_nhom46_itimi/api/` hoặc đường dẫn thư mục web nhóm được phân bổ):
-
-### 5.1. Nhóm Xác Thực (Authentication)
-- `POST /api/auth/register.php` : Đăng ký tài khoản người dùng mới.
-- `POST /api/auth/login.php` : Đăng nhập, trả về thông tin user & token xác thực.
-
-### 5.2. Nhóm Ví & Số Dư (Wallets)
-- `GET /api/wallets/list.php?user_id={id}` : Lấy danh sách ví và số dư hiện có.
-- `POST /api/wallets/create.php` : Thêm ví mới.
-
-### 5.3. Nhóm Danh Mục (Categories)
-- `GET /api/categories/list.php?user_id={id}` : Lấy toàn bộ danh mục thu & chi.
-
-### 5.4. Nhóm Giao Dịch Thu / Chi (Transactions)
-- `GET /api/transactions/list.php?user_id={id}&month={m}&year={y}` : Danh sách giao dịch theo tháng.
-- `POST /api/transactions/create.php` : Tạo mới giao dịch (Tự động cộng/trừ số dư bảng `wallets`).
-- `DELETE /api/transactions/delete.php?id={id}` : Xóa giao dịch (Hoàn lại số dư ví tương ứng).
-
-### 5.5. Nhóm Thống Kê & Báo Cáo (Reports & Charts)
-- `GET /api/reports/monthly_summary.php?user_id={id}&month={m}&year={y}` : Trả về: `total_income`, `total_expense`, `net_balance`.
-- `GET /api/reports/category_chart.php?user_id={id}&month={m}&year={y}` : Trả về dữ liệu vẽ Biểu đồ tròn: `[{ name, total_amount, color_code }]`.
-- `GET /api/reports/income_vs_expense_chart.php?user_id={id}&year={y}` : Trả về dữ liệu vẽ Biểu đồ cột so sánh Thu - Chi qua các tháng trong năm.
-
----
-
-## 6. Hướng Dẫn Thiết Lập & Khởi Chạy (2 Giai Đoạn)
-
-### Bước 1: Khởi tạo Cơ sở Dữ liệu
-
-#### 👉 Trường hợp 1: Chạy trên WAMP Server (Giai đoạn hiện tại)
-1. Bật **WAMP Server** (đảm bảo icon WAMP chuyển màu xanh lá cây).
-2. Mở trình duyệt, truy cập `http://localhost/phpmyadmin`.
-3. Đăng nhập (thường User là `root`, Password để trống).
-4. Tạo CSDL mới tên: `sql_nhom46_itimi` với Collation `utf8mb4_unicode_ci`.
-5. Chọn CSDL vừa tạo, mở tab **SQL**, dán toàn bộ mã DDL ở **Mục 4** và nhấn **Go** để khởi tạo 5 bảng.
-
-#### 👉 Trường hợp 2: Khi được Giảng viên cho phép triển khai lên Server trường
-1. Truy cập phpMyAdmin máy chủ: `https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en`
-   *(Nếu trình duyệt cảnh báo SSL, chọn **Advanced → Proceed to 103.139.203.43**)*.
-2. Đăng nhập: Username: `sql_nhom46_itimi` | Password: `0a530d0c23153`.
-3. Chọn database `sql_nhom46_itimi` bên trái, mở tab **SQL**, dán mã DDL và nhấn **Go**.
-
----
-
-### Bước 2: Thiết Lập Cầu Nối Backend Vào WAMP Server (NTFS Directory Junction - 0 Giây Đồng Bộ)
-
-> [!TIP]
-> **Tuyệt đối KHÔNG copy/paste thư mục `BE/` sang `www/` của WampServer.** Hãy sử dụng **NTFS Directory Junction** (liên kết thư mục cấp Hệ điều hành của Windows). Mã nguồn chỉ nằm trong Repo Git, Apache tự động nhận diện thời gian thực (0 giây) và tuyệt đối an toàn (xóa link không mất code gốc).
-
-* 📄 **Chi tiết hướng dẫn kỹ thuật:** Xem tại [`BE/README.md`](BE/README.md).
-
-#### Cách 1: Chạy Script Tự Động (Khuyến nghị cho cả Dev & AI Agent)
-Mở PowerShell tại thư mục `mobile-project/BE/` và chạy:
-```powershell
-.\setup_wamp_junction.ps1
-```
-*(Script sẽ tự phát hiện thư mục `www` của WampServer trên máy bạn và tạo link `expense_api` trỏ về `BE`)*.
-
-#### Cách 2: Chạy Lệnh Thủ Công Bằng PowerShell
-```powershell
-# Chạy trên máy bạn Đạt (WAMP cài ổ D):
-New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\BE"
-
-# Hoặc trên máy bạn Đại (Nếu WAMP cài ổ C):
-New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\To\Your\Repo\mobile-project\BE"
-```
-
-#### Cách 3: Chạy Lệnh Bằng Command Prompt (CMD)
-```cmd
-mklink /J "D:\WampServer\www\expense_api" "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\BE"
-```
-
----
-
-### Bước 3: Cấu hình Kết nối CSDL Đa Môi Trường (`config/database.php`)
-Sử dụng cờ `$is_local` để chuyển đổi 1 chạm giữa máy cá nhân (WAMP) và Server trường mà không lo lỗi code:
-
-```php
-<?php
-class Database {
-    // Đổi thành FALSE khi upload code lên Server trường cấp
-    private $is_local = true; 
-
-    // Cấu hình WAMP Server (Chạy ở máy cá nhân)
-    private $local_host = "localhost";
-    private $local_db   = "sql_nhom46_itimi";
-    private $local_user = "root";
-    private $local_pass = ""; // Mặc định WAMP để trống, nếu có mật khẩu thì điền vào đây
-
-    // Cấu hình Server trường cấp (Production Hosting)
-    private $remote_host = "localhost";
-    private $remote_db   = "sql_nhom46_itimi";
-    private $remote_user = "sql_nhom46_itimi";
-    private $remote_pass = "0a530d0c23153";
-
-    public $conn;
-
-    public function getConnection() {
-        $this->conn = null;
-        $host = $this->is_local ? $this->local_host : $this->remote_host;
-        $db   = $this->is_local ? $this->local_db   : $this->remote_db;
-        $user = $this->is_local ? $this->local_user : $this->remote_user;
-        $pass = $this->is_local ? $this->local_pass : $this->remote_pass;
-
-        try {
-            $this->conn = new PDO(
-                "mysql:host=" . $host . ";dbname=" . $db . ";charset=utf8mb4",
-                $user,
-                $pass
-            );
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $exception) {
-            echo json_encode(["error" => "Lỗi kết nối CSDL: " . $exception->getMessage()]);
-        }
-        return $this->conn;
-    }
-}
-?>
-```
-
----
-
-### Bước 4: Cấu hình CORS Header cho các file API PHP
-Đảm bảo đầu mỗi file PHP API luôn có các header cho phép React Native gọi vào:
-```php
-<?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-```
-
----
-
-### Bước 5: Kiểm thử API bằng Postman
-1. **Nếu test WAMP Local:**
-   - Đảm bảo đã tạo Junction ở Bước 2.
-   - Biến môi trường `BASE_URL`: `http://localhost/expense_api/api`.
-2. **Nếu test Server trường cấp (khi đã upload):**
-   - Biến môi trường `BASE_URL`: `http://nhom46.itimit.id.vn/api` (hoặc IP công khai `http://103.139.203.43/...`).
-3. Gửi request `POST {{BASE_URL}}/auth/register.php` kèm raw JSON body:
-   ```json
-   {
-     "full_name": "Nguyễn Văn A",
-     "email": "nguyenvana@gmail.com",
-     "password": "Password123@"
-   }
-   ```
-4. Kiểm tra response trả về mã `200 OK` hoặc `201 Created` và dữ liệu được ghi nhận chính xác trong phpMyAdmin.
-
----
-
-### Bước 6: Cấu hình & Khởi Chạy Frontend Mobile (Trong Thư Mục `FE`)
-
-> 📄 **Tài liệu hướng dẫn chi tiết dành riêng cho UI Lead:** Xem ngay tại [`FE/README.md`](FE/README.md).
-
-1. **Mở terminal và di chuyển vào thư mục:**
-   ```powershell
-   cd mobile-project/FE
-   ```
-2. **Cài đặt thư viện dependencies:**
-   * **Dùng Expo CLI (Khuyên dùng nhất cho Đại):** `npx expo install`
-   * **Dùng `npm`:** `npm install --legacy-peer-deps` *(bắt buộc cờ `--legacy-peer-deps` do React 19)*
-   * **Dùng `pnpm` (trên máy của Đạt):** `pnpm install`
-3. **Cấu hình IP Backend:** Sửa địa chỉ IPv4 máy tính tại [`src/api/config.js`](FE/src/api/config.js).
-4. **Khởi chạy ứng dụng:**
-   ```powershell
-   npm start
-   # hoặc khởi động xóa sạch cache: npx expo start -c
-   ```
-
----
-
-### Bước 7: Trạng Thái Triển Khai Máy Chủ & Kế Hoạch Chuyển Đổi (Server Status & Migration)
-> ⚠️ **THÔNG BÁO QUAN TRỌNG:**  
-> - **Đóng băng (Frozen):** Dừng triển khai lên máy chủ FTP `nhom46.itimit.id.vn` do Giảng viên cũ đã rời đi.
-> - **Môi trường Dev & Test hiện tại:** Tiếp tục chạy trên WAMP Server Localhost (`http://localhost/expense_api/api`) và kết nối máy ảo Android (`10.0.2.2`) hoặc điện thoại thật cùng mạng Wifi.
-> - **Sẵn sàng chuyển đổi (Migration Ready):** Khi Giảng viên mới chốt định hướng công nghệ, nhóm sẽ chuyển đổi Backend sang ASP.NET Core Web API hoặc Node.js / Docker Container theo kế hoạch [`PLAN-22`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
-
-
----
-
-## 7. Cấu Trúc Thư Mục Dự Án Chuẩn
+Thư mục `mobile-project/` được cấu trúc thành **2 phân hệ độc lập, chuyên biệt**:
 
 ```text
 mobile-project/
-├── README.md                     # Tài liệu hướng dẫn đồ án mobile & thông tin server
-├── ROADMAP.md                    # Kế hoạch lộ trình 5 Sprint và RACI Matrix
-├── huongdanvietbaocao.txt        # Yêu cầu hướng dẫn viết báo cáo của Giảng viên
-├── BaoCaoLTMB.docx               # Báo cáo học thuật môn Lập trình Mobile (Word)
 │
-├── BE/                           # Backend PHP RESTful API
-│   ├── config/
-│   │   ├── database.php          # Kết nối CSDL MySQL (Hỗ trợ WAMP & Server trường)
-│   │   └── helpers.php           # CORS headers & Chuẩn hóa JSON Response
-│   ├── api/
-│   │   ├── auth/                 # login.php, register.php
-│   │   ├── wallets/              # list.php, create.php
-│   │   ├── categories/           # list.php
-│   │   ├── transactions/         # list.php, create.php, delete.php
-│   │   └── reports/              # monthly_summary.php, category_chart.php
-│   └── sql/
-│       └── database_schema.sql   # DDL khởi tạo 5 bảng & Dữ liệu mẫu (Seed Data)
+├── 📱 react-native-ver/          # PHÂN HỆ ĐỒ ÁN MÔN HỌC (SCOPED MVP)
+│   ├── BE/                       # Backend PHP WAMP (21 RESTful APIs, JWT Bearer)
+│   ├── FE/                       # Frontend React Native (Expo SDK 54, React 19)
+│   ├── realtime-server/          # Cổng Gateway WebSocket thời gian thực (Socket.IO + Web Simulator)
+│   ├── README.md                 # Hướng dẫn chi tiết chạy bản React Native
+│   └── BaoCaoLTMB.docx           # Tài liệu báo cáo môn học Lập trình Mobile (Word)
 │
-└── FE/                           # Frontend Ứng dụng React Native
-    ├── package.json
-    ├── src/
-    │   ├── api/                  # Axios instance & config.js (Đa môi trường)
-    │   ├── components/           # TransactionCard, CustomButton, ChartWrapper
-    │   ├── navigation/           # AppNavigator, TabNavigator
-    │   ├── screens/              # HomeScreen, AddTransactionScreen, ReportScreen, WalletScreen
-    │   └── utils/                # FormatMoney, FormatDate
-    └── App.js
+└── ⚡ dotnet-maui-ver/           # PHÂN HỆ HỆ THỐNG HOÀN CHỈNH KLTN (FULL SCOPE)
+    ├── README.md                 # Hướng dẫn kiến trúc chi tiết bản .NET MAUI
+    └── src/                      # Source code .NET 9 MAUI (Clean Architecture + MVVM)
 ```
 
 ---
 
-## 8. Khởi Chạy Gateway Thời Gian Thực (Socket.IO Realtime Gateway POC)
+## 2. 📊 Bảng Đối Chiếu Tính Năng Giữa Hai Phiên Bản
 
-Hệ thống tích hợp cổng WebSocket song song để phục vụ tính năng đồng bộ số dư tức thì, cảnh báo cú hích chi tiêu (Nudge) và thu hồi phiên đăng nhập đa thiết bị:
+| Phân Hệ / Tiêu Chí | 📱 Phiên Bản React Native (`react-native-ver/`) | ⚡ Phiên Bản .NET MAUI (`dotnet-maui-ver/`) |
+| :--- | :--- | :--- |
+| **Mục đích chính** | Phục vụ chấm điểm & vấn đáp **môn Lập trình Mobile**. | Phục vụ bảo vệ **Khóa luận Tốt nghiệp & PTTKHTTT**. |
+| **Phân công phụ trách** | **Trần Trọng Đại (UI Lead)** & Trịnh Thành Đạt (BE). | **Trịnh Thành Đạt (Lead Architect)** & Nhóm KLTN. |
+| **Ngăn xếp công nghệ** | React Native Expo SDK 54, React 19, JavaScript. | .NET 9 MAUI, C# 13, XAML, CommunityToolkit.Mvvm. |
+| **Hạ tầng Backend** | WAMP Server (Apache, PHP PDO, MySQL). | ASP.NET Core Web API (.NET 9, EF Core, Clean Architecture). |
+| **Giao thức Thời gian thực** | Socket.IO Node.js Gateway (Port 3001). | Microsoft.AspNetCore.SignalR Hub (hoặc WebSocket). |
+| **Quản trị Tài khoản & Ví** | 2 Ví cơ bản (Tiền mặt, Tài khoản Ngân hàng). | Đa ví không giới hạn: Thẻ tín dụng, Ví điện tử, Sổ tiết kiệm. |
+| **Bóc tách Hóa đơn AI** | Tạm đóng băng (Nhập liệu thủ công nhanh). | **AI Multimodal Vision OCR** + Hậu kiểm toán số học. |
+| **Tối ưu Nợ & Dòng tiền** | Tạm đóng băng. | **Debt Snowball vs. Avalanche** + Đồ thị dòng tiền DAG. |
+| **Ngân sách & Cú hích** | Ngân sách tháng cơ bản (Tiến độ % tiêu). | **DSA hạn mức an toàn ngày** + Cú hích hành vi Richard Thaler. |
+| **Bảo mật & Mã hóa** | JWT Bearer Authentication. | AES-256 SQLCipher, Biometric (Face ID/Vân tay), JWT Rotation. |
 
-### 8.1. Khởi động Realtime Gateway Server
-Mở terminal riêng biệt:
+---
+
+## 3. 🚀 Lối Tắt Khởi Chạy Nhanh (Quick Navigation)
+
+### 👉 Bạn muốn chạy Đồ án môn học React Native?
+Xem hướng dẫn chi tiết tại: [`react-native-ver/README.md`](react-native-ver/README.md)
 ```bash
-cd mobile-project/realtime-server
-pnpm install
+# 1. Bật WampServer (wampmanager.exe)
+# 2. Tạo liên kết Junction:
+cd "mobile-project/react-native-ver/BE"
+powershell -ExecutionPolicy Bypass -File setup_wamp_junction.ps1
+
+# 3. Bật Gateway Socket.IO (Port 3001):
+cd "mobile-project/react-native-ver/realtime-server"
 pnpm start
-# Server lắng nghe tại cổng http://localhost:3001 (WS: ws://localhost:3001)
+
+# 4. Bật Frontend Expo:
+cd "mobile-project/react-native-ver/FE"
+npm start
 ```
 
-### 8.2. Kích hoạt sự kiện kiểm thử (Bắn sự kiện sang App Mobile)
-Mở một terminal khác và chạy lệnh kiểm thử tự động:
-```bash
-cd mobile-project/realtime-server
-pnpm test:trigger
-# hoặc: node test_realtime.js / powershell -File test_realtime.ps1
-```
+### 👉 Bạn muốn xem Kiến trúc Hệ thống Hoàn chỉnh .NET MAUI?
+Xem tài liệu đặc tả kiến trúc tại: [`dotnet-maui-ver/README.md`](dotnet-maui-ver/README.md)
+- Yêu cầu: Visual Studio 2022 v17.12+ (Workload: `.NET Multi-platform App UI development`) và .NET 9 SDK.
 
-### 8.3. Kết quả trên App Mobile (Expo)
-- **Thanh trạng thái Realtime:** Hiển thị chấm xanh lá cây `Realtime Socket.IO: Sẵn sàng (X ms)`.
-- **Đồng bộ số dư 0ms:** Tự động reload tổng tài sản và danh sách ví ngay khi có giao dịch mới.
-- **Banner Cú hích (Nudge):** Cảnh báo màu vàng (80%) hoặc đỏ (100%+) hiển thị trực tiếp trên đầu màn hình HomeScreen.
+---
 
+## 4. 📜 Liên Kết Ngữ Cảnh Dự Án
+
+* 📄 **Chiến lược tiến hóa công nghệ hai giai đoạn:** [`PLAN-22`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
+* 📜 **Nhật ký quyết định kiến trúc:** [`decisions_and_changes_log.md`](../project_context/decisions_and_changes_log.md) (Quyết định 82, 84 & 85)

@@ -20,9 +20,9 @@
 
 ## 2. 🚀 Hướng Dẫn Khởi Chạy Ứng Dụng Trên Máy Của Đại
 
-### Bước 1: Mở Terminal tại thư mục `mobile-project/FE`
+### Bước 1: Mở Terminal tại thư mục `mobile-project/react-native-ver/FE`
 ```powershell
-cd mobile-project/FE
+cd mobile-project/react-native-ver/FE
 ```
 
 ### Bước 2: Cài đặt toàn bộ thư viện (Dependencies)
@@ -173,7 +173,7 @@ export default function MyCustomScreen() {
 ```
 
 ### 6.3. Cách Test Thử Giao Diện Realtime Khi Đang Thiết Kế
-1. Bật Realtime Server tại thư mục `mobile-project/realtime-server`:
+1. Bật Realtime Server tại thư mục `mobile-project/react-native-ver/realtime-server`:
    ```bash
    pnpm start
    ```

@@ -2,7 +2,7 @@
 ## ĐỒ ÁN MÔN HỌC: LẬP TRÌNH THIẾT BỊ DI ĐỘNG (MOBILE APPLICATION DEVELOPMENT)
 > **Ngăn xếp công nghệ chuyển tiếp (Transitional Stack):** React Native Expo SDK 54 + PHP PDO RESTful API (21 endpoints bảo mật JWT) + MySQL WAMP Server Localhost.  
 > **Định hướng nâng cấp (Target Modern Stack):** Sẵn sàng chuyển đổi sang **.NET MAUI** hoặc **React Native** kết hợp **Backend ASP.NET Core Web API (.NET 8/9)** / **Node.js (NestJS)** theo chỉ đạo của Giảng viên mới.  
-> **Tài liệu tham chiếu:** [README.md](README.md) | [BaoCaoLTMB.docx](BaoCaoLTMB.docx) | [Kế hoạch PLAN-22](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
+> **Tài liệu tham chiếu:** [README.md](README.md) | [BaoCaoLTMB.docx](BaoCaoLTMB.docx) | [Kế hoạch PLAN-22](../../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
 
 ---
 
@@ -67,7 +67,7 @@
 ### Giai Đoạn 1: Thiết Kế CSDL & Chuẩn Bị Môi Trường WAMP Local (Tuần 1)
 > **Mục tiêu:** Có sẵn database chạy mượt trên WAMP Server máy cá nhân và Git repository sẵn sàng cộng tác. (Chưa can thiệp server trường do thầy chưa cho phép).
 
-- [x] **Task 1.1 (Đạt):** Vẽ sơ đồ thực thể liên kết (ERD) cho 5 bảng (`users`, `wallets`, `categories`, `transactions`, `budgets`) trên Draw.io (`mobile-project/database_erd.drawio`), xuất file ảnh nét cao cho Trang 7 báo cáo.
+- [x] **Task 1.1 (Đạt):** Vẽ sơ đồ thực thể liên kết (ERD) cho 5 bảng (`users`, `wallets`, `categories`, `transactions`, `budgets`) trên Draw.io ([`database_erd.drawio`](database_erd.drawio)), xuất file ảnh nét cao cho Trang 7 báo cáo.
 - [x] **Task 1.2 (Đạt):** Soạn thảo mã CSDL `BE/sql/database_schema.sql`, thiết lập cầu nối NTFS Directory Junction `www/expense_api` vào WAMP Server, sẵn sàng import phpMyAdmin.
 - [ ] **Task 1.3 (Đại):** Soạn thảo dữ liệu mẫu (Seed Data) gồm: 1 user test, 2 ví (Tiền mặt, Ngân hàng), 8 danh mục chi tiêu, 4 danh mục thu nhập, 5 giao dịch mẫu để kiểm tra hiển thị. *(Đạt đã hỗ trợ viết sẵn mẫu trong database_schema.sql)*.
 - [x] **Task 1.4 (Đạt & Đại):** Đồng bộ mã nguồn lên Git repository GitHub (`analyze-system-subject`), thiết lập branch `main` và liên kết remote `origin`.
@@ -101,7 +101,7 @@
 ### Giai Đoạn 3: Khởi Tạo Ứng Dụng React Native & Dựng Khung Giao Diện (Tuần 3)
 > **Mục tiêu:** Đạt hoàn tất thiết lập khung sườn dự án (FE Setup & Navigation Architecture), Đại xây dựng bộ linh kiện UI dùng chung.
 
-- [x] **Task 3.1 (Đạt - Lead Setup FE):** Khởi tạo project React Native trong thư mục `mobile-project/FE/`, cài đặt các thư viện thiết yếu:
+- [x] **Task 3.1 (Đạt - Lead Setup FE):** Khởi tạo project React Native trong thư mục `mobile-project/react-native-ver/FE/`, cài đặt các thư viện thiết yếu:
   ```bash
   npm install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack
   npm install react-native-screens react-native-safe-area-context
@@ -166,7 +166,7 @@
   - **Dừng triển khai** lên server FTP `nhom46.itimit.id.vn` và phpMyAdmin `103.139.203.43` do Giảng viên cũ đã rời đi.
   - Toàn bộ dữ liệu kiểm thử được chuyển sang chạy trên Localhost WAMP & script tự động `test_api.ps1`.
   - Sẵn sàng chuyển giao cấu hình sang server mới hoặc Docker container khi Giảng viên mới yêu cầu.
-- [ ] **Task 5.1 (Đạt):** Mở tệp `mobile-project/BaoCaoLTMB.docx`:
+- [ ] **Task 5.1 (Đạt):** Mở tệp [`BaoCaoLTMB.docx`](BaoCaoLTMB.docx) (trong `mobile-project/react-native-ver/`):
   - Tại Trang 7 (*Xây dựng mô hình DB*): Chèn ảnh sơ đồ ERD, bảng từ điển dữ liệu mô tả chi tiết 5 bảng dữ liệu MySQL.
   - Chèn ảnh chụp giao diện phpMyAdmin đã có đủ 5 bảng.
 - [ ] **Task 5.2 (Đại):**

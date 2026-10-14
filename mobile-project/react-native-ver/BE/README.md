@@ -13,7 +13,7 @@
 
 ### Giải pháp chuẩn mực: NTFS Directory Junction (Liên kết cấp Kernel của Windows)
 - **Directory Junction** là một tính năng của hệ điều hành Windows (định dạng ổ cứng NTFS).
-- Khi tạo một Junction từ `D:\WampServer\www\expense_api` trỏ về thư mục `mobile-project/BE`:
+- Khi tạo một Junction từ `D:\WampServer\www\expense_api` trỏ về thư mục `mobile-project/react-native-ver/BE`:
   - Mã nguồn thật chỉ nằm **duy nhất 1 nơi** trong thư mục dự án Git.
   - Apache xem `expense_api` như một thư mục vật lý thực thụ nằm trong `www`.
   - **Sửa code ăn ngay (Real-time):** Bạn nhấn `Ctrl + S` lưu code trong IDE, Apache nạp file mới ngay lập tức.
@@ -24,7 +24,7 @@
 ## 2. Hướng Dẫn Tự Động Thiết Lập (Dành Cho Agent & Dev)
 
 ### Cách 1: Chạy Script PowerShell Tự Động (Khuyến nghị)
-Trong thư mục `mobile-project/BE/` đã có sẵn file script tự động [`setup_wamp_junction.ps1`](setup_wamp_junction.ps1).
+Trong thư mục `mobile-project/react-native-ver/BE/` đã có sẵn file script tự động [`setup_wamp_junction.ps1`](setup_wamp_junction.ps1).
 
 Chỉ cần mở PowerShell tại thư mục này và chạy:
 ```powershell
@@ -46,10 +46,10 @@ Mở PowerShell với quyền User bình thường (không cần Administrator) 
 # New-Item -ItemType Junction -Path "<Đường_dẫn_Wamp_www>\expense_api" -Target "<Đường_dẫn_thư_mục_BE_của_bạn>"
 
 # Ví dụ trên máy bạn Đạt (WAMP cài ổ D):
-New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\BE"
+New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\react-native-ver\BE"
 
 # Ví dụ nếu bạn Đại cài WampServer mặc định ở ổ C:
-New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\To\Your\Repo\mobile-project\BE"
+New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\To\Your\Repo\mobile-project\react-native-ver\BE"
 ```
 
 ---
@@ -58,7 +58,7 @@ New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\T
 
 Nếu bạn hoặc Agent sử dụng CMD (Command Prompt):
 ```cmd
-mklink /J "D:\WampServer\www\expense_api" "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\BE"
+mklink /J "D:\WampServer\www\expense_api" "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\react-native-ver\BE"
 ```
 
 ---
@@ -81,7 +81,7 @@ Get-Item "D:\WampServer\www\expense_api" | Select-Object Name, LinkType, Target
 Remove-Item "D:\WampServer\www\expense_api"
 ```
 > [!IMPORTANT]
-> Lệnh `Remove-Item` này **CHỈ XÓA ĐƯỜNG DẪN LIÊN KẾT ẢO**, toàn bộ mã nguồn PHP và CSDL trong `mobile-project/BE` **VẪN CÒN NGUYÊN VẸN 100%**.
+> Lệnh `Remove-Item` này **CHỈ XÓA ĐƯỜNG DẪN LIÊN KẾT ẢO**, toàn bộ mã nguồn PHP và CSDL trong `mobile-project/react-native-ver/BE` **VẪN CÒN NGUYÊN VẸN 100%**.
 
 ---
 
@@ -95,7 +95,7 @@ Remove-Item "D:\WampServer\www\expense_api"
 4. **Nhập dữ liệu mẫu (Import Schema & Seed Data):**
    - Chọn database `sql_nhom46_itimi` ở cột bên trái.
    - Nhấn vào tab **Import** (hoặc mở tab **SQL**).
-   - Mở file [`mobile-project/BE/sql/database_schema.sql`](sql/database_schema.sql), sao chép toàn bộ nội dung và dán vào tab SQL, rồi bấm nút **Go** (Thực hiện).
+   - Mở file [`mobile-project/react-native-ver/BE/sql/database_schema.sql`](sql/database_schema.sql), sao chép toàn bộ nội dung và dán vào tab SQL, rồi bấm nút **Go** (Thực hiện).
    - CSDL sẽ tự động tạo đủ 5 bảng: `users`, `wallets`, `categories`, `transactions`, `budgets` kèm dữ liệu mẫu ban đầu.
 
 ---
