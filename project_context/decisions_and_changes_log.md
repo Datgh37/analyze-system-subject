@@ -1688,3 +1688,28 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Chạy toàn bộ test suite hệ thống: **100% 124/124 tests PASSED**.
 - **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md`](plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md).
 - **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
+
+---
+
+## [2026-10-07 16:30] - Quyết Định 85: Đồng Bộ Hóa Mã Nguồn Git & Hợp Nhất Toàn Diện Giao Diện UI Frontend Mobile (Trần Trọng Đại) Vào Kiến Trúc Mới (PLAN-22)
+- **Vấn đề:** 
+  1. Thành viên Trần Trọng Đại (UI Specialist & Frontend Screens) cần đồng bộ 4 commit mới nhất từ `origin/main` (gồm tái cấu trúc thư mục, Realtime Socket.IO, các API Backend nâng cao) mà không làm mất hoặc xung đột với các màn hình và linh kiện UI đã dày công xây dựng ở nhánh local.
+  2. Cần cấy ghép trọn vẹn bộ linh kiện UI dùng chung (`WalletCard`, `BudgetBar`, `TransactionItem`, `CustomButton`) và thiết kế giao diện giàu tính thẩm mỹ của Đại vào kiến trúc module hóa mới (`src/screens/main/` và `src/screens/auth/`), tích hợp đầy đủ cơ chế xác thực JWT, gọi API qua `src/api/endpoints.js` và đồng bộ số dư thời gian thực 0ms qua Socket.IO.
+- **Quyết định & Thực thi:**
+  1. **Đồng Bộ Git An Toàn Tuyệt Đối (Zero Data-Loss Git Sync):**
+     - Tạo nhánh backup độc lập `backup-dai-ui-local` lưu giữ toàn bộ mã nguồn ban đầu của Đại.
+     - Cập nhật nhánh `main` bắt kịp `origin/main` tại commit `7c61432` không một lỗi xung đột.
+  2. **Bảo Toàn & Module Hóa Bộ Linh Kiện UI (`src/components/`):**
+     - Khôi phục và hoàn thiện 4 linh kiện: `WalletCard.js`, `BudgetBar.js`, `TransactionItem.js`, `CustomButton.js`.
+     - Đồng bộ mượt mà với `RealtimeAlertBanner.js` của Socket.IO Gateway.
+     - Bổ sung các alias tương thích ngược (`card`, `text`, `white`, `SIZES.md/sm/lg`) vào `src/constants/theme.js`.
+  3. **Hợp Nhất Toàn Diện 8 Màn Hình Ứng Dụng:**
+     - `src/screens/main/HomeScreen.js`: Tích hợp thẻ số dư ví cuộn ngang, tiến độ ngân sách, danh sách 5 giao dịch gần nhất, banner Socket.IO thời gian thực và tự động nạp lại khi có biến động số dư.
+     - `src/screens/main/AddTransactionScreen.js`: Tab chuyển đổi Thu/Chi, bàn phím format tiền tệ VND, chọn ví nguồn, lưới chọn Icon danh mục màu sắc sinh động, tích hợp logic thêm mới và cập nhật bù trừ Delta.
+     - `src/screens/main/TransactionsScreen.js`: Bộ lọc 3 chế độ (Tất cả / Chi / Thu), bộ lọc tìm kiếm theo ghi chú, FlatList giao dịch, thẻ tóm tắt dòng tiền và xác nhận xóa giao dịch hoàn tiền ví.
+     - `src/screens/main/BudgetScreen.js`: Thanh tiến độ ngân sách đổi màu động, cảnh báo vượt ngưỡng, thẻ chi tiêu an toàn mỗi ngày và modal thiết lập hạn mức tháng mới.
+     - `src/screens/main/ReportScreen.js`: Biểu đồ tròn tỷ trọng danh mục `PieChart`, biểu đồ cột đối chiếu `BarChart` 6 tháng (dùng `react-native-chart-kit`), bảng phân tích tỷ trọng chi tiết.
+     - `src/screens/main/ProfileScreen.js`: Thẻ thông tin cá nhân, chỉ số thống kê, modal cập nhật họ tên, modal đổi mật khẩu Bcrypt và nút đăng xuất tài khoản.
+     - `src/screens/auth/LoginScreen.js` & `RegisterScreen.js`: Form xác thực chuẩn theme, validate dữ liệu, kết nối JWT Auth và hỗ trợ bypass xem trước giao diện.
+  4. **Kế hoạch snapshot:** [`project_context/plans/plans-mobile-app/2026-10-07_plan_22_sync_git_and_merge_dai_ui_into_new_architecture.md`](plans/plans-mobile-app/2026-10-07_plan_22_sync_git_and_merge_dai_ui_into_new_architecture.md).
+- **Trạng thái:** `ACCEPTED & COMPLETED (READY FOR DEMO & REPORT SCREENSHOTS)`.

@@ -25,13 +25,16 @@ export const COLORS = {
   // Bảng màu nền & bề mặt (Neutral Colors)
   background: '#F8F9FA',  // Nền xám nhạt hiện đại
   surface: '#FFFFFF',     // Nền thẻ trắng (Card surface)
+  card: '#FFFFFF',        // Alias thẻ trắng tương thích ngược
   surfaceVariant: '#F1F3F5',
 
   // Bảng màu chữ (Typography)
   textPrimary: '#1E293B', // Chữ tiêu đề / Số tiền đậm
+  text: '#1E293B',        // Alias chữ tiêu đề tương thích ngược
   textSecondary: '#64748B', // Chữ ghi chú / Phụ đề
   textMuted: '#94A3B8',   // Chữ gợi ý mờ (Placeholder)
   textWhite: '#FFFFFF',
+  white: '#FFFFFF',       // Alias màu trắng tương thích ngược
 
   // Đường viền & Phân cách
   border: '#E2E8F0',
@@ -61,6 +64,12 @@ export const SPACING = {
 };
 
 export const SIZES = {
+  // Alias khoảng cách tương thích ngược
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
   fontXs: 12,
   fontSm: 14,
   fontMd: 16,
