@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "jsx": "react-native",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "esnext"
+  },
+  "include": [
+    "src/**/*",
+    "App.js",
+    "index.js"
+  ],
+  "exclude": [
+    "node_modules",
+    ".expo"
+  ]
+}

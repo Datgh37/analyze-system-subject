@@ -12,7 +12,7 @@ import { Platform } from 'react-native';
  */
 
 // 1. IP mạng nội bộ của máy tính chạy WAMP Server (Dùng khi cắm điện thoại thật cùng Wifi)
-const LOCAL_LAN_IP = '192.168.1.15'; // TODO: Đại hãy thay bằng IPv4 máy bạn khi test Expo Go điện thoại thật
+const LOCAL_LAN_IP = '192.168.2.5'; // IPv4 máy tính thực tế của Đại trên mạng Wi-Fi hiện tại
 
 // 2. Cờ chuyển đổi môi trường nhanh
 const USE_PRODUCTION_SERVER = false;

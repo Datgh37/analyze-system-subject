@@ -144,4 +144,4 @@ dotnet build -t:Run -f net9.0-windows10.0.19041.0
 
 * 📄 **Chiến lược tiến hóa công nghệ toàn diện:** [`PLAN-22`](../../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
 * 📱 **Phiên bản môn học React Native (Scoped MVP):** [`../react-native-ver/README.md`](../react-native-ver/README.md)
-* 📜 **Nhật ký quyết định kiến trúc:** [`decisions_and_changes_log.md`](../../project_context/decisions_and_changes_log.md) (Quyết định 82, 84 & 85)
+* 📜 **Nhật ký quyết định kiến trúc:** [`decisions_and_changes_log.md`](../../project_context/decisions_and_changes_log.md) (Quyết định 82, 84, 85 & 86)

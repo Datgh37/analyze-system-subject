@@ -1689,6 +1689,7 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 - **Kế hoạch snapshot:** [`project_context/plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md`](plans/plans-general/2026-10-08_plan_23_word_docx_captions_tof_tot_automation.md).
 - **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
 
+<<<<<<< HEAD
 
 ### [2026-10-09] - Hoàn thiện Kịch bản Thuyết trình 21 Slide & Chuẩn hóa Lý luận Cú Hích và VietQR
 - **Kịch bản thuyết trình:** Xuất file files/Kich_Ban_Thuyet_Trinh_PTTKHTTT.txt chuẩn hóa chi tiết 21 slide, phân vai Đạt - Đại, thời lượng 15-20 phút.
@@ -1706,10 +1707,34 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 - **Căn cứ:** Tiếp thu ý kiến sau báo cáo tiến độ giữa kỳ (tích hợp Voice Expense Logging, mở rộng AI OCR scan số dư ví và phiếu lương, củng cố lý luận Ví mô phỏng Ledger vs Core Banking).
 - **Kỹ thuật Word DOCX:** Nhận diện và lên phương án khắc phục triệt để lỗi Word Captions (chuyển sang mã trường OpenXML native w:fldSimple với switch SEQ Figure và SEQ Table để bảng TOF/TOT nhận diện tự động 100%).
 - **Tệp kế hoạch chi tiết:** project_context/plans/plans-general/2026-10-09_plan_24_toan_dien_ucd_cd_usecase_kltn_redesign.md.
+---
+
+## [2026-10-07 16:30] - Quyết Định 85: Đồng Bộ Hóa Mã Nguồn Git & Hợp Nhất Toàn Diện Giao Diện UI Frontend Mobile (Trần Trọng Đại) Vào Kiến Trúc Mới (PLAN-22)
+- **Vấn đề:** 
+  1. Thành viên Trần Trọng Đại (UI Specialist & Frontend Screens) cần đồng bộ 4 commit mới nhất từ `origin/main` (gồm tái cấu trúc thư mục, Realtime Socket.IO, các API Backend nâng cao) mà không làm mất hoặc xung đột với các màn hình và linh kiện UI đã dày công xây dựng ở nhánh local.
+  2. Cần cấy ghép trọn vẹn bộ linh kiện UI dùng chung (`WalletCard`, `BudgetBar`, `TransactionItem`, `CustomButton`) và thiết kế giao diện giàu tính thẩm mỹ của Đại vào kiến trúc module hóa mới (`src/screens/main/` và `src/screens/auth/`), tích hợp đầy đủ cơ chế xác thực JWT, gọi API qua `src/api/endpoints.js` và đồng bộ số dư thời gian thực 0ms qua Socket.IO.
+- **Quyết định & Thực thi:**
+  1. **Đồng Bộ Git An Toàn Tuyệt Đối (Zero Data-Loss Git Sync):**
+     - Tạo nhánh backup độc lập `backup-dai-ui-local` lưu giữ toàn bộ mã nguồn ban đầu của Đại.
+     - Cập nhật nhánh `main` bắt kịp `origin/main` tại commit `7c61432` không một lỗi xung đột.
+  2. **Bảo Toàn & Module Hóa Bộ Linh Kiện UI (`src/components/`):**
+     - Khôi phục và hoàn thiện 4 linh kiện: `WalletCard.js`, `BudgetBar.js`, `TransactionItem.js`, `CustomButton.js`.
+     - Đồng bộ mượt mà với `RealtimeAlertBanner.js` của Socket.IO Gateway.
+     - Bổ sung các alias tương thích ngược (`card`, `text`, `white`, `SIZES.md/sm/lg`) vào `src/constants/theme.js`.
+  3. **Hợp Nhất Toàn Diện 8 Màn Hình Ứng Dụng:**
+     - `src/screens/main/HomeScreen.js`: Tích hợp thẻ số dư ví cuộn ngang, tiến độ ngân sách, danh sách 5 giao dịch gần nhất, banner Socket.IO thời gian thực và tự động nạp lại khi có biến động số dư.
+     - `src/screens/main/AddTransactionScreen.js`: Tab chuyển đổi Thu/Chi, bàn phím format tiền tệ VND, chọn ví nguồn, lưới chọn Icon danh mục màu sắc sinh động, tích hợp logic thêm mới và cập nhật bù trừ Delta.
+     - `src/screens/main/TransactionsScreen.js`: Bộ lọc 3 chế độ (Tất cả / Chi / Thu), bộ lọc tìm kiếm theo ghi chú, FlatList giao dịch, thẻ tóm tắt dòng tiền và xác nhận xóa giao dịch hoàn tiền ví.
+     - `src/screens/main/BudgetScreen.js`: Thanh tiến độ ngân sách đổi màu động, cảnh báo vượt ngưỡng, thẻ chi tiêu an toàn mỗi ngày và modal thiết lập hạn mức tháng mới.
+     - `src/screens/main/ReportScreen.js`: Biểu đồ tròn tỷ trọng danh mục `PieChart`, biểu đồ cột đối chiếu `BarChart` 6 tháng (dùng `react-native-chart-kit`), bảng phân tích tỷ trọng chi tiết.
+     - `src/screens/main/ProfileScreen.js`: Thẻ thông tin cá nhân, chỉ số thống kê, modal cập nhật họ tên, modal đổi mật khẩu Bcrypt và nút đăng xuất tài khoản.
+     - `src/screens/auth/LoginScreen.js` & `RegisterScreen.js`: Form xác thực chuẩn theme, validate dữ liệu, kết nối JWT Auth và hỗ trợ bypass xem trước giao diện.
+  4. **Kế hoạch snapshot:** [`project_context/plans/plans-mobile-app/2026-10-07_plan_22_sync_git_and_merge_dai_ui_into_new_architecture.md`](plans/plans-mobile-app/2026-10-07_plan_22_sync_git_and_merge_dai_ui_into_new_architecture.md).
+- **Trạng thái:** `ACCEPTED & COMPLETED (READY FOR DEMO & REPORT SCREENSHOTS)`.
 
 ---
 
-## [2026-10-14 08:35] - Quyết Định 85: Phân Tách Hai Ngăn Xếp Mobile App (React Native Scoped Cho Môn Học vs .NET MAUI Enterprise Cho KLTN) & Tái Thiết Lập Junction WAMP Server
+## [2026-10-14 08:35] - Quyết Định 86: Phân Tách Hai Ngăn Xếp Mobile App (React Native Scoped Cho Môn Học vs .NET MAUI Enterprise Cho KLTN) & Tái Thiết Lập Junction WAMP Server
 - **Vấn đề:** 
   1. Người dùng tiến hành tái cấu trúc thư mục `mobile-project/` thành hai nhánh dự án riêng biệt:
      - `mobile-project/react-native-ver/`: Dành cho môn Lập trình Thiết bị Di động (phạm vi tinh gọn Scoped MVP, bạn Đại phụ trách UI Lead, WAMP PHP 21 APIs).
@@ -1730,4 +1755,3 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Chuẩn hóa toàn bộ đường dẫn thư mục trong [`mobile-project/react-native-ver/BE/README.md`](../mobile-project/react-native-ver/BE/README.md), [`mobile-project/react-native-ver/FE/README.md`](../mobile-project/react-native-ver/FE/README.md), và [`mobile-project/react-native-ver/ROADMAP.md`](../mobile-project/react-native-ver/ROADMAP.md).
      - Rà soát toàn bộ mã nguồn FE (`src/api/config.js`, `client.js`, `endpoints.js`), BE (`config/database.php`, `config/helpers.php`, `setup_wamp_junction.ps1`, `test_api.ps1`) và realtime-server (`server.js`, `test_realtime.ps1`): Xác nhận tất cả module sử dụng đường dẫn tương đối hoặc Base URL mạng động (`$PSScriptRoot`, `__dirname`, `__DIR__`, `http://localhost/...`), không bị đứt gãy sau khi chuyển sang thư mục `react-native-ver/`.
 - **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
-

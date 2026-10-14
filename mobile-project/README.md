@@ -76,4 +76,4 @@ Xem tài liệu đặc tả kiến trúc tại: [`dotnet-maui-ver/README.md`](do
 ## 4. 📜 Liên Kết Ngữ Cảnh Dự Án
 
 * 📄 **Chiến lược tiến hóa công nghệ hai giai đoạn:** [`PLAN-22`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
-* 📜 **Nhật ký quyết định kiến trúc:** [`decisions_and_changes_log.md`](../project_context/decisions_and_changes_log.md) (Quyết định 82, 84 & 85)
+* 📜 **Nhật ký quyết định kiến trúc:** [`decisions_and_changes_log.md`](../project_context/decisions_and_changes_log.md) (Quyết định 82, 84, 85 & 86)
