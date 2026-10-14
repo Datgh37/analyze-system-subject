@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -10,14 +9,13 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { authStyles as styles, COLORS, SPACING } from '../../constants/appStyles';
 import CustomButton from '../../components/CustomButton';
 
 /**
  * ==============================================================================
  * MÀN HÌNH: ĐĂNG KÝ TÀI KHOẢN (REGISTER SCREEN)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Logic Backend & JWT Auth: Trịnh Thành Đạt (Lead Architect)
+ * Quản lý Chi tiêu & Hoạch định Tài chính Cá nhân Thông minh
  * ==============================================================================
  */
 export default function RegisterScreen({ navigation }) {
@@ -79,7 +77,7 @@ export default function RegisterScreen({ navigation }) {
           <Ionicons name="person-outline" size={18} color={COLORS.textSecondary} style={{ marginRight: 8 }} />
           <TextInput
             style={styles.input}
-            placeholder="Ví dụ: Trần Trọng Đại"
+            placeholder="Ví dụ: Nguyễn Văn An"
             placeholderTextColor={COLORS.textMuted}
             value={fullName}
             onChangeText={setFullName}
@@ -146,81 +144,3 @@ export default function RegisterScreen({ navigation }) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: COLORS.background,
-    justifyContent: 'center',
-    padding: SPACING.lg
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: SPACING.lg
-  },
-  iconCircle: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: COLORS.surfaceVariant,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border
-  },
-  appTitle: {
-    fontSize: SIZES.fontXl,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    textAlign: 'center'
-  },
-  subtitle: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    marginTop: 2
-  },
-  formCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: SIZES.radiusLg,
-    padding: SPACING.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.card
-  },
-  label: {
-    fontSize: SIZES.fontSm,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
-    marginBottom: 6
-  },
-  inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: SIZES.radiusSm,
-    paddingHorizontal: SPACING.md,
-    backgroundColor: COLORS.surfaceVariant
-  },
-  input: {
-    flex: 1,
-    paddingVertical: SPACING.sm + 2,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textPrimary
-  },
-  switchAuthTouch: {
-    marginTop: SPACING.md,
-    alignItems: 'center',
-    paddingVertical: SPACING.xs
-  },
-  switchAuthText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  highlightText: {
-    color: COLORS.primary,
-    fontWeight: 'bold'
-  }
-});

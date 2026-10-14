@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SIZES } from '../constants/theme';
+import { COLORS, SIZES, budgetBarStyles as styles } from '../constants/appStyles';
 
 /**
  * LINH KIỆN THANH NGÂN SÁCH THÁNG ĐỔI MÀU (BUDGET BAR)
  * Sinh viên thực hiện: Trần Trọng Đại (UI Specialist)
  * Tiêu chí đồ án: Thanh tiến độ đổi màu Xanh -> Vàng -> Đỏ theo % chi tiêu thực tế
+ * Styling tập trung quản lý tại FE/src/constants/appStyles.js
  */
 export default function BudgetBar({
   spent = 0,
@@ -109,85 +110,3 @@ export default function BudgetBar({
   );
 }
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    width: '100%',
-    backgroundColor: COLORS.card,
-    borderRadius: SIZES.radiusMd,
-    padding: SIZES.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2
-  },
-  plainContainer: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    padding: 0
-  },
-  headerRow: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SIZES.sm
-  },
-  titleGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    marginRight: 8
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: COLORS.text,
-    flex: 1
-  },
-  badgePill: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0
-  },
-  percentBadge: {
-    fontSize: 12,
-    fontWeight: '700'
-  },
-  track: {
-    width: '100%',
-    height: 10,
-    backgroundColor: '#EEEEEE',
-    borderRadius: SIZES.radiusFull,
-    overflow: 'hidden',
-    marginBottom: SIZES.xs
-  },
-  fill: {
-    height: '100%',
-    borderRadius: SIZES.radiusFull
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: SIZES.xs
-  },
-  spentText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  limitText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  statusMsg: {
-    fontSize: SIZES.fontSm - 1,
-    fontWeight: '500',
-    marginTop: 6
-  }
-});

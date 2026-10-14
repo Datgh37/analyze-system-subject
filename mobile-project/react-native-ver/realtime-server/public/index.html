@@ -549,22 +549,30 @@
         <!-- Thẻ Tổng Số Dư Tài Sản -->
         <div class="balance-card">
           <div class="balance-label">Tổng Tài Sản Khả Dụng</div>
-          <div id="totalBalanceVal" class="balance-amount">2.500.000 ₫</div>
+          <div id="totalBalanceVal" class="balance-amount">68.150.000 ₫</div>
           <div class="balance-sub">
             <span>⚡ Đồng bộ tức thì (0ms)</span>
           </div>
         </div>
 
         <!-- Danh sách ví thành phần -->
-        <div class="section-title">Ví Của Bạn</div>
+        <div class="section-title">Ví Tài Chính (4 Ví)</div>
         <div class="wallets-preview">
           <div class="wallet-chip">
             <div class="wallet-chip-name">Tiền Mặt</div>
-            <div id="cashWalletVal" class="wallet-chip-val">2.500.000 ₫</div>
+            <div id="cashWalletVal" class="wallet-chip-val">3.850.000 ₫</div>
           </div>
           <div class="wallet-chip">
-            <div class="wallet-chip-name">Tài Khoản Bank</div>
-            <div class="wallet-chip-val">0 ₫</div>
+            <div class="wallet-chip-name">Vietcombank</div>
+            <div class="wallet-chip-val">36.450.000 ₫</div>
+          </div>
+          <div class="wallet-chip">
+            <div class="wallet-chip-name">Ví MoMo</div>
+            <div class="wallet-chip-val">2.850.000 ₫</div>
+          </div>
+          <div class="wallet-chip">
+            <div class="wallet-chip-name">Sổ Tiết Kiệm</div>
+            <div class="wallet-chip-val">25.000.000 ₫</div>
           </div>
         </div>
 
@@ -573,13 +581,53 @@
         <div id="transactionFeed" class="transaction-feed">
           <div class="tx-item">
             <div class="tx-left">
-              <div class="tx-icon">💼</div>
+              <div class="tx-icon">🍜</div>
               <div class="tx-info">
-                <h4>Khởi tạo ví mẫu</h4>
-                <span>Hệ thống WAMP</span>
+                <h4>Ăn trưa cơm văn phòng</h4>
+                <span>Ví Tiền Mặt</span>
               </div>
             </div>
-            <div class="tx-amount pos">+2.500.000 ₫</div>
+            <div class="tx-amount neg">-65.000 ₫</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-left">
+              <div class="tx-icon">⚡</div>
+              <div class="tx-info">
+                <h4>Hóa đơn điện EVN & Nước</h4>
+                <span>Ví MoMo</span>
+              </div>
+            </div>
+            <div class="tx-amount neg">-480.000 ₫</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-left">
+              <div class="tx-icon">🛒</div>
+              <div class="tx-info">
+                <h4>Siêu thị WinMart</h4>
+                <span>Tài Khoản Vietcombank</span>
+              </div>
+            </div>
+            <div class="tx-amount neg">-320.000 ₫</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-left">
+              <div class="tx-icon">🎁</div>
+              <div class="tx-info">
+                <h4>Thưởng năng suất dự án</h4>
+                <span>Tài Khoản Vietcombank</span>
+              </div>
+            </div>
+            <div class="tx-amount pos">+2.000.000 ₫</div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-left">
+              <div class="tx-icon">💼</div>
+              <div class="tx-info">
+                <h4>Nhận lương tháng 10</h4>
+                <span>Tài Khoản Vietcombank</span>
+              </div>
+            </div>
+            <div class="tx-amount pos">+18.500.000 ₫</div>
           </div>
         </div>
       </div>
@@ -649,12 +697,12 @@
   </main>
 
   <footer>
-    Đồ án Hệ thống Quản lý Chi tiêu Cá nhân Thông minh • Hội đồng Đa tác tử & PTTKHTTT • Trịnh Thành Đạt & Trần Trọng Đại
+    Đồ án Hệ thống Quản lý Chi tiêu Cá nhân Thông minh • Người dùng: Nguyễn Văn An (ID #1) • Kết nối Socket.IO
   </footer>
 
   <script>
-    // State cục bộ
-    let currentBalance = 2500000;
+    // State cục bộ đồng bộ với CSDL MySQL & Mobile App
+    let currentBalance = 68150000;
     const TARGET_USER_ID = 1;
 
     // Định dạng tiền tệ

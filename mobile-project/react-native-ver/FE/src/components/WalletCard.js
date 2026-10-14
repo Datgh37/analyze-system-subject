@@ -1,110 +1,109 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SIZES } from '../constants/theme';
+import { walletCardStyles as styles } from '../constants/appStyles';
 
 /**
  * LINH KIỆN THẺ VÍ TÀI CHÍNH (WALLET CARD)
- * Sinh viên thực hiện: Trần Trọng Đại (UI Specialist)
- * Phục vụ: Hiển thị thẻ ví tiền mặt / ngân hàng trên HomeScreen và AddTransactionScreen
+ * Thiết kế chuẩn Modern Fintech: Bố cục rộng rãi, không bị cụt chữ, nhận diện loại ví thông minh.
+ * Styling tập trung quản lý tại FE/src/constants/appStyles.js
  */
 export default function WalletCard({ wallet, isSelected, onPress }) {
-  const isBank = wallet.wallet_type === 'BANK' || (wallet.name && wallet.name.toLowerCase().includes('ngân hàng'));
+  const nameLower = (wallet.name || '').toLowerCase();
+  const isMoMo = nameLower.includes('momo');
+  const isSavings = nameLower.includes('tiết kiệm') || nameLower.includes('dự phòng');
+  const isBank = wallet.wallet_type === 'BANK' || nameLower.includes('ngân hàng') || nameLower.includes('vietcombank') || nameLower.includes('mb');
+  
   const balance = typeof wallet.balance === 'number' ? wallet.balance : parseFloat(wallet.balance || 0);
+
+  const getBadgeLabel = () => {
+    if (isMoMo) return 'Ví MoMo';
+    if (isSavings) return 'Tiết Kiệm';
+    if (isBank) return 'Ngân Hàng';
+    return 'Tiền Mặt';
+  };
+
+  const getIconName = () => {
+    if (isMoMo) return 'phone-portrait-outline';
+    if (isSavings) return 'shield-checkmark-outline';
+    if (isBank) return 'card-outline';
+    return 'cash-outline';
+  };
+
+  const getAccentColor = () => {
+    if (isMoMo) return '#A21CAF'; // Tím hồng MoMo
+    if (isSavings) return '#0D9488'; // Xanh ngọc tiết kiệm
+    if (isBank) return '#2563EB'; // Xanh dương ngân hàng
+    return '#16A34A'; // Xanh lá tiền mặt
+  };
+
+  const accentColor = getAccentColor();
 
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={0.85}
       onPress={onPress}
       style={[
         styles.card,
-        isSelected && styles.cardSelected,
-        isBank ? styles.cardBank : styles.cardCash
+        { borderLeftColor: accentColor },
+        isSelected && styles.cardSelected
       ]}
     >
       <View style={styles.headerRow}>
-        <View style={[styles.iconCircle, isBank ? styles.iconCircleBank : styles.iconCircleCash]}>
+        <View
+          style={[
+            styles.iconCircle,
+            isSelected ? styles.iconCircleSelected : { backgroundColor: accentColor + '18' }
+          ]}
+        >
           <Ionicons
-            name={isBank ? 'card-outline' : 'cash-outline'}
-            size={22}
-            color={isBank ? '#1565C0' : COLORS.primary}
+            name={getIconName()}
+            size={18}
+            color={isSelected ? '#FFFFFF' : accentColor}
           />
         </View>
-        <Text style={styles.badgeText}>{isBank ? 'Tài Khoản' : 'Tiền Mặt'}</Text>
+
+        <View style={styles.badgeGroup}>
+          <Text
+            style={[
+              styles.badgeText,
+              { color: isSelected ? '#FFFFFF' : accentColor }
+            ]}
+          >
+            {getBadgeLabel()}
+          </Text>
+          {isSelected && (
+            <Ionicons
+              name="checkmark-circle"
+              size={15}
+              color="#FFFFFF"
+              style={{ marginLeft: 4 }}
+            />
+          )}
+        </View>
       </View>
 
-      <Text style={styles.walletName} numberOfLines={1}>
+      <Text
+        style={[
+          styles.walletName,
+          isSelected && styles.walletNameSelected
+        ]}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
         {wallet.name || 'Ví của tôi'}
       </Text>
 
-      <Text style={styles.balanceText}>
+      <Text
+        style={[
+          styles.balanceText,
+          isSelected && styles.balanceTextSelected
+        ]}
+        numberOfLines={1}
+      >
         {balance.toLocaleString('vi-VN')} đ
       </Text>
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    width: 170,
-    borderRadius: SIZES.radiusMd,
-    padding: SIZES.md,
-    marginRight: SIZES.sm,
-    backgroundColor: COLORS.card,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2
-  },
-  cardCash: {
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary
-  },
-  cardBank: {
-    borderLeftWidth: 4,
-    borderLeftColor: '#1976D2'
-  },
-  cardSelected: {
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.primaryLight
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SIZES.sm
-  },
-  iconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  iconCircleCash: {
-    backgroundColor: '#E8F5E9'
-  },
-  iconCircleBank: {
-    backgroundColor: '#E3F2FD'
-  },
-  badgeText: {
-    fontSize: SIZES.fontSm - 2,
-    fontWeight: 'bold',
-    color: COLORS.textSecondary,
-    textTransform: 'uppercase'
-  },
-  walletName: {
-    fontSize: SIZES.fontMd,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginBottom: 4
-  },
-  balanceText: {
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    color: COLORS.text
-  }
-});

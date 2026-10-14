@@ -17,10 +17,15 @@ export const apiClient = axios.create({
   headers: API_CONFIG.HEADERS
 });
 
-// 1. Request Interceptor: Kẹp Bearer Token vào mọi request nếu đã đăng nhập
+// 1. Request Interceptor: Luôn cập nhật dynamic baseURL và kẹp Bearer Token
 apiClient.interceptors.request.use(
   async (config) => {
     try {
+      // Đảm bảo baseURL luôn bám sát IP máy chủ Metro động
+      if (typeof API_CONFIG.getBaseUrl === 'function') {
+        config.baseURL = API_CONFIG.getBaseUrl();
+      }
+
       const token = await AsyncStorage.getItem('@auth_token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;

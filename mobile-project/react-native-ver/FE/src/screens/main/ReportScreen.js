@@ -6,85 +6,51 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { PieChart, BarChart } from 'react-native-chart-kit';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../../api/endpoints';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { reportStyles as styles, COLORS, SPACING } from '../../constants/appStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
 /**
  * ==============================================================================
  * MÀN HÌNH: BÁO CÁO TÀI CHÍNH & BIỂU ĐỒ (REPORT SCREEN)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Logic Backend & API: Trịnh Thành Đạt (Lead Architect)
+ * Quản lý Chi tiêu & Hoạch định Tài chính Cá nhân Thông minh
  * ==============================================================================
  */
-export default function ReportScreen() {
+export default function ReportScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  // Dữ liệu tổng hợp dòng tiền
+  // 100% Dữ liệu thực tế từ CSDL MySQL (Khởi tạo rỗng, không hardcode mock data)
   const [summaryData, setSummaryData] = useState({
-    total_income: 15000000,
-    total_expense: 8500000,
-    net_balance: 6500000,
-    savings_rate: 43
+    total_income: 0,
+    total_expense: 0,
+    net_balance: 0,
+    savings_rate: 0
   });
 
-  // Dữ liệu biểu đồ tròn tỷ trọng chi tiêu (PieChart)
-  const [pieChartData, setPieChartData] = useState([
-    {
-      name: 'Ăn uống',
-      population: 3500000,
-      color: '#FF6B6B',
-      legendFontColor: '#1E293B',
-      legendFontSize: 12
-    },
-    {
-      name: 'Nhà ở & Tiện ích',
-      population: 2500000,
-      color: '#4D96FF',
-      legendFontColor: '#1E293B',
-      legendFontSize: 12
-    },
-    {
-      name: 'Mua sắm',
-      population: 1200000,
-      color: '#4ECDC4',
-      legendFontColor: '#1E293B',
-      legendFontSize: 12
-    },
-    {
-      name: 'Đi lại',
-      population: 800000,
-      color: '#FFE66D',
-      legendFontColor: '#1E293B',
-      legendFontSize: 12
-    },
-    {
-      name: 'Giải trí & Khác',
-      population: 500000,
-      color: '#9B5DE5',
-      legendFontColor: '#1E293B',
-      legendFontSize: 12
-    }
-  ]);
+  const [pieChartData, setPieChartData] = useState([]);
 
-  // Dữ liệu biểu đồ cột đối chiếu 6 tháng (BarChart)
-  const [barChartData, setBarChartData] = useState({
-    labels: ['T5', 'T6', 'T7', 'T8', 'T9', 'T10'],
-    datasets: [
-      {
-        data: [7.2, 8.5, 9.1, 7.8, 8.5, 8.5]
-      }
-    ]
+  // Chế độ xem biểu đồ 6 tháng: 'EXPENSE' (Chi tiêu) hoặc 'INCOME' (Thu nhập)
+  const [chartMode, setChartMode] = useState('EXPENSE');
+
+  // Dữ liệu 6 tháng đối chiếu từ CSDL
+  const [sixMonthData, setSixMonthData] = useState({
+    labels: [],
+    expense_series: [],
+    income_series: [],
+    monthly_details: []
   });
 
   const fetchReports = async () => {
     try {
+      setErrorMsg(null);
       const [sumRes, pieRes, barRes] = await Promise.allSettled([
         api.getMonthlySummary(),
         api.getCategoryChart(),
@@ -106,24 +72,26 @@ export default function ReportScreen() {
             legendFontSize: 12
           }));
           setPieChartData(formatted);
+        } else {
+          setPieChartData([]);
         }
       }
 
       if (barRes.status === 'fulfilled' && barRes.value?.data) {
         const rawBar = barRes.value.data.chart_data || barRes.value.data;
-        if (rawBar?.labels && rawBar?.expense_series) {
-          setBarChartData({
+        const details = barRes.value.data.monthly_details || [];
+        if (rawBar?.labels) {
+          setSixMonthData({
             labels: rawBar.labels,
-            datasets: [
-              {
-                data: rawBar.expense_series.map((val) => parseFloat((val / 1000000).toFixed(1)))
-              }
-            ]
+            expense_series: (rawBar.expense_series || []).map((val) => parseFloat((val / 1000000).toFixed(1))),
+            income_series: (rawBar.income_series || []).map((val) => parseFloat((val / 1000000).toFixed(1))),
+            monthly_details: details
           });
         }
       }
     } catch (error) {
-      console.warn('[ReportScreen] Lỗi nạp báo cáo, dùng mock fallback:', error.message);
+      console.warn('[ReportScreen] Lỗi nạp báo cáo từ Backend:', error.message);
+      setErrorMsg(error.message || 'Không thể tải biểu đồ báo cáo từ máy chủ.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -139,14 +107,18 @@ export default function ReportScreen() {
     fetchReports();
   }, []);
 
+  const chartThemeColor = chartMode === 'EXPENSE' ? COLORS.primary : COLORS.income;
+
   const chartConfig = {
     backgroundGradientFrom: COLORS.surface,
     backgroundGradientTo: COLORS.surface,
-    color: (opacity = 1) => `rgba(43, 76, 126, ${opacity})`,
+    color: (opacity = 1) => chartMode === 'EXPENSE' 
+      ? `rgba(43, 76, 126, ${opacity})` 
+      : `rgba(16, 185, 129, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(100, 116, 139, ${opacity})`,
-    barPercentage: 0.6,
+    barPercentage: 0.55,
     decimalPlaces: 1,
-    fillShadowGradient: COLORS.primary,
+    fillShadowGradient: chartThemeColor,
     fillShadowGradientOpacity: 1
   };
 
@@ -163,6 +135,20 @@ export default function ReportScreen() {
   const totalIncome = summaryData.total_income || 0;
   const netBalance = summaryData.net_balance ?? (totalIncome - totalExpense);
   const savingsRate = summaryData.savings_rate ?? (totalIncome > 0 ? Math.round((netBalance / totalIncome) * 100) : 0);
+
+  const hasPieData = pieChartData && pieChartData.length > 0 && pieChartData.some((item) => item.population > 0);
+
+  // Dữ liệu hiển thị biểu đồ cột theo chế độ đã chọn (Chi tiêu / Thu nhập)
+  const currentSeries = chartMode === 'EXPENSE' ? sixMonthData.expense_series : sixMonthData.income_series;
+  const hasBarData = currentSeries && currentSeries.length > 0 && currentSeries.some((val) => val > 0);
+  const barChartDisplayData = {
+    labels: sixMonthData.labels,
+    datasets: [
+      {
+        data: hasBarData ? currentSeries : [0, 0, 0, 0, 0, 0]
+      }
+    ]
+  };
 
   return (
     <ScrollView
@@ -214,245 +200,148 @@ export default function ReportScreen() {
           <Text style={styles.chartTitle}>Cơ Cấu Chi Tiêu Theo Danh Mục</Text>
         </View>
 
-        <PieChart
-          data={pieChartData}
-          width={screenWidth - SPACING.md * 2 - 32}
-          height={200}
-          chartConfig={chartConfig}
-          accessor="population"
-          backgroundColor="transparent"
-          paddingLeft="10"
-          absolute
-        />
+        {hasPieData ? (
+          <PieChart
+            data={pieChartData}
+            width={screenWidth - SPACING.md * 2 - 32}
+            height={200}
+            chartConfig={chartConfig}
+            accessor="population"
+            backgroundColor="transparent"
+            paddingLeft="10"
+            absolute
+          />
+        ) : (
+          <View style={styles.chartEmptyWrap}>
+            <Ionicons name="pie-chart-outline" size={44} color={COLORS.textMuted} />
+            <Text style={styles.chartEmptyText}>Chưa có phát sinh chi tiêu trong kỳ này</Text>
+            <TouchableOpacity
+              style={styles.emptyActionBtn}
+              onPress={() => navigation?.navigate('AddTransaction')}
+            >
+              <Text style={styles.emptyActionBtnText}>+ Thêm khoản chi</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
-      {/* 3. Biểu Đồ Cột Đối Chiếu 6 Tháng (BarChart) */}
+      {/* 3. Biểu Đồ Cột Đối Chiếu 6 Tháng (BarChart) - Có Chuyển Đổi Thu / Chi */}
       <View style={styles.chartCard}>
         <View style={styles.chartHeaderRow}>
-          <Ionicons name="bar-chart" size={20} color={COLORS.primary} style={{ marginRight: 6 }} />
-          <Text style={styles.chartTitle}>Xu Hướng Chi Tiêu 6 Tháng Gần Nhất</Text>
+          <Ionicons name="bar-chart" size={20} color={chartThemeColor} style={{ marginRight: 6 }} />
+          <Text style={styles.chartTitle}>
+            {chartMode === 'EXPENSE' ? 'Xu Hướng Chi Tiêu 6 Tháng' : 'Xu Hướng Thu Nhập 6 Tháng'}
+          </Text>
         </View>
-        <Text style={styles.unitHint}>(Đơn vị: Triệu VNĐ)</Text>
+        <Text style={styles.unitHint}>(Đơn vị: Triệu VNĐ • Bấm chuyển đổi bên dưới)</Text>
 
-        <BarChart
-          data={barChartData}
-          width={screenWidth - SPACING.md * 2 - 32}
-          height={220}
-          yAxisLabel=""
-          yAxisSuffix="Tr"
-          chartConfig={chartConfig}
-          verticalLabelRotation={0}
-          fromZero
-          style={styles.barChartStyle}
-        />
+        {/* Nút chuyển đổi tương tác Chi tiêu / Thu nhập */}
+        <View style={styles.chartToggleRow}>
+          <TouchableOpacity
+            style={[styles.chartToggleBtn, chartMode === 'EXPENSE' && styles.chartToggleBtnActive]}
+            onPress={() => setChartMode('EXPENSE')}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name="arrow-up-circle-outline"
+              size={15}
+              color={chartMode === 'EXPENSE' ? '#FFFFFF' : COLORS.expense}
+              style={{ marginRight: 4 }}
+            />
+            <Text style={[styles.chartToggleText, chartMode === 'EXPENSE' && styles.chartToggleTextActive]}>
+              Chi tiêu (Expense)
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.chartToggleBtn, chartMode === 'INCOME' && styles.chartToggleBtnActiveIncome]}
+            onPress={() => setChartMode('INCOME')}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name="arrow-down-circle-outline"
+              size={15}
+              color={chartMode === 'INCOME' ? '#FFFFFF' : COLORS.income}
+              style={{ marginRight: 4 }}
+            />
+            <Text style={[styles.chartToggleText, chartMode === 'INCOME' && styles.chartToggleTextActive]}>
+              Thu nhập (Income)
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {hasBarData ? (
+          <BarChart
+            data={barChartDisplayData}
+            width={screenWidth - SPACING.md * 2 - 32}
+            height={220}
+            yAxisLabel=""
+            yAxisSuffix="Tr"
+            chartConfig={chartConfig}
+            verticalLabelRotation={0}
+            fromZero
+            style={styles.barChartStyle}
+          />
+        ) : (
+          <View style={styles.chartEmptyWrap}>
+            <Ionicons name="bar-chart-outline" size={44} color={COLORS.textMuted} />
+            <Text style={styles.chartEmptyText}>Chưa đủ lịch sử 6 tháng để hiển thị xu hướng</Text>
+          </View>
+        )}
+
+        {/* Bảng chi tiết đối chiếu dòng tiền 6 tháng gần nhất */}
+        {sixMonthData.monthly_details && sixMonthData.monthly_details.length > 0 && (
+          <View style={styles.historyTable}>
+            <View style={[styles.historyTableRow, { borderBottomWidth: 1.5, borderBottomColor: COLORS.border }]}>
+              <Text style={[styles.historyTableColMonth, { fontWeight: 'bold' }]}>Tháng</Text>
+              <Text style={[styles.historyTableColIncome, { fontWeight: 'bold' }]}>Tổng Thu</Text>
+              <Text style={[styles.historyTableColExpense, { fontWeight: 'bold' }]}>Tổng Chi</Text>
+              <Text style={[styles.historyTableColNet, { fontWeight: 'bold' }]}>Ròng (+/-)</Text>
+            </View>
+
+            {sixMonthData.monthly_details.map((mItem, idx) => {
+              const incMil = (mItem.total_income / 1000000).toFixed(1);
+              const expMil = (mItem.total_expense / 1000000).toFixed(1);
+              const netMil = (mItem.net_savings / 1000000).toFixed(1);
+              const isPositive = mItem.net_savings >= 0;
+
+              return (
+                <View key={idx} style={styles.historyTableRow}>
+                  <Text style={styles.historyTableColMonth}>{mItem.full_label || `Thg ${mItem.month}`}</Text>
+                  <Text style={styles.historyTableColIncome}>+{incMil}Tr</Text>
+                  <Text style={styles.historyTableColExpense}>-{expMil}Tr</Text>
+                  <Text style={[styles.historyTableColNet, { color: isPositive ? COLORS.income : COLORS.danger }]}>
+                    {isPositive ? '+' : ''}{netMil}Tr
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        )}
       </View>
 
       {/* 4. Danh Sách Phân Loại Tỷ Trọng Chi Tiết */}
-      <View style={styles.detailCard}>
-        <Text style={styles.detailCardTitle}>Bảng Chi Tiết Tỷ Trọng Danh Mục</Text>
+      {hasPieData && (
+        <View style={styles.detailCard}>
+          <Text style={styles.detailCardTitle}>Bảng Chi Tiết Tỷ Trọng Danh Mục</Text>
 
-        {pieChartData.map((item, idx) => {
-          const pct = totalExpense > 0 ? Math.round((item.population / totalExpense) * 100) : 0;
-          return (
-            <View key={idx} style={styles.detailRow}>
-              <View style={styles.detailLeft}>
-                <View style={[styles.detailDot, { backgroundColor: item.color }]} />
-                <Text style={styles.detailName}>{item.name}</Text>
+          {pieChartData.map((item, idx) => {
+            const pct = totalExpense > 0 ? Math.round((item.population / totalExpense) * 100) : 0;
+            return (
+              <View key={idx} style={styles.detailRow}>
+                <View style={styles.detailLeft}>
+                  <View style={[styles.detailDot, { backgroundColor: item.color }]} />
+                  <Text style={styles.detailName}>{item.name}</Text>
+                </View>
+                <View style={styles.detailRight}>
+                  <Text style={styles.detailAmount}>{item.population.toLocaleString('vi-VN')} đ</Text>
+                  <Text style={styles.detailPct}>({pct}%)</Text>
+                </View>
               </View>
-              <View style={styles.detailRight}>
-                <Text style={styles.detailAmount}>{item.population.toLocaleString('vi-VN')} đ</Text>
-                <Text style={styles.detailPct}>({pct}%)</Text>
-              </View>
-            </View>
-          );
-        })}
-      </View>
+            );
+          })}
+        </View>
+      )}
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background
-  },
-  contentContainer: {
-    padding: SPACING.md,
-    paddingBottom: SPACING.xxl
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.background
-  },
-  loadingText: {
-    marginTop: SPACING.sm,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  summaryCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusLg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.md,
-    ...SHADOWS.card
-  },
-  cardHeaderTitle: {
-    fontSize: SIZES.fontXs,
-    fontWeight: 'bold',
-    color: COLORS.textSecondary,
-    letterSpacing: 0.5,
-    marginBottom: SPACING.sm
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    paddingBottom: SPACING.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.borderLight
-  },
-  summaryCol: {
-    flex: 1
-  },
-  labelRow: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  incomeLabel: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.income,
-    fontWeight: '600'
-  },
-  incomeAmount: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.income,
-    marginTop: 2
-  },
-  expenseLabel: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.expense,
-    fontWeight: '600'
-  },
-  expenseAmount: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.expense,
-    marginTop: 2
-  },
-  summaryDivider: {
-    width: 1,
-    backgroundColor: COLORS.borderLight,
-    marginHorizontal: SPACING.sm
-  },
-  netBalanceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: SPACING.sm
-  },
-  netLabel: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary
-  },
-  netAmount: {
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    marginTop: 2
-  },
-  savingsBadge: {
-    backgroundColor: '#E0F2FE',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs + 2,
-    borderRadius: SIZES.radiusFull
-  },
-  savingsBadgeText: {
-    fontSize: SIZES.fontSm,
-    fontWeight: 'bold',
-    color: '#0284C7'
-  },
-  chartCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusLg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.md,
-    alignItems: 'center',
-    ...SHADOWS.small
-  },
-  chartHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    marginBottom: 4
-  },
-  chartTitle: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary
-  },
-  unitHint: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary,
-    alignSelf: 'flex-start',
-    marginBottom: SPACING.sm
-  },
-  barChartStyle: {
-    marginVertical: 4,
-    borderRadius: SIZES.radiusMd
-  },
-  detailCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusLg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.md,
-    ...SHADOWS.small
-  },
-  detailCardTitle: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary,
-    marginBottom: SPACING.sm
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: SPACING.xs + 2,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.borderLight
-  },
-  detailLeft: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  detailDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 8
-  },
-  detailName: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textPrimary
-  },
-  detailRight: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  detailAmount: {
-    fontSize: SIZES.fontSm,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
-    marginRight: 4
-  },
-  detailPct: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary
-  }
-});

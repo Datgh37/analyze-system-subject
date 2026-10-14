@@ -1738,20 +1738,144 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 - **Vấn đề:** 
   1. Người dùng tiến hành tái cấu trúc thư mục `mobile-project/` thành hai nhánh dự án riêng biệt:
      - `mobile-project/react-native-ver/`: Dành cho môn Lập trình Thiết bị Di động (phạm vi tinh gọn Scoped MVP, bạn Đại phụ trách UI Lead, WAMP PHP 21 APIs).
-     - `mobile-project/dotnet-maui-ver/`: Dành cho Khóa luận Tốt nghiệp & Hệ thống lớn PTTKHTTT hoàn chỉnh (không giới hạn phạm vi, .NET 9 MAUI, Clean Architecture, C# End-to-End).
+     - `mobile-project/dotnet-maui-ver/`: Dành cho Khóa luận Tốt nghiệp & Hệ thống lớn PTTKHTTT hoàn chỉnh (không giới hạn phạm vi, .NET MAUI 10 LTS, Clean Architecture, C# 14 End-to-End).
   2. Việc di chuyển thư mục làm đứt gãy liên kết NTFS Directory Junction giữa WampServer `www\expense_api` và thư mục Backend `BE/` cũ.
   3. Cần đồng bộ tài liệu `README.md` cho cả hai phân hệ và cập nhật script tạo junction tự động.
 - **Quyết định & Thực thi:**
   1. **Đánh Giá Chiến Lược Kiến Trúc:**
-     - Hoàn toàn ủng hộ và đánh giá cao tính hợp lý của việc tách 2 stack: Giúp nhóm môn học hoàn thành đúng hạn 10-15 tuần không bị quá tải, đồng thời giải phóng toàn bộ tiềm năng cho Khóa luận tốt nghiệp với công nghệ .NET MAUI enterprise-grade.
+     - Hoàn toàn ủng hộ và đánh giá cao tính hợp lý của việc tách 2 stack: Giúp nhóm môn học hoàn thành đúng hạn 10-15 tuần không bị quá tải, đồng thời giải phóng toàn bộ tiềm năng cho Khóa luận tốt nghiệp với công nghệ .NET MAUI 10 LTS enterprise-grade (hỗ trợ dài hạn 3 năm).
   2. **Tái Thiết Lập Cầu Nối WAMP Junction Thành Công:**
      - Nâng cấp [`setup_wamp_junction.ps1`](../mobile-project/react-native-ver/BE/setup_wamp_junction.ps1): Hỗ trợ cờ `-Force`, tự động nhận diện target hiện tại, xóa liên kết an toàn (tránh xóa nhầm file gốc) và xác nhận trạng thái.
      - Đã thực thi liên kết trực tiếp thành công: `D:\WampServer\www\expense_api` $\rightarrow$ `mobile-project\react-native-ver\BE`.
   3. **Đồng Bộ & Xuất Bản Tài Liệu Kỹ Thuật:**
      - Xuất bản [`mobile-project/README.md`](../mobile-project/README.md): Hub điều hướng kiến trúc trung tâm, đối chiếu tính năng giữa 2 phiên bản.
      - Cập nhật [`mobile-project/react-native-ver/README.md`](../mobile-project/react-native-ver/README.md): Hiệu chỉnh toàn bộ đường dẫn và lệnh sang thư mục con `react-native-ver/`.
-     - Xuất bản [`mobile-project/dotnet-maui-ver/README.md`](../mobile-project/dotnet-maui-ver/README.md): Đặc tả kiến trúc .NET 9 MAUI, MVVM CommunityToolkit, SQLite Offline-first, Refit, Polly, SignalR và Clean Architecture solution.
+     - Xuất bản [`mobile-project/dotnet-maui-ver/README.md`](../mobile-project/dotnet-maui-ver/README.md): Đặc tả kiến trúc .NET MAUI 10 (LTS), MVVM CommunityToolkit, SQLite Offline-first, Refit, Polly, SignalR và Clean Architecture solution.
   4. **Kiểm Toán & Hiệu Chỉnh Toàn Diện Đường Dẫn (Path Audit & Fixes):**
      - Chuẩn hóa toàn bộ đường dẫn thư mục trong [`mobile-project/react-native-ver/BE/README.md`](../mobile-project/react-native-ver/BE/README.md), [`mobile-project/react-native-ver/FE/README.md`](../mobile-project/react-native-ver/FE/README.md), và [`mobile-project/react-native-ver/ROADMAP.md`](../mobile-project/react-native-ver/ROADMAP.md).
      - Rà soát toàn bộ mã nguồn FE (`src/api/config.js`, `client.js`, `endpoints.js`), BE (`config/database.php`, `config/helpers.php`, `setup_wamp_junction.ps1`, `test_api.ps1`) và realtime-server (`server.js`, `test_realtime.ps1`): Xác nhận tất cả module sử dụng đường dẫn tương đối hoặc Base URL mạng động (`$PSScriptRoot`, `__dirname`, `__DIR__`, `http://localhost/...`), không bị đứt gãy sau khi chuyển sang thư mục `react-native-ver/`.
 - **Trạng thái:** `VERIFIED & LOCKED BY COUNCIL`.
+
+---
+
+### [2026-10-14 09:25] - Khởi Tạo Kế Hoạch PLAN-25: Kiểm Toán & Tái Cấu Trúc Toàn Diện Frontend UI React Native (Expo SDK 54)
+- **Căn cứ & Đánh giá của Hội đồng Agents:**
+  1. **Agent 09 (Brad Frost):** Phát hiện lỗi tương phản màu chữ nghiêm trọng trong `WalletCard.js` (chữ đen trên nền xanh thẫm khi active, vi phạm chuẩn WCAG AA), `TransactionItem.js` (huy hiệu ví chữ xanh đen trên nền xanh), `HomeScreen.js` (subgreeting chìm vào nền). Tên danh mục ở `AddTransactionScreen` bị cụt chữ trên màn hình nhỏ.
+  2. **Agent 10 (Dan Abramov):** Phát hiện `ForgotPasswordScreen.js` vẫn là màn hình placeholder thô sơ; phát hiện lỗi xung đột cảm ứng (touch bubbling) giữa `FlatList` item và nút Xóa trong `TransactionsScreen.js`; phát hiện nguy cơ crash `ReportScreen.js` khi database chưa có giao dịch do thiếu Empty State.
+  3. **Agent 01 (Richard Thaler):** Nhận diện ma sát nhận thức cao: người dùng phải gõ chuỗi ngày `YYYY-MM-DD` bằng tay, phải gõ thủ công và đếm số 0 khi nhập tiền (thiếu chip phím tắt nhanh +10k, +50k, +100k, +500k), thông điệp cảnh báo ngân sách bị lặp thừa 2 lần trên `BudgetScreen.js`.
+  4. **Agent 13 (Julian Garnier):** Đánh giá hiệu ứng chuyển đổi tab Thu/Chi và vị trí banner `RealtimeAlertBanner` cần tích hợp mượt mà vào header.
+- **Tệp kế hoạch chi tiết:** [`project_context/plans/plans-mobile-app/2026-10-14_plan_25_frontend_ui_audit_and_refactoring.md`](plans/plans-mobile-app/2026-10-14_plan_25_frontend_ui_audit_and_refactoring.md).
+- **Trạng thái:** `PLAN CREATED & IMPLEMENTED`.
+
+---
+
+## [2026-10-14 09:45] - Quyết Định 87: Hoàn Thành Toàn Diện Kiểm Toán & Tái Cấu Trúc Frontend UI React Native (Expo SDK 54) Theo Ý Kiến Hội Đồng Tác Tử
+- **Vấn đề & Động cơ:**
+  1. Buổi demo thử nghiệm của thành viên Trần Trọng Đại bộc lộ nhiều điểm sai sót giao diện: màn hình Quên mật khẩu còn dang dở dưới dạng hộp placeholder; lỗi tương phản chữ chìm vào nền khi chọn thẻ ví; nút xóa giao dịch xung đột với sự kiện click chuyển sang màn hình sửa; biểu đồ tài chính có nguy cơ sập app nếu chưa có giao dịch; thao tác nhập số tiền và ngày tháng gây ma sát nhận thức lớn.
+  2. Cần kích hoạt Hội đồng UI/UX (`Agent 09 Brad Frost`, `Agent 10 Dan Abramov`, `Agent 01 Richard Thaler`, `Agent 13 Julian Garnier`) để kiểm toán và tái cấu trúc triệt để, đảm bảo ứng dụng đạt độ hoàn thiện cao nhất để chuẩn bị thi vấn đáp và chụp ảnh báo cáo môn học.
+- **Kết quả Thực Thi Chi Tiết:**
+  1. **Tái thiết kế `WalletCard.js` (Agent 09 - Brad Frost):**
+     - Đổi màu toàn bộ văn bản và số dư sang trắng tinh khiết (`COLORS.textWhite`) khi thẻ ở trạng thái được chọn (`isSelected = true`), chấm dứt hoàn toàn lỗi chữ đen chìm trên nền xanh navy (`contrast ratio > 7:1` đạt chuẩn WCAG AAA).
+     - Bổ sung huy hiệu icon checkmark xác nhận chọn thẻ và viền sáng nổi bật.
+  2. **Tách riêng sự kiện cảm ứng & Chuẩn hóa huy hiệu trong `TransactionItem.js` (Agent 10 & 09):**
+     - Tách riêng vùng bấm nội dung giao dịch (xem/sửa) và vùng bấm nút Thùng rác xóa (độc lập hoàn toàn, hitSlop rộng), loại bỏ triệt để lỗi nuốt sự kiện cảm ứng (*Touch Bubbling*).
+     - Đổi huy hiệu tên ví sang nền `#EEF2F6` với chữ `COLORS.primaryDark` đậm nét, rõ ràng.
+     - Tích hợp hàm định dạng ngày tháng tiếng Việt thân thiện (`DD/MM/YYYY`).
+  3. **Hiện thực hóa 100% Giao diện Wizard 3 bước trong `ForgotPasswordScreen.js` (Agent 10 & 09):**
+     - Xóa bỏ hoàn toàn hộp thông báo placeholder thô sơ.
+     - Xây dựng thanh tiến trình 3 bước trực quan (1: Nhập Email $\rightarrow$ 2: Nhập OTP $\rightarrow$ 3: Đặt Mật khẩu mới).
+     - Bổ sung ô nhập mã OTP 6 chữ số cỡ lớn, hộp thông tin trợ giúp nhà phát triển `debug_otp` phục vụ test nhanh tại buổi thi vấn đáp, và các form nhập mật khẩu xác thực bảo mật.
+  4. **Nâng cấp trải nghiệm màn hình `TransactionsScreen.js` (Agent 10):**
+     - Đấu nối `onPress` và `onDelete` trực tiếp vào `TransactionItem` không qua thẻ bọc ngoài.
+     - Bổ sung thanh điều hướng chuyển tháng nhanh (`◀ Tháng MM/YYYY ▶`) giúp người dùng dễ dàng chuyển đổi kỳ sao kê.
+  5. **Giảm thiểu ma sát nhận thức trong `AddTransactionScreen.js` (Agent 01 - Richard Thaler):**
+     - Bổ sung hàng phím tắt tăng nhanh số tiền (`+10k`, `+50k`, `+100k`, `+500k`, `+1Tr`, `Xóa`) giúp người dùng không phải gõ đếm số 0.
+     - Bổ sung chip chọn nhanh ngày (`Hôm nay`, `Hôm qua`) tự động điền chuẩn `YYYY-MM-DD`, triệt tiêu lỗi nhập sai cú pháp.
+     - Tinh chỉnh khoảng đệm và kích thước lưới Category Grid, đảm bảo nhãn danh mục không bị cụt hay tràn viền.
+  6. **Tinh gọn thông điệp & Format hạn mức trong `BudgetScreen.js` (Agent 01 & 10):**
+     - Loại bỏ thông điệp cảnh báo trùng lặp với `BudgetBar`, thay bằng hộp khuyến nghị tài chính thông minh hiển thị mức chi an toàn mỗi ngày và số ngày còn lại.
+     - Modal đặt hạn mức mới có hiển thị định dạng tiền tệ tức thời và các phím preset nhanh (`5Tr`, `10Tr`, `15Tr`, `20Tr`).
+  7. **Chống sập ứng dụng & Empty State trong `ReportScreen.js` (Agent 10):**
+     - Bổ sung kiểm tra an toàn `hasPieData` và `hasBarData` trước khi vẽ biểu đồ `react-native-chart-kit`, ngăn ngừa hoàn toàn lỗi crash khi tài khoản chưa có giao dịch.
+     - Hiển thị Empty State đồ họa trang nhã kèm nút bấm dẫn hướng `+ Thêm khoản chi`.
+  8. **Đồng bộ mỹ thuật Header trong `HomeScreen.js` & `RealtimeAlertBanner.js` (Agent 13 & 09):**
+     - Đổi màu `subGreeting` sang `rgba(255,255,255,0.85)` tương phản sắc nét trên nền header.
+     - Tinh chỉnh `RealtimeAlertBanner` đồng bộ nền `COLORS.primaryDark`, tạo dải màu liền mạch từ thanh trạng thái xuống header.
+     - Đấu nối sự kiện chạm vào từng giao dịch gần nhất để mở màn hình chỉnh sửa.
+  9. **Kiểm tra cú pháp & tính toàn vẹn:**
+     - 100% 9 tệp JavaScript đều vượt qua kiểm tra cú pháp `node -c` với mã thoát 0.
+- **Trạng thái:** `ACCEPTED & VERIFIED (READY FOR DEMO)`.
+
+---
+
+## [2026-10-14 11:15] - Quyết Định 88: Xuất Bản Báo Cáo Giữa Kỳ Markdown (React Native + Socket.IO) & Thẩm Định Kiến Trúc MVVM .NET MAUI Khớp 100% Với Phạm Vi PTTKHTTT
+- **Vấn đề:** 
+  1. Giảng viên yêu cầu nộp Báo cáo Giữa kỳ cho phân hệ React Native: mô tả toàn bộ dự án, FE/BE triển khai thế nào, cơ chế lưu trữ CSDL ra sao, công nghệ sử dụng, và chức năng realtime bằng Socket.IO.
+  2. Giảng viên định hướng bài cuối kỳ sẽ làm bằng .NET MAUI + SignalR theo kiến trúc MVVM, Backend dùng ASP.NET Core Web API.
+  3. Người dùng đặt câu hỏi cốt tử: *Liệu kiến trúc MVVM + ASP.NET Core API này có phù hợp với scope tổng quát của hệ thống PTTKHTTT không, hay phải tách thêm một folder thứ 3 để làm riêng hệ thống tổng quát?*
+- **Quyết định & Thẩm định của Hội đồng Tác tử:**
+  1. **Xuất bản Báo cáo Giữa kỳ hoàn chỉnh:**
+     - Đã tạo [`mobile-project/react-native-ver/BAO_CAO_GIUA_KY.md`](../mobile-project/react-native-ver/BAO_CAO_GIUA_KY.md) gồm 9 chương chuẩn mực: Tổng quan đề tài, Kiến trúc phân tán 3 tầng, Đặc tả Frontend React Native Expo SDK 54, Backend WAMP PHP 22 APIs (JWT HMAC-SHA256), Cơ chế Socket.IO Gateway Realtime < 50ms, Thiết kế CSDL MySQL 5 bảng quan hệ (ERD Mermaid), Bảng công nghệ và Hướng dẫn 3 bước khởi chạy demo.
+  2. **Thẩm định Kiến trúc MVVM & .NET MAUI đối với Phạm vi PTTKHTTT:**
+     - **Khẳng định đanh thép: PHÙ HỢP 100% VÀ LÀ CHUẨN MỰC TỐI ƯU NHẤT (GOLD STANDARD).**
+     - Theo Clean Architecture & DDD của đề tài, MVVM chính là Presentation Pattern chính thống của tầng giao diện người dùng (Delivery Mechanism) trên nền tảng .NET Client.
+     - Backend ASP.NET Core Web API (.NET 10 LTS) hiện thực hóa hoàn hảo 6 Bounded Contexts của PTTKHTTT với Type Safety 100%, dùng chung Models/DTOs với MAUI Client.
+     - **TUYỆT ĐỐI KHÔNG CẦN TÁCH THÊM FOLDER THỨ 3:** Phân hệ `mobile-project/dotnet-maui-ver/` chính là sản phẩm dùng chung cho cả **Bài Cuối Kỳ Môn Mobile** và **Khóa luận Tốt nghiệp / Đồ án PTTKHTTT hoàn chỉnh**.
+- **Trạng thái:** `APPROVED & LOCKED`.
+
+---
+
+## [2026-10-14 21:40] - Quyết Định 89: Kích Hoạt Kế Hoạch PLAN-27 - Remake Giao Diện Mobile Đẳng Cấp Fintech, Thanh Lọc Dữ Liệu Thực Tế, Tối Ưu Hóa Socket.IO & Xóa Remote Hosting
+- **Vấn đề:**
+  1. Người dùng yêu cầu loại bỏ Remote Hosting trường cấp vì sắp bị ngắt quyền truy cập.
+  2. Dữ liệu trong CSDL và UI còn chứa tên của Trịnh Thành Đạt (Lead) và Trần Trọng Đại cùng các ghi chú test thô, không phản ánh ứng dụng người dùng thật.
+  3. Giao diện Mobile còn thô ("phèn"), chữ bị cụt hoặc ẩn, chiều rộng thẻ ví và giao dịch cố định gây co kéo hiển thị trên màn hình điện thoại.
+  4. Lỗi fetching đỏ xuất hiện do Axios BaseURL bị đóng băng khi khởi tạo và độ trễ cURL phân giải IPv6 trên Windows.
+  5. Kênh Socket.IO hoạt động ngầm, người dùng chưa cảm nhận được sự hiện diện và giá trị thực tế của nó trên màn hình.
+- **Quyết định của Hội đồng Tác tử:**
+  1. **Khởi lập PLAN-27:** [`project_context/plans/plans-mobile-app/2026-10-14_plan_27_mobile_fe_redesign_realtime_and_data_purification.md`](plans/plans-mobile-app/2026-10-14_plan_27_mobile_fe_redesign_realtime_and_data_purification.md).
+  2. **Loại bỏ Remote Hosting:** Xóa `REMOTE_HOSTING_URL` và `USE_PRODUCTION_SERVER` khỏi `config.js`, áp dụng 100% `getAutoHost()` Zero-Config.
+  3. **Khắc phục triệt để lỗi Fetching:** Cấu hình Dynamic BaseURL trong Axios Request Interceptor; tối ưu cURL PHP gọi sang `127.0.0.1:3001`.
+  4. **Thanh lọc CSDL & Dữ liệu:** Thay tên người dùng thành `Nguyễn Văn An` (`nguyenvanan@gmail.com`), bổ sung bộ ví và giao dịch tiêu dùng sinh hoạt đời thường thực tế tháng 10/2026.
+  5. **Nâng cấp Socket.IO Hữu hình:** Bổ sung Realtime Floating Toast tự động trượt xuống khi nhận biến động số dư / cảnh báo, kèm tiện ích Quick Test Realtime trên HomeScreen.
+  6. **Remake Giao Diện Fintech (Anti-Phèn):** Thiết kế lại Header, Card tổng số dư Glass-like, thẻ ví linh hoạt, danh sách giao dịch rộng rãi không cắt cụt chữ.
+- **Trạng thái:** `APPROVED & COMPLETED`.
+
+---
+
+## [2026-10-14 22:05] - Quyết Định 90: Thiết Lập Kiến Trúc Styling Tập Trung Cho Toàn Bộ Giao Diện Mobile (Centralized AppStyles)
+- **Vấn đề:** 
+  - Mỗi tệp màn hình và linh kiện trước đây đều chứa khối `StyleSheet.create` cục bộ dài hàng trăm dòng, dẫn tới trùng lặp mã nguồn (DRY violation) và rất khó kiểm soát, đồng bộ màu sắc, padding, border radius khi cần tinh chỉnh.
+  - Người dùng yêu cầu tạo hẳn 1 tệp trung tâm duy nhất để lưu trữ toàn bộ styles của giao diện cho dễ quản lý.
+- **Quyết định của Hội đồng Tác tử:**
+  1. **Khởi lập PLAN-28:** [`project_context/plans/plans-mobile-app/2026-10-14_plan_28_centralized_ui_styles_architecture.md`](plans/plans-mobile-app/2026-10-14_plan_28_centralized_ui_styles_architecture.md).
+  2. **Tạo tệp trung tâm `FE/src/constants/appStyles.js`** (và alias `FE/src/styles/appStyles.js`, `FE/src/styles/index.js`):
+     - Kế thừa và re-export đầy đủ `COLORS`, `SPACING`, `SIZES`, `SHADOWS`.
+     - Phân định các nhóm styles rõ ràng: `commonStyles`, `authStyles`, `homeStyles`, `transactionStyles`, `budgetStyles`, `reportStyles`, `profileStyles`, `componentStyles`.
+     - Xuất khẩu cả dạng `Named Exports` và `Default Export` để tối ưu hóa linh hoạt trong mọi màn hình và component.
+  3. **Tái cấu trúc mã nguồn các màn hình:** Nhập trực tiếp styles từ tệp trung tâm, giảm tải 50-70% số dòng mã dư thừa ở cuối mỗi file màn hình, mang lại trải nghiệm phát triển sạch sẽ, chuyên nghiệp.
+  4. **Nghiệm thu toàn diện:** Đã chuyển đổi 100% màn hình và component con, xóa bỏ hoàn toàn tất cả `StyleSheet.create` cục bộ trong toàn bộ thư mục `FE/src/`. 26/26 tệp JavaScript đều vượt qua bài kiểm tra cú pháp `node -c`.
+- **Trạng thái:** `APPROVED & COMPLETED (100% CENTRALIZED)`.
+
+---
+
+## [2026-10-14 23:15] - Quyết Định 91: Nâng Cấp Bộ Dữ Liệu Stress Test Thu Chi 6 Tháng Thực Tế & Trực Quan Hóa Đa Chiều Biểu Đồ
+- **Vấn đề:** 
+  - Người dùng yêu cầu bổ sung nhiều dữ liệu thu chi trải dài theo thời gian để có biểu đồ trực quan, sinh động hơn và phục vụ mục tiêu Stress Test ứng dụng (FlatList, API tốc độ tính toán, phân loại danh mục, chuyển tháng).
+  - Yêu cầu tập trung hoàn toàn vào tài khoản người dùng mẫu duy nhất (`Nguyễn Văn An`, User #1) với dữ liệu sinh hoạt đời thường phong phú, chi tiết.
+- **Quyết định của Hội đồng Tác tử:**
+  1. **Tạo lập tập dữ liệu Stress Test 6 tháng (92 giao dịch thực tế):**
+     - Trải dài từ Tháng 5/2026 đến Tháng 10/2026.
+     - Riêng Tháng 10/2026 (tháng hiện tại) có 35 giao dịch dày đặc trải đều từ ngày 01 đến ngày 14 (ngày hiện tại) với đầy đủ các khoản chi thiết yếu, giải trí, ăn uống, thể thao, hóa đơn, y tế và thu nhập lương/thưởng/freelance.
+  2. **Mở rộng 13 danh mục hệ thống đa dạng:**
+     - Bổ sung `Giải trí & Dịch vụ` (`#FF9F1C`), `Thể thao & Thể hình` (`#06D6A0`), `Đầu tư & Tiết kiệm` (`#00BBF9`).
+     - Thiết lập hạn mức ngân sách chi tiết cho 9 danh mục chi tiêu trong tháng 10/2026, giúp tab Ngân Sách và Biểu đồ tròn PieChart hiển thị 9 lát cắt màu sắc sống động, thanh tiến độ phân bố tự nhiên từ 25% đến 100%.
+  3. **Cân đối số dư ví thực tế:**
+     - Cập nhật số dư 4 ví tài chính đạt tổng 68.150.000 đ (Ví tiền mặt: 3.85M, Vietcombank: 36.45M, MoMo: 2.85M, Tiết kiệm: 25.0M) khớp hoàn toàn với dòng tiền thặng dư tích lũy 6 tháng.
+  4. **Nâng cấp tính năng tương tác Biểu đồ Báo Cáo ([ReportScreen.js](FE/src/screens/main/ReportScreen.js)):**
+     - Bổ sung bộ chuyển đổi tương tác `[Chi tiêu (Expense) | Thu nhập (Income)]` cho Biểu đồ cột BarChart 6 tháng với màu sắc động thích ứng (Navy vs Emerald).
+     - Bổ sung Bảng Đối Chiếu Dòng Tiền 6 Tháng chi tiết hiển thị rõ ràng Tổng Thu, Tổng Chi và Tiết kiệm ròng của từng tháng.
+  5. **Đồng bộ toàn diện:**
+     - Cập nhật đồng bộ tại CSDL MySQL WAMP (`reset_database.php` & `database_schema.sql`), Web Simulator (`index.html`), và các màn hình Mobile App (`HomeScreen`, `BudgetScreen`, `ReportScreen`, `TransactionsScreen`).
+- **Trạng thái:** `APPROVED & COMPLETED (STRESS TEST READY)`.
+

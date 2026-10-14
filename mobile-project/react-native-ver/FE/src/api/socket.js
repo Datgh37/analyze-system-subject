@@ -24,7 +24,7 @@ export const initSocket = (userId = 1, options = {}) => {
   console.log(`[Socket.IO Client] Đang kết nối tới ${socketUrl} (User #${userId})...`);
 
   socket = io(socketUrl, {
-    transports: ['websocket'],
+    transports: ['websocket', 'polling'],
     autoConnect: true,
     auth: {
       userId: Number(userId),
@@ -32,7 +32,8 @@ export const initSocket = (userId = 1, options = {}) => {
     },
     reconnection: true,
     reconnectionAttempts: 10,
-    reconnectionDelay: 2000
+    reconnectionDelay: 2000,
+    timeout: 10000
   });
 
   socket.on('connect', () => {
@@ -44,7 +45,7 @@ export const initSocket = (userId = 1, options = {}) => {
   });
 
   socket.on('connect_error', (error) => {
-    console.warn(`⚠️ [Socket.IO Client] Lỗi kết nối Socket: ${error.message}`);
+    console.warn(`⚠️ [Socket.IO Client] Lỗi kết nối Socket tới ${socketUrl}: ${error.message}`);
   });
 
   return socket;

@@ -93,12 +93,15 @@ try {
     // 6. Lấy danh sách ngân sách chi tiết theo từng Danh mục
     $stmt_cat_budgets = $db->prepare("
         SELECT 
+            b.id,
             b.id AS budget_id,
             b.category_id,
+            c.name,
             c.name AS category_name,
             c.icon_name,
             c.color_code,
             b.amount_limit,
+            b.amount_limit AS limit_amount,
             COALESCE(SUM(t.amount), 0.00) AS spent_amount
         FROM `budgets` b
         INNER JOIN `categories` c ON b.category_id = c.id

@@ -232,7 +232,7 @@ function get_authenticated_user_id(): int {
  * @return bool
  */
 function send_realtime_event(string $endpoint, array $payload): bool {
-    $url = "http://localhost:3001" . $endpoint;
+    $url = "http://127.0.0.1:3001" . $endpoint;
     $json = json_encode($payload);
 
     if (function_exists('curl_init')) {

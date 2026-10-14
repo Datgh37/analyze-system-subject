@@ -8,7 +8,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import AddTransactionScreen from '../screens/main/AddTransactionScreen';
-import { COLORS } from '../constants/theme';
+import { COLORS } from '../constants/appStyles';
 
 const Stack = createNativeStackNavigator();
 

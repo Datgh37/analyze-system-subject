@@ -1,51 +1,53 @@
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
+
+
+// 1. IP mạng nội bộ dự phòng (Fallback khi không đọc được scriptURL)
+const LOCAL_LAN_IP = '192.168.1.9'; 
 
 /**
- * CẤU HÌNH MÁY CHỦ VÀ MẠNG (API NETWORK CONFIGURATION)
- * 
- * Hướng dẫn đổi địa chỉ kết nối cho bạn Đại:
- * 1. Test trên Máy ảo Android Emulator: Giữ nguyên `10.0.2.2` (Địa chỉ loopback của Android Studio tới WAMP của máy tính).
- * 2. Test trên Điện thoại Android thật (qua Expo Go cùng mạng Wifi):
- *    - Mở cmd gõ `ipconfig` xem IPv4 máy tính của bạn (Ví dụ: `192.168.1.15`).
- *    - Đổi hằng số `LOCAL_LAN_IP` bên dưới thành IP máy của bạn.
- * 3. Test trên Server trường cấp: Bật cờ `USE_PRODUCTION_SERVER = true`.
+ * Hàm tự động nhận diện Hostname/IP của máy tính đang chạy Metro Bundler
  */
-
-// 1. IP mạng nội bộ của máy tính chạy WAMP Server (Dùng khi cắm điện thoại thật cùng Wifi)
-const LOCAL_LAN_IP = '192.168.2.5'; // IPv4 máy tính thực tế của Đại trên mạng Wi-Fi hiện tại
-
-// 2. Cờ chuyển đổi môi trường nhanh
-const USE_PRODUCTION_SERVER = false;
-
-// 3. Địa chỉ Hosting trường cấp
-const REMOTE_HOSTING_URL = 'http://nhom46.itimit.id.vn/api';
-
-/**
- * Hàm lấy Base URL động tùy theo thiết bị đang chạy
- */
-const getBaseUrl = () => {
-  if (USE_PRODUCTION_SERVER) {
-    return REMOTE_HOSTING_URL;
+export const getAutoHost = () => {
+  if (Platform.OS === 'web') {
+    if (typeof window !== 'undefined' && window.location?.hostname) {
+      return window.location.hostname;
+    }
+    return 'localhost';
   }
 
+  // Tự động lấy IP từ Metro Bundler script URL khi chạy trên Expo Go / Android / iOS
+  const scriptURL = NativeModules.SourceCode?.scriptURL;
+  if (scriptURL) {
+    const match = scriptURL.match(/https?:\/\/([^:\/]+)/);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+
+  // Fallback nếu không xác định được scriptURL
   if (Platform.OS === 'android') {
-    // Nếu là điện thoại thật, ưu tiên LOCAL_LAN_IP; nếu là máy ảo, dùng 10.0.2.2
-    // Mặc định hỗ trợ tốt cả hai môi trường:
-    return `http://${LOCAL_LAN_IP}/expense_api/api`;
+    return LOCAL_LAN_IP;
   }
 
-  // Chạy trên iOS Simulator hoặc Web
-  return 'http://localhost/expense_api/api';
+  return 'localhost';
+};
+
+/**
+ * Hàm lấy Base URL động tùy theo thiết bị đang chạy (Local WAMP)
+ */
+export const getBaseUrl = () => {
+  const host = getAutoHost();
+  return `http://${host}/expense_api/api`;
 };
 
 export const getSocketUrl = () => {
-  if (Platform.OS === 'android') {
-    return `http://${LOCAL_LAN_IP}:3001`;
-  }
-  return 'http://localhost:3001';
+  const host = getAutoHost();
+  return `http://${host}:3001`;
 };
 
 export const API_CONFIG = {
+  getBaseUrl,
+  getSocketUrl,
   BASE_URL: getBaseUrl(),
   SOCKET_URL: getSocketUrl(),
   TIMEOUT_MS: 10000, // 10 giây timeout
@@ -54,3 +56,4 @@ export const API_CONFIG = {
     'Accept': 'application/json'
   }
 };
+

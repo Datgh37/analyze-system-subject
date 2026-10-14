@@ -75,6 +75,16 @@ export const RealtimeProvider = ({ children }) => {
     };
   }, [user]);
 
+  // Tự động ẩn banner số dư sau 6 giây
+  useEffect(() => {
+    if (lastBalanceEvent) {
+      const timer = setTimeout(() => {
+        setLastBalanceEvent(null);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [lastBalanceEvent]);
+
   // Hàm bắn Ping đo độ trễ
   const testPing = () => {
     const socket = getSocket();
@@ -87,6 +97,35 @@ export const RealtimeProvider = ({ children }) => {
     setActiveNudge(null);
   };
 
+  const clearBalanceEvent = () => {
+    setLastBalanceEvent(null);
+  };
+
+  // ⚡ Hàm kích hoạt sự kiện mô phỏng trực tiếp từ ứng dụng để giáo viên nghiệm thu
+  const triggerDemoEvent = async () => {
+    try {
+      const socket = getSocket();
+      const currentUserId = user?.id || 1;
+      // Gọi trực tiếp HTTP Trigger trên Socket.IO Server cổng 3001
+      const socketBase = socket?.io?.uri || 'http://localhost:3001';
+      const res = await fetch(`${socketBase}/api/notify/balance-update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUserId,
+          walletId: 1,
+          walletName: 'Ví Tiền Mặt',
+          delta: -45000,
+          newBalance: 3455000,
+          reason: 'Cà phê sáng (Test Realtime)'
+        })
+      });
+      return await res.json();
+    } catch (e) {
+      console.warn('[RealtimeContext] Không thể gửi demo event:', e);
+    }
+  };
+
   return (
     <RealtimeContext.Provider
       value={{
@@ -95,7 +134,9 @@ export const RealtimeProvider = ({ children }) => {
         activeNudge,
         latencyMs,
         testPing,
-        clearNudge
+        clearNudge,
+        clearBalanceEvent,
+        triggerDemoEvent
       }}
     >
       {children}

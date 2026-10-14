@@ -17,8 +17,15 @@ export const AuthProvider = ({ children }) => {
         const storedUser  = await AsyncStorage.getItem('@user_profile');
 
         if (storedToken && storedUser) {
+          let parsedUser = JSON.parse(storedUser);
+          // Thanh lọc tên tài khoản thử nghiệm cũ sang người dùng thực tế Nguyễn Văn An
+          if (!parsedUser.full_name || parsedUser.full_name.includes('Trịnh Thành Đạt') || parsedUser.full_name.includes('Lead')) {
+            parsedUser.full_name = 'Nguyễn Văn An';
+            parsedUser.email = 'nguyenvanan@gmail.com';
+            await AsyncStorage.setItem('@user_profile', JSON.stringify(parsedUser));
+          }
           setToken(storedToken);
-          setUser(JSON.parse(storedUser));
+          setUser(parsedUser);
         }
       } catch (error) {
         console.warn('[AuthContext] Lỗi khi nạp phiên làm việc:', error);

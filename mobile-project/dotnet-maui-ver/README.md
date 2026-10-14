@@ -16,8 +16,8 @@ Trong cơ cấu tổ chức mã nguồn của đồ án, thư mục `mobile-proj
 | :--- | :--- | :--- |
 | **Mục đích sử dụng** | **Đồ án môn học:** Lập trình Thiết bị Di động (10–15 tuần). | **Khóa luận Tốt nghiệp (KLTN) & PTTKHTTT:** Hệ thống hoàn chỉnh cấp doanh nghiệp. |
 | **Phạm vi nghiệp vụ** | **Bản rút gọn (Scoped MVP):** 2 ví cơ bản, thu/chi nhanh, ngân sách tháng, WAMP PHP 21 APIs. | **Toàn diện 100% (Enterprise Full Scope):** Đa ví ACID, AI Multimodal Vision OCR, Tối ưu nợ Snowball/Avalanche, Ngân sách thích ứng DSA, Đồ thị dòng tiền DAG. |
-| **Công nghệ Frontend** | React Native Expo SDK 54, React 19, JavaScript. | **.NET 9 MAUI (Multi-platform App UI), C# 13, XAML.** |
-| **Hệ thống Backend** | WAMP Server (PHP PDO + MySQL). | **ASP.NET Core Web API (.NET 9, Clean Architecture, Entity Framework Core).** |
+| **Công nghệ Frontend** | React Native Expo SDK 54, React 19, JavaScript. | **.NET MAUI 10 (Multi-platform App UI), C# 14, XAML (LTS - Long Term Support).** |
+| **Hệ thống Backend** | WAMP Server (PHP PDO + MySQL). | **ASP.NET Core Web API (.NET 10 LTS, Clean Architecture, Entity Framework Core 10).** |
 | **Hiệu năng & Nền tảng** | Mobile Hybrid (Android / iOS). | **Native Native Compilation:** Android 15+, iOS 18+, Windows 11 Desktop, macOS (Mac Catalyst). |
 | **Độ an toàn kiểu dữ liệu** | Dynamic typing (JS). | **End-to-End Type Safety 100%:** Dùng chung Models / DTOs / Value Objects C# giữa Client và Server. |
 
@@ -25,7 +25,7 @@ Trong cơ cấu tổ chức mã nguồn của đồ án, thư mục `mobile-proj
 
 ## 2. ⚙️ Ngăn Xếp Công Nghệ Đỉnh Cao (.NET Ecosystem)
 
-* **Nền tảng Cốt lõi (Core Framework):** **.NET 9 MAUI** (C# 13 / XAML) — Tối ưu hóa AOT (Ahead-Of-Time compilation) cho thời gian khởi động app dưới 500ms.
+* **Nền tảng Cốt lõi (Core Framework):** **.NET MAUI 10 (LTS)** (C# 14 / XAML) — Phiên bản hỗ trợ dài hạn (Long Term Support - 3 năm) với cải tiến vượt bậc về hiệu năng AOT (Ahead-Of-Time compilation), Native Native Compilation cho thời gian khởi động app dưới 400ms.
 * **Mô hình Kiến trúc Giao diện:** **MVVM (Model-View-ViewModel)** kết hợp thư viện chính thức **`CommunityToolkit.Mvvm`** (Tận dụng Roslyn Source Generators: `[ObservableProperty]`, `[RelayCommand]`).
 * **Quản lý Dữ liệu Ngoại tuyến (Offline-First):**
   - **SQLite-net-pcl** / **Entity Framework Core for SQLite** làm bộ đệm CSDL cục bộ trên thiết bị.
@@ -75,7 +75,7 @@ Cấu trúc dự án tuân thủ nghiêm ngặt **Clean Architecture** và **DDD
 ```text
 mobile-project/dotnet-maui-ver/
 ├── README.md                              # Tài liệu kỹ thuật phân hệ .NET MAUI
-├── ExpenseApp.sln                         # Solution tập tin .NET 9
+├── ExpenseApp.sln                         # Solution tập tin .NET 10 (LTS)
 │
 └── src/
     ├── ExpenseApp.Core/                   # [Domain & Application Layer]
@@ -117,10 +117,10 @@ mobile-project/dotnet-maui-ver/
 ## 5. 🛠️ Yêu Cầu Môi Trường & Hướng Dẫn Cài Đặt
 
 ### 5.1. Yêu cầu công cụ
-1. **IDE:** [Visual Studio 2022](https://visualstudio.microsoft.com/) (Phiên bản 17.12 trở lên) hoặc **Visual Studio Code** với C# Dev Kit + .NET MAUI extension.
+1. **IDE:** [Visual Studio](https://visualstudio.microsoft.com/) (Hỗ trợ .NET 10) hoặc **Visual Studio Code** với C# Dev Kit + .NET MAUI extension.
 2. **Workload bắt buộc:** Trong Visual Studio Installer, tích chọn:  
    ✅ **.NET Multi-platform App UI development**
-3. **.NET SDK:** .NET 9.0 SDK (`dotnet --version` $\ge$ 9.0.100).
+3. **.NET SDK:** .NET 10.0 SDK (LTS) (`dotnet --version` $\ge$ 10.0.100).
 4. **Android SDK:** Android API Level 34 (Android 14) hoặc 35 (Android 15).
 
 ### 5.2. Khởi tạo và biên dịch dự án
@@ -132,10 +132,10 @@ dotnet workload list
 dotnet restore ExpenseApp.sln
 
 # Chạy trực tiếp trên máy ảo Android
-dotnet build -t:Run -f net9.0-android
+dotnet build -t:Run -f net10.0-android
 
 # Chạy trên Windows Desktop (để test logic siêu nhanh mà không cần máy ảo)
-dotnet build -t:Run -f net9.0-windows10.0.19041.0
+dotnet build -t:Run -f net10.0-windows10.0.19041.0
 ```
 
 ---

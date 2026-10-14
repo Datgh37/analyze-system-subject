@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   ScrollView,
@@ -11,14 +10,13 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../../api/endpoints';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { transactionStyles as styles, COLORS, SPACING } from '../../constants/appStyles';
 import CustomButton from '../../components/CustomButton';
 
 /**
  * ==============================================================================
  * MÀN HÌNH: THÊM / SỬA GIAO DỊCH (ADD / EDIT TRANSACTION)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Logic Backend & Delta Balance: Trịnh Thành Đạt (Lead Architect)
+ * Quản lý Chi tiêu & Hoạch định Tài chính Cá nhân Thông minh
  * ==============================================================================
  */
 export default function AddTransactionScreen({ route, navigation }) {
@@ -36,7 +34,9 @@ export default function AddTransactionScreen({ route, navigation }) {
 
   const [wallets, setWallets] = useState([
     { id: 1, name: 'Ví Tiền Mặt', wallet_type: 'CASH', balance: 3500000 },
-    { id: 2, name: 'Ngân Hàng Vietcombank', wallet_type: 'BANK', balance: 15200000 }
+    { id: 2, name: 'Tài Khoản Vietcombank', wallet_type: 'BANK', balance: 18500000 },
+    { id: 3, name: 'Ví Điện Tử MoMo', wallet_type: 'E_WALLET', balance: 1250000 },
+    { id: 4, name: 'Sổ Tiết Kiệm Dự Phòng', wallet_type: 'SAVINGS', balance: 25000000 }
   ]);
 
   const [categories, setCategories] = useState([
@@ -104,6 +104,27 @@ export default function AddTransactionScreen({ route, navigation }) {
     setAmount(cleanNumber);
   };
 
+  const addQuickAmount = (delta) => {
+    const current = parseInt(amount || '0', 10);
+    const next = current + delta;
+    setAmount(next.toString());
+  };
+
+  const clearAmount = () => {
+    setAmount('');
+  };
+
+  const setQuickDate = (mode) => {
+    const now = new Date();
+    if (mode === 'today') {
+      setTransactionDate(now.toISOString().split('T')[0]);
+    } else if (mode === 'yesterday') {
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+      setTransactionDate(yesterday.toISOString().split('T')[0]);
+    }
+  };
+
   const formatDisplayAmount = (val) => {
     if (!val) return '0 đ';
     return parseInt(val, 10).toLocaleString('vi-VN') + ' đ';
@@ -126,6 +147,15 @@ export default function AddTransactionScreen({ route, navigation }) {
     if (name.includes('thưởng')) return 'gift-outline';
     if (name.includes('đầu tư')) return 'trending-up-outline';
     return type === 'EXPENSE' ? 'pricetag-outline' : 'wallet-outline';
+  };
+
+  const getWalletIcon = (w) => {
+    const typeUpper = (w.wallet_type || '').toUpperCase();
+    const nameLower = (w.name || '').toLowerCase();
+    if (typeUpper === 'BANK' || nameLower.includes('ngân hàng') || nameLower.includes('vietcombank')) return 'card-outline';
+    if (typeUpper === 'E_WALLET' || nameLower.includes('momo') || nameLower.includes('ví điện tử')) return 'phone-portrait-outline';
+    if (typeUpper === 'SAVINGS' || nameLower.includes('tiết kiệm')) return 'shield-checkmark-outline';
+    return 'cash-outline';
   };
 
   const handleSave = async () => {
@@ -224,7 +254,7 @@ export default function AddTransactionScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* 2. Ô nhập số tiền với hiển thị định dạng VND */}
+      {/* 2. Ô nhập số tiền với hiển thị định dạng VND & Phím tắt */}
       <View style={styles.amountCard}>
         <Text style={styles.cardSectionLabel}>SỐ TIỀN GIAO DỊCH</Text>
         <TextInput
@@ -238,6 +268,28 @@ export default function AddTransactionScreen({ route, navigation }) {
         <Text style={styles.amountPreviewText}>
           {formatDisplayAmount(amount)}
         </Text>
+
+        {/* Thanh phím tắt tăng nhanh số tiền (Richard Thaler Nudge) */}
+        <View style={styles.quickAmountRow}>
+          <TouchableOpacity style={styles.quickChip} onPress={() => addQuickAmount(10000)}>
+            <Text style={styles.quickChipText}>+10k</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickChip} onPress={() => addQuickAmount(50000)}>
+            <Text style={styles.quickChipText}>+50k</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickChip} onPress={() => addQuickAmount(100000)}>
+            <Text style={styles.quickChipText}>+100k</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickChip} onPress={() => addQuickAmount(500000)}>
+            <Text style={styles.quickChipText}>+500k</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickChip} onPress={() => addQuickAmount(1000000)}>
+            <Text style={styles.quickChipText}>+1Tr</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.quickChip, styles.quickChipClear]} onPress={clearAmount}>
+            <Text style={[styles.quickChipText, styles.quickChipClearText]}>Xóa</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* 3. Chọn Ví thanh toán */}
@@ -246,7 +298,7 @@ export default function AddTransactionScreen({ route, navigation }) {
         <View style={styles.walletRow}>
           {wallets.map((w) => {
             const isSelected = selectedWalletId === w.id;
-            const isBank = w.wallet_type === 'BANK' || (w.name && w.name.toLowerCase().includes('ngân hàng'));
+            const walletIcon = getWalletIcon(w);
             return (
               <TouchableOpacity
                 key={w.id}
@@ -254,7 +306,7 @@ export default function AddTransactionScreen({ route, navigation }) {
                 onPress={() => setSelectedWalletId(w.id)}
               >
                 <Ionicons
-                  name={isBank ? 'card-outline' : 'cash-outline'}
+                  name={walletIcon}
                   size={18}
                   color={isSelected ? COLORS.primary : COLORS.textSecondary}
                   style={{ marginRight: 6 }}
@@ -317,6 +369,21 @@ export default function AddTransactionScreen({ route, navigation }) {
             value={transactionDate}
             onChangeText={setTransactionDate}
           />
+          {/* Quick Date Chips */}
+          <View style={styles.dateChipGroup}>
+            <TouchableOpacity
+              style={styles.dateChip}
+              onPress={() => setQuickDate('today')}
+            >
+              <Text style={styles.dateChipText}>Hôm nay</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.dateChip}
+              onPress={() => setQuickDate('yesterday')}
+            >
+              <Text style={styles.dateChipText}>Hôm qua</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={[styles.inputRow, { marginTop: SPACING.sm }]}>
@@ -343,174 +410,3 @@ export default function AddTransactionScreen({ route, navigation }) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background
-  },
-  contentContainer: {
-    padding: SPACING.md,
-    paddingBottom: SPACING.xxl
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.background
-  },
-  loadingText: {
-    marginTop: SPACING.sm,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  tabSwitch: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.surfaceVariant,
-    borderRadius: SIZES.radiusMd,
-    padding: 4,
-    marginBottom: SPACING.md
-  },
-  switchButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: SPACING.sm + 2,
-    borderRadius: SIZES.radiusSm
-  },
-  switchExpenseActive: {
-    backgroundColor: COLORS.expense
-  },
-  switchIncomeActive: {
-    backgroundColor: COLORS.income
-  },
-  switchText: {
-    fontSize: SIZES.fontMd,
-    fontWeight: '600',
-    color: COLORS.textSecondary
-  },
-  switchTextActive: {
-    color: COLORS.textWhite
-  },
-  amountCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusMd,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.md,
-    ...SHADOWS.card
-  },
-  cardSectionLabel: {
-    fontSize: SIZES.fontXs,
-    fontWeight: 'bold',
-    color: COLORS.textSecondary,
-    letterSpacing: 0.5,
-    marginBottom: SPACING.xs
-  },
-  amountInput: {
-    fontSize: SIZES.fontDisplay,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    width: '100%',
-    paddingVertical: SPACING.xs
-  },
-  expenseTextColor: {
-    color: COLORS.expense
-  },
-  incomeTextColor: {
-    color: COLORS.income
-  },
-  amountPreviewText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary,
-    marginTop: 2
-  },
-  sectionCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusMd,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.md,
-    ...SHADOWS.small
-  },
-  walletRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: SPACING.xs
-  },
-  walletChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: SIZES.radiusSm,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.surfaceVariant,
-    marginRight: SPACING.sm,
-    marginBottom: SPACING.xs
-  },
-  walletChipSelected: {
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.surface
-  },
-  walletChipText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  walletChipTextSelected: {
-    color: COLORS.primary,
-    fontWeight: 'bold'
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: SPACING.xs
-  },
-  categoryGridItem: {
-    width: '23%',
-    aspectRatio: 1,
-    margin: '1%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: SIZES.radiusSm,
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
-    backgroundColor: COLORS.surface
-  },
-  categoryIconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4
-  },
-  categoryNameText: {
-    fontSize: SIZES.fontXs - 1,
-    color: COLORS.textSecondary,
-    textAlign: 'center'
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.surfaceVariant,
-    borderRadius: SIZES.radiusSm,
-    paddingHorizontal: SPACING.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border
-  },
-  textInput: {
-    flex: 1,
-    paddingVertical: SPACING.sm,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textPrimary
-  },
-  buttonWrapper: {
-    marginTop: SPACING.sm
-  }
-});

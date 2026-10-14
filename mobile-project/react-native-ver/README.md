@@ -1,7 +1,7 @@
 # 📱 ỨNG DỤNG QUẢN LÝ CHI TIÊU CÁ NHÂN (PERSONAL EXPENSE TRACKER)
 > **Đồ án môn học:** Lập trình Thiết bị Di động (Mobile Application Development)  
 > **Mối quan hệ đề tài:** Phân hệ ứng dụng di động tinh gọn (Mobile Client MVP) được trích xuất từ đề tài lớn môn **Phân tích Thiết kế Hệ thống Thông tin (PTTKHTTT)**.  
-> 🗺️ **Kế hoạch & Lộ trình phân công chi tiết:** Xem tại [ROADMAP.md](ROADMAP.md) | 📄 **Tài liệu Báo cáo Word:** [BaoCaoLTMB.docx](BaoCaoLTMB.docx)
+> 🗺️ **Kế hoạch & Lộ trình phân công chi tiết:** Xem tại [ROADMAP.md](ROADMAP.md) | 📄 **Báo cáo Giữa kỳ (Markdown):** [BAO_CAO_GIUA_KY.md](BAO_CAO_GIUA_KY.md) | 📑 **Tài liệu Báo cáo Word:** [BaoCaoLTMB.docx](BaoCaoLTMB.docx)
 
 ---
 

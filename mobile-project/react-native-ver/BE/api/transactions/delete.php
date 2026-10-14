@@ -78,6 +78,15 @@ try {
 
     $db->commit();
 
+    // ⚡ 6. Kích hoạt thông báo biến động số dư Realtime tới Socket.IO Gateway
+    $delta = ($type === 'EXPENSE') ? $amount : -$amount;
+    $wallet_name_stmt = $db->prepare("SELECT name FROM `wallets` WHERE `id` = :wid");
+    $wallet_name_stmt->bindParam(':wid', $wallet_id, PDO::PARAM_INT);
+    $wallet_name_stmt->execute();
+    $w_name = $wallet_name_stmt->fetchColumn() ?: 'Ví Tiền Mặt';
+
+    realtime_balance_update($user_id, $wallet_id, $w_name, $new_balance, $delta, 'Đã xóa giao dịch #' . $transaction_id);
+
     send_json_response("success", "Xóa giao dịch và hoàn trả số dư ví thành công.", [
         "deleted_transaction_id" => $transaction_id,
         "wallet_id"              => $wallet_id,

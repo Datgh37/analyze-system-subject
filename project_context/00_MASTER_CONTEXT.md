@@ -95,24 +95,12 @@
 - [x] **Tầng Công Cụ (Tool Layer):** Filesystem Sandbox, Terminal Runner (`python -B`), Git Diff.
 - [x] **Hội Đồng 14 Chuyên Gia Danh Nhân:** Hoàn tất 100% 14 Persona chuẩn đề tài tài chính cá nhân.
 - [x] **Bộ Ba Tam Giác Vàng Frontend (Pha 2.5):** Hoàn tất Agent 09 (Visual), Agent 13 (Motion), Agent 10 (State).
-- [x] **Hệ Sinh Thái Kỹ Nghệ Toàn Diện ECC Universal (PLAN-21):** Tích hợp hoàn tất 18 Workflows, 19 Subagents, 40 Skills ECC (bao gồm .NET & Node/NestJS), 16 Programming Rules và phân quyền chuyên môn hóa cho 14 Agent Hội đồng.e/) | Bộ nhân Python Engine (Council, Skills, Tools Sandbox, Workflow, Memory). |
-| [`docs/`](docs/) | Tài liệu đề tài gốc (`specs/`) và hướng dẫn tích hợp (`ANTIGRAVITY-ECC-SETUP-GUIDE.md`). |
-| [`sessions/`](sessions/) | Các phiên bàn thảo 4 pha & 4 bộ Benchmark Sessions thực tế cá nhân (`session_01` đến `session_04`). |
-| [`templates/`](templates/) | Bộ 5 mẫu tài liệu đầu ra chuẩn IEEE 29148, Frontend UI Spec, ADR, DB 3NF, Feedback. |
-| [`tests/`](tests/) | Bộ Unit & Integration Tests tự động đạt chuẩn 100% Passed. |
-| [`project_context/`](project_context/) | Nơi lưu trữ nhật ký quyết định, kế hoạch và snapshot ngữ cảnh bền vững. |
-
----
-
-## 5. Trạng Thái Hoàn Thành Hiện Tại (Current Status)
-
-- [x] **Tầng Công Cụ (Tool Layer):** Filesystem Sandbox, Terminal Runner (`python -B`), Git Diff.
-- [x] **Hội Đồng 14 Chuyên Gia Danh Nhân:** Hoàn tất 100% 14 Persona chuẩn đề tài tài chính cá nhân.
-- [x] **Bộ Ba Tam Giác Vàng Frontend (Pha 2.5):** Hoàn tất Agent 09 (Visual), Agent 13 (Motion), Agent 10 (State).
 - [x] **Hệ Sinh Thái Kỹ Nghệ Toàn Diện ECC Universal (PLAN-21):** Tích hợp hoàn tất 18 Workflows, 19 Subagents, 40 Skills ECC (bao gồm .NET & Node/NestJS), 16 Programming Rules và phân quyền chuyên môn hóa cho 14 Agent Hội đồng.
 - [x] **Tái Định Hướng Cá Nhân (PLAN-09):** Hoàn thành chuyển đổi Agent 02 (Personal Budget Coach) và Agent 06 (Debt & Cashflow Optimizer).
 - [x] **Benchmark Sessions Chuẩn PFM:** Hoàn thành 4 phiên thực nghiệm tài chính cá nhân đạt 100% Quality Gates.
 - [x] **Kiểm Thử Toàn Diện:** 100% Unit Tests đã pass không lỗi.
+- [x] **Phân Hệ Mobile Giữa Kỳ (React Native Expo & Socket.IO):** Hoàn thành kiểm toán UI Refactor 9 màn hình, xuất bản Báo cáo Giữa kỳ [`mobile-project/react-native-ver/BAO_CAO_GIUA_KY.md`](../mobile-project/react-native-ver/BAO_CAO_GIUA_KY.md).
+- [x] **Chiến Lược Doanh Nghiệp .NET MAUI & ASP.NET Core (PLAN-26):** Xác lập cơ chế phong tỏa phát triển (*Zero-Code Freeze*), quy định bắt buộc triệu tập Phiên họp Hội đồng Kickoff Governance thiết lập toàn diện tiêu chuẩn C# 14, MVVM, Clean Arch, Compiler & Linter Settings trước khi code.
 
 ---
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -11,19 +10,18 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { authStyles as styles, COLORS, SPACING } from '../../constants/appStyles';
 import CustomButton from '../../components/CustomButton';
 
 /**
  * ==============================================================================
  * MÀN HÌNH: ĐĂNG NHẬP (LOGIN SCREEN)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Logic Backend & JWT Auth: Trịnh Thành Đạt (Lead Architect)
+ * Quản lý Chi tiêu & Hoạch định Tài chính Cá nhân Thông minh
  * ==============================================================================
  */
 export default function LoginScreen({ navigation }) {
   const { login, isLoading } = useAuth();
-  const [email, setEmail] = useState('thanhdat@gmail.com');
+  const [email, setEmail] = useState('nguyenvanan@gmail.com');
   const [password, setPassword] = useState('password123');
   const [localLoading, setLocalLoading] = useState(false);
 
@@ -47,8 +45,7 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleBypass = async () => {
-    // Thử đăng nhập tài khoản seed hoặc thông báo
-    await login('thanhdat@gmail.com', 'password123');
+    await login('nguyenvanan@gmail.com', 'password123');
   };
 
   const loadingState = isLoading || localLoading;
@@ -118,108 +115,10 @@ export default function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* 3. Nút Bypass Test Nhanh */}
+      {/* 3. Nút Đăng nhập nhanh trải nghiệm */}
       <TouchableOpacity style={styles.bypassLink} onPress={handleBypass}>
-        <Text style={styles.bypassText}>⚡ Đăng nhập nhanh tài khoản thử nghiệm</Text>
+        <Text style={styles.bypassText}>Đăng nhập nhanh</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: COLORS.background,
-    justifyContent: 'center',
-    padding: SPACING.lg
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: SPACING.lg
-  },
-  iconCircle: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    backgroundColor: COLORS.surfaceVariant,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border
-  },
-  appTitle: {
-    fontSize: SIZES.fontXxl,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    textAlign: 'center',
-    letterSpacing: 0.5
-  },
-  subtitle: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    marginTop: 2
-  },
-  formCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: SIZES.radiusLg,
-    padding: SPACING.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.card
-  },
-  label: {
-    fontSize: SIZES.fontSm,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
-    marginBottom: 6
-  },
-  inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: SIZES.radiusSm,
-    paddingHorizontal: SPACING.md,
-    backgroundColor: COLORS.surfaceVariant
-  },
-  input: {
-    flex: 1,
-    paddingVertical: SPACING.sm + 2,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textPrimary
-  },
-  forgotTouch: {
-    alignSelf: 'flex-end',
-    marginTop: SPACING.xs + 2,
-    marginBottom: SPACING.xs
-  },
-  forgotText: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.primary,
-    fontWeight: '600'
-  },
-  switchAuthTouch: {
-    marginTop: SPACING.md,
-    alignItems: 'center',
-    paddingVertical: SPACING.xs
-  },
-  switchAuthText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  highlightText: {
-    color: COLORS.primary,
-    fontWeight: 'bold'
-  },
-  bypassLink: {
-    marginTop: SPACING.lg,
-    alignItems: 'center'
-  },
-  bypassText: {
-    color: COLORS.primaryLight,
-    fontSize: SIZES.fontSm,
-    fontWeight: '600'
-  }
-});

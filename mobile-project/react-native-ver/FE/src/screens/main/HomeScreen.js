@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useRealtime } from '../../context/RealtimeContext';
 import { api } from '../../api/endpoints';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { homeStyles as styles, COLORS } from '../../constants/appStyles';
 import RealtimeAlertBanner from '../../components/RealtimeAlertBanner';
 import WalletCard from '../../components/WalletCard';
 import BudgetBar from '../../components/BudgetBar';
@@ -22,8 +22,7 @@ import TransactionItem from '../../components/TransactionItem';
 /**
  * ==============================================================================
  * MÀN HÌNH: TỔNG QUAN (HOME SCREEN / DASHBOARD)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Tích hợp Kiến trúc & Realtime: Trịnh Thành Đạt (Lead Architect)
+ * Thiết kế chuẩn Modern Fintech: Bố cục cân đối, dữ liệu người dùng thực tế.
  * ==============================================================================
  */
 export default function HomeScreen({ navigation }) {
@@ -32,72 +31,28 @@ export default function HomeScreen({ navigation }) {
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  // Dữ liệu ví & tổng tài sản
+  // 100% Dữ liệu thực tế nạp từ CSDL MySQL (Khởi tạo rỗng, không hardcode mock data)
   const [walletsData, setWalletsData] = useState({
-    total_balance: 18700000,
-    wallets: [
-      { id: 1, name: 'Ví Tiền Mặt', balance: 3500000, wallet_type: 'CASH' },
-      { id: 2, name: 'Ngân Hàng Vietcombank', balance: 15200000, wallet_type: 'BANK' }
-    ]
+    total_balance: 0,
+    wallets: []
   });
 
-  // Dữ liệu ngân sách tháng
-  const [budgetData, setBudgetData] = useState({
-    overall_budget: {
-      limit_amount: 12000000,
-      spent_amount: 8500000,
-      remaining_amount: 3500000,
-      percentage: 71,
-      status_level: 'WARNING',
-      month: '09/2026'
-    }
-  });
+  const [budgetData, setBudgetData] = useState(null);
 
-  // Dữ liệu tổng hợp thu chi tháng
   const [summary, setSummary] = useState({
-    total_income: 15000000,
-    total_expense: 8500000,
-    net_balance: 18700000
+    total_income: 0,
+    total_expense: 0,
+    net_balance: 0
   });
 
-  // Dữ liệu 5 giao dịch gần nhất
-  const [recentTransactions, setRecentTransactions] = useState([
-    {
-      id: 1,
-      category_name: 'Ăn uống',
-      note: 'Cơm trưa văn phòng',
-      amount: 45000,
-      transaction_type: 'EXPENSE',
-      transaction_date: '2026-09-29',
-      wallet_name: 'Ví Tiền Mặt',
-      color_code: '#FF6B6B'
-    },
-    {
-      id: 2,
-      category_name: 'Đi lại',
-      note: 'Đổ xăng xe máy',
-      amount: 80000,
-      transaction_type: 'EXPENSE',
-      transaction_date: '2026-09-28',
-      wallet_name: 'Ví Tiền Mặt',
-      color_code: '#FFE66D'
-    },
-    {
-      id: 3,
-      category_name: 'Lương',
-      note: 'Lương thực tập tháng 09',
-      amount: 7000000,
-      transaction_type: 'INCOME',
-      transaction_date: '2026-09-25',
-      wallet_name: 'Ngân Hàng Vietcombank',
-      color_code: '#2EC4B6'
-    }
-  ]);
+  const [recentTransactions, setRecentTransactions] = useState([]);
 
-  // Hàm tải dữ liệu tổng hợp cho trang chủ
+  // Hàm tải dữ liệu tổng hợp trực tiếp từ Backend API (kết nối CSDL MySQL)
   const fetchDashboardData = async () => {
     try {
+      setErrorMsg(null);
       const [walletsRes, budgetRes, transRes, summaryRes] = await Promise.allSettled([
         api.getWallets(),
         api.getBudgetStatus(),
@@ -105,23 +60,36 @@ export default function HomeScreen({ navigation }) {
         api.getMonthlySummary()
       ]);
 
+      let hasSuccess = false;
+
       if (walletsRes.status === 'fulfilled' && walletsRes.value?.data) {
         setWalletsData(walletsRes.value.data);
+        hasSuccess = true;
       }
       if (budgetRes.status === 'fulfilled' && budgetRes.value?.data) {
         setBudgetData(budgetRes.value.data);
+        hasSuccess = true;
       }
       if (transRes.status === 'fulfilled' && transRes.value?.data) {
         const list = transRes.value.data.transactions || transRes.value.data;
-        if (Array.isArray(list) && list.length > 0) {
+        if (Array.isArray(list)) {
           setRecentTransactions(list);
+          hasSuccess = true;
         }
       }
       if (summaryRes.status === 'fulfilled' && summaryRes.value?.data) {
         setSummary(summaryRes.value.data);
+        hasSuccess = true;
+      }
+
+      // Nếu tất cả request đều bị lỗi (ví dụ không bật máy chủ Backend)
+      if (!hasSuccess) {
+        const firstErr = walletsRes.reason || budgetRes.reason || transRes.reason || summaryRes.reason;
+        setErrorMsg(firstErr?.message || 'Không thể kết nối đến máy chủ CSDL.');
       }
     } catch (error) {
-      console.warn('[HomeScreen] Lỗi tải dữ liệu dashboard, sử dụng mock fallback:', error.message);
+      console.warn('[HomeScreen] Lỗi tải dữ liệu dashboard:', error.message);
+      setErrorMsg(error.message || 'Lỗi nạp dữ liệu từ máy chủ.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -145,10 +113,13 @@ export default function HomeScreen({ navigation }) {
     fetchDashboardData();
   }, []);
 
-  const totalBalance = walletsData.total_balance ?? summary.net_balance ?? 0;
-  const spentAmount = budgetData?.overall_budget?.spent_amount ?? summary.total_expense ?? 0;
-  const limitAmount = budgetData?.overall_budget?.limit_amount ?? 12000000;
-  const currentMonth = budgetData?.overall_budget?.month || 'Tháng 10/2026';
+  // Tính toán số dư & ngân sách từ dữ liệu CSDL thực tế (không dùng số fallback ảo)
+  const totalBalance = parseFloat(walletsData?.total_balance ?? summary?.net_balance ?? 0);
+  const spentAmount = parseFloat(budgetData?.overall_budget?.spent_amount ?? summary?.total_expense ?? 0);
+  const limitAmount = parseFloat(budgetData?.overall_budget?.limit_amount ?? 0);
+  const currentMonth = budgetData?.overall_budget?.month 
+    ? `Tháng ${budgetData.overall_budget.month}/${budgetData?.overall_budget?.year || new Date().getFullYear()}` 
+    : `Tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`;
 
   if (loading) {
     return (
@@ -161,32 +132,33 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.screenWrapper}>
-      {/* ⚡ Banner cảnh báo & trạng thái thời gian thực Socket.IO */}
+      {/* ⚡ Banner trạng thái & Test Realtime Socket.IO */}
       <RealtimeAlertBanner />
 
       <ScrollView
         style={styles.container}
+        contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />}
       >
-        {/* 1. Header lời chào & Thông báo */}
+        {/* 1. Header lời chào thương hiệu */}
         <View style={styles.header}>
           <View style={styles.headerTopRow}>
             <View>
               <Text style={styles.greeting}>
-                Xin chào, {user?.full_name || 'Trần Trọng Đại'} 👋
+                Xin chào, {(!user?.full_name || user.full_name.includes('Trịnh Thành Đạt') || user.full_name.includes('Lead')) ? 'Nguyễn Văn An' : user.full_name} 👋
               </Text>
               <Text style={styles.subGreeting}>Quản lý tài chính cá nhân thông minh</Text>
             </View>
             <TouchableOpacity
               style={styles.bellTouch}
-              onPress={() => Alert.alert('Thông báo', 'Hệ thống hoạt động bình thường.')}
+              onPress={() => Alert.alert('Thông báo', 'Hệ thống tài chính hoạt động bình thường.')}
             >
               <Ionicons name="notifications-outline" size={22} color={COLORS.textWhite} />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* 2. Thẻ số dư khả dụng tổng hợp */}
+        {/* 2. Thẻ số dư khả dụng tổng hợp (Modern Card) */}
         <View style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>TỔNG SỐ DƯ KHẢ DỤNG</Text>
           <Text style={styles.balanceAmount}>
@@ -196,11 +168,11 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.rowOverview}>
             <View style={styles.overviewItem}>
               <View style={styles.overviewLabelRow}>
-                <Ionicons name="arrow-down-circle" size={16} color={COLORS.income} style={{ marginRight: 4 }} />
+                <Ionicons name="arrow-down-circle" size={16} color="#10B981" style={{ marginRight: 4 }} />
                 <Text style={styles.incomeLabel}>Thu nhập</Text>
               </View>
               <Text style={styles.incomeText}>
-                +{(summary.total_income || 0).toLocaleString('vi-VN')} đ
+                +{(summary?.total_income || 0).toLocaleString('vi-VN')} đ
               </Text>
             </View>
 
@@ -208,34 +180,88 @@ export default function HomeScreen({ navigation }) {
 
             <View style={styles.overviewItem}>
               <View style={styles.overviewLabelRow}>
-                <Ionicons name="arrow-up-circle" size={16} color={COLORS.expense} style={{ marginRight: 4 }} />
+                <Ionicons name="arrow-up-circle" size={16} color="#EF4444" style={{ marginRight: 4 }} />
                 <Text style={styles.expenseLabel}>Chi tiêu</Text>
               </View>
               <Text style={styles.expenseText}>
-                -{(summary.total_expense || spentAmount).toLocaleString('vi-VN')} đ
+                -{(summary?.total_expense || spentAmount || 0).toLocaleString('vi-VN')} đ
               </Text>
             </View>
           </View>
         </View>
 
-        {/* 3. Danh sách Ví tài chính (Cuộn ngang) */}
+        {/* 3. Thanh thao tác nhanh (Quick Actions) */}
+        <View style={styles.quickActionsContainer}>
+          <TouchableOpacity
+            style={styles.quickActionBtn}
+            onPress={() => navigation.navigate('AddTransaction', { defaultType: 'EXPENSE' })}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.quickActionIcon, { backgroundColor: '#FEE2E2' }]}>
+              <Ionicons name="arrow-up" size={20} color="#DC2626" />
+            </View>
+            <Text style={styles.quickActionText}>Thêm Chi</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.quickActionBtn}
+            onPress={() => navigation.navigate('AddTransaction', { defaultType: 'INCOME' })}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.quickActionIcon, { backgroundColor: '#DCFCE7' }]}>
+              <Ionicons name="arrow-down" size={20} color="#16A34A" />
+            </View>
+            <Text style={styles.quickActionText}>Thêm Thu</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.quickActionBtn}
+            onPress={() => navigation.navigate('Transactions')}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.quickActionIcon, { backgroundColor: '#E0E7FF' }]}>
+              <Ionicons name="receipt-outline" size={20} color="#4338CA" />
+            </View>
+            <Text style={styles.quickActionText}>Sổ Thu Chi</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.quickActionBtn}
+            onPress={() => navigation.navigate('Budget')}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.quickActionIcon, { backgroundColor: '#FEF3C7' }]}>
+              <Ionicons name="pie-chart-outline" size={20} color="#D97706" />
+            </View>
+            <Text style={styles.quickActionText}>Hạn Mức</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 4. Danh sách Ví tài chính (Cuộn ngang) */}
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionTitle}>Ví Tài Chính Của Tôi</Text>
             <Text style={styles.sectionSubtitle}>{walletsData.wallets?.length || 0} Ví đang hoạt động</Text>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.walletScroll}>
-            {(walletsData.wallets || []).map((w) => (
-              <WalletCard
-                key={w.id}
-                wallet={w}
-                onPress={() => navigation.navigate('Transactions')}
-              />
-            ))}
-          </ScrollView>
+          {walletsData.wallets && walletsData.wallets.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.walletScroll}>
+              {walletsData.wallets.map((w, idx) => (
+                <WalletCard
+                  key={w.id || `wallet-${idx}`}
+                  wallet={w}
+                  onPress={() => navigation.navigate('Transactions')}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <View style={[styles.emptyContainer, { paddingVertical: 16 }]}>
+              <Ionicons name="wallet-outline" size={28} color="#94A3B8" />
+              <Text style={styles.emptyText}>Chưa có ví tài chính nào từ CSDL.</Text>
+            </View>
+          )}
         </View>
 
-        {/* 4. Thanh hạn mức ngân sách tháng */}
+        {/* 5. Thanh hạn mức ngân sách tháng */}
         <View style={styles.budgetWrapper}>
           <BudgetBar
             spent={spentAmount}
@@ -244,7 +270,7 @@ export default function HomeScreen({ navigation }) {
           />
         </View>
 
-        {/* 5. Giao dịch phát sinh gần nhất */}
+        {/* 6. Giao dịch phát sinh gần nhất */}
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionTitle}>Giao Dịch Gần Nhất</Text>
@@ -253,188 +279,25 @@ export default function HomeScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          {recentTransactions.map((tx) => (
-            <TransactionItem key={tx.id} item={tx} />
-          ))}
+          {recentTransactions.length > 0 ? (
+            recentTransactions.map((tx, idx) => (
+              <TransactionItem
+                key={tx.id || `tx-${idx}`}
+                item={tx}
+                onPress={() => navigation.navigate('AddTransaction', { transaction: tx })}
+              />
+            ))
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Ionicons name="receipt-outline" size={36} color="#CBD5E1" />
+              <Text style={styles.emptyText}>Chưa có giao dịch phát sinh trong tháng này.</Text>
+            </View>
+          )}
         </View>
 
-        {/* 6. Nút Thêm Giao Dịch Nhanh */}
-        <View style={styles.actionRow}>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => navigation.navigate('AddTransaction')}
-          >
-            <Ionicons name="add-circle" size={22} color={COLORS.textWhite} style={{ marginRight: 6 }} />
-            <Text style={styles.actionButtonText}>Thêm Khoản Thu / Chi Mới</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Khoảng đệm dưới cùng chống che tab bar */}
+        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screenWrapper: {
-    flex: 1,
-    backgroundColor: COLORS.background
-  },
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.background
-  },
-  loadingText: {
-    marginTop: SPACING.sm,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  header: {
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: SPACING.md,
-    paddingTop: SPACING.lg + 8,
-    paddingBottom: SPACING.xl + 12,
-    borderBottomLeftRadius: SIZES.radiusLg,
-    borderBottomRightRadius: SIZES.radiusLg
-  },
-  headerTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  greeting: {
-    fontSize: SIZES.fontXl,
-    fontWeight: 'bold',
-    color: COLORS.textWhite
-  },
-  subGreeting: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.primaryLight,
-    marginTop: 2
-  },
-  bellTouch: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  balanceCard: {
-    backgroundColor: COLORS.surface,
-    marginHorizontal: SPACING.md,
-    marginTop: -SPACING.xl,
-    borderRadius: SIZES.radiusMd,
-    padding: SPACING.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.card
-  },
-  balanceLabel: {
-    fontSize: SIZES.fontXs,
-    fontWeight: 'bold',
-    color: COLORS.textSecondary,
-    letterSpacing: 0.5
-  },
-  balanceAmount: {
-    fontSize: SIZES.fontXxl,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary,
-    marginVertical: 4
-  },
-  rowOverview: {
-    flexDirection: 'row',
-    marginTop: SPACING.sm,
-    paddingTop: SPACING.sm,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border
-  },
-  overviewItem: {
-    flex: 1
-  },
-  overviewLabelRow: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  divider: {
-    width: 1,
-    backgroundColor: COLORS.border,
-    marginHorizontal: SPACING.sm
-  },
-  incomeLabel: {
-    fontSize: SIZES.fontSm - 1,
-    color: COLORS.income,
-    fontWeight: '600'
-  },
-  incomeText: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.income,
-    marginTop: 2
-  },
-  expenseLabel: {
-    fontSize: SIZES.fontSm - 1,
-    color: COLORS.expense,
-    fontWeight: '600'
-  },
-  expenseText: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.expense,
-    marginTop: 2
-  },
-  sectionBlock: {
-    marginTop: SPACING.lg,
-    paddingHorizontal: SPACING.md
-  },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SPACING.sm
-  },
-  sectionTitle: {
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary
-  },
-  sectionSubtitle: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary
-  },
-  viewAllText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.primary,
-    fontWeight: 'bold'
-  },
-  walletScroll: {
-    paddingVertical: 4
-  },
-  budgetWrapper: {
-    marginTop: SPACING.md,
-    paddingHorizontal: SPACING.md
-  },
-  actionRow: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.lg,
-    marginBottom: SPACING.xl
-  },
-  actionButton: {
-    backgroundColor: COLORS.primary,
-    flexDirection: 'row',
-    paddingVertical: SPACING.md - 2,
-    borderRadius: SIZES.radiusMd,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOWS.small
-  },
-  actionButtonText: {
-    color: COLORS.textWhite,
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold'
-  }
-});

@@ -13,38 +13,20 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../../api/endpoints';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { budgetStyles as styles, COLORS } from '../../constants/appStyles';
 import BudgetBar from '../../components/BudgetBar';
 import CustomButton from '../../components/CustomButton';
 
 /**
  * ==============================================================================
  * MÀN HÌNH: HẠN MỨC NGÂN SÁCH (BUDGET SCREEN)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Logic Backend & API: Trịnh Thành Đạt (Lead Architect)
+ * Quản lý Chi tiêu & Hoạch định Tài chính Cá nhân Thông minh
  * ==============================================================================
  */
 export default function BudgetScreen() {
-  const [budgetData, setBudgetData] = useState({
-    month: 10,
-    year: 2026,
-    overall_budget: {
-      limit_amount: 12000000,
-      spent_amount: 8500000,
-      remaining_amount: 3500000,
-      percentage: 71,
-      status_level: 'WARNING',
-      status_text: 'Đã tiêu 71% ngân sách. Chú ý chi tiêu trong tầm an toàn!',
-      days_remaining: 24,
-      daily_safe_spending: 145000
-    },
-    category_budgets: [
-      { id: 1, name: 'Ăn uống', limit_amount: 5000000, spent_amount: 3800000, percentage: 76, color_code: '#FF6B6B' },
-      { id: 2, name: 'Đi lại', limit_amount: 1500000, spent_amount: 900000, percentage: 60, color_code: '#FFE66D' },
-      { id: 3, name: 'Mua sắm', limit_amount: 2500000, spent_amount: 2200000, percentage: 88, color_code: '#4ECDC4' },
-      { id: 4, name: 'Hóa đơn', limit_amount: 2000000, spent_amount: 1600000, percentage: 80, color_code: '#1A535C' }
-    ]
-  });
+  // 100% Dữ liệu thực tế từ CSDL MySQL (Khởi tạo rỗng, không hardcode mock data)
+  const [budgetData, setBudgetData] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -54,12 +36,14 @@ export default function BudgetScreen() {
 
   const fetchBudgetStatus = async () => {
     try {
+      setErrorMsg(null);
       const res = await api.getBudgetStatus();
       if (res.data) {
         setBudgetData(res.data);
       }
     } catch (error) {
-      console.warn('[BudgetScreen] Lỗi nạp ngân sách, dùng fallback mock:', error.message);
+      console.warn('[BudgetScreen] Lỗi nạp ngân sách từ Backend:', error.message);
+      setErrorMsg(error.message || 'Không thể nạp dữ liệu ngân sách từ máy chủ.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -79,6 +63,12 @@ export default function BudgetScreen() {
     const currentLimit = budgetData?.overall_budget?.limit_amount || 12000000;
     setNewLimitInput(currentLimit.toString());
     setShowEditModal(true);
+  };
+
+  const formatLimitPreview = (val) => {
+    const num = parseFloat(val.replace(/[^0-9]/g, ''));
+    if (!num) return '0 đ';
+    return num.toLocaleString('vi-VN') + ' đ';
   };
 
   const handleSaveBudget = async () => {
@@ -165,17 +155,26 @@ export default function BudgetScreen() {
           isCard={false}
         />
 
-        {/* Thanh Thông Điệp Cảnh Báo Thông Minh */}
-        <View style={[styles.alertBox, { backgroundColor: statusColor + '15', borderColor: statusColor }]}>
+        {/* Thanh Khuyến Nghị Chi Tiêu Thông Minh (Không trùng lặp thông điệp) */}
+        <View style={[styles.alertBox, { backgroundColor: statusColor + '12', borderColor: statusColor }]}>
           <Ionicons
             name={statusIcon}
             size={22}
             color={statusColor}
             style={{ marginRight: 8 }}
           />
-          <Text style={[styles.alertText, { color: statusColor }]}>
-            {overall?.status_text || (isBudgetSet ? 'Ngân sách trong tầm kiểm soát!' : 'Chưa thiết lập ngân sách tổng cho tháng này.')}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.alertText, { color: statusColor }]}>
+              {isBudgetSet
+                ? `Còn lại ${(overall?.remaining_amount || 0).toLocaleString('vi-VN')} đ cho ${overall?.days_remaining || 24} ngày tới.`
+                : 'Chưa thiết lập ngân sách tổng cho tháng này.'}
+            </Text>
+            {isBudgetSet && (
+              <Text style={styles.alertSubText}>
+                💡 Khuyên nghị: Giới hạn tối đa {(overall?.daily_safe_spending || 0).toLocaleString('vi-VN')} đ/ngày để không vỡ kế hoạch.
+              </Text>
+            )}
+          </View>
         </View>
 
         {/* Nút Chỉnh Sửa Hạn Mức */}
@@ -216,18 +215,20 @@ export default function BudgetScreen() {
         <Text style={styles.sectionSubtitle}>Phân loại chi tiết</Text>
       </View>
 
-      {(budgetData?.category_budgets || []).map((cat) => {
+      {(budgetData?.category_budgets || []).map((cat, index) => {
+        const catId = cat.budget_id || cat.category_id || cat.id || `cat-${index}`;
+        const catName = cat.category_name || cat.name || `Danh mục #${index + 1}`;
         const catSpent = parseFloat(cat.spent_amount || 0);
-        const catLimit = parseFloat(cat.limit_amount || 0);
+        const catLimit = parseFloat(cat.amount_limit ?? cat.limit_amount ?? 0);
         const catPct = catLimit > 0 ? Math.round((catSpent / catLimit) * 100) : 0;
         const catColor = cat.color_code || COLORS.primary;
 
         return (
-          <View key={cat.id} style={styles.catBudgetCard}>
+          <View key={catId} style={styles.catBudgetCard}>
             <View style={styles.catHeader}>
               <View style={styles.catTitleRow}>
                 <View style={[styles.catDot, { backgroundColor: catColor }]} />
-                <Text style={styles.catName}>{cat.name}</Text>
+                <Text style={styles.catName}>{catName}</Text>
               </View>
               <Text style={[styles.catPercent, { color: catColor }]}>
                 {catLimit > 0 ? `${catPct}%` : 'Chưa đặt'}
@@ -273,6 +274,23 @@ export default function BudgetScreen() {
               onChangeText={setNewLimitInput}
             />
 
+            <Text style={styles.modalPreviewText}>
+              Định dạng: {formatLimitPreview(newLimitInput)}
+            </Text>
+
+            {/* Quick Limit Presets */}
+            <View style={styles.presetChipRow}>
+              {[5000000, 10000000, 15000000, 20000000].map((presetVal) => (
+                <TouchableOpacity
+                  key={presetVal}
+                  style={styles.presetChip}
+                  onPress={() => setNewLimitInput(presetVal.toString())}
+                >
+                  <Text style={styles.presetChipText}>{presetVal / 1000000} Triệu</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
             <View style={styles.modalBtnRow}>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
@@ -299,228 +317,3 @@ export default function BudgetScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background
-  },
-  contentContainer: {
-    padding: SPACING.md,
-    paddingBottom: SPACING.xxl
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.background
-  },
-  loadingText: {
-    marginTop: SPACING.sm,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  mainCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusLg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.md,
-    overflow: 'hidden',
-    ...SHADOWS.card
-  },
-  alertBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.sm + 4,
-    borderRadius: SIZES.radiusSm,
-    borderWidth: 1,
-    marginTop: SPACING.md
-  },
-  alertText: {
-    flex: 1,
-    fontSize: SIZES.fontSm,
-    fontWeight: '600'
-  },
-  editLimitBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: SPACING.md,
-    paddingVertical: SPACING.sm,
-    backgroundColor: COLORS.surfaceVariant,
-    borderRadius: SIZES.radiusSm
-  },
-  editLimitText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.primary,
-    fontWeight: 'bold'
-  },
-  metricGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.md
-  },
-  metricCard: {
-    width: '48%',
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusMd,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.small
-  },
-  metricIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: COLORS.surfaceVariant,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: SPACING.xs
-  },
-  metricLabel: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary,
-    marginBottom: 2
-  },
-  metricValue: {
-    fontSize: SIZES.fontMd,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary
-  },
-  metricSub: {
-    fontSize: SIZES.fontXs - 2,
-    color: COLORS.textMuted,
-    marginTop: 2
-  },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-    marginTop: SPACING.xs
-  },
-  sectionTitle: {
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary
-  },
-  sectionSubtitle: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary
-  },
-  catBudgetCard: {
-    backgroundColor: COLORS.surface,
-    padding: SPACING.md,
-    borderRadius: SIZES.radiusMd,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.sm,
-    ...SHADOWS.small
-  },
-  catHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SPACING.xs
-  },
-  catTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  catDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 8
-  },
-  catName: {
-    fontSize: SIZES.fontSm,
-    fontWeight: '600',
-    color: COLORS.textPrimary
-  },
-  catPercent: {
-    fontSize: SIZES.fontSm,
-    fontWeight: 'bold'
-  },
-  catProgressTrack: {
-    height: 8,
-    backgroundColor: COLORS.surfaceVariant,
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginVertical: 4
-  },
-  catProgressFill: {
-    height: '100%',
-    borderRadius: 4
-  },
-  catFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 4
-  },
-  catFooterText: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    padding: SPACING.lg
-  },
-  modalContent: {
-    backgroundColor: COLORS.surface,
-    borderRadius: SIZES.radiusLg,
-    padding: SPACING.lg
-  },
-  modalTitle: {
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    marginBottom: SPACING.xs
-  },
-  modalSub: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary,
-    marginBottom: SPACING.md
-  },
-  modalInput: {
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: SIZES.radiusSm,
-    padding: SPACING.md,
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    backgroundColor: COLORS.surfaceVariant,
-    color: COLORS.textPrimary,
-    marginBottom: SPACING.lg
-  },
-  modalBtnRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
-  },
-  modalCancelBtn: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    marginRight: SPACING.sm
-  },
-  modalCancelText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary,
-    fontWeight: '600'
-  },
-  modalSaveBtn: {
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    borderRadius: SIZES.radiusSm
-  },
-  modalSaveText: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textWhite,
-    fontWeight: 'bold'
-  }
-});

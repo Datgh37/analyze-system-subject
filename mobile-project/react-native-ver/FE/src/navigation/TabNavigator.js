@@ -6,7 +6,7 @@ import TransactionsScreen from '../screens/main/TransactionsScreen';
 import BudgetScreen from '../screens/main/BudgetScreen';
 import ReportScreen from '../screens/main/ReportScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
-import { COLORS } from '../constants/theme';
+import { COLORS } from '../constants/appStyles';
 
 const Tab = createBottomTabNavigator();
 

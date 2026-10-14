@@ -12,72 +12,21 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../../api/endpoints';
-import { COLORS, SPACING, SIZES, SHADOWS } from '../../constants/theme';
+import { transactionStyles as styles, COLORS } from '../../constants/appStyles';
 import TransactionItem from '../../components/TransactionItem';
 
 /**
  * ==============================================================================
  * MÀN HÌNH: SỔ GIAO DỊCH (TRANSACTIONS SCREEN / LỊCH SỬ THU CHI)
- * Phụ trách Giao diện: Trần Trọng Đại (UI Lead)
- * Logic Backend & API: Trịnh Thành Đạt (Lead Architect)
+ * Quản lý Chi tiêu & Hoạch định Tài chính Cá nhân Thông minh
  * ==============================================================================
  */
 export default function TransactionsScreen({ navigation }) {
-  const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      category_name: 'Ăn uống',
-      note: 'Cơm trưa văn phòng',
-      amount: 45000,
-      transaction_type: 'EXPENSE',
-      transaction_date: '2026-09-29',
-      wallet_name: 'Ví Tiền Mặt',
-      color_code: '#FF6B6B'
-    },
-    {
-      id: 2,
-      category_name: 'Đi lại',
-      note: 'Đổ xăng xe máy',
-      amount: 80000,
-      transaction_type: 'EXPENSE',
-      transaction_date: '2026-09-28',
-      wallet_name: 'Ví Tiền Mặt',
-      color_code: '#FFE66D'
-    },
-    {
-      id: 3,
-      category_name: 'Mua sắm',
-      note: 'Sách Lập trình React Native',
-      amount: 250000,
-      transaction_type: 'EXPENSE',
-      transaction_date: '2026-09-27',
-      wallet_name: 'Ngân Hàng Vietcombank',
-      color_code: '#4ECDC4'
-    },
-    {
-      id: 4,
-      category_name: 'Hóa đơn',
-      note: 'Tiền điện nước tháng 9',
-      amount: 1200000,
-      transaction_type: 'EXPENSE',
-      transaction_date: '2026-09-25',
-      wallet_name: 'Ngân Hàng Vietcombank',
-      color_code: '#1A535C'
-    },
-    {
-      id: 5,
-      category_name: 'Lương',
-      note: 'Lương thực tập part-time',
-      amount: 5000000,
-      transaction_type: 'INCOME',
-      transaction_date: '2026-09-20',
-      wallet_name: 'Ngân Hàng Vietcombank',
-      color_code: '#2EC4B6'
-    }
-  ]);
-
+  // 100% Dữ liệu thực tế từ CSDL MySQL (Khởi tạo mảng rỗng, không hardcode mock data)
+  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [filterType, setFilterType] = useState('ALL'); // 'ALL' | 'EXPENSE' | 'INCOME'
   const [keyword, setKeyword] = useState('');
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
@@ -85,6 +34,7 @@ export default function TransactionsScreen({ navigation }) {
 
   const fetchTransactions = async () => {
     try {
+      setErrorMsg(null);
       const typeParam = filterType === 'ALL' ? null : filterType;
       const res = await api.getTransactions({
         month: currentMonth,
@@ -94,12 +44,13 @@ export default function TransactionsScreen({ navigation }) {
       });
       if (res.data) {
         const list = res.data.transactions || res.data;
-        if (Array.isArray(list) && list.length > 0) {
+        if (Array.isArray(list)) {
           setTransactions(list);
         }
       }
     } catch (error) {
-      console.warn('[TransactionsScreen] Lỗi nạp dữ liệu, dùng mock fallback:', error.message);
+      console.warn('[TransactionsScreen] Lỗi nạp dữ liệu từ Backend:', error.message);
+      setErrorMsg(error.message || 'Không thể tải sổ giao dịch từ máy chủ.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -172,7 +123,7 @@ export default function TransactionsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* 1. Thanh tìm kiếm & Lọc tháng */}
+      {/* 1. Thanh tìm kiếm & Bộ chọn tháng */}
       <View style={styles.topFilterBar}>
         <View style={styles.searchBox}>
           <Ionicons name="search-outline" size={18} color={COLORS.textSecondary} style={{ marginRight: 6 }} />
@@ -189,6 +140,44 @@ export default function TransactionsScreen({ navigation }) {
               <Ionicons name="close-circle" size={16} color={COLORS.textMuted} />
             </TouchableOpacity>
           ) : null}
+        </View>
+
+        {/* Thanh chuyển tháng nhanh */}
+        <View style={styles.monthNavigator}>
+          <TouchableOpacity
+            style={styles.monthNavBtn}
+            onPress={() => {
+              if (currentMonth === 1) {
+                setCurrentMonth(12);
+                setCurrentYear((y) => y - 1);
+              } else {
+                setCurrentMonth((m) => m - 1);
+              }
+            }}
+          >
+            <Ionicons name="chevron-back" size={18} color={COLORS.primary} />
+          </TouchableOpacity>
+
+          <View style={styles.monthLabelWrap}>
+            <Ionicons name="calendar-outline" size={16} color={COLORS.primary} style={{ marginRight: 6 }} />
+            <Text style={styles.monthLabelText}>
+              Tháng {currentMonth}/{currentYear}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.monthNavBtn}
+            onPress={() => {
+              if (currentMonth === 12) {
+                setCurrentMonth(1);
+                setCurrentYear((y) => y + 1);
+              } else {
+                setCurrentMonth((m) => m + 1);
+              }
+            }}
+          >
+            <Ionicons name="chevron-forward" size={18} color={COLORS.primary} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -242,15 +231,11 @@ export default function TransactionsScreen({ navigation }) {
         contentContainerStyle={styles.listContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <TransactionItem
+            item={item}
             onPress={() => navigation.navigate('AddTransaction', { transaction: item })}
-          >
-            <TransactionItem
-              item={item}
-              onDelete={() => handleDeleteTransaction(item.id, item.note)}
-            />
-          </TouchableOpacity>
+            onDelete={() => handleDeleteTransaction(item.id, item.note)}
+          />
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
@@ -269,144 +254,3 @@ export default function TransactionsScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background
-  },
-  centerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.background
-  },
-  loadingText: {
-    marginTop: SPACING.sm,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary
-  },
-  topFilterBar: {
-    paddingHorizontal: SPACING.md,
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.xs
-  },
-  searchBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.surface,
-    borderRadius: SIZES.radiusMd,
-    paddingHorizontal: SPACING.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    height: 44,
-    ...SHADOWS.small
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: SIZES.fontSm,
-    color: COLORS.textPrimary
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    backgroundColor: COLORS.background
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: SPACING.sm,
-    borderRadius: SIZES.radiusSm,
-    alignItems: 'center',
-    backgroundColor: COLORS.surfaceVariant,
-    marginHorizontal: 3
-  },
-  tabButtonActive: {
-    backgroundColor: COLORS.primary
-  },
-  tabExpenseActive: {
-    backgroundColor: COLORS.expense
-  },
-  tabIncomeActive: {
-    backgroundColor: COLORS.income
-  },
-  tabText: {
-    fontSize: SIZES.fontSm,
-    fontWeight: '600',
-    color: COLORS.textSecondary
-  },
-  tabTextActive: {
-    color: COLORS.textWhite
-  },
-  summaryBar: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.surface,
-    marginHorizontal: SPACING.md,
-    marginBottom: SPACING.xs,
-    paddingVertical: SPACING.sm,
-    paddingHorizontal: SPACING.md,
-    borderRadius: SIZES.radiusSm,
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  },
-  summaryItem: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  summaryLabel: {
-    fontSize: SIZES.fontXs,
-    color: COLORS.textSecondary,
-    marginRight: 6
-  },
-  summaryExpense: {
-    fontSize: SIZES.fontSm,
-    fontWeight: 'bold',
-    color: COLORS.expense
-  },
-  summaryIncome: {
-    fontSize: SIZES.fontSm,
-    fontWeight: 'bold',
-    color: COLORS.income
-  },
-  summaryDivider: {
-    width: 1,
-    height: 18,
-    backgroundColor: COLORS.border
-  },
-  listContent: {
-    paddingHorizontal: SPACING.md,
-    paddingTop: SPACING.xs,
-    paddingBottom: SPACING.xl
-  },
-  emptyContainer: {
-    paddingVertical: SPACING.xxl,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  emptyTitle: {
-    fontSize: SIZES.fontLg,
-    fontWeight: 'bold',
-    color: COLORS.textPrimary,
-    marginTop: SPACING.sm
-  },
-  emptySubtitle: {
-    fontSize: SIZES.fontSm,
-    color: COLORS.textSecondary,
-    marginTop: 4,
-    textAlign: 'center'
-  },
-  emptyAddBtn: {
-    marginTop: SPACING.md,
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm + 2,
-    borderRadius: SIZES.radiusMd
-  },
-  emptyAddBtnText: {
-    color: COLORS.textWhite,
-    fontSize: SIZES.fontSm,
-    fontWeight: 'bold'
-  }
-});
