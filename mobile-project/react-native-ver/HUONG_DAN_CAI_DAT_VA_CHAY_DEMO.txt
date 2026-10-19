@@ -1,0 +1,81 @@
+================================================================================
+HUONG DAN CAI DAT VA VAN HANH DEMO DO AN LAP TRINH THIET BI DI DONG
+================================================================================
+Truong: Dai hoc Cong nghe Dong Nai (DNTU) - Khoa CNTT
+De tai: He thong Quan ly Chi tieu va Hoach dinh Tai chinh Ca nhan Thong minh
+Nhom thuc hien: Nhom 46
+ - Trinh Thanh Dat  - MSSV: 1923050149 (Nhom truong)
+ - Tran Trong Dai   - MSSV: 1923050745
+
+================================================================================
+I. YEU CAU MOI TRUONG
+================================================================================
+1. WAMP Server: Apache Port 80 va MySQL Port 3306 hoac 3308.
+2. Node.js: Phien ban 18.x tro len (Khuyen nghi v20 LTS).
+3. Thiet bi chay App:
+   - Cach 1 (Nhanh nhat): Chay truc tiep tren Web Browser may tinh (Chrome/Edge).
+   - Cach 2: Chay tren dien thoai co cai app Expo Go (quet ma QR).
+
+================================================================================
+II. QUY TRINH CAI DAT & CHAY DEMO (3 BUOC SIEU TOC)
+================================================================================
+
+--- BUOC 1: KHOI TAO CSDL MYSQL TREN WAMP ---
+1. Bat WampServer (Dam bao icon goc phai thanh Taskbar mau XANH LA CAY).
+2. Mo trinh duyet vao phpMyAdmin: http://localhost/phpmyadmin
+3. Tao Database moi ten: sql_nhom46_itimi (Collation: utf8mb4_unicode_ci).
+4. Chon Database vua tao -> Chon the "Import" (Nhap).
+5. Bam "Choose File" va chon tep: BE\sql\database_schema.sql
+6. Keo xuong duoi bam "Import" / "Go".
+(*) Ghi chu: File SQL da chua day du bang va 92 giao dich mau 6 thang (T5-T10/2026),
+    4 vi tien, 13 danh muc va han muc ngan sach.
+
+--- BUOC 2: LIEN KET BACKEND PHP VOI WAMP WWW ---
+1. Nhap dup chuot chay file: 2_KET_NOI_WAMP.bat
+2. Script se tu dong tao lien ket (Junction) vao C:\wamp64\www\expense_api
+3. Kiem tra API: Mo trinh duyet go link sau:
+   http://localhost/expense_api/api/reports/monthly_summary.php?user_id=1&month=2026-09
+   => Neu tra ve chuoi JSON la Backend da san sang 100%!
+
+--- BUOC 3: CAI DAT THU VIEN VA BAT HE THONG ---
+1. Cai dat thu vien (Chi can chay lan dau):
+   - Nhap dup chay file: 1_CAI_DAT_THU_VIEN.bat
+   - Cho he thong tai node_modules cho ca Realtime Server va Mobile App.
+
+2. Khoi dong Realtime Gateway (Socket.IO):
+   - Nhap dup chay file: 3_CHAY_REALTIME_SERVER.bat
+   - Terminal bao: "[Expense Realtime] Server is running on port 3001" (Giu cua so nay).
+
+3. Khoi dong Mobile App (Expo):
+   - Nhap dup chay file: 4_CHAY_APP_MOBILE.bat
+   - De xem tren Web may tinh: Bam phim 'w'.
+   - De xem tren Dien thoai: Mo app Expo Go quet ma QR tren man hinh.
+
+================================================================================
+III. TAI KHOAN DANG NHAP DEMO
+================================================================================
+Email:     nguyenvanan@gmail.com
+Mat khau:  password123
+(*) Tai khoan da duoc nap san du lieu stress-test 92 giao dich 6 thang,
+    tong tai san 68.150.000d khop hoan toan CSDL.
+
+================================================================================
+IV. KICH BAN DANH GIA CHAT LUONG (DEMO SCENARIOS)
+================================================================================
+1. Dang nhap: Vao bang email/pass tren, vao thang Home Dashboard.
+2. Home: Xem the tong tai san, 4 vi tien, 5 giao dich moi nhat.
+3. Ngan sach (Budget): Xem thanh tien do doi mau (Xanh -> Vang -> Do) va chi tieu an toan ngay (DSA).
+4. Bao cao (Report):
+   - Bam nut chuyen doi [Chi tieu | Thu nhap].
+   - Xem bieu do cot doi chieu 6 thang (T5 - T10/2026).
+   - Xem bieu do tron co ty trong % tung danh muc ro rang.
+   - Xem bang tong hop dong tien chi tiet cuoi trang.
+5. Giao dich (Transactions): Xem toan bo 92 giao dich, loc theo thang va danh muc.
+6. Realtime Socket.IO 0ms:
+   - Bam nut (+) them 1 khoan chi tieu (Vi du: An uong 50.000d).
+   - So du vi lap tuc tru 50k, thanh ngan sach tu nhay, bieu do tu ve lai
+     ngay lap tuc ma KHONG CAN LOAD LAI TRANG (Realtime 0ms).
+
+================================================================================
+CHUC THAY/CO VA CAC BAN CO TRAI NGHIEM DANH GIA TOT NHAT!
+================================================================================

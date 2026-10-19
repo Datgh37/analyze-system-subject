@@ -26,6 +26,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-09.01` |
 | **3. Mức độ ưu tiên** | Bắt buộc |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ Thông báo & Cảnh báo (Notification Service - FCM Push / Local Alarm) |
 | **5. Mô tả tóm tắt** | Ứng dụng lý thuyết Cú hích (Nudge Theory của Giáo sư Richard Thaler - Giải Nobel Kinh tế 2017) để tự động phát hiện các rủi ro hoặc hành vi chi tiêu lệch chuẩn trong thời gian thực; tự động gửi các thông điệp định hướng hành vi nhẹ nhàng đúng thời điểm vàng (Just-In-Time Nudge) như: Cảnh báo chi tiêu chạm trần ngày DSA, Phát hiện gói thuê bao định kỳ ngủ quên (Zombie Subscriptions), Nhắc nhở tích lũy thặng dư khi có thu nhập mới, hỗ trợ người dùng giữ vững kỷ luật tài chính tự nguyện mà không cảm thấy bị gò bó hay trừng phạt. |
 | **6. Điểm kích hoạt (Trigger)** | Được động cơ AI Nudge Engine tự động kích hoạt ngay sau một sự kiện tài chính (thêm giao dịch chi tiêu, nhận thu nhập mới, hoặc đến lịch quét định kỳ hàng ngày). |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập và đang sử dụng hệ thống.<br>2. Tính năng Cú hích hành vi thông minh đang được kích hoạt trong cài đặt ứng dụng. |
@@ -46,6 +47,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-09.02` |
 | **3. Mức độ ưu tiên** | Cao |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ AI Đa phương thức (AI Multimodal Service — Explainable AI Reasoning Engine) |
 | **5. Mô tả tóm tắt** | Cung cấp tính năng Trí tuệ nhân tạo có thể giải thích được (Explainable AI - XAI), minh bạch hóa 100% logic thuật toán và bằng chứng số liệu đằng sau mỗi lời khuyên tài chính; người dùng có thể xem chi tiết lý do tại sao hệ thống đưa ra cú hích, công thức toán học nào được áp dụng và dữ liệu giao dịch lịch sử nào làm căn cứ, loại bỏ hoàn toàn định kiến "AI hộp đen" (Black Box) và xây dựng niềm tin bền vững giữa người dùng và hệ thống. |
 | **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn vào liên kết "Xem căn cứ & Lý do giải trình" hoặc nút "Tại sao tôi nhận được lời khuyên này?" trên thẻ cú hích (Mở rộng từ UC-09.01). |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đang xem một thẻ cú hích tài chính hoặc thông báo đề xuất của hệ thống.<br>2. Cú hích tài chính có chứa dữ liệu giải trình trong trường `rationaleExplanation`. |
@@ -106,6 +108,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-09.05` |
 | **3. Mức độ ưu tiên** | Cao |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ Thông báo & Cảnh báo (Notification Service — Push Alert nhắc nhở kết thúc thời gian hạ nhiệt 24h-48h) |
 | **5. Mô tả tóm tắt** | Ứng dụng nguyên lý kiến tạo ma sát tâm lý có lợi (Friction by Design & Thaler Behavioral Control) để bảo vệ người dùng trước các quyết định mua sắm bốc đồng (Impulse Buying); khi người dùng chuẩn bị thực hiện một khoản chi tiêu tùy chọn vượt ngưỡng tài chính an toàn (ví dụ: $> 20\%$ thu nhập tháng hoặc $> 3,000,000$ VND), hệ thống tự động kích hoạt Khoảng trễ tâm lý (Cooling-off Period) kéo dài 24h hoặc 48h; tạm hoãn việc ghi nhận giao dịch tức thời và hiển thị bản phân tích tác động tài chính sâu sắc, giúp người dùng chuyển đổi trạng thái tư duy từ bốc đồng cảm xúc (Hệ thống tư duy 1) sang lý trí điềm tĩnh (Hệ thống tư duy 2). |
 | **6. Điểm kích hoạt (Trigger)** | Người dùng nhập một khoản chi tiêu mới thuộc danh mục tùy chọn (Wants / Culture) có giá trị vượt ngưỡng kích hoạt khoảng trễ tâm lý trong cài đặt. |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập thành công vào hệ thống.<br>2. Người dùng đang thực hiện thêm mới một giao dịch chi tiêu tùy chọn (UC-03.01).<br>3. Tính năng Khoảng trễ tâm lý (Cooling-off Period) đang được kích hoạt trong hồ sơ rủi ro. |

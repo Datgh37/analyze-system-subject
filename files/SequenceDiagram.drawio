@@ -1,0 +1,888 @@
+<mxfile host="app.diagrams.net" agent="Antigravity IDE / Sequence Diagram Clean Architecture UML 2.5 (BCE Method Call Edition)" pages="5">
+  <diagram id="diag_sd01" name="SD-01: Bóc Tách Hóa Đơn AI OCR">
+    <mxGraphModel dx="1182" dy="707" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="banner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#4a6b82;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;align=center;arcSize=6;fontSize=13;" value="&lt;b style=&quot;font-size: 19px;&quot;&gt;SƠ ĐỒ TUẦN TỰ SD-01: BÓC TÁCH HÓA ĐƠN BẰNG AI VISION OCR &amp;amp; HẬU KIỂM TOÁN SỐ HỌC&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 15px; color: rgb(59, 89, 152);&quot;&gt;Áp dụng chuẩn IEEE 29148 &amp;amp; Mô hình BCE Hướng đối tượng cho Ca sử dụng UC-03.07 &amp;amp; UC-03.08&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="1680" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_user" parent="1" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=70;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="USER" vertex="1">
+          <mxGeometry height="1080" width="40" x="96" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_ui" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:ReceiptScanScreen&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Boundary / Form»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="210" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_ctrl" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:ReceiptController&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Control Object»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="420" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_ocr" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:ReceiptOcrService&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Service Object»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="635" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_ai" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:AIMultimodalService&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«External AI Service»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="160" x="850" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_audit" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:MathematicalAuditEngine&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Domain Engine»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="195" x="1057" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_repo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:WalletRepository&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Data Access»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="1305" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd1_db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:Database&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Entity / CSDL»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="130" x="1515" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_ui" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="890" width="12" x="274" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_ctrl" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="845" width="12" x="484" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_ocr" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="420" width="12" x="699" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_ai" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="75" width="12" x="924" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_audit" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="185" width="12" x="1149" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_repo" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="135" width="12" x="1369" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="act1_db" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="75" width="12" x="1574" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="m1_1" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="1: Chụp ảnh hóa đơn mua sắm siêu thị">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="106" y="180" as="sourcePoint" />
+            <mxPoint x="274" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_2" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="2: scanReceipt(imageFile, walletId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="286" y="215" as="sourcePoint" />
+            <mxPoint x="484" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_3" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="3: processReceipt(imageStream, walletId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="496" y="250" as="sourcePoint" />
+            <mxPoint x="699" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_4" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="4: extractReceiptData(imageBytes)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="711" y="285" as="sourcePoint" />
+            <mxPoint x="924" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_5" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="5: return ReceiptDataDto (danh sách món, thuế, tổng tiền)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="924" y="360" as="sourcePoint" />
+            <mxPoint x="711" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_6" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="6: auditReceipt(items, taxAmount, grandTotal)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="711" y="395" as="sourcePoint" />
+            <mxPoint x="1149" y="395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_7" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="7: Tính sai số: Delta = |(Tổng món + Thuế) - Tổng tiền|">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="425" />
+              <mxPoint x="1210" y="455" />
+            </Array>
+            <mxPoint x="1161" y="425" as="sourcePoint" />
+            <mxPoint x="1161" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="alt_audit" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=220;height=32;fillColor=none;strokeColor=#d35400;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontStyle=1;align=center;" value="alt [Kiểm toán số học]" vertex="1">
+          <mxGeometry height="210" width="600" x="645" y="466" as="geometry" />
+        </mxCell>
+        <mxCell id="alt_audit_sep" parent="1" style="line;strokeWidth=1.3;dashed=1;labelPosition=right;verticalLabelPosition=top;align=left;verticalAlign=bottom;spacingLeft=10;fontColor=#d35400;fontStyle=1;strokeColor=#d35400;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;" value="[else: Delta &gt; 0 - Phát hiện sai lệch số học]" vertex="1">
+          <mxGeometry height="15" width="600" x="645" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="m1_8a" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="8a: return Kết quả hợp lệ (status: MATCHED, delta: 0)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1149" y="515" as="sourcePoint" />
+            <mxPoint x="711" y="515" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_8b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="8b: return Phát hiện sai lệch (status: DISCREPANCY)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1149" y="595" as="sourcePoint" />
+            <mxPoint x="711" y="595" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_8c" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="8c: Gắn cờ cảnh báo sai lệch số học">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="699" y="625" as="sourcePoint" />
+            <mxPoint x="496" y="625" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_8d" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="8d: Hiển thị ô nghi vấn &amp;amp; cho phép người dùng sửa">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="484" y="655" as="sourcePoint" />
+            <mxPoint x="286" y="655" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="9: return ReceiptResponseDto (Dữ liệu đã kiểm toán)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="699" y="705" as="sourcePoint" />
+            <mxPoint x="496" y="705" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="10: return Hiển thị Form xem trước chi tiêu">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="484" y="735" as="sourcePoint" />
+            <mxPoint x="286" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="11: Bấm &#39;Xác nhận lưu giao dịch&#39; (Human-in-the-loop)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="106" y="785" as="sourcePoint" />
+            <mxPoint x="274" y="785" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="12: confirmReceiptTransaction(receiptDto)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="286" y="820" as="sourcePoint" />
+            <mxPoint x="484" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="13: deductBalance(walletId, grandTotal)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="496" y="855" as="sourcePoint" />
+            <mxPoint x="1369" y="855" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="14: executeUpdateWalletAndExpense(walletId, amount)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1381" y="895" as="sourcePoint" />
+            <mxPoint x="1574" y="895" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="15: return Kết quả cập nhật thành công (COMMIT)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1574" y="970" as="sourcePoint" />
+            <mxPoint x="1381" y="970" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="16: return TransactionResultDto (id, số dư mới)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1369" y="1000" as="sourcePoint" />
+            <mxPoint x="496" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="17: return Lưu giao dịch thành công">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="484" y="1035" as="sourcePoint" />
+            <mxPoint x="286" y="1035" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1_18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="18: Thông báo thành công &amp;amp; Cập nhật số dư ví tức thì">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="274" y="1070" as="sourcePoint" />
+            <mxPoint x="106" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_sd02" name="SD-02: Ghi Nhận Chi Tiêu Giọng Nói">
+    <mxGraphModel dx="2453" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="banner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#4a6b82;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;align=center;arcSize=6;fontSize=13;" value="&lt;b style=&quot;font-size: 19px;&quot;&gt;SƠ ĐỒ TUẦN TỰ SD-02: GHI NHẬN CHI TIÊU NHANH BẰNG KHẨU LỆNH GIỌNG NÓI (VOICE NLU)&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 15px; color: rgb(59, 89, 152);&quot;&gt;Xử lý ngôn ngữ tự nhiên ASR/NLU &amp;amp; Human-in-the-loop cho Ca sử dụng UC-03.11&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="1680" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_ui" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:VoiceRecorderModal&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Boundary / Form»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="150" x="205" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_ctrl" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:VoiceExpenseController&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Control Object»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="170" x="405" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_service" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:VoiceProcessingService&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Service Object»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="170" x="620" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_ai" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:AICloudVoiceService&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«AI ASR/NLU Service»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="160" x="850" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_matcher" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:ExpenseCategoryMatcher&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Domain Matcher»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="170" x="1070" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_repo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:ExpenseRepository&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Data Access»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="1300" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd2_bus" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;:DomainEventPublisher&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size: 10px;&quot;&gt;«Event Publisher»&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="170" x="1490" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="act2_ui" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="890" width="12" x="274" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="act2_ctrl" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="845" width="12" x="484" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="act2_service" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="775" width="12" x="699" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act2_ai" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="95" width="12" x="924" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="act2_matcher" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="75" width="12" x="1149" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="act2_repo" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;fontSize=13;" value="" vertex="1">
+          <mxGeometry height="110" width="12" x="1364" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="m2_1" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="1: Bấm giữ Micro &amp;amp; nói: &#39;Ăn bún bò Huế 45 nghìn tiền mặt&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="106" y="180" as="sourcePoint" />
+            <mxPoint x="274" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_2" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="2: parseVoiceExpense(audioBlob, userId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="286" y="215" as="sourcePoint" />
+            <mxPoint x="484" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_3" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="3: processVoiceAudio(audioBlob, userId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="496" y="250" as="sourcePoint" />
+            <mxPoint x="699" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_4" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="4: transcribeAndExtract(audioBytes, &#39;vi-VN&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="711" y="285" as="sourcePoint" />
+            <mxPoint x="924" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_5" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="5: return Kết quả bóc tách (Số tiền: 45k, Tên: Ăn bún bò, Ví: Tiền mặt)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="924" y="380" as="sourcePoint" />
+            <mxPoint x="711" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_6" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="6: resolveCategory(userId, &#39;Ăn uống&#39;, &#39;bún bò&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="711" y="415" as="sourcePoint" />
+            <mxPoint x="1149" y="415" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_7" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="7: return Danh mục tự động: &#39;Ăn sáng&#39; (categoryId: 102)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1149" y="490" as="sourcePoint" />
+            <mxPoint x="711" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="8: return ParsedVoiceExpenseDto">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="699" y="525" as="sourcePoint" />
+            <mxPoint x="496" y="525" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="9: return Điền sẵn Form chi tiêu (45k, Ăn sáng, Tiền mặt)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="484" y="560" as="sourcePoint" />
+            <mxPoint x="286" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="10: Chạm nút &#39;Xác nhận lưu&#39; (Human-in-the-loop)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="106" y="625" as="sourcePoint" />
+            <mxPoint x="274" y="625" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="11: createExpenseTransaction(expenseDto)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="286" y="670" as="sourcePoint" />
+            <mxPoint x="484" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="12: recordExpense(expenseDto)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="496" y="715" as="sourcePoint" />
+            <mxPoint x="699" y="715" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="13: saveExpenseWithVoiceLog(amount, walletId, transcript)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="711" y="830" as="sourcePoint" />
+            <mxPoint x="1364" y="830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="14: return ExpenseEntity đã lưu thành công (id: 1054)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1364" y="940" as="sourcePoint" />
+            <mxPoint x="711" y="940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#1a252f;" value="15: publish(ExpenseCreatedEvent(userId, 45000))">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="711" y="965" as="sourcePoint" />
+            <mxPoint x="1569" y="965" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="16: return Ghi nhận chi tiêu thành công">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="699" y="1000" as="sourcePoint" />
+            <mxPoint x="496" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="17: return Hoàn tất lưu giao dịch">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="484" y="1035" as="sourcePoint" />
+            <mxPoint x="286" y="1035" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2_18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;" value="18: Cập nhật số dư ví &amp;amp; Đóng cửa sổ thu âm">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="274" y="1070" as="sourcePoint" />
+            <mxPoint x="106" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DvN2RXChXfQp66v0e7fG-2" parent="1" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=70;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="USER" vertex="1">
+          <mxGeometry height="1080" width="40" x="80" y="85" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_sd03" name="SD-03: Thanh Toán VietQR &amp; Sổ Cái">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1800" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="banner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#4a6b82;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;align=center;arcSize=6;" value="&lt;b style=&#39;font-size:18px;&#39;&gt;SƠ ĐỒ TUẦN TỰ SD-03: THANH TOÁN CHUYỂN KHOẢN VIETQR &amp; CẬP NHẬT SỔ CÁI NỘI BỘ&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:14px;color:#3b5998;&#39;&gt;Chuẩn hóa EMVCo Dynamic QR &amp; Deeplink liên ngân hàng (Không giữ tiền) cho Ca sử dụng UC-03.10&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="1680" x="86" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_ui" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:VietQRPaymentScreen&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Boundary / Form&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="188" x="232" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_ctrl" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:PaymentController&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Control Object&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="168" x="452" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_service" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:VietQRService&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Service Object&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="158" x="672" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_napas" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:VietQRGateway&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;NAPAS 247 Gateway&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="158" x="892" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_bank" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:MobileBankingApp&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;External CoreBank App&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="168" x="1112" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_repo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:BankWalletRepository&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Data Access&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="188" x="1322" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd3_db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:Database&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Entity / CSDL&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="130" x="1556" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_ui" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="890" width="12" x="320" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_ctrl" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="845" width="12" x="530" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_service" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="775" width="12" x="745" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_napas" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="85" width="12" x="965" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_bank" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="105" width="12" x="1190" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_repo" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="115" width="12" x="1410" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="act3_db" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="65" width="12" x="1615" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="m3_1" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="1: Nhập số tiền 150k, chọn &#39;Ví Vietcombank&#39; &amp; quét mã người nhận">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="152" y="180" as="sourcePoint" />
+            <mxPoint x="320" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_2" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="2: generateVietQR(amount, receiverInfo, bankWalletId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="332" y="215" as="sourcePoint" />
+            <mxPoint x="530" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_3" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="3: createDynamicVietQRPayload(dto)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="542" y="250" as="sourcePoint" />
+            <mxPoint x="745" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_4" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="4: generateEMVCoPayload(binBank, accNo, amount: 150k, memo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="757" y="285" as="sourcePoint" />
+            <mxPoint x="965" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_5" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="5: return Chuỗi EMVCo + Đường dẫn Deeplink (&#39;vcb://...&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="965" y="370" as="sourcePoint" />
+            <mxPoint x="757" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_6" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="6: return VietQRResponseDto (mã QR, deeplink, refCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="745" y="405" as="sourcePoint" />
+            <mxPoint x="542" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_7" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="7: return Hiển thị mã QR &amp; Nút &#39;Mở App Ngân Hàng để chuyển tiền&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="440" as="sourcePoint" />
+            <mxPoint x="332" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="8: Bấm nút &#39;Mở App Ngân Hàng&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="152" y="480" as="sourcePoint" />
+            <mxPoint x="320" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="9: openBankingApp(deeplinkUrl)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="332" y="515" as="sourcePoint" />
+            <mxPoint x="1190" y="515" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="10: Xác thực Sinh trắc học/OTP &amp; chuyển tiền 150k">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1251" y="545" />
+              <mxPoint x="1251" y="575" />
+            </Array>
+            <mxPoint x="1202" y="545" as="sourcePoint" />
+            <mxPoint x="1202" y="575" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="11: Quay lại ứng dụng PFM &amp; bấm &#39;Đã hoàn tất thanh toán&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="152" y="660" as="sourcePoint" />
+            <mxPoint x="320" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="12: confirmPayment(refCode, bankWalletId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="332" y="705" as="sourcePoint" />
+            <mxPoint x="530" y="705" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="13: processPaymentConfirmation(refCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="542" y="750" as="sourcePoint" />
+            <mxPoint x="745" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="14: deductBalance(bankWalletId, 150000)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="757" y="815" as="sourcePoint" />
+            <mxPoint x="1410" y="815" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="15: executeUpdateWalletBalance(bankWalletId, 150000)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1422" y="850" as="sourcePoint" />
+            <mxPoint x="1615" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="16: return Cập nhật số dư CSDL thành công (COMMIT)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1615" y="915" as="sourcePoint" />
+            <mxPoint x="1422" y="915" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="17: return Số dư ví ngân hàng đã trừ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1410" y="945" as="sourcePoint" />
+            <mxPoint x="757" y="945" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="18: return ExpenseRecordedDto">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="745" y="980" as="sourcePoint" />
+            <mxPoint x="542" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="19: return Xác nhận thanh toán thành công">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="1015" as="sourcePoint" />
+            <mxPoint x="332" y="1015" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3_20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="20: Cập nhật số dư sổ cái ví Vietcombank trên PFM thành công">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="1050" as="sourcePoint" />
+            <mxPoint x="152" y="1050" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k4-h-kZCA1ha6J-2m7eQ-1" parent="1" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=70;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="USER" vertex="1">
+          <mxGeometry height="1080" width="40" x="131" y="85" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_sd04" name="SD-04: Động Cơ DSA &amp; Cú Hích Thaler">
+    <mxGraphModel dx="3504" dy="2096" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="banner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#4a6b82;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;align=center;arcSize=6;" value="&lt;b style=&#39;font-size:18px;&#39;&gt;SƠ ĐỒ TUẦN TỰ SD-04: ĐỘNG CƠ HẠN MỨC NGÀY DSA &amp; BẮN CÚ HÍCH THALER NUDGE KÈM XAI&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:14px;color:#3b5998;&#39;&gt;Tính toán hạn mức thích ứng DSA &amp; Minh bạch thuật toán Explainable AI cho Ca sử dụng UC-05.05 &amp; UC-09.01, 09.02&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="1680" x="84" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_ui" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:MobileAppClient&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Boundary / UI&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="152" x="248" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_handler" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:TransactionEventHandler&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Domain Event Handler&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="212" x="428" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_dsa" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:DSAEngine&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Domain Engine&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="679" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_nudge" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:BehavioralNudgeEngine&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Nudge Domain Engine&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="202" x="868" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_fcm" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:NotificationService&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;External FCM Push&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="162" x="1108" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_xai" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:ExplainableAIReporter&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;XAI Service&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="202" x="1308" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd4_db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:Database&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Entity / CSDL&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="130" x="1554" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="act4_handler" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="480" width="12" x="528" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="act4_dsa" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="185" width="12" x="743" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="act4_nudge" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="210" width="12" x="963" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="act4_fcm" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="52.5" width="12" x="1183" y="567.5" as="geometry" />
+        </mxCell>
+        <mxCell id="act4_ui" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="450" width="12" x="318" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="act4_xai" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="160" width="12" x="1403" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="m4_1" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="1: onExpenseCreated(ExpenseCreatedEvent(amount: 180k))">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="180" as="sourcePoint" />
+            <mxPoint x="528" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_2" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="2: recalculateDailySpendingAllowance(userId, date)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="215" as="sourcePoint" />
+            <mxPoint x="743" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_3" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="3: getRemainingFlexibleBudget(userId, currentMonth)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="755" y="255" as="sourcePoint" />
+            <mxPoint x="1613" y="255" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_4" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="4: return Dữ liệu ngân sách còn lại &amp; số ngày">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1613" y="305" as="sourcePoint" />
+            <mxPoint x="755" y="305" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_5" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="5: Tính: DSA = Ngân sách còn lại / Số ngày; V = Đã tiêu / DSA">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="804" y="325" />
+              <mxPoint x="804" y="355" />
+            </Array>
+            <mxPoint x="755" y="325" as="sourcePoint" />
+            <mxPoint x="755" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_6" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="6: saveDailySpendingAllowance(dsaRecord)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="755" y="375" as="sourcePoint" />
+            <mxPoint x="1613" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_7" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="7: evaluateNudgeRules(userId, dsaValue, velocity: 1.45)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="440" as="sourcePoint" />
+            <mxPoint x="963" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="opt_nudge" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=220;height=32;fillColor=none;strokeColor=#2980b9;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;align=center;" value="opt [Tốc độ tiêu tiền V &gt; 1.2 hoặc Chi tiêu &gt; 85% DSA]" vertex="1">
+          <mxGeometry height="185" width="560" x="894" y="471" as="geometry" />
+        </mxCell>
+        <mxCell id="m4_8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="8: Khởi tạo bản ghi Cú hích (NudgeRecord: ACTIVE)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1024" y="518" />
+              <mxPoint x="1024" y="543" />
+            </Array>
+            <mxPoint x="975" y="518" as="sourcePoint" />
+            <mxPoint x="975" y="543" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="9: sendPushNotification(deviceToken, nudgePayload)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="975" y="569" as="sourcePoint" />
+            <mxPoint x="1183" y="569" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="10: return Hiển thị thông báo: &#39;Bạn đã tiêu 88% hạn mức ngày...&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1183" y="620" as="sourcePoint" />
+            <mxPoint x="330" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="11: Bấm vào thông báo: &#39;Tại sao tôi nhận được lời khuyên này?&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="700" as="sourcePoint" />
+            <mxPoint x="318" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="12: getExplainableAIRationale(nudgeId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="810" as="sourcePoint" />
+            <mxPoint x="1403" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="13: queryDSAHistoryAndMetrics(userId, nudgeId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1415" y="845" as="sourcePoint" />
+            <mxPoint x="1613" y="845" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="14: return Dữ liệu số học và xu hướng chi tiêu">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1613" y="895" as="sourcePoint" />
+            <mxPoint x="1415" y="895" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="15: return RationaleDto (Công thức toán, ngày dự kiến cạn ví)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1403" y="940" as="sourcePoint" />
+            <mxPoint x="330" y="940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4_16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="16: Hiển thị Hộp thoại giải trình minh bạch (XAI Modal)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="318" y="1010" as="sourcePoint" />
+            <mxPoint x="150" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XVIIssDB7QY2M-c8HiXg-1" parent="1" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=70;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="USER" vertex="1">
+          <mxGeometry height="1080" width="40" x="130" y="88" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="diag_sd05" name="SD-05: Khoảng Trễ Tâm Lý Cooling-off">
+    <mxGraphModel dx="3504" dy="2096" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="banner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#4a6b82;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;align=center;arcSize=6;" value="&lt;b style=&#39;font-size:18px;&#39;&gt;SƠ ĐỒ TUẦN TỰ SD-05: ĐÁNH GIÁ MUA SẮM LỚN &amp; KÍCH HOẠT KHOẢNG TRỄ TÂM LÝ COOLING-OFF&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:14px;color:#3b5998;&#39;&gt;Kiến tạo ma sát có lợi (Friction by Design) triệt tiêu chi tiêu bốc đồng cho Ca sử dụng UC-09.05&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="1680" x="63" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_ui" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:CoolingOffScreen&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Boundary / Form&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="233" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_ctrl" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:ExpenseController&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Control Object&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="438" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_mgr" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:CoolingOffManager&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Domain Manager&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="653" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_repo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:ExpenseRepository&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Data Access&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="873" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_worker" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:CoolingOffExpiryWorker&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Cron Worker&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="1093" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_fcm" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:NotificationService&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;External FCM Push&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="1313" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sd5_wallet" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=45;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;fontStyle=1;" value="&lt;b style=&#39;font-size:15px;&#39;&gt;:WalletRepository&lt;/b&gt;&lt;br&gt;&lt;i style=&#39;font-size:12px;&#39;&gt;&amp;laquo;Data Access&amp;raquo;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="1080" width="140" x="1523" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="act5_ui" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="855" width="12" x="297" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="act5_ctrl" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="845" width="12" x="502" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="act5_mgr" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="240" width="12" x="717" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act5_worker" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="95" width="12" x="1157" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="act5_fcm" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="65" width="12" x="1377" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="act5_wallet" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#2c3e50;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="80" width="12" x="1587" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="m5_1" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="1: Nhập mua đồ tùy chọn 4.5tr&amp;nbsp;&lt;div&gt;(&amp;gt; 3tr ngưỡng an toàn) &amp;amp; bấm &#39;Lưu&#39;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="129" y="210" as="sourcePoint" />
+            <mxPoint x="297" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_2" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="2: createExpense(expenseData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="309" y="215" as="sourcePoint" />
+            <mxPoint x="502" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_3" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="3: validateAndIntercept(expenseData, userId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="514" y="250" as="sourcePoint" />
+            <mxPoint x="717" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_4" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="4: Quy đổi = 36 giờ làm việc; DSA tụt 280k -&gt; 95k/ngày">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="778" y="280" />
+              <mxPoint x="778" y="310" />
+            </Array>
+            <mxPoint x="729" y="280" as="sourcePoint" />
+            <mxPoint x="729" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_5" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="5: savePendingExpense(expense, status: PENDING_COOLING_OFF, lock: 24h)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="729" y="345" as="sourcePoint" />
+            <mxPoint x="937" y="345" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_6" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="6: return Bản ghi lưu tạm (CHƯA KHẤU TRỪ VÍ THẬT)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="937" y="405" as="sourcePoint" />
+            <mxPoint x="729" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_7" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="7: return InterceptedDto (36 giờ công, thời hạn đếm ngược: 24h)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="717" y="440" as="sourcePoint" />
+            <mxPoint x="514" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="8: return Kích hoạt Màn hình Đếm ngược 24:00:00 &amp; Khóa nút mua">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="502" y="475" as="sourcePoint" />
+            <mxPoint x="309" y="475" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="9: [Sau 24 giờ]: Cron Job quét các giao dịch hết hạn trễ">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1218" y="530" />
+              <mxPoint x="1218" y="555" />
+            </Array>
+            <mxPoint x="1169" y="530" as="sourcePoint" />
+            <mxPoint x="1169" y="555" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="10: sendPushNotification(userId, &#39;Hết 24h, bạn có còn muốn mua?&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1169" y="565" as="sourcePoint" />
+            <mxPoint x="1377" y="565" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="11: return Đẩy thông báo nhắc nhở quyết định lý trí">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1377" y="620" as="sourcePoint" />
+            <mxPoint x="309" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="alt_decision" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=220;height=32;fillColor=none;strokeColor=#d35400;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;align=center;" value="alt [Quyết định của Người dùng sau 24h hạ nhiệt]" vertex="1">
+          <mxGeometry height="365" width="1515" x="98" y="665" as="geometry" />
+        </mxCell>
+        <mxCell id="alt_decision_sep" parent="1" style="line;strokeWidth=1.3;dashed=1;labelPosition=right;verticalLabelPosition=top;align=left;verticalAlign=bottom;spacingLeft=10;fontColor=#d35400;fontStyle=1;strokeColor=#d35400;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;" value="[else: Người dùng bấm&#xa; &#39;Tiến hành mua&#39; - &#xa;Mua sắm có lý trí]" vertex="1">
+          <mxGeometry height="15" width="1515" x="98" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="m5_12a" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="12a: Bấm &#39;Tôi không cần nữa&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="129" y="710" as="sourcePoint" />
+            <mxPoint x="297" y="710" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_13a" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="13a: cancelCoolingOffExpense(expenseId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="309" y="745" as="sourcePoint" />
+            <mxPoint x="502" y="745" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_14a" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="14a: updateExpenseStatus(expenseId, CANCELLED)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="514" y="770" as="sourcePoint" />
+            <mxPoint x="937" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_15a" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="15a: Thông báo: &#39;Bạn vừa tiết kiệm thành công 4.5 triệu VNĐ!&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="297" y="800" as="sourcePoint" />
+            <mxPoint x="129" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_12b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="12b: Bấm &#39;Xác nhận mua&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="129" y="860" as="sourcePoint" />
+            <mxPoint x="297" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_13b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="13b: confirmCoolingOffExpense(expenseId)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="309" y="895" as="sourcePoint" />
+            <mxPoint x="502" y="895" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_14b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="14b: deductWalletBalance(walletId, 4500000) (Chính thức trừ tiền ví)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="514" y="930" as="sourcePoint" />
+            <mxPoint x="1587" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_15b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#2c3e50;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#1a252f;" value="15b: updateExpenseStatus(expenseId, COMPLETED)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="514" y="965" as="sourcePoint" />
+            <mxPoint x="937" y="965" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_16b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="16b: return Hoàn tất giao dịch mua sắm">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="502" y="1000" as="sourcePoint" />
+            <mxPoint x="309" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5_17b" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#555555;strokeWidth=1.3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontColor=#2c3e50;" value="17b: Thông báo hoàn tất giao dịch và trừ tiền ví thành công">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="297" y="1035" as="sourcePoint" />
+            <mxPoint x="129" y="1035" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="biZHLfnmoKm4O7uB4cm5-1" parent="1" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&amp;quot;curved&amp;quot;:0,&amp;quot;rounded&amp;quot;:0};size=70;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontColor=#2c3e50;fontStyle=1;" value="USER" vertex="1">
+          <mxGeometry height="1080" width="40" x="107" y="91" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

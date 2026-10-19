@@ -108,6 +108,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-06.05` |
 | **3. Mức độ ưu tiên** | Bắt buộc |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ Thông báo & Cảnh báo (Notification Service - Nhắc lịch thanh toán nợ) |
 | **5. Mô tả tóm tắt** | Cho phép người dùng khai báo, theo dõi toàn diện và cập nhật danh mục các nghĩa vụ nợ cá nhân (Thẻ tín dụng ngân hàng, Vay trả góp tiêu dùng, Vay thế chấp mua nhà/xe, Khoản nợ người thân); quản lý chi tiết dư nợ gốc ban đầu, dư nợ còn lại hiện tại, lãi suất danh nghĩa năm, ngày chốt sao kê / đến hạn thanh toán và mức thanh toán tối thiểu; cung cấp cái nhìn tổng quan về tổng gánh nặng nợ và tỷ lệ nợ trên thu nhập (DTI). |
 | **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn nút "Thêm khoản nợ mới" hoặc truy cập tab "Quản lý nợ cá nhân". |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập thành công vào hệ thống.<br>2. Tài khoản người dùng đang ở trạng thái hoạt động bình thường. |
@@ -128,6 +129,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-06.06` |
 | **3. Mức độ ưu tiên** | Cao |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ Thông báo & Cảnh báo (Notification Service — Push Alert nhắc lịch thanh toán nợ đến hạn theo lộ trình Snowball/Avalanche) |
 | **5. Mô tả tóm tắt** | Ứng dụng giải thuật định lượng tài chính cá nhân để phân tích toàn diện danh mục nợ hiện có; mô phỏng và lập lịch trả nợ chi tiết (Amortization Schedule) theo 2 chiến lược kinh điển: Debt Snowball (Quả cầu tuyết - Dave Ramsey) và Debt Avalanche (Tuyết lở - Tối ưu lãi suất); so sánh trực quan tổng số tiền lãi phải trả, thời gian sạch nợ và số tiền lãi tiết kiệm được khi có thêm dòng tiền trả nợ hàng tháng (Extra Cashflow); hỗ trợ người dùng lựa chọn chiến lược phù hợp nhất với tâm lý và khả năng tài chính. |
 | **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn nút "Mô phỏng chiến lược trả nợ" hoặc "Lập kế hoạch tối ưu nợ" tại màn hình Quản lý nợ cá nhân. |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng có ít nhất 2 khoản nợ đang ở trạng thái hoạt động (`status = ACTIVE`) để có cơ sở so sánh chiến lược.<br>2. Tất cả các khoản nợ đã có đầy đủ thông tin về số dư nợ còn lại, lãi suất năm và mức thanh toán tối thiểu. |

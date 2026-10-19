@@ -87,6 +87,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-05.04` |
 | **3. Mức độ ưu tiên** | Cao |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ Thông báo & Cảnh báo (Notification Service - Push Notification) |
 | **5. Mô tả tóm tắt** | Tự động giám sát và phát cảnh báo vi mô thời gian thực (Real-time Spending Micro-Alerts) khi một danh mục chi tiêu chạm hoặc vượt các ngưỡng an toàn quy định (ngưỡng cảnh báo sớm mặc định 80% và ngưỡng bội chi 100%); hỗ trợ người dùng nhận diện ngay nguy cơ để phanh chi tiêu kịp thời trước khi vỡ kế hoạch tài chính. |
 | **6. Điểm kích hoạt (Trigger)** | Được hệ thống tự động kích hoạt ngay sau khi người dùng ghi nhận thêm một giao dịch chi tiêu mới (Mở rộng từ UC-05.02 / UC-03.01) làm tổng chi tiêu của danh mục chạm hoặc vượt ngưỡng cảnh báo. |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Kế hoạch ngân sách đang ở trạng thái hoạt động.<br>2. Giao dịch chi tiêu mới đã được lưu thành công vào cơ sở dữ liệu. |

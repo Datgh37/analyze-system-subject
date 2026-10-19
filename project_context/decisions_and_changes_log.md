@@ -1879,3 +1879,165 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Cập nhật đồng bộ tại CSDL MySQL WAMP (`reset_database.php` & `database_schema.sql`), Web Simulator (`index.html`), và các màn hình Mobile App (`HomeScreen`, `BudgetScreen`, `ReportScreen`, `TransactionsScreen`).
 - **Trạng thái:** `APPROVED & COMPLETED (STRESS TEST READY)`.
 
+
+
+### [2026-10-16] - Hoàn thành Giai đoạn 1 (PLAN-24): Chuẩn hóa Danh mục Tác nhân & Ranh giới Hệ thống PFM
+- **Báo cáo chuẩn hóa:** Xuất tài liệu project_context/reports/architecture/01_chuan_hoa_actor_va_ranh_gioi_he_thong.md.
+- **Mô hình 4 Tác nhân cốt lõi (1 Primary + 3 External System Actors):**
+  1. Người dùng cá nhân (Personal User): Tác nhân chính duy nhất, sở hữu tối cao dữ liệu tài chính cá nhân.
+  2. Dịch vụ AI Đa phương thức (AI Multimodal Service): Hợp nhất toàn bộ năng lực AI đám mây ngoại vi (Vision OCR cho Hóa đơn/Phiếu lương/Ảnh chụp số dư + Voice NLU khẩu lệnh giọng nói + Recommendation/Nudge Engine).
+  3. Cổng thanh toán VietQR (VietQR Gateway - NAPAS 247): Chuẩn hóa EMVCo, tạo Deeplink thanh toán ngân hàng an toàn.
+  4. Dịch vụ Thông báo & Cảnh báo (Notification Service): Đẩy thông báo thời gian thực FCM/APNs cho cảnh báo hạn mức DSA, bẫy thuê bao Zombie và Cú hích Thaler.
+- **Ranh giới hệ thống:** Xác lập rõ ranh giới In-Scope (Sổ cái đa ví ACID, động cơ tính toán nội tại) vs Out-of-Scope (Core Banking, ví điện tử đối tác, hạ tầng NAPAS).
+- **Ma trận tương tác tác nhân:** Hoàn thành ma trận RACI/CRUD ánh xạ 4 Tác nhân qua 9 phân hệ (PH-01 đến PH-09).
+
+---
+
+### [2026-10-16] - Hoàn thành Toàn diện Giai đoạn 2, 4 & 5 (PLAN-24): Đồng Bộ UCD, Đặc Tả 63 Use Cases, Class Diagram & Khắc Phục Triệt Để Caption OpenXML KLTN Word
+- **Giai đoạn 2 (Sơ đồ Use Case Drawio & Tài liệu Đặc tả Use Case IEEE 29148):**
+  - Cập nhật 10 tabs trong [`files/UCD-DuoNoPro.drawio`](files/UCD-DuoNoPro.drawio) (sao lưu tại `files/UCD-DuoNoPro.bak_pre_plan24.drawio`), tích hợp 3 Use Cases mới:
+    * `UC-01.10: Cân chỉnh số dư ví tự động bằng ảnh chụp tài khoản (Account Balance Screenshot OCR)` (`<<extend>>` UC-01.09).
+    * `UC-02.08: Bóc tách phiếu lương tự động bằng AI Vision OCR (Automated Payslip OCR Parsing)` (`<<extend>>` UC-02.01).
+    * `UC-03.11: Ghi nhận chi tiêu nhanh bằng khẩu lệnh giọng nói (Voice Command Expense Logging)` (`<<extend>>` UC-03.01).
+  - Hoàn tất 100% 10 tệp đặc tả chi tiết trong thư mục `project_context/reports/use_cases/` (từ `00` đến `09`), chuẩn Bảng Dọc 14 mục IEEE 29148.
+  - Đồng bộ tệp master tổng hợp toàn văn `project_context/reports/BaoCao_TongHop_DacTa_UseCase_PFM.md` (352.974 ký tự, quy mô chuẩn xác **63 Use Cases** thuộc 9 phân hệ).
+- **Giai đoạn 4 (Sơ đồ Lớp Khái niệm & Hướng Miền ClassDiagram.drawio):**
+  - Cập nhật [`files/ClassDiagram.drawio`](files/ClassDiagram.drawio) (sao lưu tại `files/ClassDiagram.bak_pre_plan24.drawio`):
+    * `BalanceAdjustment`: Bổ sung các thuộc tính phục vụ OCR ảnh chụp số dư (`isOcrReconciled: BIT`, `evidenceImageUrl: NVARCHAR(500)`, `ocrConfidenceScore: DECIMAL(5,2)`, `detectedBalance: DECIMAL(18,2)`) và phương thức `reconcileFromScreenshot()`.
+    * `ExpenseTransaction`: Bổ sung thuộc tính Voice Input (`inputChannel: TINYINT`, `voiceTranscript: NVARCHAR(500)`, `voiceConfidenceScore: DECIMAL(5,2)`) và các phương thức `recordFromVoice()`, `generateVietQR()`.
+    * `IncomeTransaction` & `Receipt`: Bổ sung phân loại chứng từ `receiptType` (1: Hóa đơn, 2: Phiếu lương).
+    * Bổ sung thực thể mới `SalarySlipDetail` (11 trường nghiệp vụ phiếu lương, bóc tách lương cứng, phụ cấp, thưởng, thuế TNCN, BHXH và kiểm toán số học Net Income) liên kết Composition với `Receipt` và Association với `IncomeTransaction`.
+    * Tăng chiều cao lưới Bounded Contexts hàng dưới (`bc_wallets`, `bc_transactions`, `bc_debt_goals`) lên 2480px, bố cục cân đối tuyệt đối.
+- **Giai đoạn 5 (Cập nhật Khóa Luận Tốt Nghiệp KhoaLuanTotNghiep.docx & Khắc Phục Lỗi Word TOF):**
+  - Sao lưu an toàn: `files/KhoaLuanTotNghiep.bak_pre_plan24.docx`.
+  - **Khắc phục triệt để lỗi Word Table of Figures/Tables:**
+    * Thay thế toàn bộ 33 captions text thường thành cấu trúc trường OpenXML chuẩn: `<w:fldSimple w:instr="SEQ Hình \* ARABIC"/>` và `<w:fldSimple w:instr="SEQ Bảng \* ARABIC"/>` với Style `Caption`.
+    * Chèn mã trường tự động `<w:fldSimple w:instr="TOC \h \z \c &quot;Hình&quot;"/>` tại `DANH MỤC SƠ ĐỒ, HÌNH ẢNH` và `<w:fldSimple w:instr="TOC \h \z \c &quot;Bảng&quot;"/>` tại `DANH MỤC BẢNG BIỂU`. Khi người dùng mở file trong Word hoặc bấm chuột phải chọn "Update Field" (F9), toàn bộ danh mục sẽ tự động hiển thị đầy đủ 100% kèm số trang chính xác.
+  - **Cập nhật nội dung Khóa luận:**
+    * Bổ sung Mục `2.2.4: Công nghệ Nhận dạng Giọng nói và Xử lý Ngôn ngữ Tự nhiên trong ghi nhận chi tiêu tức thời` (khẩu lệnh giọng nói, mô hình Human-in-the-loop giảm ma sát ghi chép).
+    * Bổ sung phạm vi bóc tách phiếu lương (Payslip OCR) và ảnh số dư (Balance Screenshot OCR) vào Mục `2.2.1`.
+    * Bảng 3.1: Chuẩn hóa 4 Tác nhân hệ thống.
+    * Bảng 3.2: Cập nhật bảng tổng hợp thành đủ **63 Use Cases** (64 dòng gồm tiêu đề).
+    * Cập nhật luồng phụ A2/A3 và tác nhân hỗ trợ tương ứng trong các Bảng đặc tả tiêu biểu 3.3, 3.4, 3.5.
+- **Trạng thái:** `APPROVED & COMPLETED (PLAN-24 100% ACCOMPLISHED)`.
+
+---
+
+### [2026-10-16 10:30] - Khắc Phục Triệt Để Toàn Bộ Lỗi Format Tài Liệu Word KLTN, Class Diagram & Tái Cấu Trúc Bố Cục UCD-00
+- **1. Tài liệu Khóa luận Tốt nghiệp ([files/KhoaLuanTotNghiep.docx](files/KhoaLuanTotNghiep.docx)):**
+  - **Loại bỏ triệt để 100% màu xanh dương:** Xóa sạch toàn bộ mã màu xanh dương `#2B4C7E`, `#1F4E78`, `#F8FAFC` trong toàn bộ tài liệu.
+  - **Đồng bộ bảng biểu học thuật:**
+    * Dòng tiêu đề (Header Row): Nền xám nhạt `#F2F2F2`, chữ **in đậm (`Bold = True`)**, màu đen `#000000`, font Times New Roman.
+    * Thân bảng (Data Rows): Nền trắng tinh khiết `#FFFFFF`, chữ **không in đậm (`Bold = False`)**, màu đen `#000000`, font Times New Roman, cỡ 11-12pt.
+  - **Đồng bộ văn bản và captions:** 100% các đoạn văn, tiêu đề và caption được chuẩn hóa font **Times New Roman**, **chữ đen (`#000000`)**, giữ nguyên mã trường OpenXML `SEQ Hình \* ARABIC` và `SEQ Bảng \* ARABIC` cho tính năng Table of Figures tự động.
+- **2. Tái cấu trúc hoàn toàn tab `UCD 00 - Tổng Quát` ([files/UCD-DuoNoPro.drawio](files/UCD-DuoNoPro.drawio)):**
+  - **Khung System Boundary trung tâm:** `x=320, y=50, w=960, h=920`.
+  - **Phân bổ Actor rõ ràng:** `Người dùng cá nhân` đứng ở giữa lề trái (`x=80, y=440`). 3 Supporting Actors (`Cổng thanh toán VietQR`, `Dịch vụ AI Đa phương thức`, `Dịch vụ Thông báo & Cảnh báo`) đặt ở lề phải (`x=1380`).
+  - **9 Use Cases xếp thành 2 cột cân xứng:** Cột 1 (Nghiệp vụ cốt lõi UC-01 đến UC-06, `x=380`); Cột 2 (Báo cáo, Dự báo, Cú hích UC-07 đến UC-09, `x=830`).
+  - **Phân tuyến đường nối trực giao (Orthogonal Routing):** Đường nối từ User và các Supporting Actors được định tuyến trực giao, có waypoints rõ ràng, không cắt chéo lung tung và tuyệt đối không đi xuyên qua thân của bất kỳ Use Case nào.
+- **3. Chuẩn hóa format Class Diagram ([files/ClassDiagram.drawio](files/ClassDiagram.drawio)):**
+  - **Khắc phục lỗi lớp `SalarySlipDetail`:**
+    * Đồng bộ chuẩn mực 100% theo style các lớp khác: `fontSize=19`, font `Segoe UI, Helvetica, Arial, sans-serif`, màu chữ `#1e293b`.
+    * Kích thước ô thuộc tính `h=310` và phương thức `h=90` (tổng `h=452, w=560`), xóa bỏ hoàn toàn màu nền xám lạ, áp dụng đúng viền xanh lục `#16a34a` và nền `#f0fdf4`.
+    * Chuẩn hóa đường nối Composition từ `Receipt` (kim cương xanh `#16a34a`) và Association từ `IncomeTransaction` (đường đứt nét `#475569`).
+  - 100% (58/58) ô thuộc tính và phương thức trong toàn bộ sơ đồ đạt chuẩn đồng nhất `fontSize=19`.
+- **Trạng thái:** `VERIFIED & LOCKED (100% COMPLIANT)`.
+
+---
+
+### [2026-10-16 11:15] - Khôi Phục Toàn Vẹn Khung Sơ Đồ UCD-DuoNoPro.drawio & Chuẩn Hóa Triệt Để Word Captions / Table of Figures
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Giữ nguyên Class Diagram ([`files/ClassDiagram.drawio`](files/ClassDiagram.drawio)) đã đạt chuẩn.
+  - Sửa lại sơ đồ Use Case ([`files/UCD-DuoNoPro.drawio`](files/UCD-DuoNoPro.drawio)) dựa trên tệp gốc [`files/UCD-DuoNoPro-preplan24.drawio`](files/UCD-DuoNoPro-preplan24.drawio): giữ nguyên khung `swimlane`, giữ nguyên phong cách màu sắc đồng bộ với 9 slide/tab khác, cập nhật đúng nội dung mới và reroute các đường nối trực giao thông thoáng, không tái trang trí làm thay đổi layout gốc.
+  - Khôi phục tài liệu Khóa luận Tốt nghiệp ([`files/KhoaLuanTotNghiep.docx`](files/KhoaLuanTotNghiep.docx)) từ bản [`files/KhoaLuanTotNghiep.bak_pre_plan24.docx`](files/KhoaLuanTotNghiep.bak_pre_plan24.docx): ghi chép chi tiết toàn bộ format vào tài liệu Master Markdown, khắc phục triệt để lỗi tính năng Word "Insert Table of Figures", đánh số đúng chuẩn theo chương và loại bỏ sạch sẽ màu xanh dương.
+- **1. Xuất bản Tài liệu Nguồn sự thật Master Format Specification:**
+  - Tạo tệp [`project_context/reports/KLTN_Format_Specification_Master.md`](project_context/reports/KLTN_Format_Specification_Master.md):
+    * Thiết lập trang (Page Setup): Khổ A4, Top 2.0cm, Bottom 2.0cm, Left 3.5cm (đóng gáy), Right 2.0cm.
+    * Đánh số trang: Section 1 La Mã thường (`i`, `ii`...), Section 2 Số Ả Rập từ `1`, chính giữa đáy trang.
+    * Typography: Phông Times New Roman 100%, Body 13pt, Giãn dòng 1.5 lines, Before/After 6pt, First line 1.5cm, Căn đều hai bên (Justified), Màu chữ đen `#000000`. CẤM dùng màu xanh.
+    * Hệ thống Đề mục: Chương 14pt in đậm viết hoa căn giữa; Cấp 1 13pt in đậm căn trái; Cấp 2 13pt in đậm căn trái.
+    * Bảng biểu: Căn giữa, Header xám `#F2F2F2` in đậm đen, Data row nền trắng `#FFFFFF` chữ thường đen, Viền mỏng 0.5pt `#D3D3D3`.
+    * Quy chuẩn Caption: Đánh số theo Chương (`Bảng X.Y: ...` và `Hình X.Y: ...`), cỡ 12pt in nghiêng, căn giữa.
+- **2. Tái lập Toàn vẹn Khung & Reroute Sơ đồ UCD ([files/UCD-DuoNoPro.drawio](files/UCD-DuoNoPro.drawio)):**
+  - Sao chép và kế thừa 100% từ [`files/UCD-DuoNoPro-preplan24.drawio`](files/UCD-DuoNoPro-preplan24.drawio):
+    * Khung chứa `t0_bound` (`x=180, y=40, w=1440, h=980`) dạng `swimlane` được giữ nguyên vẹn 100%.
+    * 9 Use Cases chính (`t0_uc01` đến `t0_uc09`) giữ nguyên `parent="t0_bound"`, vị trí và màu sắc pastel nguyên bản đồng bộ tuyệt đối với các tab 01 đến 09.
+    * Cập nhật nhãn UC-01 (Cân bằng số dư qua ảnh OCR), UC-02 (Bóc tách phiếu lương AI OCR), UC-03 (Khẩu lệnh giọng nói & Math Audit).
+    * Bổ sung các Use Case con mới: `UC-01.10` vào Tab 1, `UC-02.08` vào Tab 2, `UC-03.11` vào Tab 3 theo đúng style ellipse của từng tab.
+    * Chuẩn hóa 3 Supporting Actors bên phải: `VietQR Gateway` (y=180), `Dịch vụ AI Đa phương thức` (y=470), `Dịch vụ Thông báo & Cảnh báo` (y=760).
+    * Reroute 100% các đường nối sang dạng trực giao (`orthogonalEdgeStyle; rounded=1; arcSize=8`) với các điểm waypoints rõ ràng đi qua các hành lang trống, xóa bỏ hoàn toàn hiện tượng đường chéo cắt xuyên qua thân Use Case.
+- **3. Chuẩn hóa Khóa Luận Tốt Nghiệp ([files/KhoaLuanTotNghiep.docx](files/KhoaLuanTotNghiep.docx)):**
+  - **Bảo lưu tuyệt đối 100% Khối thủ tục đầu (Trang i đến vi - Đoạn P0 đến P79, Bảng 0 đến 4):** Áp dụng cơ chế cô lập nghiêm ngặt, đối chiếu XML đạt tỷ lệ khác biệt `0 / 80` đoạn văn và `0 / 5` bảng biểu (Zero-diff 100%). Tuyệt đối không có bất kỳ lệnh sửa đổi định dạng, đường viền hay chạy script nào can thiệp vào các trang số La Mã này.
+  - Cập nhật Bảng 3.1: 4 Tác nhân chuẩn hóa kèm Dịch vụ AI Đa phương thức.
+  - Cập nhật Bảng 3.2: Đủ **63 Use Cases** (bổ sung UC-01.10, UC-02.08, UC-03.11 vào đúng phân hệ, đánh số STT 1 đến 63).
+  - Khắc phục triệt để tính năng Word "Insert Table of Figures":
+    * Áp dụng Style `Caption`, font Times New Roman 12pt, in nghiêng, màu đen `#000000`, căn giữa.
+    * Tách riêng ảnh và caption thành 2 đoạn văn độc lập cho tất cả các hình vẽ.
+    * Nhúng mã trường chuẩn Word OpenXML: `<w:fldSimple w:instr="SEQ Bảng \r [STT]"/>` và `<w:fldSimple w:instr="SEQ Hình \r [STT]"/>`.
+    * Đánh số theo Chương chính xác 100%: 15 bảng (`Bảng 1.1`, `Bảng 1.2`, `Bảng 1.3`, `Bảng 3.1` đến `Bảng 3.12`) và 17 hình (`Hình 3.1` đến `Hình 3.17`).
+    * Khi người dùng sử dụng tính năng `References` $\rightarrow$ `Insert Table of Figures` trong Word với Caption label là "Bảng" hoặc "Hình", danh mục sẽ hiển thị hoàn hảo, không còn lỗi.
+  - 100% Bảng biểu từ Chương 1 trở đi đạt chuẩn: Header xám `#F2F2F2` (đậm đen), Thân bảng nền trắng `#FFFFFF` (thường đen, không in đậm). Xóa sạch toàn bộ màu xanh dương trong văn bản.
+- **Trạng thái:** `VERIFIED & LOCKED (PREAMBLE ZERO-DIFF VERIFIED & 100% COMPLIANT)`.
+
+---
+
+### [2026-10-16] Khởi Động Thiết Kế Sơ Đồ Tuần Tự (Sequence Diagram - Draw.io) Cho 5 Luồng Cốt Lõi (PLAN-25)
+- **Tài liệu căn cứ:** [`project_context/plans/plans-general/2026-10-16_plan_25_thiet_ke_sequence_diagram_drawio.md`](plans/plans-general/2026-10-16_plan_25_thiet_ke_sequence_diagram_drawio.md).
+- **Phê duyệt phạm vi từ người dùng:**
+  - Nhất trí áp dụng cấp độ Thiết kế (Design Level) theo Clean Architecture / DDD, bỏ qua các luồng CRUD thông thường.
+  - Phê duyệt Top 5 Luồng hoạt động tiêu biểu nhất của hệ thống PFM:
+    1. **SD-01:** Bóc tách hóa đơn AI OCR kết hợp Hậu kiểm toán số học (`UC-03.07 + UC-03.08`).
+    2. **SD-02:** Ghi nhận chi tiêu nhanh bằng khẩu lệnh giọng nói Voice NLU (`UC-03.11`).
+    3. **SD-03:** Khởi tạo giao dịch thanh toán VietQR & Cập nhật sổ cái nội bộ (`UC-03.10`).
+    4. **SD-04:** Động cơ hạn mức ngày DSA thích ứng & Bắn Cú hích Thaler Nudge kèm XAI (`UC-05.05 + UC-05.06 + UC-09.01 + UC-09.02`).
+    5. **SD-05:** Đánh giá mua sắm lớn bốc đồng & Kích hoạt Khoảng trễ tâm lý Cooling-off 24h-48h (`UC-09.05`).
+  - Tập hợp toàn bộ 5 sơ đồ vào một tệp duy nhất: [`files/SequenceDiagram.drawio`](../files/SequenceDiagram.drawio) gồm 5 thẻ diagram độc lập, bảo đảm 100% đồng bộ công cụ và phong cách thẩm mỹ với UCD và Class Diagram.
+- **Trạng thái:** `APPROVED & IN-PROGRESS (PLAN-25 KICKED OFF)`.
+
+---
+
+## [2026-10-17] - Quyết Định 92: Đóng Gói Và Chuẩn Hóa Bộ Sản Phẩm Mobile App Nộp Giảng Viên (DNTU)
+- **Bối cảnh:** Kết thúc giai đoạn hoàn thiện giao diện và tích hợp dữ liệu thực tế cho ứng dụng di động React Native (`mobile-project/react-native-ver`). Cần đóng gói để nộp cho Giảng viên bộ môn Lập trình thiết bị di động / PTTKHTTT theo đúng quy chuẩn DNTU.
+- **Vấn đề giải quyết:**
+  1. Thư mục mã nguồn gốc nặng gần 200 MB do chứa `node_modules`, `.expo` cache, dễ gây lỗi giới hạn dung lượng tải lên LMS và lỗi "Path too long" (> 260 ký tự) khi giải nén trên Windows của Giảng viên.
+  2. Giảng viên chấm hàng chục nhóm nên quy trình chạy demo phải cực kỳ nhanh gọn, tự động và có sẵn dữ liệu test (không bắt giảng viên phải ngồi gõ từng giao dịch thủ công).
+- **Quyết định kỹ thuật & Quy trình đóng gói:**
+  1. **Quy chuẩn cấu trúc gói nộp (`Nhom46_MobileApp_QuanLyChiTieu`):**
+     - `01_BaoCao/`: Chứa file Báo cáo (`BAO_CAO_GIUA_KY.md`), sơ đồ CSDL (`database_erd.drawio`), lộ trình và hướng dẫn.
+     - `02_CoSoDuLieu/`: Chứa file dump `database_schema.sql` (tích hợp sẵn Schema DDL và 92 giao dịch mẫu stress-test 6 tháng, 4 ví, 13 danh mục, ngân sách).
+     - `03_MaNguon/`: Gồm `BE/` (PHP API), `realtime-server/` (Socket.IO), `FE/` (React Native Expo) - **Đã lọc bỏ triệt để 100% `node_modules`, `.expo`, `.claude` và tệp rác**.
+  2. **Bộ kịch bản 1-Click dành riêng cho Giảng viên:**
+     - `1_CAI_DAT_THU_VIEN.bat`: Tự động chạy `npm install` cho cả Realtime và FE.
+     - `2_KET_NOI_WAMP.bat`: Tự động tạo NTFS Junction từ `BE` vào `C:\wamp64\www\expense_api`.
+     - `3_CHAY_REALTIME_SERVER.bat`: Khởi động Socket.IO Gateway Port 3001.
+     - `4_CHAY_APP_MOBILE.bat`: Khởi động Metro Bundler Port 8081 (hỗ trợ Web Browser và Expo Go).
+     - `HUONG_DAN_CAI_DAT_VA_CHAY_DEMO.txt` & `.md`: Hướng dẫn chi tiết 3 bước cài đặt kèm tài khoản demo `nguyenvanan@gmail.com` / `password123`.
+  3. **Tự động hóa đóng gói (`dong_goi_do_an.ps1`):**
+     - Sử dụng PowerShell và .NET `ZipFile` nén toàn bộ thành file `Nhom46_MobileApp_QuanLyChiTieu.zip`.
+     - Dung lượng giảm từ **~187 MB** xuống chỉ còn **0.33 MB (338 KB)** (giảm hơn 99%), đảm bảo nộp lên LMS mượt mà.
+- **Trạng thái:** `COMPLETED & VERIFIED 100%`.
+
+---
+
+## [2026-10-19] - Quyết Định 93: Hoàn Thiện & Chuẩn Hóa Hiển Thị Sơ Đồ Tuần Tự (SequenceDiagram.drawio) Cỡ Chữ 15
+- **Tài liệu căn cứ:** [`project_context/plans/plans-general/2026-10-16_plan_25_thiet_ke_sequence_diagram_drawio.md`](plans/plans-general/2026-10-16_plan_25_thiet_ke_sequence_diagram_drawio.md).
+- **Vấn đề phát sinh & Khắc phục:**
+  1. **Lỗi Double-Escaping HTML:** Trình sinh mã XML ban đầu escape chuỗi HTML thô thành `&amp;lt;b&amp;gt;`, dẫn đến Draw.io không parse được HTML định dạng mà hiển thị toàn bộ code thô trên giao diện. Đã xử lý triệt để về định dạng chuẩn XML Draw.io (`&lt;b&gt;...&lt;/b&gt;`).
+  2. **Biểu tượng Actor UML:** Thêm thuộc tính `participant=umlActor;size=70;` để Draw.io tự động render hình người que (Stickman) ở đầu lifeline thay vì khối hộp thông thường.
+  3. **Thanh kích hoạt (Activation Bars) & Căn chỉnh mũi tên:** Chuẩn hóa tọa độ offset $\pm 6\text{px}$ để mũi tên thông điệp bắt dính chính xác vào mép thanh kích hoạt, thanh kích hoạt nằm thẳng giữa đường lifeline nét đứt.
+  4. **Cỡ chữ theo yêu cầu người dùng:** Điều chỉnh toàn bộ văn bản thông điệp, khung phân nhánh (`alt`/`opt`), tiêu đề đối tượng lên cỡ chữ **15px** (`fontSize=15;`), khoảng cách dòng 35px-40px thoáng đãng, sắc nét, dễ đọc khi trình chiếu và in ấn báo cáo khóa luận.
+  5. **Chuẩn hóa thông điệp theo mô hình Học thuật OOAD BCE (Slide 17 & 36):**
+     - Đọc trực tiếp tệp slide bài giảng `docs/UML-04-Sequence,Communication,Sate,Activity_Diagram.pptx` của Giảng viên.
+     - Lược bỏ hoàn toàn thuật ngữ mạng internet/REST API (`POST /api/...`, `HTTP 201 Created`).
+     - Chuyển 100% sang dạng **Lời gọi phương thức OOP (Method Call)** có tham số tường minh: `scanReceipt(imageFile, walletId)`, `createExpenseTransaction(dto)`, `confirmPayment(refCode)`, trả về đối tượng `return ResultDto` hoặc thông báo tiếng Việt trực quan.
+     - Giữ nguyên các khung Interaction Fragment (`alt`, `opt`) theo đúng khái niệm định nghĩa tại Slide 13 của bài giảng để thể hiện trọn vẹn luồng rẽ nhánh và điều kiện ngoại lệ.
+- **Tập hợp 5 tab sơ đồ tuần tự trong [`files/SequenceDiagram.drawio`](../files/SequenceDiagram.drawio):**
+  - **Tab 1:** `SD-01: Bóc Tách Hóa Đơn AI OCR` (Multimodal AI Vision & Hậu kiểm toán số học).
+  - **Tab 2:** `SD-02: Ghi Nhận Chi Tiêu Giọng Nói` (Voice ASR/NLU & Human-in-the-loop).
+  - **Tab 3:** `SD-03: Thanh Toán VietQR & Sổ Cái` (EMVCo Dynamic QR & Deeplink CoreBank).
+  - **Tab 4:** `SD-04: Động Cơ DSA & Cú Hích Thaler` (Adaptive DSA & Explainable AI XAI).
+  - **Tab 5:** `SD-05: Khoảng Trễ Tâm Lý Cooling-off` (Friction by Design & Khóa bốc đồng 24h).
+- **Trạng thái:** `VERIFIED & LOCKED (100% ACADEMIC OOP & BCE COMPLIANT)`.
+
+
+

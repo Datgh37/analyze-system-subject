@@ -25,6 +25,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-08.01` |
 | **3. Mức độ ưu tiên** | Cao |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ AI Đa phương thức (AI Multimodal Service — Time-Series Forecasting Model) |
 | **5. Mô tả tóm tắt** | Ứng dụng mô hình chuỗi thời gian (Time-series Forecasting) kết hợp trọng số ngày trong tuần và ngày cuối tuần (Weekday/Weekend Effect) để dự báo con số tổng chi tiêu thực tế ước tính khi kết thúc chu kỳ ngân sách; so sánh con số dự phóng với tổng hạn mức ngân sách cấp phát ban đầu nhằm phát hiện sớm nguy cơ bội chi ngay từ giữa chu kỳ (trước ngày 15 hàng tháng), hỗ trợ người dùng kịp thời phanh chi tiêu trước khi quá muộn. |
 | **6. Điểm kích hoạt (Trigger)** | Hệ thống tự động kích hoạt tính toán hàng ngày vào lúc 00:00 hoặc khi người dùng mở màn hình Dự báo tài chính. |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập thành công vào hệ thống.<br>2. Kế hoạch ngân sách chu kỳ đang ở trạng thái hoạt động (`status = ACTIVE`).<br>3. Chu kỳ ngân sách đã trôi qua ít nhất 3 ngày để có đủ dữ liệu chuỗi thời gian ban đầu. |
@@ -45,6 +46,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-08.02` |
 | **3. Mức độ ưu tiên** | Bắt buộc |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ Thông báo & Cảnh báo (Notification Service — Push Alert cảnh báo đỏ nguy cơ cạn kiệt tiền mặt) |
 | **5. Mô tả tóm tắt** | Ứng dụng mô hình suy kiệt dòng tiền dựa trên Tốc độ tiêu tiền thực tế (Spending Velocity) và tổng số dư thanh khoản khả dụng trên các ví tiền mặt, tài khoản ngân hàng để tính toán và dự phóng chính xác ngày người dùng sẽ cạn sạch tiền (Out-of-Money Date Forecast); phát cảnh báo đỏ khẩn cấp nếu ngày cạn tiền xảy ra trước ngày nhận lương tiếp theo (`salaryDay`), giúp người dùng nhận thức rõ nguy cơ mất khả năng thanh toán trước khi hết tháng. |
 | **6. Điểm kích hoạt (Trigger)** | Được hệ thống tự động tính toán kèm theo UC-08.01 hoặc khi người dùng kiểm tra radar tài chính (Bao gồm trong UC-08.01). |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập thành công vào hệ thống.<br>2. Đã xác định được ngày nhận lương định kỳ tiếp theo (`salaryDay`).<br>3. Người dùng có ít nhất một ví tiền mặt hoặc ngân hàng có số dư ghi nhận. |
@@ -85,6 +87,7 @@
 | **2. Mã Use Case (UC ID)** | `UC-08.04` |
 | **3. Mức độ ưu tiên** | Cao |
 | **4. Tác nhân chính (Primary Actor)** | Người dùng cá nhân (Personal User) |
+| **4b. Tác nhân hỗ trợ (Secondary / Supporting Actors)** | Dịch vụ AI Đa phương thức (AI Multimodal Service — Predictive Sandbox Simulation Engine) |
 | **5. Mô tả tóm tắt** | Cung cấp động cơ mô phỏng tài chính giả lập tương tác (Interactive What-If Simulation Engine) cho phép người dùng thử nghiệm trước các quyết định tài chính quan trọng (ví dụ: Mua sắm lớn trả một lần, Vay mua trả góp định kỳ hàng tháng, hoặc Kịch bản bị cắt giảm thu nhập) trước khi chính thức đưa ra quyết định thực tế; hệ thống tự động tái tính toán tức thời tác động đa chiều lên các chỉ số tài chính cốt lõi: Hạn mức chi tiêu mỗi ngày thích ứng mới ($\text{DSA}'$), Giá trị Tài sản ròng mới ($\text{NetWorth}'$), Tỷ số Nợ trên Thu nhập mới ($\text{DTI}'$), và Ngày cạn tiền mới, hỗ trợ người dùng ra quyết định chi tiêu sáng suốt dựa trên bằng chứng định lượng. |
 | **6. Điểm kích hoạt (Trigger)** | Người dùng nhấn nút "Mô phỏng What-If" hoặc "Thử nghiệm quyết định chi tiêu" trên màn hình Dự báo tài chính. |
 | **7. Tiền điều kiện (Pre-conditions)** | 1. Người dùng đã đăng nhập thành công vào hệ thống.<br>2. Hệ thống đã có dữ liệu ngân sách, số dư ví và thu nhập của chu kỳ hiện tại. |

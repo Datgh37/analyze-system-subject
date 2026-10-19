@@ -1,6 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="Antigravity PFM Council">
   <diagram id="diag_pfm_class_diagram" name="PFM Master Class Diagram">
-    <mxGraphModel dx="2770" dy="1817" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4600" pageHeight="3400" math="0" shadow="0">
+    <mxGraphModel dx="2044" dy="1223" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4600" pageHeight="3400" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -77,7 +78,7 @@
           <mxGeometry height="100" width="720" y="282" as="geometry" />
         </mxCell>
         <mxCell id="bc_wallets" parent="1" style="swimlane;html=1;startSize=44;strokeWidth=2.2;strokeColor=#7dd3fc;fillColor=#f0f9ff;fontSize=19;fontStyle=1;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0369a1;align=left;spacingLeft=16;rounded=1;collapsible=0;arcSize=8;" value="2. Account &amp;amp; Multi-Wallet Context (ACID Guarantee)" vertex="1">
-          <mxGeometry height="2170" width="1260" x="80" y="1030" as="geometry" />
+          <mxGeometry height="2480" width="1260" x="80" y="1030" as="geometry" />
         </mxCell>
         <mxCell id="Wallet" parent="bc_wallets" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#38bdf8;fillColor=#e0f2fe;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Abstract»&lt;br&gt;Wallet&lt;/b&gt;&lt;/center&gt;" vertex="1">
           <mxGeometry height="382" width="560" x="350" y="130" as="geometry" />
@@ -134,16 +135,16 @@
           <mxGeometry height="74" width="520" y="256" as="geometry" />
         </mxCell>
         <mxCell id="BalanceAdjustment" parent="bc_wallets" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#0284c7;fillColor=#e0f2fe;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Entity»&lt;br&gt;BalanceAdjustment&lt;/b&gt;&lt;/center&gt;" vertex="1">
-          <mxGeometry height="330" width="520" x="660" y="1420" as="geometry" />
+          <mxGeometry height="430" width="520" x="660" y="1420" as="geometry" />
         </mxCell>
-        <mxCell id="BalanceAdjustment_attrs" parent="BalanceAdjustment" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- adjustmentId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- walletId: UNIQUEIDENTIFIER [FK]&lt;br&gt;- recordedBalance: DECIMAL(18, 2)&lt;br&gt;- actualBalance: DECIMAL(18, 2)&lt;br&gt;- differenceAmount: DECIMAL(18, 2)&lt;br&gt;- reason: NVARCHAR(255)&lt;br&gt;- timestamp: DATETIME2(3)" vertex="1">
-          <mxGeometry height="204" width="520" y="52" as="geometry" />
+        <mxCell id="BalanceAdjustment_attrs" parent="BalanceAdjustment" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- adjustmentId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- walletId: UNIQUEIDENTIFIER [FK]&lt;br&gt;- recordedBalance: DECIMAL(18, 2)&lt;br&gt;- actualBalance: DECIMAL(18, 2)&lt;br&gt;- differenceAmount: DECIMAL(18, 2)&lt;br&gt;- reason: NVARCHAR(255)&lt;br&gt;- isOcrReconciled: BIT&lt;br&gt;- evidenceImageUrl: NVARCHAR(500)&lt;br&gt;- ocrConfidenceScore: DECIMAL(5, 2)&lt;br&gt;- detectedBalance: DECIMAL(18, 2)&lt;br&gt;- timestamp: DATETIME2(3)" vertex="1">
+          <mxGeometry height="278" width="520" y="52" as="geometry" />
         </mxCell>
-        <mxCell id="BalanceAdjustment_methods" parent="BalanceAdjustment" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#0284c7;" value="+ calculateDiscrepancy(): Money&lt;br&gt;+ applyAdjustment(): void" vertex="1">
-          <mxGeometry height="74" width="520" y="256" as="geometry" />
+        <mxCell id="BalanceAdjustment_methods" parent="BalanceAdjustment" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#0284c7;" value="+ calculateDiscrepancy(): Money&lt;br&gt;+ applyAdjustment(): void&lt;br&gt;+ reconcileFromScreenshot(imageUrl: string, ocrConfidence: decimal): void" vertex="1">
+          <mxGeometry height="100" width="520" y="330" as="geometry" />
         </mxCell>
         <mxCell id="bc_transactions" parent="1" style="swimlane;html=1;startSize=44;strokeWidth=2.2;strokeColor=#86efac;fillColor=#f0fdf4;fontSize=19;fontStyle=1;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#15803d;align=left;spacingLeft=16;rounded=1;collapsible=0;arcSize=8;" value="3. Transactions, Multimodal AI OCR &amp;amp; Categories Context" vertex="1">
-          <mxGeometry height="2170" width="1360" x="1420" y="1030" as="geometry" />
+          <mxGeometry height="2480" width="1360" x="1420" y="1030" as="geometry" />
         </mxCell>
         <mxCell id="Transaction" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#22c55e;fillColor=#dcfce7;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Abstract»&lt;br&gt;Transaction&lt;/b&gt;&lt;/center&gt;" vertex="1">
           <mxGeometry height="296" width="560" x="80" y="130" as="geometry" />
@@ -164,31 +165,31 @@
           <mxGeometry height="100" width="560" y="334" as="geometry" />
         </mxCell>
         <mxCell id="IncomeTransaction" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#16a34a;fillColor=#f0fdf4;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;IncomeTransaction&lt;/b&gt;&lt;/center&gt;" vertex="1">
-          <mxGeometry height="192" width="520" x="80" y="620" as="geometry" />
+          <mxGeometry height="250" width="520" x="80" y="620" as="geometry" />
         </mxCell>
-        <mxCell id="IncomeTransaction_attrs" parent="IncomeTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- sourceType: TINYINT&lt;br&gt;- isRecurring: BIT&lt;br&gt;- recurringInterval: TINYINT" vertex="1">
-          <mxGeometry height="100" width="520" y="52" as="geometry" />
+        <mxCell id="IncomeTransaction_attrs" parent="IncomeTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- sourceType: TINYINT&lt;br&gt;- isRecurring: BIT&lt;br&gt;- recurringInterval: TINYINT&lt;br&gt;- receiptId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- salarySlipId: UNIQUEIDENTIFIER [FK, NULL]" vertex="1">
+          <mxGeometry height="140" width="520" y="52" as="geometry" />
         </mxCell>
-        <mxCell id="IncomeTransaction_methods" parent="IncomeTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="&lt;i&gt;(no methods)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="40" width="520" y="152" as="geometry" />
+        <mxCell id="IncomeTransaction_methods" parent="IncomeTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="+ attachSalarySlip(slip: SalarySlipDetail): void&lt;br&gt;+ verifyIncomeSource(): bool" vertex="1">
+          <mxGeometry height="58" width="520" y="192" as="geometry" />
         </mxCell>
         <mxCell id="ExpenseTransaction" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#16a34a;fillColor=#f0fdf4;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;ExpenseTransaction&lt;/b&gt;&lt;/center&gt;" vertex="1">
-          <mxGeometry height="304" width="600" x="680" y="620" as="geometry" />
+          <mxGeometry height="390" width="600" x="680" y="620" as="geometry" />
         </mxCell>
-        <mxCell id="ExpenseTransaction_attrs" parent="ExpenseTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- receiptId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- goalId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- isRecurring: BIT&lt;br&gt;- coolingOffApplied: BIT&lt;br&gt;- vietQRReference: NVARCHAR(100)" vertex="1">
-          <mxGeometry height="152" width="600" y="52" as="geometry" />
+        <mxCell id="ExpenseTransaction_attrs" parent="ExpenseTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- receiptId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- goalId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- isRecurring: BIT&lt;br&gt;- coolingOffApplied: BIT&lt;br&gt;- inputChannel: TINYINT&lt;br&gt;- voiceTranscript: NVARCHAR(500)&lt;br&gt;- voiceConfidenceScore: DECIMAL(5, 2)&lt;br&gt;- vietQRReference: NVARCHAR(100)" vertex="1">
+          <mxGeometry height="212" width="600" y="52" as="geometry" />
         </mxCell>
-        <mxCell id="ExpenseTransaction_methods" parent="ExpenseTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="+ attachReceipt(receipt: Receipt): void&lt;br&gt;+ assignToGoal(goal: FinancialGoal): void&lt;br&gt;+ triggerCoolingOffCheck(): bool" vertex="1">
-          <mxGeometry height="100" width="600" y="204" as="geometry" />
+        <mxCell id="ExpenseTransaction_methods" parent="ExpenseTransaction" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="+ attachReceipt(receipt: Receipt): void&lt;br&gt;+ assignToGoal(goal: FinancialGoal): void&lt;br&gt;+ triggerCoolingOffCheck(): bool&lt;br&gt;+ recordFromVoice(transcript: string, confidence: decimal): void&lt;br&gt;+ generateVietQR(): string" vertex="1">
+          <mxGeometry height="126" width="600" y="264" as="geometry" />
         </mxCell>
         <mxCell id="Receipt" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#22c55e;fillColor=#dcfce7;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Aggregate Root»&lt;br&gt;Receipt&lt;/b&gt;&lt;/center&gt;" vertex="1">
-          <mxGeometry height="486" width="580" x="80" y="1080" as="geometry" />
+          <mxGeometry height="520" width="580" x="80" y="1080" as="geometry" />
         </mxCell>
-        <mxCell id="Receipt_attrs" parent="Receipt" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- receiptId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- transactionId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- imageStorageUrl: NVARCHAR(500)&lt;br&gt;- merchantName: NVARCHAR(150)&lt;br&gt;- merchantTaxCode: NVARCHAR(50)&lt;br&gt;- purchaseDate: DATETIME2(3)&lt;br&gt;- subTotal: DECIMAL(18, 2)&lt;br&gt;- taxAmount: DECIMAL(18, 2)&lt;br&gt;- discountAmount: DECIMAL(18, 2)&lt;br&gt;- grandTotal: DECIMAL(18, 2)&lt;br&gt;- auditStatus: TINYINT&lt;br&gt;- scannedAt: DATETIME2(3)" vertex="1">
-          <mxGeometry height="334" width="580" y="52" as="geometry" />
+        <mxCell id="Receipt_attrs" parent="Receipt" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- receiptId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- transactionId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- receiptType: TINYINT&lt;br&gt;- imageStorageUrl: NVARCHAR(500)&lt;br&gt;- merchantName: NVARCHAR(150)&lt;br&gt;- merchantTaxCode: NVARCHAR(50)&lt;br&gt;- purchaseDate: DATETIME2(3)&lt;br&gt;- subTotal: DECIMAL(18, 2)&lt;br&gt;- taxAmount: DECIMAL(18, 2)&lt;br&gt;- discountAmount: DECIMAL(18, 2)&lt;br&gt;- grandTotal: DECIMAL(18, 2)&lt;br&gt;- auditStatus: TINYINT&lt;br&gt;- scannedAt: DATETIME2(3)" vertex="1">
+          <mxGeometry height="358" width="580" y="52" as="geometry" />
         </mxCell>
-        <mxCell id="Receipt_methods" parent="Receipt" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#22c55e;" value="+ calculateItemSum(): Money&lt;br&gt;+ verifyMathematicalAudit(): bool&lt;br&gt;+ markAsHumanVerified(): void" vertex="1">
-          <mxGeometry height="100" width="580" y="386" as="geometry" />
+        <mxCell id="Receipt_methods" parent="Receipt" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#22c55e;" value="+ calculateItemSum(): Money&lt;br&gt;+ verifyMathematicalAudit(): bool&lt;br&gt;+ markAsHumanVerified(): void&lt;br&gt;+ isSalarySlip(): bool" vertex="1">
+          <mxGeometry height="110" width="580" y="410" as="geometry" />
         </mxCell>
         <mxCell id="ReceiptItem" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#16a34a;fillColor=#f0fdf4;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Composition Entity»&lt;br&gt;ReceiptItem&lt;/b&gt;&lt;/center&gt;" vertex="1">
           <mxGeometry height="330" width="560" x="720" y="1080" as="geometry" />
@@ -200,7 +201,7 @@
           <mxGeometry height="48" width="560" y="282" as="geometry" />
         </mxCell>
         <mxCell id="Category" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#22c55e;fillColor=#dcfce7;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Entity»&lt;br&gt;Category&lt;/b&gt;&lt;/center&gt;" vertex="1">
-          <mxGeometry height="382" width="580" x="80" y="1720" as="geometry" />
+          <mxGeometry height="382" width="580" x="80" y="2000" as="geometry" />
         </mxCell>
         <mxCell id="Category_attrs" parent="Category" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- categoryId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- userId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- parentCategoryId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- categoryName: NVARCHAR(100)&lt;br&gt;- icon: NVARCHAR(50)&lt;br&gt;- colorCode: NVARCHAR(20)&lt;br&gt;- budgetPillar503020: TINYINT&lt;br&gt;- kakeiboPillar: TINYINT&lt;br&gt;- isDefault: BIT" vertex="1">
           <mxGeometry height="256" width="580" y="52" as="geometry" />
@@ -209,7 +210,7 @@
           <mxGeometry height="74" width="580" y="308" as="geometry" />
         </mxCell>
         <mxCell id="AutoCategorizationRule" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#16a34a;fillColor=#f0fdf4;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Entity»&lt;br&gt;AutoCategorizationRule&lt;/b&gt;&lt;/center&gt;" vertex="1">
-          <mxGeometry height="252" width="560" x="720" y="1720" as="geometry" />
+          <mxGeometry height="252" width="560" x="720" y="2000" as="geometry" />
         </mxCell>
         <mxCell id="AutoCategorizationRule_attrs" parent="AutoCategorizationRule" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- ruleId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- userId: UNIQUEIDENTIFIER [FK]&lt;br&gt;- keywordPattern: NVARCHAR(100)&lt;br&gt;- targetCategoryId: UNIQUEIDENTIFIER [FK]&lt;br&gt;- priorityOrder: INT" vertex="1">
           <mxGeometry height="152" width="560" y="52" as="geometry" />
@@ -217,8 +218,17 @@
         <mxCell id="AutoCategorizationRule_methods" parent="AutoCategorizationRule" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="+ matches(note: str): bool" vertex="1">
           <mxGeometry height="48" width="560" y="204" as="geometry" />
         </mxCell>
+        <mxCell id="SalarySlipDetail" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#16a34a;fillColor=#f0fdf4;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Composition Entity»&lt;br&gt;SalarySlipDetail&lt;/b&gt;&lt;/center&gt;" vertex="1">
+          <mxGeometry height="452" width="560" x="720" y="1480" as="geometry" />
+        </mxCell>
+        <mxCell id="SalarySlipDetail_attrs" parent="SalarySlipDetail" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#1e293b;" value="- slipDetailId: UNIQUEIDENTIFIER [PK]&lt;br&gt;- receiptId: UNIQUEIDENTIFIER [FK]&lt;br&gt;- incomeTransactionId: UNIQUEIDENTIFIER [FK, NULL]&lt;br&gt;- employerName: NVARCHAR(150)&lt;br&gt;- payPeriod: NVARCHAR(20)&lt;br&gt;- baseSalary: DECIMAL(18, 2)&lt;br&gt;- allowanceAmount: DECIMAL(18, 2)&lt;br&gt;- bonusAmount: DECIMAL(18, 2)&lt;br&gt;- socialInsuranceDeduction: DECIMAL(18, 2)&lt;br&gt;- personalIncomeTax: DECIMAL(18, 2)&lt;br&gt;- netIncome: DECIMAL(18, 2)" vertex="1">
+          <mxGeometry height="310" width="560" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="SalarySlipDetail_methods" parent="SalarySlipDetail" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="+ calculateTotalDeductions(): Money&lt;br&gt;+ verifyNetIncomeMath(): bool&lt;br&gt;+ getGrossSalary(): Money" vertex="1">
+          <mxGeometry height="90" width="560" y="362" as="geometry" />
+        </mxCell>
         <mxCell id="bc_debt_goals" parent="1" style="swimlane;html=1;startSize=44;strokeWidth=2.2;strokeColor=#d8b4fe;fillColor=#faf5ff;fontSize=19;fontStyle=1;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#7e22ce;align=left;spacingLeft=16;rounded=1;collapsible=0;arcSize=8;" value="5. Personal Debt &amp;amp; Financial Goals Context (Snowball vs Avalanche)" vertex="1">
-          <mxGeometry height="2170" width="1660" x="2860" y="1030" as="geometry" />
+          <mxGeometry height="2480" width="1660" x="2860" y="1030" as="geometry" />
         </mxCell>
         <mxCell id="FinancialGoal" parent="bc_debt_goals" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#9333ea;fillColor=#f3e8ff;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Entity»&lt;br&gt;FinancialGoal&lt;/b&gt;&lt;/center&gt;" vertex="1">
           <mxGeometry height="382" width="700" x="80" y="130" as="geometry" />
@@ -650,6 +660,12 @@
               <mxPoint x="4080" y="1619" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="comp_salary_slip" edge="1" parent="1" source="Receipt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=diamond;startFill=1;endArrow=none;endFill=0;strokeColor=#16a34a;strokeWidth=2;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=16;fontColor=#1e293b;" target="SalarySlipDetail" value="«composition» 0..1" exitX="1" exitY="0.7" entryX="0" entryY="0.3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_income_salary" edge="1" parent="1" source="IncomeTransaction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;dashed=1;endFill=0;strokeColor=#475569;strokeWidth=2;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=16;fontColor=#1e293b;" target="SalarySlipDetail" value="extractedFrom" exitX="0.8" exitY="1" entryX="0.2" entryY="0">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

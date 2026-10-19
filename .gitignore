@@ -38,3 +38,7 @@ dist/
 *.tsbuildinfo
 .npmrc
 pnpm-lock.yaml
+
+# Local Scratch Directory
+scratch/
+
