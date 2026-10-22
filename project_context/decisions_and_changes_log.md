@@ -2039,5 +2039,131 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   - **Tab 5:** `SD-05: Khoảng Trễ Tâm Lý Cooling-off` (Friction by Design & Khóa bốc đồng 24h).
 - **Trạng thái:** `VERIFIED & LOCKED (100% ACADEMIC OOP & BCE COMPLIANT)`.
 
+---
+
+## [2026-10-21] - Quyết Định 94: Khởi Động Phiên Họp Hội Đồng .NET MAUI Enterprise Client & Xác Lập Ngăn Xếp Công Nghệ Mobile Bắt Buộc (PLAN-29)
+- **Bối cảnh:** Kết thúc giai đoạn môn học với React Native (Scoped MVP), nhóm chính thức bước sang xây dựng phân hệ di động chuẩn doanh nghiệp .NET MAUI 10 (LTS) phục vụ Khóa luận Tốt nghiệp và PTTKHTTT. Giảng viên yêu cầu tích hợp các công nghệ bắt buộc của ứng dụng di động hiện đại, đặc biệt là cơ chế Realtime Dynamic Synchronization.
+- **Khảo sát môi trường thực tế máy tính:**
+  - Máy tính đã cài đặt sẵn **.NET SDK 10.0.402 (LTS)** và workload **`[maui-windows]`** từ Visual Studio.
+  - Sẵn sàng biên dịch và chạy trực tiếp dưới dạng Windows 11 Native Desktop App mà không cần máy ảo nặng. Để phát triển cho Android chỉ cần cài thêm `dotnet workload install maui-android` hoặc tích chọn qua Visual Studio Installer.
+- **Quyết định ngăn xếp công nghệ bắt buộc (Mandatory Mobile Tech Stack):**
+  1. **Realtime Dynamic Synchronization (0ms):** Sử dụng `Microsoft.AspNetCore.SignalR.Client` kết hợp `ObservableCollection<T>` và cơ chế Data Binding hai chiều, dữ liệu tự cập nhật ngay khi Server có biến động mà không cần reload.
+  2. **Offline-First & Local Caching:** Sử dụng `sqlite-net-pcl` / `EF Core SQLite` lưu trữ đệm cục bộ, tự động đồng bộ hai chiều khi có kết nối mạng trở lại.
+  3. **Kiến trúc MVVM Phản ứng:** Sử dụng `CommunityToolkit.Mvvm` tận dụng Roslyn Source Generators (`[ObservableProperty]`, `[RelayCommand]`, `WeakReferenceMessenger`).
+  4. **Bảo mật Phần cứng & Sinh trắc học:** Tích hợp `MAUI SecureStorage` (Android KeyStore / Apple Keychain) lưu trữ Token JWT và khóa AES-256; tích hợp sinh trắc học vân tay / Face ID (`Plugin.Maui.Biometric`).
+  5. **Tương tác Phần cứng & AI:** Camera `MediaPicker` chụp hóa đơn bóc tách AI Vision OCR + Hậu kiểm toán số học; Local Notifications & Haptics cảnh báo hạn mức ngân sách DSA.
+  6. **Giao tiếp Mạng & Phục hồi:** `Refit` (Type-safe declarative REST Client) + `Polly v8` (Exponential Backoff, Circuit Breaker).
+- **Trạng thái:** `APPROVED & ACTIVE (PLAN-29 ACTIVATED)`.
+
+---
+
+## [2026-10-21] - Quyết Định 95: Cập Nhật README.md & Xuất Bản Báo Cáo Cuối Kỳ Chuẩn Word DNTU Cho Phân Hệ .NET MAUI
+- **Bối cảnh:** Sau khi thống nhất triết lý thiết kế từ `pbakaus/impeccable`, chốt yêu cầu Real Push Notifications trên thiết bị di động thật và dỡ bỏ rung haptic bàn phím số, nhóm tiến hành đồng bộ tài liệu dự án và khởi tạo file Báo cáo tổng kết đồ án.
+- **Quyết định thực hiện:**
+  1. **Cập nhật [`mobile-project/dotnet-maui-ver/README.md`](../mobile-project/dotnet-maui-ver/README.md):**
+     - Bổ sung triết lý thiết kế Impeccable Design Harness: Chống Card Soup, Color Tinting (Deep Indigo / Navy Slate), Responsive Adapt & Hardening chống vỡ layout text overflow, Purposeful Motion (Spring physics).
+     - Đặc tả cơ chế Real Mobile Push Notifications qua `Plugin.LocalNotification` / Android NotificationManager.
+     - Dỡ bỏ hoàn toàn Haptic feedback bàn phím số tài chính.
+  2. **Xuất bản Báo cáo Tổng kết định dạng Word chuẩn DNTU:**
+     - Tạo tệp [`mobile-project/dotnet-maui-ver/BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`](../mobile-project/dotnet-maui-ver/BAO_CAO_CUOI_KY_DOTNET_MAUI.docx) (kèm bản xem trước Markdown).
+     - Áp dụng 100% các quy định format Khóa luận Tốt nghiệp DNTU: Khổ A4, lề Trái 3.5cm (đóng gáy), Phải 2.0cm, Trên 2.0cm, Dưới 2.0cm; phông chữ Times New Roman 13pt, giãn dòng 1.5 lines, Before/After 6pt, First line indent 1.5cm, căn đều hai bên; bảng biểu header xám `#F2F2F2` đậm đen, data trắng `#FFFFFF` thường đen, viền `#D3D3D3` 0.5pt, không có màu xanh dương.
+     - Cấu trúc đầy đủ: Trang bìa DNTU, Mục lục tự động, Danh mục hình ảnh, Danh mục bảng biểu, Đặt vấn đề bài toán (1 trang), Các chức năng chính (1 trang), Chương 1 Backend & DB 3NF, Chương 2 Frontend .NET MAUI & Impeccable UI, Chương 3 Kết luận & Kịch bản kiểm thử.
+- **Trạng thái:** `COMPLETED & VERIFIED 100%`.
+
+---
+
+## [2026-10-21] - Quyết Định 96: Tích Hợp Thành Công Bộ Kỹ Năng Impeccable AI Design Harness & Thiết Lập Nền Tảng Thiết Kế Cho Dự Án .NET MAUI (PLAN-27)
+- **Bối cảnh:** Nhằm nâng tầm năng lực thiết kế giao diện di động của Bộ Ba Tam Giác Vàng Frontend (Agent 09, 10, 13) và loại bỏ hoàn toàn các lỗi rập khuôn AI (AI Tells / Clichés), nhóm chính thức tích hợp bộ kỹ năng [pbakaus/impeccable](https://github.com/pbakaus/impeccable) v4.7+ vào Antigravity IDE.
+- **Hành động triển khai:**
+  1. **Cài đặt kỹ năng Impeccable vào Workspace:**
+     - Thiết lập thư mục [`.agents/skills/impeccable/`](../.agents/skills/impeccable/) gồm `SKILL.md` (frontmatter chuẩn Antigravity) và toàn bộ 41 playbook tham chiếu trong `reference/` (`audit.md`, `polish.md`, `craft-floor.md`, `harden.md`, `distill.md`, `adapt.md`, `animate.md`, `android.md`, `ios.md`,...).
+  2. **Cấu hình Workflows / Slash Commands:**
+     - Tạo [`.agents/workflows/impeccable.md`](../.agents/workflows/impeccable.md) (`/impeccable`).
+     - Tạo [`.agents/workflows/ui-audit.md`](../.agents/workflows/ui-audit.md) (`/ui-audit`) và [`.agents/workflows/ui-polish.md`](../.agents/workflows/ui-polish.md) (`/ui-polish`).
+  3. **Ủy quyền cho Bộ Ba Tam Giác Vàng Frontend trong [`AGENTS.md`](../AGENTS.md):**
+     - Agent 10 (Dan Abramov): `impeccable (audit, harden, distill, adapt, polish)`.
+     - Agent 09 & 13 (Brad Frost & Julian Garnier): `impeccable (craft, colorize, typeset, layout, animate, craft-floor)`.
+  4. **Khởi tạo 2 tệp sự thật thiết kế dự án .NET MAUI:**
+     - [`mobile-project/dotnet-maui-ver/PRODUCT.md`](../mobile-project/dotnet-maui-ver/PRODUCT.md): Chân dung người dùng, sứ mệnh PFM, giọng văn điềm tĩnh/động viên, ràng buộc 100% cá nhân và offline-first.
+     - [`mobile-project/dotnet-maui-ver/DESIGN.md`](../mobile-project/dotnet-maui-ver/DESIGN.md): 5 Luật phòng thủ lỗi rập khuôn AI (chống Card Soup, Color Tinting Deep Indigo, gia cố tràn text, chuyển động Spring Physics, cấm rung phím), Spacing grid 8pt, Typographic scale Plus Jakarta Sans và vi thẩm mỹ Double-Bezel.
+- **Trạng thái:** `COMPLETED & VERIFIED 100%`.
+
+---
+
+## [2026-10-21] - Quyết Định 97: Chốt Phiên Họp Hội Đồng .NET MAUI & ASP.NET Core: Kiến Trúc CSDL, Tiêu Chuẩn Kỹ Nghệ Mã Nguồn Và Quy Trình Phát Triển Toàn Diện (PLAN-30)
+- **Bối cảnh:** Sau các vòng tham luận và phản biện chuyên sâu giữa người dùng và các chuyên gia Hội đồng (Martin Kleppmann, Eric Evans, Dan Abramov, Bruce Schneier, Kent Beck, Werner Vogels), nhóm chính thức hoàn tất phiên họp định hướng kỹ thuật cho toàn bộ hệ thống PFM Enterprise.
+- **Các quyết định kỹ thuật được phê chuẩn:**
+  1. **Kiến trúc Dữ liệu Đa tầng Không Chi Phí (Zero-Cost Two-Tier Polyglot Persistence):**
+     - **Tầng Client:** Bắt buộc dùng `SQLite` (`sqlite-net-pcl` + `SQLCipher` mã hóa phần cứng AES-256), nhúng trực tiếp trong thiết bị di động, bảo đảm năng lực **Offline-First 100%**, tốc độ truy vấn 0.1ms, chi phí 0 đồng.
+     - **Tầng Server Central:** Sử dụng **PostgreSQL 16+** (loại bỏ MS SQL Server do rào cản hosting cloud đắt đỏ). Dùng Docker chạy local và kết nối Supabase/Neon Free Tier khi deploy. Tận dụng kiểu `JSONB` cho hóa đơn AI OCR đa món, hỗ trợ giao dịch ACID và khóa bi quan.
+     - **Tầng Cache & Realtime:** **LOẠI BỎ REDIS HOÀN TOÀN** để tránh rủi ro bản quyền kép (RSALv2/SSPLv1) và giải phóng tài nguyên. Thay thế bằng **`IMemoryCache` nội tại của ASP.NET Core** (tốc độ đọc RAM 0.001ms) và **SignalR Core Native** chạy độc lập không cần Redis backplane.
+     - **Bảo vệ toàn vẹn số dư ví:** Bắt buộc sử dụng **Pessimistic Locking (`SELECT ... FOR UPDATE`)** trong giao dịch chuyển tiền nội bộ và cập nhật số dư, kết hợp Composite Index `(user_id, transaction_date DESC)` đạt tốc độ < 5ms.
+  2. **Kiến trúc Mã nguồn Hai Phân Hệ:**
+     - **Backend:** Clean Architecture chuẩn 4 tầng (`Domain`, `Application`, `Infrastructure`, `WebApi`), phân tách rõ ràng CQRS, DTOs và FluentValidation.
+     - **Mobile Client:** Clean MVVM trên .NET MAUI với `CommunityToolkit.Mvvm` (`[ObservableProperty]`, `[RelayCommand]`), Refit Type-Safe API Client và Polly v8 Resilience Pipeline.
+  3. **Quy chuẩn Kỹ nghệ Mã nguồn & Code Craft:**
+     - Ban hành quy tắc [`.agents/rules/05_engineering_architecture_and_code_craft_rules.md`](../.agents/rules/05_engineering_architecture_and_code_craft_rules.md).
+     - **Giữ nguyên 100% English Technical Terms:** Không dịch gượng ép thuật ngữ chuyên ngành sang tiếng Việt.
+     - **Tiêu chuẩn chú thích:** Ngắn gọn 1-2 dòng, tập trung giải thích "Tại sao" (Why) và edge cases cho Code Reviewer, cấm trang trí ASCII art.
+     - **Nguyên lý Rich Domain Model:** Nghiệp vụ tài chính nằm trong Entity/Value Object, chống Anemic Model.
+     - **Result Pattern:** Dùng `Result<T>` thay thế Exception-driven flow cho business logic.
+     - **Nguyên tắc DRY bắt buộc:** Tái sử dụng tối đa Base classes, Extension methods và XAML `ResourceDictionary` / `ContentView`.
+     - **Trình biên dịch nghiêm ngặt:** C# 14 / .NET 10 bật `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` và `<Nullable>enable</Nullable>`.
+  4. **Kiểm Thử Cuốn Chiếu & Quản Trị Token:**
+     - **Incremental Unit Testing:** Viết Unit Test (`xUnit` + `FluentAssertions`) ngay sau khi hoàn thành từng module/function nghiệp vụ, không dồn đến cuối.
+     - **Scoped Inspection:** Kiểm tra có trọng tâm, không quét lặp toàn bộ Solution khi không có yêu cầu.
+  5. **Hoàn thiện 5 Mắt Xích Tiền Khả Thi (Pre-Flight Readiness):**
+     - Ban hành Bản đặc tả kiến trúc kỹ thuật toàn diện [`mobile-project/dotnet-maui-ver/TECHNICAL_ARCHITECTURE_SPEC.md`](../mobile-project/dotnet-maui-ver/TECHNICAL_ARCHITECTURE_SPEC.md) bao gồm: Bản đồ kiến trúc, Schema DDL 12 bảng PostgreSQL, Schema SQLite Local, Danh mục 40 REST Endpoints bám sát **chính xác 63 Ca sử dụng chi tiết (từ UC-01.01 đến UC-09.05)** trong bản vẽ kỹ thuật [`files/UCD-DuoNoPro.drawio`](../files/UCD-DuoNoPro.drawio), SignalR Hub Events, Luồng bảo mật JWT Refresh Token Rotation qua `SecureStorage` và Mock Services (OCR & VietQR).
+  6. **Chiến Lược Triển Khai Cuốn Chiếu Theo Từng Phân Hệ (Module-by-Module Incremental Delivery):**
+     - Định hướng triển khai dứt điểm từng phân hệ theo phương pháp luận Vertical Slice: xong trọn vẹn Domain, Use Cases, DB, API và XAML UI của phân hệ đó kèm Unit Tests trước khi bước sang phân hệ tiếp theo.
+  7. **Cam kết Zero-Code Freeze:** Phong tỏa viết mã logic ứng dụng cho đến khi hoàn tất 100% tài liệu và nhận được sự phê duyệt từ người dùng.
+- **Trạng thái:** `LOCKED & COMPLETED 100% (READY FOR SOLUTION SCAFFOLDING)`.
+
+---
+
+## [2026-10-21] - Quyết Định 98: Thống Nhất Quy Ước Thư Mục Backend/Frontend & Xuất Bản Bản Đồ Lộ Trình Xây Dựng 8 Giai Đoạn (MASTER_PROJECT_ROADMAP.md)
+- **Bối cảnh:** Sau khi chốt các tiêu chuẩn kỹ nghệ và danh mục 40 API bám sát 63 Use Cases, nhóm tiến hành văn bản hóa toàn diện lộ trình thi công Full-Stack Vertical Slice và thống nhất cấu trúc thư mục dự án theo chỉ đạo của người dùng.
+- **Quyết định thực hiện:**
+  1. **Quy chuẩn tên thư mục gốc trong `mobile-project/dotnet-maui-ver/`:**
+     - **`backend/`:** Chứa toàn bộ Solution và 4 projects Clean Architecture ASP.NET Core 10 (`Domain`, `Application`, `Infrastructure`, `WebApi`), thư mục `tests/` và `docker-compose.yml`.
+     - **`frontend/`:** Chứa toàn bộ Solution và project .NET MAUI 10 (`ExpenseTracker.Maui`), các thư mục `Views/`, `ViewModels/`, `Services/`, `Resources/` và `tests/`.
+  2. **Xuất bản Bản đồ Lộ trình Xây dựng Dự án Toàn diện:**
+     - Tạo tệp [`mobile-project/dotnet-maui-ver/MASTER_PROJECT_ROADMAP.md`](../mobile-project/dotnet-maui-ver/MASTER_PROJECT_ROADMAP.md).
+     - Chi tiết hóa 8 Giai đoạn cuốn chiếu (Giai đoạn 0 đến Giai đoạn 7) kết hợp chặt chẽ Backend và Mobile tại từng phân hệ:
+       * *Giai đoạn 0:* Khởi tạo Solution Scaffolding & DevOps (`backend/` + `frontend/` + Docker PostgreSQL).
+       * *Giai đoạn 1:* Phân hệ 1 — Tài khoản, Đa Ví ACID & Đồng bộ cục bộ (10 Use Cases).
+       * *Giai đoạn 2:* Phân hệ 2, 3, 4 — Danh mục, Sổ cái & AI Vision OCR (26 Use Cases).
+       * *Giai đoạn 3:* Phân hệ 5 — Hoạch định Ngân sách Đa phương pháp & Động cơ DSA (6 Use Cases).
+       * *Giai đoạn 4:* Phân hệ 6 — Quỹ Khẩn cấp & Tối ưu hóa Nợ cá nhân (7 Use Cases).
+       * *Giai đoạn 5:* Phân hệ 7, 8 — Báo cáo Tài chính Đa chiều & Dự báo Rủi ro (9 Use Cases).
+       * *Giai đoạn 6:* Phân hệ 9 — Tâm lý Hành vi Thaler, Cooling-off 24h & VietQR (5 Use Cases).
+       * *Giai đoạn 7:* Tổng kiểm toán, Đóng gói 1-Click cho Thầy & Báo cáo Khóa luận Word DNTU.
+  3. **Cam kết kiểm soát:** Toàn bộ quá trình code ở các giai đoạn sau bắt buộc phải đối soát chéo với `MASTER_PROJECT_ROADMAP.md`, `TECHNICAL_ARCHITECTURE_SPEC.md` và tuân thủ `05_engineering_architecture_and_code_craft_rules.md`.
+  4. **Quy chuẩn chú thích thực dụng (Practical Code Notes):** Nếu ghi note, CHỈ MÔ TẢ ĐÚNG CODE LÀM ĐƯỢC GÌ (chức năng/mục đích nghiệp vụ), ngắn gọn 1-2 dòng, triệt tiêu hoàn toàn khung trang trí ASCII art, bảo đảm Code Reviewer hoặc chính người dùng trong tương lai đọc vào là hiểu ngay lập tức.
+---
+
+## [2026-10-22 12:20] - Quyết Định 99: Hoàn Tất Nghiệm Thu Giai Đoạn 0 — Khởi Tạo Bộ Khung Hạ Tầng (Solution Scaffolding & DevOps)
+- **Vấn đề:** Triển khai Kế hoạch thi công `PLAN-31` cho Giai đoạn 0: Khởi tạo toàn bộ giải pháp kỹ thuật hai đầu Backend ASP.NET Core 10 và Frontend .NET MAUI 10 theo đúng quy định tên thư mục `backend/` và `frontend/`, thiết lập cơ sở dữ liệu PostgreSQL 16 Docker Compose, cấu hình C# 14 / .NET 10 toàn cục, và bảo đảm kiểm thử khép kín đạt 100%.
+- **Quyết định & Kết quả bàn giao:**
+  1. **Khởi tạo và cấu hình Backend (`backend/`):**
+     - Đã tạo Solution `ExpenseTracker.slnx` (chuẩn .NET 10 mới) và 4 projects Clean Architecture: `ExpenseTracker.Domain`, `ExpenseTracker.Application`, `ExpenseTracker.Infrastructure`, `ExpenseTracker.WebApi`.
+     - Đã tạo 2 projects Unit Test: `tests/ExpenseTracker.Domain.UnitTests`, `tests/ExpenseTracker.Application.UnitTests` với `xUnit`, `FluentAssertions`, `Moq`.
+     - Cài đặt đầy đủ NuGet: `FluentValidation`, `Npgsql.EntityFrameworkCore.PostgreSQL`, `Microsoft.EntityFrameworkCore.Design`, `Swashbuckle.AspNetCore`.
+     - Đã tạo `Directory.Build.props` (Nullable, CodeStyle), `.editorconfig`, `docker-compose.yml` (PostgreSQL 16 Alpine), `appsettings.json`, và `Program.cs` tích hợp Swagger UI, MemoryCache, SignalR, CORS, Health Check.
+     - **Kết quả nghiệm thu:** `dotnet build` đạt **0 Error, 0 Warning**; `dotnet test` đạt **100% Passed (1/1 smoke test)**.
+  2. **Khởi tạo và cấu hình Frontend (`frontend/ExpenseTracker.Maui`):**
+     - Đã tạo project .NET MAUI 10 (`ExpenseTracker.Maui`) target Windows WinUI 3 (hỗ trợ bật Android qua tham số `BuildingForAndroid=true`).
+     - Cài đặt đầy đủ các gói: `CommunityToolkit.Mvvm`, `Refit`, `Refit.HttpClientFactory`, `sqlite-net-pcl`, `SQLitePCLRaw.bundle_green`, `Microsoft.AspNetCore.SignalR.Client`.
+     - Thiết lập cấu trúc thư mục Clean MVVM: `Views/`, `ViewModels/`, `Models/`, `Services/`, `Converters/`.
+     - **Kết quả nghiệm thu:** `dotnet build` đạt **0 Error, 0 Warning**.
+  3. **Tài liệu hướng dẫn:** Đã tạo tệp [`mobile-project/dotnet-maui-ver/README.md`](../mobile-project/dotnet-maui-ver/README.md) mô tả cấu trúc và câu lệnh khởi chạy 1-click.
+  4. **Kế hoạch tiếp theo:** Nghiệm thu đóng Giai đoạn 0 (`PLAN-31`). Toàn bộ hạ tầng đã sẵn sàng 100% để bước vào **Giai đoạn 1: Phân hệ 1 — Quản lý Tài khoản, Đa Ví ACID & Đồng bộ Cục bộ (10 Use Cases: `UC-01.01` đến `UC-01.10`)**.
+- **Trạng thái:** `COMPLETED, ACCEPTED & LOCKED`.
+
+
+
+
+
+
 
 

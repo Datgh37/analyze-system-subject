@@ -69,11 +69,11 @@ Nhằm bao quát toàn bộ vòng đời phát triển phần mềm (Software En
 | **Agent 00** | **Council Orchestrator** | `living-docs-governance`, `intent-driven-development`, `plan-canvas`, `plan-orchestrate`, `context-budget`, `strategic-compact`, `delivery-gate`, `/plan`, `/quality-gate` |
 | **Agent 03** | **Cockburn & Debra Paul (BA Lead)** | Subagent `spec-miner.md`, `product-lens`, `market-research`, `intent-driven-development` |
 | **Agent 04** | **Eric Evans (DDD Lead)** | Subagent `architect.md`, `architecture-decision-records`, `backend-patterns`, `dotnet-patterns`, `nestjs-patterns` |
-| **Agent 10** | **Dan Abramov (Client & Craft)** | Subagent `code-reviewer.md`, Subagent `code-simplifier.md`, Subagent `refactor-cleaner.md`, Subagent `react-reviewer.md`, Subagent `typescript-reviewer.md`, Subagent `csharp-reviewer.md`, `react-patterns`, `react-performance`, `nextjs-turbopack` |
+| **Agent 10** | **Dan Abramov (Client & Craft)** | Subagent `code-reviewer.md`, Subagent `code-simplifier.md`, Subagent `refactor-cleaner.md`, Subagent `react-reviewer.md`, Subagent `typescript-reviewer.md`, Subagent `csharp-reviewer.md`, `react-patterns`, `react-performance`, `nextjs-turbopack`, `impeccable` (`audit`, `harden`, `distill`, `adapt`, `polish`) |
 | **Agent 05** | **Martin Kleppmann (DB Lead)** | Subagent `database-reviewer.md`, `database-migrations`, `postgres-patterns`, `mysql-patterns`, `redis-patterns` |
 | **Agent 07** | **Werner Vogels (DevOps Lead)** | `docker-patterns`, `deployment-patterns`, `latency-critical-systems`, Subagent `build-error-resolver.md` |
 | **Agent 08** | **Andrew Ng (AI Lead)** | `prompt-optimizer`, `eval-harness`, `agent-eval`, `cost-aware-llm-pipeline`, Subagent `mle-reviewer.md` |
-| **Agent 09 & 13** | **Brad Frost & Julian Garnier** | Subagent `a11y-architect.md`, `click-path-audit`, `make-interfaces-feel-better` |
+| **Agent 09 & 13** | **Brad Frost & Julian Garnier** | Subagent `a11y-architect.md`, `click-path-audit`, `make-interfaces-feel-better`, `impeccable` (`craft`, `colorize`, `typeset`, `layout`, `animate`, `craft-floor`) |
 | **Agent 11** | **Bruce Schneier (Security Lead)** | Subagent `security-reviewer.md`, `security-scan`, `security-review`, `the-security-guide` |
 | **Agent 12** | **Kent Beck & Martin Fowler (QA)** | Subagent `tdd-guide.md`, `tdd-workflow`, `verification-loop`, Subagent `e2e-runner.md`, `e2e-testing`, `browser-qa`, Subagent `silent-failure-hunter.md`, `csharp-testing` |
 
