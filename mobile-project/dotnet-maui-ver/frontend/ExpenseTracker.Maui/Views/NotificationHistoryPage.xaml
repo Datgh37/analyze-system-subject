@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Notifications"
+             x:Class="ExpenseTracker.Maui.Views.NotificationHistoryPage"
+             x:DataType="vm:NotificationHistoryViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F172A">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <!-- Header & Action Bar -->
+        <Border Grid.Row="0" Margin="16,12,16,8" Padding="16,12" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="Thông Báo Hệ Thống" TextColor="#F8FAFC" FontSize="20" FontAttributes="Bold" />
+                    <Label Text="{Binding StatusMessage, FallbackValue='Cập nhật thông báo theo thời gian thực'}" 
+                           TextColor="#94A3B8" FontSize="12" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" 
+                        Text="Đọc tất cả" 
+                        Command="{Binding MarkAllAsReadCommand}"
+                        BackgroundColor="#3B82F6" 
+                        TextColor="White" 
+                        FontAttributes="Bold"
+                        CornerRadius="10" 
+                        HeightRequest="36" 
+                        Padding="12,0" />
+            </Grid>
+        </Border>
+
+        <!-- Filter Segment & Demo Test Trigger Bar -->
+        <HorizontalStackLayout Grid.Row="1" Margin="16,0,16,10" Spacing="10">
+            <Button Text="Tất cả" 
+                    Command="{Binding SetFilterCommand}" 
+                    CommandParameter="All"
+                    BackgroundColor="#334155" 
+                    TextColor="White" 
+                    HeightRequest="34" 
+                    Padding="14,0" 
+                    CornerRadius="8" />
+            <Button Text="Chưa đọc" 
+                    Command="{Binding SetFilterCommand}" 
+                    CommandParameter="Unread"
+                    BackgroundColor="#475569" 
+                    TextColor="White" 
+                    HeightRequest="34" 
+                    Padding="14,0" 
+                    CornerRadius="8" />
+            
+            <!-- Quick Demo Testing Buttons for Defense -->
+            <Button Text="+ Test Cảnh báo" 
+                    Command="{Binding SendTestNotificationCommand}" 
+                    CommandParameter="budget"
+                    BackgroundColor="#B45309" 
+                    TextColor="White" 
+                    HeightRequest="34" 
+                    Padding="10,0" 
+                    CornerRadius="8" 
+                    FontSize="11" />
+            <Button Text="+ Test Số dư" 
+                    Command="{Binding SendTestNotificationCommand}" 
+                    CommandParameter="balance"
+                    BackgroundColor="#047857" 
+                    TextColor="White" 
+                    HeightRequest="34" 
+                    Padding="10,0" 
+                    CornerRadius="8" 
+                    FontSize="11" />
+        </HorizontalStackLayout>
+
+        <!-- Notification List -->
+        <RefreshView Grid.Row="2" 
+                     IsRefreshing="{Binding IsRefreshing}" 
+                     Command="{Binding LoadNotificationsCommand}">
+            <CollectionView ItemsSource="{Binding Notifications}" 
+                            SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12" Margin="0,60,0,0">
+                        <Label Text="🔔" FontSize="48" HorizontalOptions="Center" />
+                        <Label Text="Không có thông báo nào" TextColor="#E2E8F0" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Mọi biến động số dư và cảnh báo ngân sách sẽ xuất hiện tại đây." 
+                               TextColor="#64748B" FontSize="13" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="30,0" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:InAppNotificationModel">
+                        <Border Margin="16,4,16,6" Padding="14,12" 
+                                StrokeShape="RoundRectangle 12" 
+                                Stroke="#334155"
+                                BackgroundColor="#1E293B">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationHistoryViewModel}}, Path=OpenNotificationDetailCommand}" 
+                                                      CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <!-- Type Icon Badge -->
+                                <Border Grid.Column="0" WidthRequest="42" HeightRequest="42" 
+                                        StrokeShape="RoundRectangle 21" 
+                                        BackgroundColor="#0F172A" 
+                                        Stroke="#475569">
+                                    <Label Text="{Binding TypeIcon}" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <!-- Title, Message & Timestamp -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}" TextColor="#F8FAFC" FontSize="14" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Message}" TextColor="#CBD5E1" FontSize="12" LineBreakMode="WordWrap" MaxLines="2" />
+                                    <Label Text="{Binding FormattedCreatedAt}" TextColor="#64748B" FontSize="11" />
+                                </VerticalStackLayout>
+
+                                <!-- Action Button -->
+                                <VerticalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                                    <Button Text="Xem" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationHistoryViewModel}}, Path=OpenNotificationDetailCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="#334155" 
+                                            TextColor="#E2E8F0" 
+                                            FontSize="11" 
+                                            HeightRequest="28" 
+                                            Padding="8,0" 
+                                            CornerRadius="6" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Bottom Error Bar if present -->
+        <Border Grid.Row="3" BackgroundColor="#7F1D1D" Padding="12,8" Margin="16,4" StrokeShape="RoundRectangle 8"
+                IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+            <Label Text="{Binding ErrorMessage}" TextColor="#FECACA" FontSize="12" />
+        </Border>
+    </Grid>
+</ContentPage>

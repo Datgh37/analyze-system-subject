@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Transactions"
+             x:Class="ExpenseTracker.Maui.Views.IncomesPage"
+             x:DataType="vm:IncomesViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Title & Monthly Summary -->
+            <Label Text="Sổ Thu Nhập Cá Nhân (Wireframe)" FontSize="20" FontAttributes="Bold" />
+
+            <Border Stroke="Gray" Padding="16" StrokeShape="RoundRectangle 8">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Tổng Thu Nhập Tháng Này" FontSize="14" TextColor="Gray" />
+                    <Label Text="{Binding FormattedMonthlyTotal}" FontSize="24" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Error Banner -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}" />
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}" />
+
+            <!-- Add Income Wireframe Form (UC-02.01 & UC-02.06) -->
+            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Ghi Nhận Khoản Thu Mới" FontAttributes="Bold" FontSize="16" />
+
+                    <!-- Wallet Selection -->
+                    <Label Text="Ví tiếp nhận tiền:" FontSize="13" />
+                    <Picker Title="-- Chọn ví --"
+                            ItemsSource="{Binding Wallets}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedWallet}" />
+
+                    <!-- Category Selection -->
+                    <Label Text="Danh mục nguồn thu:" FontSize="13" />
+                    <Picker Title="-- Chọn danh mục --"
+                            ItemsSource="{Binding IncomeCategories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}" />
+
+                    <!-- Amount -->
+                    <Label Text="Số tiền (VND):" FontSize="13" />
+                    <Entry Placeholder="Ví dụ: 10000000"
+                           Keyboard="Numeric"
+                           Text="{Binding AmountInput}" />
+
+                    <!-- Date -->
+                    <Label Text="Ngày nhận tiền:" FontSize="13" />
+                    <DatePicker Date="{Binding TransactionDate}" />
+
+                    <!-- Windfall Flag (Richard Thaler Mental Accounting) -->
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding IsWindfall}" />
+                        <Label Text="Khoản thu bất thường / Đột xuất (Windfall)"
+                               VerticalOptions="Center"
+                               FontSize="13" />
+                    </HorizontalStackLayout>
+
+                    <!-- Note -->
+                    <Label Text="Ghi chú (tùy chọn):" FontSize="13" />
+                    <Entry Placeholder="Ghi chú nguồn thu..."
+                           Text="{Binding Note}" />
+
+                    <!-- Submit Button -->
+                    <Button Text="+ Ghi Nhận Thu Nhập"
+                            Command="{Binding CreateIncomeCommand}"
+                            Margin="0,8,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Income History List (UC-02.02) -->
+            <Label Text="Lịch Sử Giao Dịch Thu Nhập" FontAttributes="Bold" Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding Incomes}">
+                <CollectionView.EmptyView>
+                    <Label Text="Chưa có khoản thu nhập nào."
+                           HorizontalOptions="Center"
+                           Margin="0,20" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TransactionModel">
+                        <Border Stroke="LightGray" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 6">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Text="{Binding CategoryName}" FontAttributes="Bold" FontSize="16" />
+                                        <Label Text="[Đột xuất]"
+                                               FontSize="11"
+                                               TextColor="DarkOrange"
+                                               IsVisible="{Binding IsWindfall}"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding WalletName, StringFormat='Ví: {0}'}" FontSize="12" TextColor="Gray" />
+                                    <Label Text="{Binding Note}"
+                                           FontSize="12"
+                                           IsVisible="{Binding Note, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="{Binding Amount, StringFormat='+{0:N0} VND'}" FontAttributes="Bold" />
+                                    <Label Text="{Binding TransactionDate, StringFormat='{0:dd/MM/yyyy}'}" FontSize="11" TextColor="Gray" />
+                                </VerticalStackLayout>
+
+                                <Button Grid.Column="2"
+                                        Text="Xóa"
+                                        TextColor="Red"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:IncomesViewModel}}, Path=DeleteIncomeCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

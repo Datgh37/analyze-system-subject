@@ -1,7 +1,7 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:ExpenseTracker.Maui"
+             xmlns:converters="clr-namespace:ExpenseTracker.Maui.Converters"
              x:Class="ExpenseTracker.Maui.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -9,6 +9,10 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter" />
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:NullToFalseConverter x:Key="NullToFalseConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

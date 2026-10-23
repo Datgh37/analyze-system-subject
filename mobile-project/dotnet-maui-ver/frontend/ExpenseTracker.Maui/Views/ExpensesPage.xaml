@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Transactions"
+             x:Class="ExpenseTracker.Maui.Views.ExpensesPage"
+             x:DataType="vm:ExpensesViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Title & Monthly Summary Card -->
+            <Border Stroke="#EF4444" BackgroundColor="#FEF2F2" Padding="16" StrokeShape="RoundRectangle 8">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Tổng Chi Tiêu Tháng Này" FontSize="14" TextColor="#991B1B" />
+                    <Label Text="{Binding MonthlyTotalExpense, StringFormat='{0:N0} VND'}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#DC2626" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Error Banner -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}" />
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}" />
+
+            <!-- Add Expense Wireframe Form (UC-03.01) -->
+            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Ghi Nhận Khoản Chi Mới (UC-03.01)" FontAttributes="Bold" FontSize="16" />
+
+                    <Label Text="Số tiền chi (VND):" FontSize="13" />
+                    <Entry Placeholder="Ví dụ: 150000"
+                           Text="{Binding NewAmount}"
+                           Keyboard="Numeric" />
+
+                    <Label Text="Ví nguồn thanh toán (Khấu trừ số dư):" FontSize="13" />
+                    <Picker Title="-- Chọn ví thanh toán --"
+                            ItemsSource="{Binding Wallets}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedWallet}" />
+
+                    <Label Text="Ghi chú chi tiêu (Tự động kích hoạt gợi ý từ khóa UC-04.07):" FontSize="13" />
+                    <Entry Placeholder="Ví dụ: Mua đồ WinMart, Bữa trưa GrabFood..."
+                           Text="{Binding Note}" />
+
+                    <!-- Live Auto-categorization Badge (UC-04.07) -->
+                    <Label Text="{Binding AutoMatchedHint}"
+                           TextColor="#059669"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           IsVisible="{Binding AutoMatchedHint, Converter={x:Null}}" />
+
+                    <Label Text="Danh mục chi tiêu:" FontSize="13" />
+                    <Picker Title="-- Chọn danh mục --"
+                            ItemsSource="{Binding Categories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}" />
+
+                    <Label Text="Ngày chi tiêu:" FontSize="13" />
+                    <DatePicker Date="{Binding TransactionDate}" />
+
+                    <HorizontalStackLayout Spacing="8">
+                        <CheckBox IsChecked="{Binding IsEssential}" />
+                        <Label Text="Khoản chi thiết yếu (Needs 50%)" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Button Text="- Khấu Trừ &amp; Lưu Khoản Chi"
+                            BackgroundColor="#EF4444"
+                            TextColor="White"
+                            Command="{Binding CreateExpenseCommand}"
+                            Margin="0,6,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Expenses Timeline List (UC-03.02) -->
+            <Label Text="Lịch Sử Các Khoản Chi (Timeline)" FontAttributes="Bold" Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding Expenses}">
+                <CollectionView.EmptyView>
+                    <Label Text="Chưa có khoản chi tiêu nào trong tháng."
+                           HorizontalOptions="Center"
+                           TextColor="Gray"
+                           Margin="0,20" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TransactionModel">
+                        <Border Stroke="#E5E7EB" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 6">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding CategoryName}" FontAttributes="Bold" FontSize="15" />
+                                    <Label Text="{Binding Note}" FontSize="13" TextColor="DimGray" IsVisible="{Binding Note, Converter={x:Null}}" />
+                                    <Label Text="{Binding WalletName, StringFormat='Ví: {0}'}" FontSize="12" TextColor="Gray" />
+                                </VerticalStackLayout>
+
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding Amount, StringFormat='-{0:N0} VND'}"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       TextColor="#DC2626"
+                                       HorizontalOptions="End" />
+
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       Text="{Binding TransactionDate, StringFormat='{0:dd/MM/yyyy}'}"
+                                       FontSize="12"
+                                       TextColor="Gray" />
+
+                                <Button Grid.Row="1" Grid.Column="1"
+                                        Text="Xóa"
+                                        TextColor="Red"
+                                        BackgroundColor="Transparent"
+                                        HorizontalOptions="End"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExpensesViewModel}}, Path=DeleteExpenseCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

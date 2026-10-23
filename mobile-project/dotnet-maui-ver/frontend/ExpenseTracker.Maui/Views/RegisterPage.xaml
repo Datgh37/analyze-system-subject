@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.RegisterPage"
+             x:DataType="vm:RegisterViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="32,40,32,40" MaximumWidthRequest="460">
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="Create Account" 
+                       FontSize="28" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                <Label Text="Start your smart financial planning journey today" 
+                       FontSize="14" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </VerticalStackLayout>
+
+            <!-- Card Container -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Padding="24">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Error Alert -->
+                    <Border Stroke="#FCA5A5" 
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="#FEF2F2"
+                            Padding="12"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <Label Text="{Binding ErrorMessage}" 
+                               TextColor="#B91C1C" 
+                               FontSize="13" />
+                    </Border>
+
+                    <!-- Full Name -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Full Name" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Entry Placeholder="Nguyen Van A"
+                               Text="{Binding FullName}"
+                               ClearButtonVisibility="WhileEditing" />
+                    </VerticalStackLayout>
+
+                    <!-- Email Input -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Email Address" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Entry Placeholder="name@example.com"
+                               Keyboard="Email"
+                               Text="{Binding Email}"
+                               ClearButtonVisibility="WhileEditing" />
+                    </VerticalStackLayout>
+
+                    <!-- Password Input -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Password" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Entry Placeholder="At least 6 characters"
+                               IsPassword="True"
+                               Text="{Binding Password}" />
+                    </VerticalStackLayout>
+
+                    <!-- Confirm Password -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Confirm Password" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Entry Placeholder="Re-enter password"
+                               IsPassword="True"
+                               Text="{Binding ConfirmPassword}" />
+                    </VerticalStackLayout>
+
+                    <!-- Base Currency -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Base Currency" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Picker SelectedItem="{Binding BaseCurrency}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>VND</x:String>
+                                    <x:String>USD</x:String>
+                                    <x:String>EUR</x:String>
+                                    <x:String>JPY</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </VerticalStackLayout>
+
+                    <!-- Submit Button -->
+                    <Button Text="Create Account" 
+                            Command="{Binding RegisterCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            BackgroundColor="#2563EB"
+                            TextColor="#FFFFFF"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="48"
+                            Margin="0,12,0,0" />
+
+                    <!-- Loading Indicator -->
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                                       IsVisible="{Binding IsBusy}" 
+                                       Color="#2563EB"
+                                       HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Switch to Login -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                <Label Text="Already have an account?" 
+                       FontSize="14" 
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                <Label Text="Sign In" 
+                       FontSize="14" 
+                       FontAttributes="Bold" 
+                       TextColor="#2563EB">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToLoginCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

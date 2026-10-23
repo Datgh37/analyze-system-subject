@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.CreateSavingsGoalPage"
+             x:DataType="vm:CreateSavingsGoalViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Error Banner -->
+            <Border IsVisible="{Binding HasError}"
+                    Stroke="#FCA5A5"
+                    BackgroundColor="#FEF2F2"
+                    Padding="12"
+                    StrokeShape="RoundRectangle 8">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="#DC2626"
+                       FontAttributes="Bold"
+                       FontSize="13" />
+            </Border>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="#2563EB" />
+
+            <!-- FORM CARD -->
+            <Border Stroke="#E2E8F0"
+                    BackgroundColor="White"
+                    Padding="20"
+                    StrokeShape="RoundRectangle 16">
+                <VerticalStackLayout Spacing="14">
+
+                    <!-- Goal Name -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Tên mục tiêu tích lũy (*)"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#334155" />
+                        <Entry Text="{Binding Name}"
+                               Placeholder="Ví dụ: Quỹ Khẩn Cấp 6 Tháng, Mua Laptop Pro"
+                               FontSize="14" />
+                    </VerticalStackLayout>
+
+                    <!-- Goal Type Picker -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Phân loại mục tiêu / Hũ tài chính (*)"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#334155" />
+                        <Picker ItemsSource="{Binding AvailableTypes}"
+                                SelectedItem="{Binding SelectedType}"
+                                Title="Chọn loại mục tiêu"
+                                FontSize="14" />
+                    </VerticalStackLayout>
+
+                    <!-- Target Amount -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Số tiền mục tiêu (VND) (*)"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#334155" />
+                        <Entry Text="{Binding TargetAmount}"
+                               Keyboard="Numeric"
+                               Placeholder="Ví dụ: 30000000"
+                               FontSize="14" />
+                    </VerticalStackLayout>
+
+                    <!-- Initial Amount -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Số tiền ban đầu đã có sẵn trong quỹ (VND)"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#334155" />
+                        <Entry Text="{Binding InitialAmount}"
+                               Keyboard="Numeric"
+                               Placeholder="0 nếu bắt đầu từ đầu"
+                               FontSize="14" />
+                    </VerticalStackLayout>
+
+                    <!-- Priority Picker -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Mức độ ưu tiên"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#334155" />
+                        <Picker ItemsSource="{Binding AvailablePriorities}"
+                                SelectedItem="{Binding SelectedPriority}"
+                                FontSize="14" />
+                    </VerticalStackLayout>
+
+                    <!-- Date Range: Start and Target Deadlines -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Ngày bắt đầu"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#334155" />
+                            <DatePicker Date="{Binding StartDate}"
+                                        Format="dd/MM/yyyy"
+                                        FontSize="13" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Hạn chót hoàn thành (*)"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#334155" />
+                            <DatePicker Date="{Binding TargetDate}"
+                                        Format="dd/MM/yyyy"
+                                        FontSize="13" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Description -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Ghi chú / Kế hoạch chi tiết"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#334155" />
+                        <Editor Text="{Binding Description}"
+                                Placeholder="Ghi chú thêm về mục đích hoặc kỷ luật tiết kiệm..."
+                                HeightRequest="80"
+                                AutoSize="Disabled"
+                                FontSize="13" />
+                    </VerticalStackLayout>
+
+                    <!-- PROJECTION INFO CARD -->
+                    <Border BackgroundColor="#EFF6FF"
+                            Stroke="#BFDBFE"
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12">
+                        <VerticalStackLayout Spacing="6">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="📊 TÍNH TOÁN DỰ KIẾN MỖI THÁNG"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#1E40AF" />
+                                <Label Grid.Column="1"
+                                       Text="Kỷ luật ngân sách"
+                                       FontSize="11"
+                                       TextColor="#3B82F6" />
+                            </Grid>
+
+                            <Label Text="Để đạt được mục tiêu trước thời hạn đã chọn, số tiền bạn cần tiết kiệm đều đặn mỗi tháng là:"
+                                   FontSize="12"
+                                   TextColor="#475569" />
+
+                            <Label Text="{Binding FormattedCalculatedMonthly}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#2563EB" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ACTION BUTTONS -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
+                        <Button Grid.Column="0"
+                                Text="Hủy bỏ"
+                                BackgroundColor="#F1F5F9"
+                                TextColor="#475569"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Command="{Binding CancelCommand}" />
+
+                        <Button Grid.Column="1"
+                                Text="Tạo Mục Tiêu"
+                                BackgroundColor="#2563EB"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Command="{Binding SaveGoalCommand}" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

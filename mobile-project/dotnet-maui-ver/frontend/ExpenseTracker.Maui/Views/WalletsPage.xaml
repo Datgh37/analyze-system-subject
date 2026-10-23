@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Wallets"
+             x:Class="ExpenseTracker.Maui.Views.WalletsPage"
+             x:DataType="vm:WalletsViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <RefreshView IsRefreshing="{Binding IsBusy}" Command="{Binding LoadWalletsCommand}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="16" Padding="20,20,20,32" MaximumWidthRequest="600">
+                <!-- Realtime Connection Status Indicator (Phương án B2 - SignalR) -->
+                <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}" 
+                        StrokeThickness="1" 
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}" 
+                        Padding="14,10">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <BoxView Grid.Column="0" WidthRequest="10" HeightRequest="10" CornerRadius="5"
+                                 Color="{Binding RealtimeDotColor}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding RealtimeStatusText}"
+                               FontSize="12" FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" 
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="2" Text="🔔 Thông báo" 
+                                Clicked="OnNotificationsClicked"
+                                BackgroundColor="{AppThemeBinding Light=#E0E7FF, Dark=#334155}" 
+                                TextColor="{AppThemeBinding Light=#4338CA, Dark=#F8FAFC}" 
+                                FontSize="11"
+                                HeightRequest="30" Padding="10,0" CornerRadius="6" />
+                    </Grid>
+                </Border>
+
+                <!-- Realtime Instant Toast Message if available -->
+                <Border Stroke="#10B981" StrokeThickness="1" StrokeShape="RoundRectangle 8"
+                        BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}" 
+                        Padding="12,8"
+                        IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                    <Label Text="{Binding StatusMessage}" 
+                           TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}" 
+                           FontSize="12" FontAttributes="Bold" />
+                </Border>
+
+                <!-- Total Balance / Net Worth Banner -->
+                <Border Stroke="{AppThemeBinding Light=#3B82F6, Dark=#1D4ED8}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 20"
+                        BackgroundColor="{AppThemeBinding Light=#1E40AF, Dark=#1E293B}"
+                        Padding="24">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="TỔNG TÀI SẢN KHẢ DỤNG"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="#93C5FD"
+                               CharacterSpacing="1" />
+                        <Label Text="{Binding FormattedTotalBalance}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="#FFFFFF" />
+                        <Label Text="Bao gồm các ví tiền mặt, ngân hàng và ví điện tử"
+                               FontSize="12"
+                               TextColor="#BFDBFE" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Error Alert -->
+                <Border Stroke="#FCA5A5"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        BackgroundColor="#FEF2F2"
+                        Padding="12"
+                        IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#B91C1C"
+                           FontSize="13" />
+                </Border>
+
+                <!-- Section Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Danh Sách Ví Của Bạn"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
+                    <Button Grid.Column="1"
+                            Text="Làm mới"
+                            Command="{Binding LoadWalletsCommand}"
+                            FontSize="12"
+                            HeightRequest="36"
+                            Padding="12,0"
+                            CornerRadius="8"
+                            BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
+                </Grid>
+
+                <!-- Wallets Collection -->
+                <CollectionView ItemsSource="{Binding Wallets}"
+                                SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Spacing="10" Padding="20,40" HorizontalOptions="Center">
+                            <Border WidthRequest="56"
+                                    HeightRequest="56"
+                                    StrokeShape="RoundRectangle 28"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                    HorizontalOptions="Center">
+                                <Label Text="W"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            </Border>
+                            <Label Text="Chưa có ví nào được tạo"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <Label Text="Kéo xuống để tải lại hoặc tạo ví đầu tiên"
+                                   FontSize="13"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:WalletModel">
+                            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 16"
+                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                                    Padding="16"
+                                    Margin="0,0,0,12">
+                                <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                                    <!-- Wallet Icon Circle -->
+                                    <Border Grid.Column="0"
+                                            WidthRequest="48"
+                                            HeightRequest="48"
+                                            StrokeShape="RoundRectangle 24"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{Binding ColorHex}">
+                                        <Label Text="{Binding Currency}"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               TextColor="#FFFFFF"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+
+                                    <!-- Wallet Details -->
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                        <Label Text="{Binding SubtitleInfo}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                                    </VerticalStackLayout>
+
+                                    <!-- Wallet Balance -->
+                                    <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End" VerticalOptions="Center">
+                                        <Label Text="{Binding FormattedBalance}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalTextAlignment="End"
+                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                        <Label Text="{Binding Currency}"
+                                               FontSize="11"
+                                               HorizontalTextAlignment="End"
+                                               TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.RecurringIncomes"
+             x:Class="ExpenseTracker.Maui.Views.RecurringIncomesPage"
+             x:DataType="vm:RecurringIncomesViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Title & Batch Process Action -->
+            <Label Text="Quản Lý Nguồn Thu Định Kỳ (Wireframe UC-02.07)" FontSize="18" FontAttributes="Bold" />
+
+            <Button Text="⚡ Quét &amp; Ghi Nhận Ngay Khoản Đến Hạn"
+                    Command="{Binding ProcessDueIncomesCommand}"
+                    BackgroundColor="#059669"
+                    TextColor="White" />
+
+            <!-- Messages -->
+            <Label Text="{Binding StatusMessage}"
+                   TextColor="Green"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}" />
+
+            <!-- Add Recurring Income Form -->
+            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Thiết Lập Nguồn Thu Định Kỳ Mới" FontAttributes="Bold" FontSize="16" />
+
+                    <!-- Name -->
+                    <Label Text="Tên nguồn thu (VD: Lương công ty, Tiền nhà cho thuê):" FontSize="13" />
+                    <Entry Placeholder="Nhập tên nguồn thu..."
+                           Text="{Binding NameInput}" />
+
+                    <!-- Wallet Selection -->
+                    <Label Text="Ví nhận tiền:" FontSize="13" />
+                    <Picker Title="-- Chọn ví --"
+                            ItemsSource="{Binding Wallets}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedWallet}" />
+
+                    <!-- Category Selection -->
+                    <Label Text="Danh mục thu nhập:" FontSize="13" />
+                    <Picker Title="-- Chọn danh mục --"
+                            ItemsSource="{Binding IncomeCategories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}" />
+
+                    <!-- Expected Amount -->
+                    <Label Text="Số tiền dự kiến mỗi kỳ (VND):" FontSize="13" />
+                    <Entry Placeholder="Ví dụ: 25000000"
+                           Keyboard="Numeric"
+                           Text="{Binding AmountInput}" />
+
+                    <!-- Frequency -->
+                    <Label Text="Tần suất lặp lại:" FontSize="13" />
+                    <Picker Title="-- Chọn tần suất --"
+                            ItemsSource="{Binding FrequencyOptions}"
+                            SelectedIndex="{Binding SelectedFrequencyIndex}" />
+
+                    <!-- Day of Month -->
+                    <Label Text="Ngày nhận tiền trong tháng (1 - 31):" FontSize="13" />
+                    <Entry Placeholder="Ví dụ: 5 hoặc 31"
+                           Keyboard="Numeric"
+                           Text="{Binding DayOfMonthInput}" />
+
+                    <!-- Auto Record Toggle -->
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding AutoRecord}" />
+                        <Label Text="Tự động ghi nhận và cộng tiền vào ví khi đến hạn"
+                               VerticalOptions="Center"
+                               FontSize="13" />
+                    </HorizontalStackLayout>
+
+                    <!-- Submit -->
+                    <Button Text="+ Lưu Thiết Lập Định Kỳ"
+                            Command="{Binding CreateRecurringIncomeCommand}"
+                            Margin="0,8,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- List of Recurring Incomes -->
+            <Label Text="Danh Sách Nguồn Thu Đang Hoạt Động" FontAttributes="Bold" Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding RecurringIncomes}">
+                <CollectionView.EmptyView>
+                    <Label Text="Chưa có nguồn thu định kỳ nào được thiết lập."
+                           HorizontalOptions="Center"
+                           Margin="0,20" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:RecurringIncomeModel">
+                        <Border Stroke="LightGray" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 6">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="15" />
+                                        <Label Text="{Binding IsActive, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding ExpectedAmount, StringFormat='Số tiền: {0:N0} VND'}" FontSize="13" TextColor="#059669" FontAttributes="Bold" />
+                                    <Label Text="{Binding WalletName, StringFormat='Ví nhận: {0}'}" FontSize="12" TextColor="Gray" />
+                                    <Label Text="{Binding CategoryName, StringFormat='Danh mục: {0}'}" FontSize="12" TextColor="Gray" />
+                                    <Label Text="{Binding NextDueDate, StringFormat='Kỳ tới: {0:dd/MM/yyyy}'}" FontSize="12" FontAttributes="Italic" />
+                                </VerticalStackLayout>
+
+                                <Button Grid.Column="1"
+                                        Text="Bật/Tắt"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=ToggleStatusCommand}"
+                                        CommandParameter="{Binding .}" />
+
+                                <Button Grid.Column="2"
+                                        Text="Xóa"
+                                        TextColor="Red"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=DeleteRecurringIncomeCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

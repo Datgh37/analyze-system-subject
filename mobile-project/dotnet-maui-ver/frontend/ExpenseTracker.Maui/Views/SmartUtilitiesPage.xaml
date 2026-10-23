@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.SmartUtilities"
+             x:Class="ExpenseTracker.Maui.Views.SmartUtilitiesPage"
+             x:DataType="vm:SmartUtilitiesViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <!-- ========================================== -->
+            <!-- SECTION 1: CẢNH BÁO BẪY THUÊ BAO ĐỊNH KỲ (UC-03.09) -->
+            <!-- ========================================== -->
+            <Border Stroke="#E5E7EB" Padding="14" StrokeShape="RoundRectangle 8" BackgroundColor="White">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🚨 Bẫy Thuê Bao Định Kỳ &amp; Rò Rỉ Tài Chính (UC-03.09)" FontAttributes="Bold" FontSize="16" TextColor="#B91C1C" />
+                    <Label Text="Thuật toán Richard Thaler Nudge phân tích chu kỳ trừ tiền lặp lại (Netflix, Spotify, iCloud, Gym...). Cảnh báo số tiền tích lũy rút ruột ví âm thầm theo năm."
+                           FontSize="12" TextColor="Gray" />
+
+                    <Button Text="🔍 Rà Soát Bẫy Thuê Bao Ngay"
+                            Command="{Binding AuditSubscriptionsCommand}"
+                            BackgroundColor="#DC2626"
+                            TextColor="White"
+                            FontAttributes="Bold" />
+
+                    <!-- Financial Drain Summary Banner -->
+                    <Border Stroke="#F87171" BackgroundColor="#FEF2F2" Padding="12" StrokeShape="RoundRectangle 6"
+                            IsVisible="{Binding HasSubscriptionAudit}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding FinancialHealthAlert}" FontAttributes="Bold" TextColor="#991B1B" FontSize="13" />
+                            <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+                                <Label Grid.Column="0" Text="{Binding TotalMonthlyDrain, StringFormat='Rò rỉ tháng: {0:N0} đ'}" FontAttributes="Bold" TextColor="#DC2626" FontSize="12" />
+                                <Label Grid.Column="1" Text="{Binding TotalAnnualDrain, StringFormat='Rò rỉ năm: {0:N0} đ'}" FontAttributes="Bold" TextColor="#B91C1C" FontSize="12" HorizontalOptions="End" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Subscriptions List -->
+                    <CollectionView ItemsSource="{Binding Subscriptions}" Margin="0,6,0,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:DetectedSubscriptionModel">
+                                <Border Stroke="#E5E7EB" Padding="10" Margin="0,4" StrokeShape="RoundRectangle 6" BackgroundColor="#FFF1F2">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" Text="{Binding ServiceName}" FontAttributes="Bold" FontSize="14" TextColor="#881337" />
+                                            <Label Grid.Column="1" Text="{Binding RecurringAmount, StringFormat='{0:N0} đ/chu kỳ'}" FontAttributes="Bold" TextColor="#E11D48" FontSize="13" />
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" Text="{Binding OccurrencesCount, StringFormat='Số lần ghi nhận: {0} lần'}" FontSize="11" TextColor="Gray" />
+                                            <Label Grid.Column="1" Text="{Binding EstimatedAnnualCost, StringFormat='Tích lũy năm: ~{0:N0} đ'}" FontSize="11" TextColor="#BE123C" FontAttributes="Bold" />
+                                        </Grid>
+                                        <Label Text="{Binding AdviceMessage}" FontSize="11" TextColor="#4B5563" FontAttributes="Italic" Margin="0,2,0,0" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ========================================== -->
+            <!-- SECTION 2: TẠO MÃ VIETQR NAPAS 247 (UC-03.10) -->
+            <!-- ========================================== -->
+            <Border Stroke="#E5E7EB" Padding="14" StrokeShape="RoundRectangle 8" BackgroundColor="White">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="⚡ Tạo Mã Chuyển Khoản &amp; Thanh Toán VietQR (UC-03.10)" FontAttributes="Bold" FontSize="16" TextColor="#1D4ED8" />
+                    <Label Text="Sinh mã QR thanh toán chuẩn Napas 247 tương thích 100% ứng dụng Mobile Banking tại Việt Nam kèm số tiền và nội dung."
+                           FontSize="12" TextColor="Gray" />
+
+                    <!-- Quick Wallet Selector -->
+                    <Label Text="Chọn tài khoản ngân hàng nguồn:" FontSize="12" TextColor="Gray" />
+                    <Picker ItemsSource="{Binding BankWallets}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedBankWallet}" />
+
+                    <!-- Bank BIN & Account Number -->
+                    <Grid ColumnDefinitions="100,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Mã BIN:" FontSize="12" TextColor="Gray" />
+                            <Entry Text="{Binding BankBin}" Placeholder="970422" Keyboard="Numeric" FontSize="13" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Số tài khoản nhận:" FontSize="12" TextColor="Gray" />
+                            <Entry Text="{Binding AccountNumber}" Placeholder="Nhập số tài khoản..." Keyboard="Numeric" FontSize="13" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="Tên người thụ hưởng:" FontSize="12" TextColor="Gray" />
+                    <Entry Text="{Binding AccountName}" Placeholder="NGUYEN VAN A" FontSize="13" />
+
+                    <!-- Amount & Note -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Số tiền (đ):" FontSize="12" TextColor="Gray" />
+                            <Entry Text="{Binding QrAmount}" Placeholder="Để trống hoặc nhập tiền" Keyboard="Numeric" FontSize="13" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Nội dung:" FontSize="12" TextColor="Gray" />
+                            <Entry Text="{Binding QrNote}" Placeholder="Thanh toán tiền ăn..." FontSize="13" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Button Text="⚡ Sinh Mã VietQR Ngay"
+                            Command="{Binding GenerateVietQrCommand}"
+                            BackgroundColor="#2563EB"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            Margin="0,4,0,0" />
+
+                    <!-- VietQR Display Result -->
+                    <Border Stroke="#93C5FD" BackgroundColor="#EFF6FF" Padding="14" StrokeShape="RoundRectangle 8"
+                            IsVisible="{Binding HasGeneratedQr}" Margin="0,8,0,0">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="MÃ THANH TOÁN VIETQR CHUẨN NAPAS 247" FontAttributes="Bold" TextColor="#1E40AF" FontSize="13" HorizontalOptions="Center" />
+                            
+                            <Image Source="{Binding GeneratedQr.QrImageUrl}"
+                                   WidthRequest="220"
+                                   HeightRequest="220"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="{Binding GeneratedQr.AccountNumber, StringFormat='STK: {0}'}" FontAttributes="Bold" FontSize="13" HorizontalOptions="Center" />
+                            <Label Text="{Binding GeneratedQr.AccountName, StringFormat='Chủ TK: {0}'}" FontSize="12" TextColor="#1E3A8A" HorizontalOptions="Center" />
+                            <Label Text="{Binding GeneratedQr.Amount, StringFormat='Số tiền: {0:N0} đ'}" FontAttributes="Bold" FontSize="14" TextColor="#DC2626" HorizontalOptions="Center"
+                                   IsVisible="{Binding GeneratedQr.Amount, Converter={StaticResource NullToFalseConverter}}" />
+                            <Label Text="{Binding GeneratedQr.Note, StringFormat='Nội dung: {0}'}" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Loading & Error -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="{Binding StatusMessage}" TextColor="#059669" FontAttributes="Bold" IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

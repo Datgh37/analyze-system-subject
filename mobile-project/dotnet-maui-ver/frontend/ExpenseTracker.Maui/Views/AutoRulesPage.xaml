@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.AutoRules"
+             x:Class="ExpenseTracker.Maui.Views.AutoRulesPage"
+             x:DataType="vm:AutoRulesViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Title Header -->
+            <Label Text="Quy Tắc Phân Loại Tự Động (UC-04.07)" FontSize="20" FontAttributes="Bold" />
+
+            <!-- Error Banner -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}" />
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}" />
+
+            <!-- Add Rule Form -->
+            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Thiết Lập Quy Tắc Từ Khóa Mới" FontAttributes="Bold" FontSize="16" />
+
+                    <Label Text="Từ khóa so khớp (Pattern):" FontSize="13" />
+                    <Entry Placeholder="Ví dụ: WinMart, GrabFood, Highlands..."
+                           Text="{Binding NewKeywordPattern}" />
+
+                    <Label Text="Danh mục tự động gán:" FontSize="13" />
+                    <Picker Title="-- Chọn danh mục đích --"
+                            ItemsSource="{Binding AvailableCategories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}" />
+
+                    <Label Text="Thứ tự ưu tiên (Priority):" FontSize="13" />
+                    <Entry Placeholder="Số nguyên (ví dụ: 1, 2, 3)"
+                           Text="{Binding PriorityOrder}"
+                           Keyboard="Numeric" />
+
+                    <HorizontalStackLayout Spacing="16">
+                        <HorizontalStackLayout Spacing="6">
+                            <CheckBox IsChecked="{Binding IsRegex}" />
+                            <Label Text="Regex" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout Spacing="6">
+                            <CheckBox IsChecked="{Binding IsCaseSensitive}" />
+                            <Label Text="Phân biệt hoa/thường" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Button Text="+ Lưu Quy Tắc Thông Minh"
+                            Command="{Binding CreateRuleCommand}"
+                            Margin="0,6,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Rules List -->
+            <Label Text="Danh Sách Quy Tắc Hiện Tại" FontAttributes="Bold" Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding Rules}">
+                <CollectionView.EmptyView>
+                    <Label Text="Chưa có quy tắc tự động nào được thiết lập."
+                           HorizontalOptions="Center"
+                           TextColor="Gray"
+                           Margin="0,20" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:AutoRuleModel">
+                        <Border Stroke="#E5E7EB" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 6">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8">
+                                    <Label Text="{Binding KeywordPattern}" FontAttributes="Bold" FontSize="15" />
+                                    <Label Text="➔" TextColor="Gray" />
+                                    <Label Text="{Binding TargetCategoryName}" TextColor="#10B981" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       Text="{Binding PriorityOrder, StringFormat='Ưu tiên: {0}'}"
+                                       FontSize="12"
+                                       TextColor="Gray" />
+
+                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                        Text="Xóa"
+                                        TextColor="Red"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AutoRulesViewModel}}, Path=DeleteRuleCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

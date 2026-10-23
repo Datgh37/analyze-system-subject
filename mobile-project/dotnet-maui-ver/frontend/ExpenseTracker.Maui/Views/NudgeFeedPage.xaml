@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Behavioral"
+             x:Class="ExpenseTracker.Maui.Views.NudgeFeedPage"
+             x:DataType="vm:NudgeFeedViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F172A">
+
+    <Grid>
+        <!-- MAIN CONTENT SCROLLVIEW -->
+        <ScrollView>
+            <VerticalStackLayout Spacing="16" Padding="16,12">
+
+                <!-- HEADER & ACTION BAR -->
+                <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16,12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Kiến Trúc Lựa Chọn Thaler &amp; Trợ Lý XAI" TextColor="#F8FAFC" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="Cú hích kinh tế hành vi, ma sát tích cực &amp; minh bạch toán học" TextColor="#94A3B8" FontSize="12" />
+                        </VerticalStackLayout>
+                        
+                        <Button Grid.Column="1" 
+                                Text="Làm Mới" 
+                                Command="{Binding LoadNudgesCommand}"
+                                BackgroundColor="#3B82F6" 
+                                TextColor="White" 
+                                FontAttributes="Bold"
+                                CornerRadius="10" 
+                                HeightRequest="36" 
+                                Padding="12,0" 
+                                FontSize="12" />
+                    </Grid>
+                </Border>
+
+                <!-- ERROR NOTIFICATION -->
+                <Border BackgroundColor="#7F1D1D" StrokeShape="RoundRectangle 12" Stroke="#DC2626" Padding="12,8"
+                        IsVisible="{Binding HasError}">
+                    <Label Text="{Binding ErrorMessage}" TextColor="#FECACA" FontSize="12" />
+                </Border>
+
+                <!-- STATUS MESSAGE -->
+                <Border BackgroundColor="#064E3B" StrokeShape="RoundRectangle 12" Stroke="#059669" Padding="12,8"
+                        IsVisible="{Binding StatusMessage, Converter={x:Null}}">
+                    <Label Text="{Binding StatusMessage}" TextColor="#A7F3D0" FontSize="12" />
+                </Border>
+
+                <!-- NUDGE FEED LIST -->
+                <Label Text="Danh Sách Cú Hích Hành Vi Đang Hoạt Động" TextColor="#38BDF8" FontSize="16" FontAttributes="Bold" />
+
+                <CollectionView ItemsSource="{Binding Nudges}" SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="24">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="🎉" FontSize="36" HorizontalOptions="Center" />
+                                <Label Text="Tuyệt vời! Không có cảnh báo thâm hụt nào." TextColor="#F8FAFC" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" />
+                                <Label Text="Bạn đang duy trì tốc độ chi tiêu an toàn trong hạn mức kế hoạch." TextColor="#94A3B8" FontSize="12" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FinancialNudgeModel">
+                            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16" Margin="0,0,0,12">
+                                <VerticalStackLayout Spacing="10">
+                                    <!-- Header Badge and Title -->
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Label Grid.Column="0" Text="{Binding Title}" TextColor="#F8FAFC" FontSize="15" FontAttributes="Bold" />
+                                        <Border Grid.Column="1" BackgroundColor="{Binding NudgeBadgeColor}" StrokeShape="RoundRectangle 8" Padding="8,3">
+                                            <Label Text="{Binding NudgeTypeDisplay}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Message Body -->
+                                    <Label Text="{Binding Message}" TextColor="#CBD5E1" FontSize="13" LineHeight="1.3" />
+
+                                    <!-- Trigger Context -->
+                                    <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 8" Padding="10,6" IsVisible="{Binding TriggerContext, Converter={x:Null}}">
+                                        <Label Text="{Binding TriggerContext, StringFormat='Nguyên nhân kích hoạt: {0}'}" TextColor="#94A3B8" FontSize="11" />
+                                    </Border>
+
+                                    <!-- Actions Row -->
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,6,0,0">
+                                        <!-- XAI Rationale Button -->
+                                        <Button Grid.Column="0"
+                                                Text="🔍 Giải Thích XAI"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ViewXaiRationaleCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="#0284C7"
+                                                TextColor="White"
+                                                CornerRadius="8"
+                                                HeightRequest="36"
+                                                FontSize="12"
+                                                FontAttributes="Bold" />
+
+                                        <!-- Approve / Apply Rebalance Button -->
+                                        <Button Grid.Column="1"
+                                                Text="✅ Đồng Ý"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ApproveNudgeCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="#16A34A"
+                                                TextColor="White"
+                                                CornerRadius="8"
+                                                HeightRequest="36"
+                                                FontSize="12"
+                                                FontAttributes="Bold"
+                                                IsVisible="{Binding HasRebalanceProposal}" />
+
+                                        <!-- Dismiss Button -->
+                                        <Button Grid.Column="2"
+                                                Text="Bỏ Qua"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=DismissNudgeCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="#334155"
+                                                TextColor="#94A3B8"
+                                                CornerRadius="8"
+                                                HeightRequest="36"
+                                                FontSize="12" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- XAI EXPLANATION MODAL POPUP -->
+        <Border BackgroundColor="#CC000000" IsVisible="{Binding IsXaiModalVisible}" ZIndex="99" Padding="20">
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 20" Stroke="#0284C7" Padding="20" VerticalOptions="Center" MaximumHeightRequest="560">
+                <ScrollView>
+                    <VerticalStackLayout Spacing="14">
+                        <!-- Modal Header -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" Text="🧠 Giải Thích Minh Bạch Trợ Lý XAI" TextColor="#38BDF8" FontSize="16" FontAttributes="Bold" />
+                            <Button Grid.Column="1" Text="✕" Command="{Binding CloseXaiModalCommand}" BackgroundColor="Transparent" TextColor="#94A3B8" FontSize="18" Padding="0" WidthRequest="32" HeightRequest="32" />
+                        </Grid>
+
+                        <Label Text="{Binding SelectedNudge.Title}" TextColor="#F8FAFC" FontSize="15" FontAttributes="Bold" />
+
+                        <!-- Context Trigger Box -->
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Padding="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Nguyên Nhân Kích Hoạt:" TextColor="#94A3B8" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ActiveXaiRationale.TriggerContext}" TextColor="#E2E8F0" FontSize="13" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Mathematical Formula Box -->
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#334155" Padding="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="📐 Công Thức Toán Học Chứng Minh:" TextColor="#F59E0B" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ActiveXaiRationale.MathematicalFormula}" TextColor="#FCD34D" FontSize="12" FontFamily="Consolas" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Empirical Evidence Box -->
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Padding="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="📊 Bằng Chứng Thực Nghiệm:" TextColor="#38BDF8" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ActiveXaiRationale.EmpiricalEvidence}" TextColor="#E2E8F0" FontSize="13" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Projected Consequences Box -->
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#EF4444" Padding="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="🔮 Dự Phóng Hệ Quả Tương Lai:" TextColor="#F87171" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ActiveXaiRationale.ProjectedConsequences}" TextColor="#FECACA" FontSize="13" />
+                                <Label Text="{Binding ActiveXaiRationale.ProjectedDailyDsaAfter, StringFormat='Hạn mức DSA nếu tiếp tục chi: {0:N0} đ/ngày'}" TextColor="#FCA5A5" FontSize="12" FontAttributes="Bold" Margin="0,4,0,0" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Close Modal Button -->
+                        <Button Text="Đã Hiểu &amp; Quay Lại" Command="{Binding CloseXaiModalCommand}" BackgroundColor="#3B82F6" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="40" Margin="0,8,0,0" />
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Border>
+        </Border>
+    </Grid>
+</ContentPage>

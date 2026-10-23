@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Forecasting"
+             x:Class="ExpenseTracker.Maui.Views.ForecastingPage"
+             x:DataType="vm:ForecastingViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F172A">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="16,12">
+
+            <!-- HEADER & ACTION BAR -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16,12">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Dự Báo &amp; Radar Rủi Ro Thâm Hụt" TextColor="#F8FAFC" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{Binding StatusMessage, FallbackValue='Mô hình chuỗi thời gian, thanh khoản kỳ lương &amp; Sandbox What-If'}" 
+                               TextColor="#94A3B8" FontSize="12" />
+                    </VerticalStackLayout>
+                    
+                    <Button Grid.Column="1" 
+                            Text="Làm Mới" 
+                            Command="{Binding LoadForecastDataCommand}"
+                            BackgroundColor="#3B82F6" 
+                            TextColor="White" 
+                            FontAttributes="Bold"
+                            CornerRadius="10" 
+                            HeightRequest="36" 
+                            Padding="12,0" 
+                            FontSize="12" />
+                </Grid>
+            </Border>
+
+            <!-- ERROR NOTIFICATION -->
+            <Border BackgroundColor="#7F1D1D" StrokeShape="RoundRectangle 12" Stroke="#DC2626" Padding="12,8"
+                    IsVisible="{Binding HasError}">
+                <Label Text="{Binding ErrorMessage}" TextColor="#FECACA" FontSize="12" />
+            </Border>
+
+            <!-- SECTION 1: EXPENDITURE TRAJECTORY & FORECAST (UC-08.01) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="1. Dự Báo Tổng Chi Cuối Kỳ" TextColor="#38BDF8" FontSize="16" FontAttributes="Bold" />
+                        <Border BackgroundColor="#EF4444" StrokeShape="RoundRectangle 8" Padding="8,2"
+                                IsVisible="{Binding Forecast.ProjectedOverspendAmount, Converter={x:Null}}">
+                            <Label Text="{Binding Forecast.RiskLevel, StringFormat='Rủi ro: {0}'}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                        </Border>
+                    </Grid>
+
+                    <!-- KPI Forecast Summary -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#1E293B" Padding="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Hạn Mức Ngân Sách" TextColor="#94A3B8" FontSize="11" />
+                                <Label Text="{Binding Forecast.TotalBudget, StringFormat='{0:N0} đ'}" TextColor="#F8FAFC" FontSize="14" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#1E293B" Padding="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Thực Chi Hiện Tại" TextColor="#94A3B8" FontSize="11" />
+                                <Label Text="{Binding Forecast.CurrentSpent, StringFormat='{0:N0} đ'}" TextColor="#38BDF8" FontSize="14" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#1E293B" Padding="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Dự Phóng Cuối Kỳ" TextColor="#94A3B8" FontSize="11" />
+                                <Label Text="{Binding Forecast.EstimatedTotalSpent, StringFormat='{0:N0} đ'}" TextColor="#F87171" FontSize="14" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Weekday vs Weekend Velocity -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 10" Padding="10">
+                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                <Label Text="💼" FontSize="16" />
+                                <VerticalStackLayout Spacing="1">
+                                    <Label Text="Tốc độ Ngày thường" TextColor="#94A3B8" FontSize="11" />
+                                    <Label Text="{Binding Forecast.WeekdayDailyVelocity, StringFormat='{0:N0} đ/ngày'}" TextColor="#E2E8F0" FontSize="13" FontAttributes="Bold" />
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 10" Padding="10">
+                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                <Label Text="🎉" FontSize="16" />
+                                <VerticalStackLayout Spacing="1">
+                                    <Label Text="Tốc độ Cuối tuần" TextColor="#94A3B8" FontSize="11" />
+                                    <Label Text="{Binding Forecast.WeekendDailyVelocity, StringFormat='{0:N0} đ/ngày'}" TextColor="#F59E0B" FontSize="13" FontAttributes="Bold" />
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Advisory Alert -->
+                    <Border BackgroundColor="#1E3A8A" StrokeShape="RoundRectangle 10" Stroke="#2563EB" Padding="12,10">
+                        <Label Text="{Binding Forecast.AdvisoryMessage}" TextColor="#BFDBFE" FontSize="12" LineBreakMode="WordWrap" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- SECTION 2: LIQUIDITY DEPLETION & SALARY GAP RADAR (UC-08.02) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="2. Radar Cạn Tiền Khả Dụng vs Kỳ Lương" TextColor="#38BDF8" FontSize="16" FontAttributes="Bold" />
+                        <Border BackgroundColor="#DC2626" StrokeShape="RoundRectangle 8" Padding="8,2"
+                                IsVisible="{Binding Liquidity.IsLiquidityCrisis}">
+                            <Label Text="🚨 BÁO ĐỘNG ĐỎ" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                        </Border>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#1E293B" Padding="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Tiền Lỏng Khả Dụng" TextColor="#94A3B8" FontSize="11" />
+                                <Label Text="{Binding Liquidity.TotalLiquidFunds, StringFormat='{0:N0} đ'}" TextColor="#10B981" FontSize="14" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#1E293B" Padding="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Vận Tốc Tiêu (7 Ngày)" TextColor="#94A3B8" FontSize="11" />
+                                <Label Text="{Binding Liquidity.Recent7DaysDailyVelocity, StringFormat='{0:N0} đ/ngày'}" TextColor="#FBBF24" FontSize="14" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#1E293B" Padding="10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Dự Kiến Cạn Tiền" TextColor="#94A3B8" FontSize="11" />
+                                <Label Text="{Binding Liquidity.OutOfMoneyDate, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#F87171" FontSize="13" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Crisis Counter Card -->
+                    <Border BackgroundColor="#450A0A" StrokeShape="RoundRectangle 12" Stroke="#991B1B" Padding="12"
+                            IsVisible="{Binding Liquidity.IsLiquidityCrisis}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" VerticalOptions="Center">
+                            <Label Text="⚠️" FontSize="24" VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="{Binding Liquidity.DeficitDaysBeforeSalary, StringFormat='CẢNH BÁO: BẠN SẼ HẾT TIỀN TRƯỚC KỲ LƯƠNG {0} NGÀY!'}" 
+                                       TextColor="#FCA5A5" FontSize="12" FontAttributes="Bold" />
+                                <Label Text="{Binding Liquidity.AdvisoryMessage}" TextColor="#FECACA" FontSize="11" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- SECTION 3: CATEGORY DEFICIT RISKS RADAR (UC-08.03) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="3. Radar Nguy Cơ Thâm Hụt Danh Mục" TextColor="#38BDF8" FontSize="16" FontAttributes="Bold" />
+
+                    <CollectionView ItemsSource="{Binding CategoryRisks}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:CategoryDeficitRiskModel">
+                                <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#334155" Padding="12" Margin="0,0,0,8">
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+                                        
+                                        <!-- Category Name & Essential Badge -->
+                                        <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                            <Label Text="{Binding CategoryName}" TextColor="#F8FAFC" FontSize="14" FontAttributes="Bold" />
+                                            <Border BackgroundColor="#1E3A8A" StrokeShape="RoundRectangle 6" Padding="6,1"
+                                                    IsVisible="{Binding IsEssential}">
+                                                <Label Text="Thiết Yếu" TextColor="#93C5FD" FontSize="10" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+
+                                        <!-- Risk Severity Badge -->
+                                        <Border Grid.Row="0" Grid.Column="1" BackgroundColor="#DC2626" StrokeShape="RoundRectangle 6" Padding="8,2">
+                                            <Label Text="{Binding RiskRatio, StringFormat='Vượt {0:N1}%'}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                                        </Border>
+
+                                        <!-- Spending Stats -->
+                                        <Grid Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                                            <Label Text="{Binding AllocatedAmount, StringFormat='Hạn mức: {0:N0} đ'}" TextColor="#94A3B8" FontSize="11" />
+                                            <Label Text="{Binding CurrentSpent, StringFormat='Đã chi: {0:N0} đ'}" TextColor="#38BDF8" FontSize="11" />
+                                            <Label Text="{Binding ProjectedSpentEnd, StringFormat='Dự kiến: {0:N0} đ'}" TextColor="#F87171" FontSize="11" />
+                                        </Grid>
+
+                                        <!-- Advice & Exhaustion Date -->
+                                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding Advice}" TextColor="#FCD34D" FontSize="11" LineBreakMode="WordWrap" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- SECTION 4: WHAT-IF SIMULATION SANDBOX (UC-08.04) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="4. Phòng Thí Nghiệm Tài Chính (What-If Sandbox)" TextColor="#38BDF8" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="In-Memory 0ms" TextColor="#10B981" FontSize="11" VerticalOptions="Center" />
+                    </Grid>
+
+                    <!-- Scenario Selectors -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                        <Button Text="Mua Sắm Lớn" 
+                                Command="{Binding SelectScenarioCommand}" 
+                                CommandParameter="LumpSum"
+                                BackgroundColor="#334155" 
+                                TextColor="White" 
+                                HeightRequest="36" 
+                                CornerRadius="8" 
+                                FontSize="11" />
+                        <Button Text="Vay Trả Góp" 
+                                Command="{Binding SelectScenarioCommand}" 
+                                CommandParameter="Installment"
+                                BackgroundColor="#334155" 
+                                TextColor="White" 
+                                HeightRequest="36" 
+                                CornerRadius="8" 
+                                FontSize="11" />
+                        <Button Text="Giảm Thu Nhập" 
+                                Command="{Binding SelectScenarioCommand}" 
+                                CommandParameter="IncomeReduction"
+                                BackgroundColor="#334155" 
+                                TextColor="White" 
+                                HeightRequest="36" 
+                                CornerRadius="8" 
+                                FontSize="11" />
+                    </Grid>
+
+                    <!-- Scenario Input Parameters (Wireframe Sliders / Inputs) -->
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Số tiền / Mức độ giả định:" TextColor="#E2E8F0" FontSize="12" />
+                            <Label Text="{Binding LumpSumAmount, StringFormat='{0:N0} đ'}" TextColor="#38BDF8" FontSize="13" FontAttributes="Bold" />
+                        </Grid>
+
+                        <Slider Minimum="1000000" Maximum="20000000" Value="{Binding LumpSumAmount}" 
+                                MinimumTrackColor="#38BDF8" MaximumTrackColor="#334155" ThumbColor="#38BDF8" />
+
+                        <Button Text="Chạy Mô Phỏng Tác Động" 
+                                Command="{Binding RunWhatIfSimulationCommand}"
+                                BackgroundColor="#0284C7" 
+                                TextColor="White" 
+                                FontAttributes="Bold"
+                                CornerRadius="10" 
+                                HeightRequest="40" 
+                                FontSize="13" />
+                    </VerticalStackLayout>
+
+                    <!-- Before vs After Comparison Card -->
+                    <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 12" Stroke="#334155" Padding="12">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding WhatIfResult.ScenarioDescription, FallbackValue='Kết quả đối chiếu Trước vs Sau'}" 
+                                   TextColor="#F8FAFC" FontSize="13" FontAttributes="Bold" />
+
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                                <!-- DSA Comparison -->
+                                <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 8" Padding="8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Hạn Mức DSA" TextColor="#94A3B8" FontSize="10" />
+                                        <Label Text="{Binding WhatIfResult.DsaBefore, StringFormat='{0:N0} đ'}" TextColor="#E2E8F0" FontSize="11" />
+                                        <Label Text="{Binding WhatIfResult.DsaAfter, StringFormat='➔ {0:N0} đ'}" TextColor="#F87171" FontSize="12" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!-- DTI Ratio Comparison -->
+                                <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 8" Padding="8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Tỷ Số Nợ DTI" TextColor="#94A3B8" FontSize="10" />
+                                        <Label Text="{Binding WhatIfResult.DtiBefore, StringFormat='{0}%'}" TextColor="#E2E8F0" FontSize="11" />
+                                        <Label Text="{Binding WhatIfResult.DtiAfter, StringFormat='➔ {0}%'}" TextColor="#FBBF24" FontSize="12" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!-- Net Worth Comparison -->
+                                <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 8" Padding="8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Tài Sản Ròng" TextColor="#94A3B8" FontSize="10" />
+                                        <Label Text="{Binding WhatIfResult.NetWorthBefore, StringFormat='{0:N0} đ'}" TextColor="#E2E8F0" FontSize="11" />
+                                        <Label Text="{Binding WhatIfResult.NetWorthAfter, StringFormat='➔ {0:N0} đ'}" TextColor="#38BDF8" FontSize="12" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+
+                            <!-- Impact Summary Message -->
+                            <Border BackgroundColor="#1E1B4B" StrokeShape="RoundRectangle 8" Stroke="#4338CA" Padding="10">
+                                <Label Text="{Binding WhatIfResult.ImpactSummaryMessage}" TextColor="#C7D2FE" FontSize="11" LineBreakMode="WordWrap" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

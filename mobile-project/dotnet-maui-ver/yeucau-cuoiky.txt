@@ -1,0 +1,117 @@
+BÀI TẬP LỚN CUỐI KỲ – LẬP TRÌNH MOBILE
+Phát triển tiếp đề tài giữa kỳ, bổ sung Push Notification (bắt buộc) và một trong ba phương án kỹ thuật: Socket.IO, SignalR hoặc kiến trúc MVVM.
+
+1. Hình thức thực hiện
+Giữ nguyên nhóm 2 sinh viên và đề tài đã chọn ở giữa kỳ. Muốn đổi đề tài phải được giảng viên đồng ý.
+Ứng dụng cuối kỳ là phiên bản mở rộng của bài giữa kỳ: hoàn thiện chức năng cơ bản, kết nối backend thật và bổ sung các yêu cầu kỹ thuật ở mục 3.
+Backend tùy chọn: Node.js (Express/Fastify) hoặc ASP.NET Core Web API; cơ sở dữ liệu tùy chọn.
+Mã nguồn quản lý bằng Git; lịch sử commit phải thể hiện đóng góp của cả hai thành viên.
+2. Yêu cầu nền tảng (bắt buộc)
+Hoàn thiện đầy đủ chức năng cơ bản của đề tài theo bảng giữa kỳ.
+Đăng nhập/đăng ký qua backend; lưu token và tự động đăng nhập lại.
+Dữ liệu nghiệp vụ được CRUD qua REST API; xử lý trạng thái đang tải, lỗi mạng, danh sách rỗng.
+Điều hướng bằng React Navigation; quản lý trạng thái toàn cục bằng Redux/Redux Toolkit hoặc Context API.
+3. Yêu cầu kỹ thuật nâng cao
+Quy định: mỗi nhóm bắt buộc thực hiện Phần A – Push Notification và chọn 1 trong 3 phương án của Phần B (B1 Socket.IO, B2 SignalR, B3 MVVM). Nhóm thực hiện thêm một phương án khác của Phần B được cộng tối đa +1,0 điểm (tổng không vượt quá 10).
+
+Phần A – Push Notification (bắt buộc)
+Công nghệ gợi ý: expo-notifications + Expo Push Service, hoặc Firebase Cloud Messaging (FCM).
+
+Xin quyền nhận thông báo, lấy push token và gửi token lên server gắn với tài khoản người dùng.
+Server tự động gửi thông báo khi xảy ra ít nhất 2 sự kiện nghiệp vụ khác nhau (không chấp nhận chỉ gửi thử bằng công cụ test).
+Xử lý thông báo ở 3 trạng thái: foreground, background và đã tắt ứng dụng.
+Nhấn vào thông báo thì điều hướng đến đúng màn hình liên quan (dựa vào trường data trong payload).
+Có ít nhất 1 thông báo cục bộ được lên lịch (nhắc lịch, nhắc deadline…).
+Có màn hình lịch sử thông báo (đã đọc/chưa đọc) hoặc tùy chọn bật/tắt từng loại thông báo.
+Lưu ý: từ Expo SDK 53, Expo Go trên Android không hỗ trợ remote push notification; cần tạo development build và kiểm thử trên thiết bị thật.
+
+Phần B – Chọn 1 trong 3 phương án
+Phương án B1 – Giao tiếp thời gian thực bằng Socket.IO
+
+Server Node.js + socket.io; client socket.io-client.
+
+Xây dựng server Socket.IO; xác thực kết nối bằng token đăng nhập (middleware xác thực khi handshake).
+Cài đặt ít nhất 2 sự kiện realtime hai chiều (emit/on) gắn với nghiệp vụ đề tài.
+Sử dụng room để chỉ gửi dữ liệu đến đúng nhóm người dùng (theo lớp, đơn hàng, dự án…).
+Giao diện cập nhật tức thời không cần tải lại; minh họa bằng 2 thiết bị/giả lập chạy song song.
+Hiển thị trạng thái kết nối, tự động kết nối lại; hủy lắng nghe sự kiện khi rời màn hình hoặc đăng xuất.
+Phương án B2 – Giao tiếp thời gian thực bằng SignalR
+
+Server ASP.NET Core SignalR (Hub); client @microsoft/signalr.
+
+Xây dựng Hub SignalR; xác thực kết nối bằng JWT (accessTokenFactory phía client, [Authorize] phía Hub).
+Cài đặt ít nhất 2 phương thức realtime hai chiều (client gọi invoke lên Hub, server gọi Clients.* về client) gắn với nghiệp vụ đề tài.
+Sử dụng Groups để chỉ gửi dữ liệu đến đúng nhóm người dùng.
+Giao diện cập nhật tức thời không cần tải lại; minh họa bằng 2 thiết bị/giả lập chạy song song.
+Hiển thị trạng thái kết nối, cấu hình withAutomaticReconnect; gỡ handler (off) và dừng kết nối khi rời màn hình hoặc đăng xuất.
+Phương án B3 – Kiến trúc MVVM (Model – View – ViewModel)
+
+ViewModel có thể cài đặt bằng custom hook (useXxxViewModel) hoặc class kết hợp MobX/Redux Toolkit.
+
+Tách rõ 3 tầng:
+Model: entity, Repository, Service (API, storage, notification).
+ViewModel: state hiển thị, logic nghiệp vụ, kiểm tra dữ liệu, các hành động cho View.
+View: chỉ hiển thị và gọi ViewModel; không gọi API, fetch, AsyncStorage trực tiếp.
+Áp dụng MVVM cho toàn bộ ứng dụng, tối thiểu 3 màn hình chính.
+Repository khai báo theo interface chung để thay được nguồn dữ liệu (API thật / mock) mà không sửa ViewModel.
+Viết ít nhất 3 unit test cho ViewModel bằng Jest (dùng repository giả lập).
+Báo cáo có sơ đồ kiến trúc MVVM và giải thích luồng dữ liệu cho 1 chức năng.
+Cấu trúc thư mục tham khảo:
+
+src/
+├── models/          // Product.ts, Order.ts
+├── services/        // apiClient.ts, notificationService.ts
+├── repositories/    // ProductRepository.ts (interface + cài đặt API / mock)
+├── viewmodels/      // useProductListViewModel.ts
+├── views/
+│   ├── screens/     // ProductListScreen.tsx
+│   └── components/  // ProductCard.tsx
+├── navigation/
+└── __tests__/       // useProductListViewModel.test.ts
+4. Gợi ý áp dụng theo từng đề tài
+Gợi ý mang tính tham khảo; nhóm có thể đề xuất kịch bản khác. Cột Realtime dùng cho phương án B1 hoặc B2; phương án B3 (MVVM) áp dụng được cho mọi đề tài.
+
+STT	Đề tài	Gợi ý Push Notification	Gợi ý Realtime (B1/B2)
+1	Quản lý sinh viên	Hồ sơ sinh viên được cập nhật; thông báo từ phòng đào tạo	Danh sách sinh viên đồng bộ giữa nhiều thiết bị khi thêm/sửa/xóa
+2	Quản lý lớp học	Đổi lịch học, đổi phòng, phân công giảng viên	Bảng tin/chat theo lớp (mỗi lớp là một room/group)
+3	Điểm danh sinh viên	Nhắc trước buổi học; cảnh báo vắng quá số buổi	Danh sách có mặt cập nhật trực tiếp khi sinh viên điểm danh
+4	Quản lý điểm sinh viên	Có điểm mới; kết quả phúc khảo	Bảng điểm tự cập nhật khi giảng viên nhập điểm
+5	Đăng ký môn học	Mở cổng đăng ký; lớp đang chờ có chỗ trống	Sĩ số còn lại của lớp học phần cập nhật thời gian thực
+6	Quản lý thư viện	Sắp đến hạn trả sách; sách đặt trước đã có	Tình trạng còn/hết sách cập nhật khi mượn/trả
+7	Bán sách trực tuyến	Trạng thái đơn hàng; sách yêu thích giảm giá	Chat hỗ trợ khách hàng; tồn kho cập nhật trực tiếp
+8	Bán đồ ăn	Đơn đã xác nhận / đang giao / đã giao	Quản lý nhận đơn mới tức thời; khách theo dõi trạng thái đơn
+9	Đặt trà sữa/cà phê	Đồ uống đã pha xong; khuyến mãi theo khung giờ	Quầy pha chế nhận đơn và cập nhật tiến trình
+10	Quần áo thời trang	Sản phẩm yêu thích giảm giá; trạng thái đơn	Flash sale: số lượng còn lại đồng bộ cho mọi người dùng
+11	Cửa hàng thú cưng	Nhắc mua thức ăn định kỳ; khuyến mãi mới	Chat tư vấn giữa khách hàng và cửa hàng
+12	Bán thuốc và tra cứu thuốc	Nhắc uống thuốc theo giờ; trạng thái đơn mua	Chat tư vấn với dược sĩ
+13	Đặt lịch khám bệnh	Nhắc lịch hẹn; bác sĩ đổi/hủy lịch	Khung giờ trống cập nhật tức thời, tránh đặt trùng
+14	Quản lý phòng khám	Sắp đến lượt khám; có kết quả xét nghiệm	Hàng đợi bệnh nhân đồng bộ giữa lễ tân và bác sĩ
+15	Quản lý chi tiêu cá nhân	Vượt ngân sách tháng; nhắc ghi chép cuối ngày	Ví chi tiêu chung đồng bộ giữa nhiều thành viên
+16	Quản lý công việc cá nhân	Sắp đến deadline; công việc quá hạn	Đồng bộ công việc giữa nhiều thiết bị; chia sẻ danh sách
+17	Quản lý dự án nhóm	Được giao nhiệm vụ; có bình luận; trễ hạn	Bảng Kanban cập nhật trực tiếp; chat theo dự án
+18	Đặt phòng khách sạn	Xác nhận đặt phòng; nhắc check-in	Tình trạng phòng trống cập nhật tức thời; chat lễ tân
+19	Đặt vé xe khách	Nhắc giờ khởi hành; thay đổi lịch chuyến	Ghế đang được người khác chọn bị khóa tạm, tránh đặt trùng
+20	Quản lý nhà trọ	Có hóa đơn tháng mới; nhắc hạn đóng tiền	Người thuê báo sự cố, chủ trọ nhận và cập nhật xử lý
+21	Tìm và đăng tin phòng trọ	Có phòng mới khớp tiêu chí đã lưu	Chat giữa người tìm phòng và chủ trọ
+22	Quản lý cây trồng/vùng trồng	Nhắc lịch tưới/bón phân theo mùa vụ	Nhật ký chăm sóc đồng bộ giữa cán bộ kỹ thuật và nông hộ
+23	Nhận dạng cây/bệnh cây bằng AI	Thông báo khi server xử lý xong ảnh	Tiến trình: đã nhận ảnh → đang xử lý → có kết quả
+24	Gợi ý sản phẩm thông minh	Gợi ý cá nhân hóa theo hành vi người dùng	Danh sách gợi ý cập nhật ngay khi xem/mua sản phẩm
+25	Đọc dữ liệu và thống kê từ REST API	Cảnh báo khi chỉ số vượt ngưỡng	Dashboard biểu đồ cập nhật trực tiếp
+5. Sản phẩm nộp
+Mã nguồn (mobile + backend): link repository hoặc file .zip không chứa node_modules, bin, obj; có README.md hướng dẫn cài đặt và chạy.
+File cài đặt .apk hoặc link development build.
+Báo cáo PDF (CK_Nhom_XX_TenDeTai.pdf): giới thiệu đề tài và phân công (tỷ lệ % đóng góp); ghi rõ phương án Phần B đã chọn; sơ đồ chức năng và kiến trúc hệ thống; mô tả chi tiết Phần A và Phần B; ảnh chụp màn hình, kết quả kiểm thử, hạn chế và hướng phát triển.
+Video demo 5–8 phút: bắt buộc thể hiện thông báo ở trạng thái background/đã tắt; nhóm chọn B1/B2 thể hiện 2 thiết bị cập nhật đồng thời; nhóm chọn B3 trình bày cấu trúc mã và chạy unit test.
+6. Tiêu chí đánh giá (thang 10)
+Tiêu chí	Điểm
+Yêu cầu nền tảng: chức năng cơ bản, đăng nhập, CRUD qua REST API, điều hướng, quản lý trạng thái	2,5
+Phần A – Push Notification	2,0
+Phần B – Phương án đã chọn (B1 Socket.IO / B2 SignalR / B3 MVVM)	2,0
+Chất lượng mã nguồn, tổ chức thư mục, xử lý lỗi, giao diện	1,0
+Báo cáo và video demo	1,0
+Bảo vệ và vấn đáp (đánh giá cá nhân từng thành viên)	1,5
+Tổng	10,0
+Điểm cộng: thực hiện thêm một phương án khác của Phần B; đề tài nâng cao 23–25; chức năng sáng tạo (tổng không vượt quá 10)	tối đa +1,0
+Quy định: thành viên không trả lời được câu hỏi về phần mã nguồn mình phụ trách sẽ bị trừ điểm vấn đáp và có thể bị trừ điểm phần tương ứng. Sao chép mã nguồn giữa các nhóm bị xử lý theo quy chế. Được phép dùng công cụ AI hỗ trợ lập trình nhưng phải ghi rõ trong báo cáo và hiểu toàn bộ mã đã nộp.
+
+Hạn nộp: …………………   |   Thời gian bảo vệ: …………………

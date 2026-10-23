@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.CreateBudgetPage"
+             x:DataType="vm:CreateBudgetViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Error Banner -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="#DC2626"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding HasError}" />
+
+            <!-- Success Status Banner -->
+            <Label Text="{Binding StatusMessage}"
+                   TextColor="#059669"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}" />
+
+            <!-- 1. GENERAL BUDGET CONFIGURATION -->
+            <Border Stroke="#D1D5DB" Padding="14" StrokeShape="RoundRectangle 10" BackgroundColor="#FFFFFF">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Thông Tin Kế Hoạch Ngân Sách (UC-05.01)" FontAttributes="Bold" FontSize="16" TextColor="#111827" />
+
+                    <!-- Budget Name -->
+                    <Label Text="Tên kế hoạch:" FontSize="13" TextColor="#374151" />
+                    <Entry Placeholder="Ví dụ: Ngân sách Tháng 10/2026..."
+                           Text="{Binding BudgetName}" />
+
+                    <!-- Total Amount -->
+                    <Label Text="Tổng số tiền ngân sách chu kỳ (VND):" FontSize="13" TextColor="#374151" />
+                    <Entry Placeholder="Ví dụ: 15000000"
+                           Text="{Binding TotalAmount}"
+                           Keyboard="Numeric" />
+
+                    <!-- Period Type -->
+                    <Label Text="Chu kỳ ngân sách:" FontSize="13" TextColor="#374151" />
+                    <Picker Title="-- Chọn chu kỳ --"
+                            ItemsSource="{Binding PeriodOptions}"
+                            SelectedIndex="{Binding SelectedPeriodIndex}" />
+
+                    <!-- Start & End Date -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Ngày bắt đầu:" FontSize="13" TextColor="#374151" />
+                            <DatePicker Date="{Binding StartDate}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Ngày kết thúc:" FontSize="13" TextColor="#374151" />
+                            <DatePicker Date="{Binding EndDate}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Budgeting Methodology -->
+                    <Label Text="Phương pháp hoạch định ngân sách:" FontSize="13" TextColor="#374151" />
+                    <Picker Title="-- Chọn phương pháp --"
+                            ItemsSource="{Binding MethodOptions}"
+                            SelectedIndex="{Binding SelectedMethodIndex}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 2. ALLOCATION SUMMARY & ZBB INVARIANT CARD -->
+            <Border Stroke="#93C5FD" BackgroundColor="#EFF6FF" Padding="14" StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Tổng Quan Phân Bổ Hạn Mức" FontAttributes="Bold" FontSize="14" TextColor="#1E40AF" />
+
+                    <Grid ColumnDefinitions="*,*,*">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Tổng ngân sách" FontSize="11" TextColor="#6B7280" />
+                            <Label Text="{Binding TotalAmount, StringFormat='{0:N0} đ'}"
+                                   FontSize="13" FontAttributes="Bold" TextColor="#111827" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Đã phân bổ (Σ)" FontSize="11" TextColor="#6B7280" />
+                            <Label Text="{Binding TotalAllocatedSum, StringFormat='{0:N0} đ'}"
+                                   FontSize="13" FontAttributes="Bold" TextColor="#2563EB" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2" Spacing="2">
+                            <Label Text="Chưa phân bổ" FontSize="11" TextColor="#6B7280" />
+                            <Label Text="{Binding RemainingToAllocate, StringFormat='{0:N0} đ'}"
+                                   FontSize="13" FontAttributes="Bold" TextColor="#059669" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="💡 Lưu ý với ZBB (Zero-Based Budgeting): Số tiền 'Chưa phân bổ' phải bằng đúng 0 đ (mọi đồng tiền đều có mục đích)."
+                           FontSize="11"
+                           TextColor="#1D4ED8"
+                           FontAttributes="Italic"
+                           Margin="0,4,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 3. CATEGORY ALLOCATIONS LIST -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Phân Bổ Cho Từng Danh Mục Chi Tiêu" FontAttributes="Bold" FontSize="15" TextColor="#111827" />
+
+                <CollectionView ItemsSource="{Binding CategoryInputs}">
+                    <CollectionView.EmptyView>
+                        <Label Text="Đang tải danh mục chi tiêu..."
+                               TextColor="Gray"
+                               HorizontalOptions="Center"
+                               Margin="0,16" />
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CategoryAllocationInputItem">
+                            <Border Stroke="#E5E7EB"
+                                    BackgroundColor="#FFFFFF"
+                                    Padding="12"
+                                    Margin="0,4"
+                                    StrokeShape="RoundRectangle 8">
+                                <Grid ColumnDefinitions="*,130" ColumnSpacing="10" VerticalOptions="Center">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding CategoryName}" FontSize="14" FontAttributes="Bold" TextColor="#1F2937" />
+                                        <Label Text="{Binding BudgetRuleMapping, StringFormat='Quy tắc: {0}'}" FontSize="11" TextColor="#6B7280" />
+                                    </VerticalStackLayout>
+
+                                    <!-- Allocated Amount Input -->
+                                    <Entry Grid.Column="1"
+                                           Placeholder="Số tiền (đ)"
+                                           Text="{Binding AllocatedAmount}"
+                                           Keyboard="Numeric"
+                                           HorizontalTextAlignment="End"
+                                           FontSize="13" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- 4. SUBMIT ACTION BUTTON -->
+            <Button Text="💾 Hoàn Tất &amp; Kích Hoạt Kế Hoạch Ngân Sách"
+                    BackgroundColor="#10B981"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    Command="{Binding CreateBudgetCommand}"
+                    Margin="0,8,0,24" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

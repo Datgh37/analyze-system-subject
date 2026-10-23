@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Reports"
+             x:Class="ExpenseTracker.Maui.Views.ReportsPage"
+             x:DataType="vm:ReportsViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F172A">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="16,12">
+            
+            <!-- HEADER & ACTIONS BAR (Wireframe) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16,12">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Báo Cáo &amp; Phân Tích Đa Chiều" TextColor="#F8FAFC" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{Binding StatusMessage, FallbackValue='Động cơ định lượng tài chính cá nhân &amp; phát hiện đột biến'}" 
+                               TextColor="#94A3B8" FontSize="12" />
+                    </VerticalStackLayout>
+                    
+                    <Button Grid.Column="1" 
+                            Text="Chụp Tài Sản" 
+                            Command="{Binding TakeSnapshotCommand}"
+                            BackgroundColor="#0284C7" 
+                            TextColor="White" 
+                            FontAttributes="Bold"
+                            CornerRadius="10" 
+                            HeightRequest="36" 
+                            Padding="12,0" 
+                            FontSize="12" />
+
+                    <Button Grid.Column="2" 
+                            Text="Làm mới" 
+                            Command="{Binding LoadReportsCommand}"
+                            BackgroundColor="#3B82F6" 
+                            TextColor="White" 
+                            FontAttributes="Bold"
+                            CornerRadius="10" 
+                            HeightRequest="36" 
+                            Padding="12,0" 
+                            FontSize="12" />
+                </Grid>
+            </Border>
+
+            <!-- ERROR NOTIFICATION -->
+            <Border BackgroundColor="#7F1D1D" StrokeShape="RoundRectangle 12" Stroke="#DC2626" Padding="12,8"
+                    IsVisible="{Binding HasError}">
+                <Label Text="{Binding ErrorMessage}" TextColor="#FECACA" FontSize="12" />
+            </Border>
+
+            <!-- TAB SELECTOR (Wireframe) -->
+            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                <HorizontalStackLayout Spacing="8">
+                    <Button Text="Thu - Chi (MoM/YoY)" 
+                            Command="{Binding SelectTabCommand}" 
+                            CommandParameter="Overview"
+                            BackgroundColor="#334155" 
+                            TextColor="White" 
+                            HeightRequest="34" 
+                            CornerRadius="8" 
+                            FontSize="12" />
+                    <Button Text="Tài Sản Ròng (Net Worth)" 
+                            Command="{Binding SelectTabCommand}" 
+                            CommandParameter="NetWorth"
+                            BackgroundColor="#334155" 
+                            TextColor="White" 
+                            HeightRequest="34" 
+                            CornerRadius="8" 
+                            FontSize="12" />
+                    <Button Text="Dòng Tiền (Waterfall)" 
+                            Command="{Binding SelectTabCommand}" 
+                            CommandParameter="Cashflow"
+                            BackgroundColor="#334155" 
+                            TextColor="White" 
+                            HeightRequest="34" 
+                            CornerRadius="8" 
+                            FontSize="12" />
+                    <Button Text="Cơ Cấu (50/30/20 &amp; Kakeibo)" 
+                            Command="{Binding SelectTabCommand}" 
+                            CommandParameter="Structure"
+                            BackgroundColor="#334155" 
+                            TextColor="White" 
+                            HeightRequest="34" 
+                            CornerRadius="8" 
+                            FontSize="12" />
+                    <Button Text="Đột Biến Z-Score" 
+                            Command="{Binding SelectTabCommand}" 
+                            CommandParameter="Outliers"
+                            BackgroundColor="#991B1B" 
+                            TextColor="White" 
+                            HeightRequest="34" 
+                            CornerRadius="8" 
+                            FontSize="12" />
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <!-- SECTION 1: TOP KPI CARDS (NET WORTH & SAVINGS RATE) -->
+            <!-- [UI GUIDE]: Khu vực thẻ tóm tắt các chỉ số tài chính cốt lõi -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <!-- Thẻ Tài sản ròng -->
+                <Border Grid.Column="0" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="14">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Tài Sản Ròng" TextColor="#94A3B8" FontSize="12" />
+                        <Label Text="{Binding NetWorthReport.CurrentNetWorth, StringFormat='{0:N0} đ'}" 
+                               TextColor="#10B981" FontSize="20" FontAttributes="Bold" />
+                        <HorizontalStackLayout Spacing="4">
+                            <Label Text="Tài sản:" TextColor="#64748B" FontSize="11" />
+                            <Label Text="{Binding NetWorthReport.TotalAssets, StringFormat='{0:N0}'}" TextColor="#94A3B8" FontSize="11" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="4">
+                            <Label Text="Nợ:" TextColor="#EF4444" FontSize="11" />
+                            <Label Text="{Binding NetWorthReport.TotalLiabilities, StringFormat='{0:N0}'}" TextColor="#EF4444" FontSize="11" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Thẻ Dòng tiền & Tỷ lệ tích lũy -->
+                <Border Grid.Column="1" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="14">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Tỷ Lệ Tiết Kiệm" TextColor="#94A3B8" FontSize="12" />
+                        <Label Text="{Binding CashflowReport.SavingsRate, StringFormat='{0:F1}%'}" 
+                               TextColor="#38BDF8" FontSize="20" FontAttributes="Bold" />
+                        <HorizontalStackLayout Spacing="4">
+                            <Label Text="Dòng tiền ròng:" TextColor="#64748B" FontSize="11" />
+                            <Label Text="{Binding CashflowReport.NetCashflow, StringFormat='{0:N0}'}" TextColor="#94A3B8" FontSize="11" />
+                        </HorizontalStackLayout>
+                        <Label Text="{Binding CashflowReport.HealthStatus, StringFormat='Trạng thái: {0}'}" 
+                               TextColor="#F59E0B" FontSize="11" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- SECTION 2: THU - CHI THEO THỜI GIAN (UC-07.01) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Thu Nhập vs Chi Tiêu (MoM/YoY)" TextColor="#F8FAFC" FontSize="16" FontAttributes="Bold" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="{Binding IncomeExpenseReport.GrowthMoM, StringFormat='MoM: {0:+0.0;-0.0}%'}" TextColor="#38BDF8" FontSize="12" />
+                            <Label Text="{Binding IncomeExpenseReport.GrowthYoY, StringFormat='YoY: {0:+0.0;-0.0}%'}" TextColor="#A855F7" FontSize="12" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,4,0,4">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Tổng Thu" TextColor="#94A3B8" FontSize="11" />
+                            <Label Text="{Binding IncomeExpenseReport.TotalIncome, StringFormat='{0:N0}'}" TextColor="#10B981" FontSize="14" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Tổng Chi" TextColor="#94A3B8" FontSize="11" />
+                            <Label Text="{Binding IncomeExpenseReport.TotalExpense, StringFormat='{0:N0}'}" TextColor="#EF4444" FontSize="14" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Thặng Dư" TextColor="#94A3B8" FontSize="11" />
+                            <Label Text="{Binding IncomeExpenseReport.NetSurplus, StringFormat='{0:N0}'}" TextColor="#38BDF8" FontSize="14" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- [UI GUIDE]: Chỗ gắn biểu đồ Bar/Line Chart biến thiên theo tháng -->
+                    <Label Text="Biến thiên theo các kỳ (Breakdown):" TextColor="#64748B" FontSize="12" FontAttributes="Bold" />
+                    <CollectionView ItemsSource="{Binding BreakdownItems}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:PeriodDataPointModel">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" Padding="0,4" ColumnSpacing="12">
+                                    <Label Grid.Column="0" Text="{Binding PeriodLabel}" TextColor="#CBD5E1" FontSize="12" />
+                                    <BoxView Grid.Column="1" Color="Transparent" />
+                                    <Label Grid.Column="2" Text="{Binding Income, StringFormat='+{0:N0}'}" TextColor="#10B981" FontSize="12" />
+                                    <Label Grid.Column="3" Text="{Binding Expense, StringFormat='-{0:N0}'}" TextColor="#EF4444" FontSize="12" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- SECTION 3: PHÂN RÃ THÁC NƯỚC DÒNG TIỀN (WATERFALL FLOW - UC-07.03) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Phân Rã Thác Nước Dòng Tiền (Waterfall Flow)" TextColor="#F8FAFC" FontSize="16" FontAttributes="Bold" />
+                    <Label Text="{Binding CashflowReport.HealthRecommendation}" TextColor="#94A3B8" FontSize="12" />
+
+                    <CollectionView ItemsSource="{Binding WaterfallSteps}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:WaterfallStepModel">
+                                <Border BackgroundColor="#0F172A" StrokeShape="RoundRectangle 8" Stroke="#334155" Margin="0,3" Padding="12,8">
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                                        <Label Grid.Column="0" Text="{Binding StepName}" TextColor="#E2E8F0" FontSize="13" />
+                                        <Label Grid.Column="1" Text="{Binding Amount, StringFormat='{0:N0}'}" TextColor="#CBD5E1" FontSize="13" FontAttributes="Bold" />
+                                        <Label Grid.Column="2" Text="{Binding RunningBalance, StringFormat='Còn: {0:N0}'}" TextColor="#38BDF8" FontSize="12" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- SECTION 4: CƠ CẤU 50/30/20 & KAKEIBO 4 CỘT TRỤ (UC-07.04) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Cơ Cấu Chi Tiêu (50/30/20 &amp; Kakeibo)" TextColor="#F8FAFC" FontSize="16" FontAttributes="Bold" />
+
+                    <!-- Nhóm 50/30/20 -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Border Grid.Column="0" BackgroundColor="#0F172A" StrokeShape="RoundRectangle 8" Stroke="#334155" Padding="8">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Needs (50%)" TextColor="#3B82F6" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ExpenseStructureReport.By503020.NeedsPercentage, StringFormat='{0:F1}%'}" TextColor="White" FontSize="14" FontAttributes="Bold" />
+                                <Label Text="{Binding ExpenseStructureReport.By503020.NeedsAmount, StringFormat='{0:N0}'}" TextColor="#94A3B8" FontSize="10" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="#0F172A" StrokeShape="RoundRectangle 8" Stroke="#334155" Padding="8">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Wants (30%)" TextColor="#F59E0B" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ExpenseStructureReport.By503020.WantsPercentage, StringFormat='{0:F1}%'}" TextColor="White" FontSize="14" FontAttributes="Bold" />
+                                <Label Text="{Binding ExpenseStructureReport.By503020.WantsAmount, StringFormat='{0:N0}'}" TextColor="#94A3B8" FontSize="10" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" BackgroundColor="#0F172A" StrokeShape="RoundRectangle 8" Stroke="#334155" Padding="8">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Savings (20%)" TextColor="#10B981" FontSize="11" FontAttributes="Bold" />
+                                <Label Text="{Binding ExpenseStructureReport.By503020.SavingsDebtPercentage, StringFormat='{0:F1}%'}" TextColor="White" FontSize="14" FontAttributes="Bold" />
+                                <Label Text="{Binding ExpenseStructureReport.By503020.SavingsDebtAmount, StringFormat='{0:N0}'}" TextColor="#94A3B8" FontSize="10" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Kakeibo 4 Cột trụ -->
+                    <Label Text="Sổ Kakeibo 4 Cột Trụ:" TextColor="#64748B" FontSize="12" FontAttributes="Bold" Margin="0,4,0,0" />
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="6">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Thiết yếu" TextColor="#94A3B8" FontSize="10" />
+                            <Label Text="{Binding ExpenseStructureReport.ByKakeibo.SurvivalPercentage, StringFormat='{0:F1}%'}" TextColor="#E2E8F0" FontSize="12" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Tùy chọn" TextColor="#94A3B8" FontSize="10" />
+                            <Label Text="{Binding ExpenseStructureReport.ByKakeibo.OptionalPercentage, StringFormat='{0:F1}%'}" TextColor="#E2E8F0" FontSize="12" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Văn hóa" TextColor="#94A3B8" FontSize="10" />
+                            <Label Text="{Binding ExpenseStructureReport.ByKakeibo.CulturePercentage, StringFormat='{0:F1}%'}" TextColor="#A855F7" FontSize="12" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="3">
+                            <Label Text="Bất thường" TextColor="#94A3B8" FontSize="10" />
+                            <Label Text="{Binding ExpenseStructureReport.ByKakeibo.ExtraPercentage, StringFormat='{0:F1}%'}" TextColor="#EF4444" FontSize="12" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- SECTION 5: CẢNH BÁO ĐỘT BIẾN Z-SCORE (UC-07.05) -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#7F1D1D" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Cảnh Báo Đột Biến Z-Score (Outliers)" TextColor="#FCA5A5" FontSize="16" FontAttributes="Bold" />
+                        <Label Grid.Column="1" Text="{Binding OutlierReport.OutlierCount, StringFormat='Phát hiện: {0}'}" TextColor="#F87171" FontSize="12" FontAttributes="Bold" />
+                    </Grid>
+
+                    <CollectionView ItemsSource="{Binding Outliers}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:OutlierTransactionModel">
+                                <Border BackgroundColor="#450A0A" StrokeShape="RoundRectangle 8" Stroke="#991B1B" Margin="0,3" Padding="12,8">
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="{Binding CategoryName}" TextColor="#FEE2E2" FontSize="13" FontAttributes="Bold" />
+                                            <Label Text="{Binding Note, FallbackValue='Không có ghi chú'}" TextColor="#FCA5A5" FontSize="11" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="{Binding Amount, StringFormat='{0:N0} đ'}" TextColor="#EF4444" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                                        <Label Grid.Column="2" Text="{Binding ZScore, StringFormat='Z={0:F1}'}" TextColor="#F87171" FontSize="12" VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        <CollectionView.EmptyView>
+                            <Label Text="Không phát hiện khoản chi tiêu đột biến bất thường nào trong 30 ngày qua (Z-Score &lt; 2.0)." 
+                                   TextColor="#94A3B8" FontSize="12" FontAttributes="Italic" Padding="0,8" />
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

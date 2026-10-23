@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="32,60,32,40" MaximumWidthRequest="460">
+            <!-- Brand Header -->
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="DuoNoPro" 
+                       FontSize="32" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                <Label Text="Smart Personal Finance &amp; Expense Planning" 
+                       FontSize="14" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </VerticalStackLayout>
+
+            <!-- Card Container -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Padding="24">
+                <VerticalStackLayout Spacing="18">
+                    <Label Text="Sign In to your Account" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
+
+                    <!-- Error Alert -->
+                    <Border Stroke="#FCA5A5" 
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="#FEF2F2"
+                            Padding="12"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <Label Text="{Binding ErrorMessage}" 
+                               TextColor="#B91C1C" 
+                               FontSize="13" />
+                    </Border>
+
+                    <!-- Email Input -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Email Address" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Entry Placeholder="name@example.com"
+                               Keyboard="Email"
+                               Text="{Binding Email}"
+                               ClearButtonVisibility="WhileEditing" />
+                    </VerticalStackLayout>
+
+                    <!-- Password Input -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Password" 
+                               FontSize="13" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Entry Placeholder="••••••••"
+                               IsPassword="True"
+                               Text="{Binding Password}" />
+                    </VerticalStackLayout>
+
+                    <!-- Submit Button -->
+                    <Button Text="Sign In" 
+                            Command="{Binding LoginCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            BackgroundColor="#2563EB"
+                            TextColor="#FFFFFF"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="48"
+                            Margin="0,12,0,0" />
+
+                    <!-- Loading Indicator -->
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                                       IsVisible="{Binding IsBusy}" 
+                                       Color="#2563EB"
+                                       HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Switch to Register -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                <Label Text="Don't have an account?" 
+                       FontSize="14" 
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                <Label Text="Sign Up" 
+                       FontSize="14" 
+                       FontAttributes="Bold" 
+                       TextColor="#2563EB">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToRegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            <!-- Direct Preview Link for Stage 1 Testing -->
+            <Button Text="Xem trực tiếp Giao diện Ví (Wallets Preview)"
+                    Command="{Binding SkipToWalletsCommand}"
+                    FontSize="12"
+                    TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

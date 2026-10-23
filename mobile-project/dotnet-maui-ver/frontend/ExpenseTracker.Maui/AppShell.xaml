@@ -4,7 +4,93 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ExpenseTracker.Maui"
-    Title="ExpenseTracker.Maui">
+    xmlns:views="clr-namespace:ExpenseTracker.Maui.Views"
+    Title="DuoNoPro">
+
+    <ShellContent
+        Title="Sign In"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+
+    <ShellContent
+        Title="Wallets"
+        ContentTemplate="{DataTemplate views:WalletsPage}"
+        Route="WalletsPage" />
+
+    <ShellContent
+        Title="Incomes"
+        ContentTemplate="{DataTemplate views:IncomesPage}"
+        Route="IncomesPage" />
+
+    <ShellContent
+        Title="Recurring"
+        ContentTemplate="{DataTemplate views:RecurringIncomesPage}"
+        Route="RecurringIncomesPage" />
+
+    <ShellContent
+        Title="Payslip OCR"
+        ContentTemplate="{DataTemplate views:PayslipOcrPage}"
+        Route="PayslipOcrPage" />
+
+    <ShellContent
+        Title="Categories"
+        ContentTemplate="{DataTemplate views:CategoriesPage}"
+        Route="CategoriesPage" />
+
+    <ShellContent
+        Title="Expenses"
+        ContentTemplate="{DataTemplate views:ExpensesPage}"
+        Route="ExpensesPage" />
+
+    <ShellContent
+        Title="Smart Rules"
+        ContentTemplate="{DataTemplate views:AutoRulesPage}"
+        Route="AutoRulesPage" />
+
+    <ShellContent
+        Title="Receipt OCR"
+        ContentTemplate="{DataTemplate views:ReceiptOcrPage}"
+        Route="ReceiptOcrPage" />
+
+    <ShellContent
+        Title="Smart Utilities"
+        ContentTemplate="{DataTemplate views:SmartUtilitiesPage}"
+        Route="SmartUtilitiesPage" />
+
+    <ShellContent
+        Title="Budgets"
+        ContentTemplate="{DataTemplate views:BudgetsPage}"
+        Route="BudgetsPage" />
+
+    <ShellContent
+        Title="Savings Goals"
+        ContentTemplate="{DataTemplate views:SavingsGoalsPage}"
+        Route="SavingsGoalsPage" />
+
+    <ShellContent
+        Title="Notifications"
+        ContentTemplate="{DataTemplate views:NotificationHistoryPage}"
+        Route="NotificationHistoryPage" />
+
+    <ShellContent
+        Title="Reports"
+        ContentTemplate="{DataTemplate views:ReportsPage}"
+        Route="ReportsPage" />
+
+    <ShellContent
+        Title="Forecasting"
+        ContentTemplate="{DataTemplate views:ForecastingPage}"
+        Route="ForecastingPage" />
+
+    <ShellContent
+        Title="Nudge Feed"
+        ContentTemplate="{DataTemplate views:NudgeFeedPage}"
+        Route="NudgeFeedPage" />
+
+    <ShellContent
+        Title="Cooling Off"
+        ContentTemplate="{DataTemplate views:CoolingOffHubPage}"
+        Route="CoolingOffHubPage" />
 
     <ShellContent
         Title="Home"
