@@ -22,7 +22,7 @@ public class ReceiptsController : BaseApiController
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ReceiptParsedDataDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ParseReceipt([FromForm] IFormFile file, CancellationToken ct)
+    public async Task<IActionResult> ParseReceipt(IFormFile file, CancellationToken ct)
     {
         if (file == null || file.Length == 0)
             return BadRequest(new ProblemDetails { Detail = "Vui lòng đính kèm tệp ảnh hoặc PDF hóa đơn hợp lệ." });

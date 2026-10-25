@@ -418,6 +418,8 @@ hubConnection.On<DsaAlertPayload>("ReceiveDsaAlert", payload =>
 
 ## CHƯƠNG 4: XÁC THỰC & BẢO MẬT PHẦN CỨNG DI ĐỘNG (AUTH & SECURITY)
 
+### 4.1. Luồng Xác Thực Hai Lớp & Tự Động Xoay Vòng (Dual-Token & Silent Refresh)
+
 ```text
 [Mobile .NET MAUI]                                          [ASP.NET Core Web API]
         │                                                              │
@@ -438,6 +440,15 @@ hubConnection.On<DsaAlertPayload>("ReceiveDsaAlert", payload =>
         │── 7. Tự động gửi lại Request ban đầu (Seamless 0ms) ────────►│
         │◄─ 8. Trả về dữ liệu thành công ──────────────────────────────│
 ```
+
+### 4.2. Đặc Tả Lớp Khóa Giao Diện (Mobile App Lock & Inactivity Timeout)
+* **Phân loại ưu tiên:** **Độ ưu tiên Thấp (Low Priority / Future Backlog)** — Không nằm trong phạm vi bắt buộc của MVP hiện tại, ưu tiên sau khi hoàn tất kiểm thử API và tài liệu báo cáo.
+* **Mục đích:** Bảo vệ quyền riêng tư số dư tài chính cá nhân khỏi người ngoài khi mượn thiết bị, đồng thời triệt tiêu ma sát đăng nhập lại bằng mật khẩu tài khoản dài dòng.
+* **Cơ chế kỹ thuật:**
+  * **Vòng đời ứng dụng (App Lifecycle):** Theo dõi sự kiện `OnSleep` (ứng dụng vào background) và `OnResume` (ứng dụng quay lại foreground).
+  * **Bộ đếm thời gian không hoạt động (Inactivity Timer):** Nếu thời gian ở trạng thái background vượt quá ngưỡng cấu hình (ví dụ: 2 phút hoặc 5 phút), kích hoạt cờ trạng thái `IsAppLocked = true`.
+  * **Giao diện mở khóa nhanh:** Hiển thị màn hình khóa nhẹ yêu cầu xác thực bằng **Sinh trắc học (FaceID / Vân tay)** hoặc **Mã PIN 4–6 số**.
+  * **Nguyên tắc an toàn:** Phiên làm việc ngầm (`RefreshToken` trong `SecureStorage`) vẫn được giữ nguyên để tiến trình bóc tách thông báo ngân hàng chạy thông suốt; lớp khóa chỉ đóng vai trò che chắn màn hình giao diện (UI Curtain).
 
 ---
 

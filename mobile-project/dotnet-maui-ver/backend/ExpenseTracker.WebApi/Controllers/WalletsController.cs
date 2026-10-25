@@ -48,6 +48,14 @@ public class WalletsController : BaseApiController
         return HandleResult(result);
     }
 
+    // Partially updates wallet properties via HTTP PATCH (RFC 7396)
+    [HttpPatch("{id:guid}")]
+    public async Task<IActionResult> PatchWallet(Guid id, [FromBody] PatchWalletRequest request, CancellationToken ct)
+    {
+        var result = await _walletService.PatchWalletAsync(CurrentUserId, id, request, ct);
+        return HandleResult(result);
+    }
+
     // Soft-deletes a wallet account
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteWallet(Guid id, CancellationToken ct)

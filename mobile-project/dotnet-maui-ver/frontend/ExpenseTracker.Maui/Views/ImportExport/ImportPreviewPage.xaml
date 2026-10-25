@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels.ImportExport"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.ImportExport"
+             xmlns:walletModels="clr-namespace:ExpenseTracker.Maui.Models.Wallets"
+             x:Class="ExpenseTracker.Maui.Views.ImportExport.ImportPreviewPage"
+             x:DataType="vm:ImportPreviewViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#F8FAFC">
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto">
+        <!-- Header summary card -->
+        <Border Grid.Row="0" Margin="16,12,16,8" Padding="16" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12" />
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Xác nhận dữ liệu trước khi nhập (HITL)" FontAttributes="Bold" FontSize="16" TextColor="#1E3A8A" />
+                <Label Text="{Binding SummaryMessage}" FontSize="13" TextColor="#64748B" />
+
+                <Grid ColumnDefinitions="*, *, *" Margin="0,4,0,0">
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Text="Tổng số dòng" FontSize="11" TextColor="#94A3B8" />
+                        <Label Text="{Binding TotalCount}" FontAttributes="Bold" FontSize="15" TextColor="#0F172A" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Hợp lệ" FontSize="11" TextColor="#94A3B8" />
+                        <Label Text="{Binding ValidCount}" FontAttributes="Bold" FontSize="15" TextColor="#16A34A" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label Text="Tổng tiền" FontSize="11" TextColor="#94A3B8" />
+                        <Label Text="{Binding TotalAmount, StringFormat='{0:N0} đ'}" FontAttributes="Bold" FontSize="15" TextColor="#0284C7" />
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Wallet Selection -->
+        <Border Grid.Row="1" Margin="16,0,16,8" Padding="12" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8" />
+            </Border.StrokeShape>
+            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                <Label Text="Ví đích:" FontAttributes="Bold" VerticalOptions="Center" TextColor="#334155" />
+                <Picker ItemsSource="{Binding Wallets}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedWallet}"
+                        WidthRequest="220" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- Transaction rows list -->
+        <CollectionView Grid.Row="2" Margin="16,0,16,0" ItemsSource="{Binding Rows}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ParsedImportRowModel">
+                    <Border Margin="0,4" Padding="12" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto">
+                            <CheckBox Grid.Column="0" Grid.RowSpan="2" IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="0" Padding="8,0">
+                                <Label Text="{Binding CategoryName}" FontAttributes="Bold" FontSize="14" TextColor="#1E293B" />
+                                <Label Text="{Binding Note}" FontSize="12" TextColor="#64748B" LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Grid.Row="0" Text="{Binding Amount, StringFormat='{0:N0} đ'}" FontAttributes="Bold" FontSize="14" TextColor="{Binding TransactionType, Converter={x:Null}}" HorizontalOptions="End" />
+                            <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="{Binding ValidationMessage}" TextColor="#DC2626" FontSize="11" IsVisible="{Binding ValidationMessage, Converter={x:Null}}" Margin="8,2,0,0" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Bottom Action Commit Button -->
+        <Border Grid.Row="3" Padding="16" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
+            <Button Text="XÁC NHẬN NHẬP TẤT CẢ VÀO SỔ CÁI"
+                    Command="{Binding CommitBulkCommand}"
+                    BackgroundColor="#1E3A8A"
+                    TextColor="#FFFFFF"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    HeightRequest="50" />
+        </Border>
+    </Grid>
+
+</ContentPage>

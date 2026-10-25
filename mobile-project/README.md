@@ -26,7 +26,8 @@ mobile-project/
 │
 └── ⚡ dotnet-maui-ver/           # PHÂN HỆ HỆ THỐNG HOÀN CHỈNH KLTN (FULL SCOPE)
     ├── README.md                 # Hướng dẫn kiến trúc chi tiết bản .NET MAUI
-    └── src/                      # Source code .NET 9 MAUI (Clean Architecture + MVVM)
+    ├── backend/                  # Backend ASP.NET Core 10 Web API (Clean Architecture)
+    └── frontend/                 # Frontend .NET MAUI 10 (Clean MVVM)
 ```
 
 ---
@@ -37,8 +38,8 @@ mobile-project/
 | :--- | :--- | :--- |
 | **Mục đích chính** | Phục vụ chấm điểm & vấn đáp **môn Lập trình Mobile**. | Phục vụ bảo vệ **Khóa luận Tốt nghiệp & PTTKHTTT**. |
 | **Phân công phụ trách** | **Trần Trọng Đại (UI Lead)** & Trịnh Thành Đạt (BE). | **Trịnh Thành Đạt (Lead Architect)** & Nhóm KLTN. |
-| **Ngăn xếp công nghệ** | React Native Expo SDK 54, React 19, JavaScript. | .NET 9 MAUI, C# 13, XAML, CommunityToolkit.Mvvm. |
-| **Hạ tầng Backend** | WAMP Server (Apache, PHP PDO, MySQL). | ASP.NET Core Web API (.NET 9, EF Core, Clean Architecture). |
+| **Ngăn xếp công nghệ** | React Native Expo SDK 54, React 19, JavaScript. | .NET 10 MAUI, C# 14, XAML, CommunityToolkit.Mvvm. |
+| **Hạ tầng Backend** | WAMP Server (Apache, PHP PDO, MySQL). | ASP.NET Core Web API (.NET 10, EF Core, Clean Architecture). |
 | **Giao thức Thời gian thực** | Socket.IO Node.js Gateway (Port 3001). | Microsoft.AspNetCore.SignalR Hub (hoặc WebSocket). |
 | **Quản trị Tài khoản & Ví** | 2 Ví cơ bản (Tiền mặt, Tài khoản Ngân hàng). | Đa ví không giới hạn: Thẻ tín dụng, Ví điện tử, Sổ tiết kiệm. |
 | **Bóc tách Hóa đơn AI** | Tạm đóng băng (Nhập liệu thủ công nhanh). | **AI Multimodal Vision OCR** + Hậu kiểm toán số học. |
@@ -69,7 +70,7 @@ npm start
 
 ### 👉 Bạn muốn xem Kiến trúc Hệ thống Hoàn chỉnh .NET MAUI?
 Xem tài liệu đặc tả kiến trúc tại: [`dotnet-maui-ver/README.md`](dotnet-maui-ver/README.md)
-- Yêu cầu: Visual Studio 2022 v17.12+ (Workload: `.NET Multi-platform App UI development`) và .NET 9 SDK.
+- Yêu cầu: Visual Studio 2022 / 2026 (Workload: `.NET Multi-platform App UI development`) và .NET 10 SDK.
 
 ---
 

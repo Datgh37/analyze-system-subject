@@ -202,3 +202,21 @@ public class JarItemModel
     public string FormattedTotalAmount => $"{TotalAmount:N0} đ";
     public string FormattedPercentages => $"{ActualPercentage:F1}% (Mục tiêu: {TargetPercentage:F0}%)";
 }
+
+public class PatchSavingsGoalModel
+{
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public decimal? TargetAmount { get; set; }
+    public DateTime? TargetDate { get; set; }
+    public SavingsGoalPriority? Priority { get; set; }
+    public string? IconKey { get; set; }
+    public string? ColorHex { get; set; }
+    public SavingsGoalStatus? Status { get; set; }
+}
+
+public class PatchSavingsGoalStatusModel
+{
+    public SavingsGoalStatus Status { get; set; }
+}
+

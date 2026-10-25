@@ -38,9 +38,11 @@ Khi bạn tiến hành thiết kế lại giao diện, hãy lưu ý **3 nguyên 
   builder.Services.AddScoped<IForecastingRepository, MockForecastingRepository>();
   builder.Services.AddScoped<INudgeRepository, MockNudgeRepository>();
   builder.Services.AddScoped<ICoolingOffRepository, MockCoolingOffRepository>();
+  builder.Services.AddScoped<IAutonomousActionRepository, MockAutonomousActionRepository>();
 
   // KHI CẦN KẾT NỐI BACKEND THẬT THÌ ĐỔI 'Mock' THÀNH 'Api':
   // builder.Services.AddScoped<IWalletRepository, ApiWalletRepository>();
+  // builder.Services.AddScoped<IAutonomousActionRepository, ApiAutonomousActionRepository>();
   ```
 - **Cấu hình địa chỉ IP máy chủ Backend** (nằm ở dòng 28 của `MauiProgram.cs`):
   - Chạy trên Windows Desktop: `"http://localhost:5000"`
@@ -290,16 +292,45 @@ Dưới đây là danh sách toàn bộ 20 màn hình trong `Views/`, liệt kê
 
 ---
 
+### PHÂN HỆ 10: ĐỘNG CƠ HÀNH ĐỘNG TỰ HÀNH & PHÂN TẦNG XÁC SUẤT JEV (CHẶNG 10.5 / PLAN-47)
+
+#### 17. `ActionInboxView.xaml` & `SmartActionCardView.xaml` (ViewModel: `ActionInboxViewModel`, tích hợp tại đầu `WalletsPage.xaml`)
+- **Mục đích & Cơ chế hoạt động:**
+  - Khay chứa các thẻ hành động tự hành được sinh ra khi máy chủ nhận diện biến động số dư ngân hàng hoặc ví điện tử.
+  - Tự động co lại / ẩn hoàn toàn (`IsVisible = false`) khi khay rỗng (`HasPendingActions = false`), bảo đảm không làm phiền người dùng khi không có việc cần xử lý.
+- **Dữ liệu hiển thị (Data Context: `ActionInboxViewModel`):**
+  - Số lượng việc đang chờ: `{Binding ActionCount}` (dùng cho tiêu đề: `⚡ Việc Cần Xử Lý ({0})`).
+  - Thông báo phản hồi sau khi lưu: `{Binding ActionStatusMessage}`.
+  - Danh sách thẻ hành động: `ItemsSource="{Binding PendingActions}"` (phần tử: `AutonomousActionModel`).
+- **Chi tiết dữ liệu từng thẻ (`SmartActionCardView.xaml` - Data Context: `AutonomousActionModel`):**
+  - Nhãn phân loại: `{Binding Display.BadgeText}` (Mã màu gợi ý: `{Binding Display.BadgeColor}`).
+  - Nguồn giao dịch & Thời gian: `{Binding Display.Subtitle}` (Ví dụ: `"ACB • 23:15"`, `"MoMo • 14:20"`).
+  - Tiêu đề & Số tiền: `{Binding Display.Title}` (Ví dụ: `"Shopee: 185.000 đ"`, `"Circle K: 35.000 đ"`).
+  - Số tiền nguyên bản: `{Binding Display.Amount, StringFormat='{0:N0} đ'}`.
+  - **Nhánh A - Xác suất cao (Confidence $\ge 0.85$):**
+    - Điều kiện hiển thị: `IsVisible="{Binding PrimaryAction, Converter={StaticResource NullToFalseConverter}}"`.
+    - Nút Lưu nhanh 1-chạm: `{Binding PrimaryAction.Label}` (gọi `{Binding QuickCommitCommand}` kèm `CommandParameter="{Binding .}"`).
+    - Nút Đổi chi tiết: `{Binding SecondaryAction.Label}` (gọi `{Binding NavigateCommand}` kèm `CommandParameter="{Binding .}"`).
+  - **Nhánh B - Phân tầng Jev Choice ($0.50 \le \text{Confidence} < 0.85$):**
+    - Điều kiện hiển thị: `IsVisible="{Binding Choices, Converter={StaticResource NullToFalseConverter}}"`.
+    - Danh sách lựa chọn: `BindableLayout.ItemsSource="{Binding Choices}"` (mỗi phần tử có `{Binding Label}` và `{Binding FormattedProbability}`).
+    - Lệnh khi bấm vào 1 lựa chọn: gọi `{Binding SelectChoiceCommand}` kèm `CommandParameter="{Binding .}"`.
+  - **Nút Bỏ qua (Dismiss):** Bấm nút `[✕]` gọi `{Binding DismissCommand}` kèm `CommandParameter="{Binding .}"` để dọn sạch thẻ khỏi khay.
+- **Lệnh tương tác trên khay:**
+  - Tải lại danh sách: `{Binding LoadInboxCommand}`.
+
+---
+
 ### TIỆN ÍCH CHUNG & ĐIỀU HƯỚNG
 
-#### 17. `NotificationHistoryPage.xaml` (ViewModel: `NotificationHistoryViewModel`)
+#### 18. `NotificationHistoryPage.xaml` (ViewModel: `NotificationHistoryViewModel`)
 - **Dữ liệu hiển thị:**
   - Danh sách thông báo đẩy & nhắc nhở 21:00: `ItemsSource="{Binding Notifications}"` (Trường con: `Title`, `Message`, `CreatedAt`, `IsRead`, `SeverityColor`).
 - **Lệnh tương tác:**
   - Đánh dấu tất cả đã đọc: `{Binding MarkAllAsReadCommand}`
   - Xóa thông báo: `{Binding DeleteNotificationCommand}` kèm `CommandParameter="{Binding .}"`
 
-#### 18. `AppShell.xaml` & `AppShell.xaml.cs`
+#### 19. `AppShell.xaml` & `AppShell.xaml.cs`
 - Chứa cấu trúc điều hướng toàn ứng dụng (`TabBar`, `FlyoutItem`, `ShellContent`).
 - Các Route đã được đăng ký đầy đủ: `LoginPage`, `WalletsPage`, `IncomesPage`, `RecurringIncomesPage`, `PayslipOcrPage`, `CategoriesPage`, `ExpensesPage`, `ReceiptOcrPage`, `SmartUtilitiesPage`, `BudgetsPage`, `CreateBudgetPage`, `SavingsGoalsPage`, `CreateSavingsGoalPage`, `ReportsPage`, `ForecastingPage`, `NudgeFeedPage`, `CoolingOffHubPage`, `NotificationHistoryPage`.
 - Khi cần tạo thanh điều hướng chân trang (Bottom Navigation Bar) hoặc Menu trượt cạnh bên (Flyout Drawer), bạn thoải mái tinh chỉnh lại thẻ `<TabBar>` hoặc `<FlyoutItem>` trong file `AppShell.xaml`.

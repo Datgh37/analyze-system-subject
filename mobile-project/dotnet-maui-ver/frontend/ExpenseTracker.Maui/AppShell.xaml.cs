@@ -1,4 +1,6 @@
 using ExpenseTracker.Maui.Views;
+using ExpenseTracker.Maui.Views.AiAgent;
+using ExpenseTracker.Maui.Views.ImportExport;
 
 namespace ExpenseTracker.Maui;
 
@@ -20,5 +22,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("ForecastingPage", typeof(ForecastingPage));
         Routing.RegisterRoute("NudgeFeedPage", typeof(NudgeFeedPage));
         Routing.RegisterRoute("CoolingOffHubPage", typeof(CoolingOffHubPage));
+        Routing.RegisterRoute("VoiceMicModalPage", typeof(VoiceMicModalPage));
+        Routing.RegisterRoute("ImportPreviewPage", typeof(ImportPreviewPage));
     }
 }

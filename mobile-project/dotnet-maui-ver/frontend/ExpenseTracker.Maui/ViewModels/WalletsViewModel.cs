@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using ExpenseTracker.Maui.Models.Wallets;
 using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Realtime.Messages;
+using ExpenseTracker.Maui.ViewModels.Autonomous;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
@@ -12,6 +13,8 @@ namespace ExpenseTracker.Maui.ViewModels;
 public partial class WalletsViewModel : BaseViewModel
 {
     private readonly IWalletRepository _walletRepository;
+
+    public ActionInboxViewModel? ActionInbox { get; }
 
     public ObservableCollection<WalletModel> Wallets { get; } = new();
 
@@ -36,9 +39,10 @@ public partial class WalletsViewModel : BaseViewModel
     [ObservableProperty]
     private string? _statusMessage;
 
-    public WalletsViewModel(IWalletRepository walletRepository)
+    public WalletsViewModel(IWalletRepository walletRepository, ActionInboxViewModel? actionInbox = null)
     {
         _walletRepository = walletRepository;
+        ActionInbox = actionInbox;
         Title = "Quản lý Đa Ví";
 
         // Listen for realtime connection state changes (Indicator Dot)
@@ -114,6 +118,11 @@ public partial class WalletsViewModel : BaseViewModel
 
         TotalBalance = total;
         FormattedTotalBalance = $"{total:N0} VND";
+
+        if (ActionInbox != null)
+        {
+            await ActionInbox.LoadInboxAsync();
+        }
     }
 
     // Executes quick money transfer between wallets

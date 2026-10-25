@@ -5,7 +5,15 @@ using ExpenseTracker.Maui.Services.Notifications;
 using ExpenseTracker.Maui.Services.Realtime;
 using ExpenseTracker.Maui.Services.Security;
 using ExpenseTracker.Maui.ViewModels;
+using ExpenseTracker.Maui.ViewModels.AiAgent;
+using ExpenseTracker.Maui.ViewModels.Autonomous;
+using ExpenseTracker.Maui.ViewModels.ImportExport;
 using ExpenseTracker.Maui.Views;
+using ExpenseTracker.Maui.Views.AiAgent;
+using ExpenseTracker.Maui.Views.ImportExport;
+using ExpenseTracker.Maui.Repositories.AiAgent;
+using ExpenseTracker.Maui.Repositories.Autonomous;
+using ExpenseTracker.Maui.Repositories.ImportExport;
 using Microsoft.Extensions.Logging;
 using Refit;
 
@@ -102,15 +110,50 @@ public static class MauiProgram
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
-        // Register Clean MVVM Repositories (Swap between Api and Mock for testing)
-        builder.Services.AddScoped<IWalletRepository, ApiWalletRepository>();
-        builder.Services.AddScoped<ITransactionRepository, ApiTransactionRepository>();
-        builder.Services.AddScoped<IBudgetRepository, ApiBudgetRepository>();
-        builder.Services.AddScoped<INotificationRepository, ApiNotificationRepository>();
-        builder.Services.AddScoped<IAnalyticsReportRepository, ApiAnalyticsReportRepository>();
-        builder.Services.AddScoped<IForecastingRepository, ApiForecastingRepository>();
-        builder.Services.AddScoped<INudgeRepository, ApiNudgeRepository>();
-        builder.Services.AddScoped<ICoolingOffRepository, ApiCoolingOffRepository>();
+        builder.Services.AddRefitClient<IVoiceAgentApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        builder.Services.AddRefitClient<IDataImportApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        builder.Services.AddRefitClient<IAutonomousActionsApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        // =========================================================================
+        // CHẾ ĐỘ 1: DÙNG MOCK DATA OFFLINE (ĐANG BẬT ĐỂ TEST GIAO DIỆN & VIEWMODELS)
+        // Không cần khởi động Docker hay Backend WebAPI, hệ thống vẫn có đầy đủ dữ liệu sống động.
+        // =========================================================================
+        builder.Services.AddScoped<IWalletRepository, MockWalletRepository>();
+        builder.Services.AddScoped<ITransactionRepository, MockTransactionRepository>();
+        builder.Services.AddScoped<IBudgetRepository, MockBudgetRepository>();
+        builder.Services.AddScoped<INotificationRepository, MockNotificationRepository>();
+        builder.Services.AddScoped<IAnalyticsReportRepository, MockAnalyticsReportRepository>();
+        builder.Services.AddScoped<IForecastingRepository, MockForecastingRepository>();
+        builder.Services.AddScoped<INudgeRepository, MockNudgeRepository>();
+        builder.Services.AddScoped<ICoolingOffRepository, MockCoolingOffRepository>();
+        builder.Services.AddScoped<IVoiceAgentRepository, MockVoiceAgentRepository>();
+        builder.Services.AddScoped<IDataImportRepository, MockDataImportRepository>();
+        builder.Services.AddScoped<IAutonomousActionRepository, MockAutonomousActionRepository>();
+
+        // =========================================================================
+        // CHẾ ĐỘ 2: DÙNG API THẬT KẾT NỐI BACKEND ASP.NET CORE (ĐÃ ĐÓNG NOTE)
+        // Khi cần kết nối Backend thật và Docker PostgreSQL, hãy mở ghi chú (uncomment) các dòng dưới đây
+        // và đóng ghi chú (comment) các dòng Mock ở trên:
+        // =========================================================================
+        // builder.Services.AddScoped<IWalletRepository, ApiWalletRepository>();
+        // builder.Services.AddScoped<ITransactionRepository, ApiTransactionRepository>();
+        // builder.Services.AddScoped<IBudgetRepository, ApiBudgetRepository>();
+        // builder.Services.AddScoped<INotificationRepository, ApiNotificationRepository>();
+        // builder.Services.AddScoped<IAnalyticsReportRepository, ApiAnalyticsReportRepository>();
+        // builder.Services.AddScoped<IForecastingRepository, ApiForecastingRepository>();
+        // builder.Services.AddScoped<INudgeRepository, ApiNudgeRepository>();
+        // builder.Services.AddScoped<ICoolingOffRepository, ApiCoolingOffRepository>();
+        // builder.Services.AddScoped<IVoiceAgentRepository, ApiVoiceAgentRepository>();
+        // builder.Services.AddScoped<IDataImportRepository, ApiDataImportRepository>();
+        // builder.Services.AddScoped<IAutonomousActionRepository, ApiAutonomousActionRepository>();
 
         // Register Realtime SignalR and Local Notifications Services
         builder.Services.AddSingleton<ISignalRRealtimeService, SignalRRealtimeService>();
@@ -140,6 +183,9 @@ public static class MauiProgram
         builder.Services.AddTransient<ForecastingViewModel>();
         builder.Services.AddTransient<NudgeFeedViewModel>();
         builder.Services.AddTransient<CoolingOffHubViewModel>();
+        builder.Services.AddTransient<VoiceFloatingMicViewModel>();
+        builder.Services.AddTransient<ImportPreviewViewModel>();
+        builder.Services.AddTransient<ActionInboxViewModel>();
 
         // Register UI Views
         builder.Services.AddTransient<LoginPage>();
@@ -162,6 +208,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ForecastingPage>();
         builder.Services.AddTransient<NudgeFeedPage>();
         builder.Services.AddTransient<CoolingOffHubPage>();
+        builder.Services.AddTransient<VoiceMicModalPage>();
+        builder.Services.AddTransient<ImportPreviewPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

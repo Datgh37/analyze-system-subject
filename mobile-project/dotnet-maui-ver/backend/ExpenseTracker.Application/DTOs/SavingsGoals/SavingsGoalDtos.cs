@@ -54,6 +54,24 @@ public record UpdateSavingsGoalDto(
     string? ColorHex = null
 );
 
+// Payload to partially update savings goal metadata via HTTP PATCH (RFC 7396)
+public record PatchSavingsGoalDto(
+    string? Name = null,
+    string? Description = null,
+    decimal? TargetAmount = null,
+    DateTime? TargetDate = null,
+    int? Priority = null,
+    string? IconKey = null,
+    string? ColorHex = null,
+    int? Status = null
+);
+
+// Payload to patch savings goal status (Active = 1, Completed = 2, Paused = 3, Cancelled = 4)
+public record PatchSavingsGoalStatusDto(
+    int Status
+);
+
+
 // Payload to deposit money into a savings goal (UC-06.02)
 public record DepositSavingsGoalDto(
     Guid WalletId,

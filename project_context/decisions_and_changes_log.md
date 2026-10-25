@@ -2892,3 +2892,342 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 
 
 
+
+
+---
+
+## [2026-10-23 23:45] - Quyết Định 127: Hoàn Tất Bàn Giao Kỹ Thuật Giai Đoạn 9 Cho Bạn Cùng Nhóm (Tài Liệu HUONG_DAN_FE.md) Và Kích Hoạt Phiên Họp Hội Đồng Toàn Diện Chuẩn Bị Giai Đoạn 10 (Kiểm Định & Hoàn Thiện Toàn Diện Hệ Thống AI)
+- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Toàn thể Hội đồng Chuyên gia (Agent 08 Andrew Ng, Agent 01 Richard Thaler, Agent 03 Cockburn BA, Agent 04 Eric Evans, Agent 10 Dan Abramov).
+- **Căn cứ & Bối cảnh:**
+  1. Người dùng đã chuyển giao thành công tài liệu hướng dẫn kỹ thuật `HUONG_DAN_FE.md` cho bạn cùng nhóm phụ trách thiết kế giao diện (Giai đoạn 9).
+  2. Tài liệu bàn giao tập trung 100% vào hạ tầng kỹ thuật MVVM Repositories, Data Binding Anchors của 20 màn hình, cơ chế chuyển đổi 1 dòng giữa Mock/Real API, quản lý trạng thái tải Loading/Empty/Error, hoàn toàn không can thiệp vào thẩm mỹ hay thiết kế của bạn cùng nhóm.
+  3. Cập nhật Master Project Roadmap (`MASTER_PROJECT_ROADMAP.md`): Ghi nhận hoàn thành trọn vẹn Giai đoạn 8 (233/233 Tests Passed 100%, 0 Warning, 0 Error), trạng thái đã bàn giao của Giai đoạn 9, và chuyển tiếp sang Giai đoạn 10.
+  4. Tuân thủ cam kết chỉ đạo của Người dùng đối với Giai đoạn 10: *"riêng cái này, khi đến giai đoạn đó, hội đồng cùng tôi họp lại và bàn bạc kỹ hơn"*. Hội đồng chính thức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council Session) để cùng Người dùng mổ xẻ các khía cạnh AI cốt lõi trước khi ban hành Kế hoạch PLAN-45.
+- **Trạng thái:** `LOCKED & ACTIVATING PHASE 10 COUNCIL SESSION`.
+
+
+---
+
+## [2026-10-24 19:55] - Quyết Định 128: Khóa Phiên Họp Hội Đồng Toàn Diện Về AI Giai Đoạn 10 — Thông Qua 5 Định Hướng Kiến Trúc Đột Phá, Xác Lập Lịch Trình 2 Deadline Và Ban Hành Tài Liệu Bàn Giao Sửa Đổi Thiết Kế PTTKHTTT
+- **Người chủ trì:** Chủ tọa (Người dùng / Project Owner) cùng Toàn thể Hội đồng Đa tác tử (Council Orchestrator, Agent 08 Andrew Ng, Agent 01 Richard Thaler, Agent 03 Cockburn BA, Agent 04 Eric Evans, Agent 07 Werner Vogels, Agent 10 Dan Abramov, Agent 11 Bruce Schneier).
+- **Căn cứ & Bối cảnh:**
+  1. Thực hiện đúng cam kết chỉ đạo của Người dùng: Tổ chức phiên họp chuyên sâu mổ xẻ toàn diện mọi khía cạnh AI trước khi thi công Giai đoạn 10.
+  2. Xuất bản toàn văn Biên bản cuộc họp dày dặn và chi tiết tại `sessions/session_giai_doan_10_ai_comprehensive_audit/00_bien_ban_hop_hoi_dong_toan_dien_ai.md`, bảo tồn 100% nguyên trạng ngữ cảnh.
+  3. Phân định rõ 2 mốc deadline chiến lược:
+     - **Deadline 1 (Thứ Tư, 28/10/2026):** Hoàn thành Video Demo, Báo cáo PDF, File APK và bảo vệ mã nguồn Ứng dụng Di động (.NET MAUI, MVVM B3, SignalR B2, Push Notifications Phần A).
+     - **Deadline 2 (Thứ Tư, 04/11/2026):** Báo cáo và nộp Tài liệu Phân tích Thiết kế Hệ thống Thông tin (PTTKHTTT) / Khóa Luận Tốt Nghiệp.
+- **5 Định hướng Kiến trúc Đột phá đã được thông qua:**
+  1. *Giọng điệu AI:* Chốt Lựa chọn A (Empathetic Finance) — Cố vấn tài chính thấu cảm, triết lý, không phán xét.
+  2. *Multimodal Vision OCR:* Hỗ trợ hóa đơn siêu thị bán lẻ + Hóa đơn điện (EVN) và nước điện tử (E-Invoice); tích hợp module xử lý tiền kỳ làm nét ảnh; đối soát số học $\Delta \le 1.000$ đ.
+  3. *Kiến trúc Hybrid Multi-Source Import:* Thư viện `ClosedXML` cho file Excel/CSV chuẩn (0đ, 0.1s) + Gemini 2.5 Flash Free Tier cho file note/ảnh ghi chú vụn vặt; đổ về Màn hình Preview HITL trước khi lưu CSDL.
+  4. *AI-Enhanced Executive Export:* Luồng phụ A1 của UC-07.01 hỗ trợ 2 chế độ (Xuất thô không AI vs Báo cáo điều hành có đoạn nhận định Cố vấn AI Richard Thaler).
+  5. *Voice Intent Agent & Prototype Bank Notification Listener:* Khẩu lệnh tiếng Việt nhận diện từ nói tắt ("50k", "năm xị") điều hướng AppShell mở màn hình tạo danh mục điền sẵn; Service nền Android `BankNotificationListenerService` bắt thông báo biến động số dư ACB, MoMo, ZaloPay, Vietcombank, MBBank.
+- **Tài liệu chuyển giao ban hành:**
+  - `project_context/reports/HuongDan_BanGiao_SuaDoi_TaiLieu_PTTKHTTT_AI_MoRong.md`: Hướng dẫn chi tiết phạm vi sửa đổi Chương 3, Bảng Tác nhân, làm sâu sắc 3 UCs (`UC-03.07`, `UC-03.11`, `UC-07.01 A1`) và toàn văn đặc tả 2 UCs mới (`UC-03.12` và `UC-07.06`) chuẩn Bảng Dọc 2xN IEEE 29148 phục vụ Agent phiên phân tích thiết kế.
+- **Trạng thái:** `LOCKED & READY FOR PHASE 10 IMPLEMENTATION PLAN (PLAN-45)`.
+
+---
+
+## [2026-10-25 08:45] - Quyết Định 129: Hoàn Tất Triển Khai Toàn Diện Giai Đoạn 10 (Hệ Thống AI Đa Phương Thức, Voice Intent Router Agent, Hybrid Multi-Source Import/Export & Android Bank Notification Listener)
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử (Agent 00 Orchestrator, Agent 08 Andrew Ng - AI Lead, Agent 01 Richard Thaler - Behavioral Lead, Agent 03 Cockburn BA, Agent 04 Eric Evans - DDD Lead, Agent 07 Werner Vogels - DevOps/Realtime Lead, Agent 10 Dan Abramov - Clean MVVM, Agent 11 Bruce Schneier - Security Lead, Agent 12 Kent Beck - TDD Quality Gate).
+- **Căn cứ & Kế hoạch:** Kế hoạch thực thi chuẩn hóa `PLAN-45` ([`2026-10-25_plan_45_giai_doan_10_ai_toan_dien_multimodal_voice_intent_hybrid_import_export.md`](plans/plans-mobile-app/2026-10-25_plan_45_giai_doan_10_ai_toan_dien_multimodal_voice_intent_hybrid_import_export.md)).
+- **Kết quả nghiệm thu kỹ thuật:**
+  1. **Backend ASP.NET Core & ClosedXML Integration:**
+     - Cài đặt thành công package `ClosedXML` v0.105.1 vào `ExpenseTracker.Application`.
+     - Hiện thực hóa `ImagePreProcessingService` tiền xử lý ảnh hóa đơn trước OCR.
+     - Nâng cấp `ReceiptOcrService`: Nhận diện thông minh hóa đơn tiện ích Điện lực (EVN) và Cấp nước sinh hoạt (E-Invoice), tự động gắn danh mục "Hóa đơn & Tiện ích", trích xuất sản lượng ($kWh$, $m^3$) vào ghi chú, duy trì nghiêm ngặt kiểm toán số học sai lệch $\Delta \le 1.000$ đ.
+     - Triển khai `VoiceIntentRouterService`: Giải mã tiếng Việt đời thường và từ lóng ("50k", "50 ka", "năm xị", "2 trẹo rưỡi", "1 củ"), tự động phân loại ý định `AddTransaction` vs `NavigateTo` (mở màn hình tạo danh mục, tạo mục tiêu tích lũy, mở báo cáo tài chính).
+     - Triển khai `HybridDataImportService`: Bóc tách bảng tính `.xlsx`/`.csv` không tốn token LLM bằng ClosedXML và bóc tách ghi chú tự do bằng thuật toán NLP Contextual Reasoning. Hỗ trợ lưu hàng loạt giao dịch nguyên tử (ACID Transaction) vào ví.
+     - Triển khai `ReportExportService`: Xuất file Excel kép gồm xuất dữ liệu thô (Raw Data) và Báo cáo Điều hành Cố vấn AI (Executive Summary) chứa nhận định thấu cảm của Cố vấn Richard Thaler, thẻ KPI sức khỏe tài chính và danh sách giao dịch định dạng Academic Navy Theme.
+     - Mở rộng RESTful API Controllers: `VoiceAgentController`, `DataImportController`, và bổ sung endpoint `export-excel` tại `AnalyticsReportsController`.
+  2. **Frontend .NET MAUI & Android Native Integration:**
+     - Bổ sung Refit API Contracts: `IVoiceAgentApi`, `IDataImportApi`.
+     - Triển khai Clean MVVM Repositories: `IVoiceAgentRepository` (`ApiVoiceAgentRepository`, `MockVoiceAgentRepository`), `IDataImportRepository` (`ApiDataImportRepository`, `MockDataImportRepository`).
+     - Hiện thực Android Native Service: `BankNotificationListenerService` kế thừa `NotificationListenerService`, bắt biến động số dư và giao dịch chi tiền từ ứng dụng ngân hàng và ví điện tử (ACB ONE, MoMo, ZaloPay, VCB Digibank, MBBank).
+     - Triển khai ViewModels & Views:
+       * `ImportPreviewViewModel` & `ImportPreviewPage.xaml` (Giao diện bảng xem trước Human-In-The-Loop, chọn ví, chọn lọc dòng, kiểm tra lỗi xác thực, commit vào sổ cái).
+       * `VoiceFloatingMicViewModel` & `VoiceMicModalPage.xaml` (Giao diện Modal Popup micro giọng nói AI, nhận diện transcript, phản hồi âm thanh và kích hoạt điều hướng AppShell).
+     - Đăng ký DI hoàn chỉnh trong `MauiProgram.cs` và navigation routes trong `AppShell.xaml.cs`.
+  3. **Kiểm toán Chất lượng TDD (Kent Beck Quality Gate):**
+     - Bổ sung 19 Unit Tests mới toàn diện (13 tests Application + 6 tests MAUI ViewModel).
+     - Tổng cộng toàn hệ sinh thái đạt **252 / 252 Tests PASSED 100%**:
+       * `ExpenseTracker.Domain.UnitTests`: 83/83 Tests Passed.
+       * `ExpenseTracker.Application.UnitTests`: 131/131 Tests Passed.
+       * `ExpenseTracker.Maui.UnitTests`: 38/38 Tests Passed.
+     - Toàn bộ Solution Backend (`ExpenseTracker.slnx`) và Frontend MAUI (`ExpenseTracker.Maui.csproj`) biên dịch đạt **0 Error**.
+- **Trạng thái:** `COMPLETED, AUDITED & READY FOR MERGE`. Hoàn tất trọn vẹn Giai đoạn 10. Sẵn sàng chuyển tiếp sang công tác tổng hợp Báo cáo cuối kỳ môn Mobile (`BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`), quay Video Demo và đóng gói APK (Giai đoạn 11).
+
+---
+
+## [2026-10-25 09:25] - Quyết Định 130: Phê Duyệt Kế Hoạch PLAN-46 Tích Hợp Toàn Diện Google Gemini Multimodal AI Thật & Bảo Mật Khóa API Qua GitIgnore
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử (Agent 00 Orchestrator, Agent 08 Andrew Ng - AI Lead, Agent 11 Bruce Schneier - Security Lead, Agent 03 Cockburn BA, Agent 12 Kent Beck - QA Lead) cùng Người dùng.
+- **Bối cảnh & Vấn đề:**
+  1. Người dùng tiến hành rà soát chuyên sâu và phát hiện: Toàn bộ các cấu phần AI trước đó (đặc biệt là bóc tách ảnh hóa đơn `ReceiptOcrService`, bóc tách phiếu lương `PayslipOcrService`, NLP bóc tách văn bản thô `HybridDataImportService`, và nhận định Cố vấn AI `ReportExportService`) mới chỉ dừng lại ở tầng mô phỏng dữ liệu hoặc giải thuật thống kê định lượng truyền thống, chưa có kết nối HTTP Client thực sự tới nền tảng Foundation Multimodal AI Google Gemini 2.5 Flash.
+  2. Người dùng cung cấp API Key chính thức của Google AI Studio và yêu cầu:
+     - Chưa được viết code ngay, phải lập kế hoạch chi tiết rà soát lại toàn bộ Roadmap từ Giai đoạn 1 đến Giai đoạn 10 để tìm tất cả các điểm chạm bắt buộc phải tích hợp AI theo đúng tài liệu đặc tả.
+     - Phải cấu hình `.gitignore` bảo vệ tuyệt đối API Key cá nhân, không để lọt vào Git commit.
+     - Lập kế hoạch kết nối Gemini AI thật kèm hệ thống logging debug trực quan để Người dùng tự tay test và kiểm chứng hành vi thực tế của AI trên ảnh thật.
+- **Quyết định phê duyệt:**
+  1. **Thông qua Kế hoạch Kỹ thuật PLAN-46:** Ban hành tệp kế hoạch [`plans/plans-mobile-app/2026-10-25_plan_46_tich_hop_toan_dien_gemini_ai_that_tu_giai_doan_1_den_10.md`](plans/plans-mobile-app/2026-10-25_plan_46_tich_hop_toan_dien_gemini_ai_that_tu_giai_doan_1_den_10.md).
+  2. **Bảo mật Khóa API tuyệt đối (Zero-Leak GitIgnore):**
+     - Đã cập nhật `.gitignore` loại trừ: `appsettings*.Development.json`, `appsettings*.Local.json`, `appsettings*.Secrets.json`, `*.secrets.json`.
+     - File `appsettings.json` commit lên Git chỉ chứa khung cấu hình và chuỗi rỗng (`"ApiKey": ""`).
+     - File chứa Key thật của Người dùng (`appsettings.Local.json` hoặc `appsettings.Development.json`) được `.gitignore` bảo vệ 100%.
+  3. **Kiến trúc AI Gateway Module (`GeminiApiClient`):**
+     - Xây dựng `IGeminiApiClient` và `GeminiApiClient` trong `ExpenseTracker.Infrastructure/Ai/` sử dụng `HttpClientFactory`, hỗ trợ Multimodal Vision Base64, Strict JSON Schema và Console Debugger trực quan.
+     - Cập nhật 5 dịch vụ trọng điểm: `ReceiptOcrService` (UC-03.07), `PayslipOcrService` (UC-02.08), `HybridDataImportService` (UC-07.06), `ReportExportService` (UC-07.01 A1), `VoiceIntentRouterService` (UC-03.11).
+  4. **Bảo toàn Chất lượng TDD:**
+     - Duy trì 100% 252 tests hiện tại bằng cơ chế Mock `IGeminiApiClient` khi chạy Unit Tests (độc lập mạng Internet).
+     - Hỗ trợ Live Integration Testing khi chạy Backend thực tế với API Key của Người dùng.
+- **Trạng thái:** `APPROVED & LOCKED. READY FOR IMPLEMENTATION`.
+
+
+
+---
+
+## [2026-10-25 09:40] - Quyết Định 131: Hoàn Thành Chặng 46.1 - Hạ Tầng Gemini AI Gateway (GeminiApiClient), Cấu Hình Bảo Mật GitIgnore & Visual Console Debugger
+- **Người chủ trì:** Agent 08 Andrew Ng (AI Lead), Agent 11 Bruce Schneier (Security Lead) & Agent 12 Kent Beck (QA Lead) cùng Người dùng.
+- **Kết quả thực thi Chặng 46.1:**
+  1. **Cấu hình Bảo mật GitIgnore (Zero-Leak Protocol):**
+     - Đã thiết lập cấu hình 2 lớp: `appsettings.json` chứa mẫu an toàn với `"ApiKey": ""` để commit lên Git.
+     - Tạo tệp `appsettings.Local.json` chứa API Key thật của Người dùng, được `.gitignore` bảo vệ 100%. Lệnh `git status -s` xác nhận tệp hoàn toàn không bị Git tracking.
+     - Cập nhật `Program.cs` để tự động nạp `appsettings.Local.json` khi chạy local.
+  2. **Tạo Lớp POCO & Giao diện Interface:**
+     - Tạo `AiSettings.cs` chứa đầy đủ cấu hình `Provider`, `ApiKey`, `Model`, `Endpoint`, `Temperature`, `MaxTokens`, `EnableLogging`.
+     - Tạo interface `IGeminiApiClient.cs` định nghĩa 2 phương thức: `GenerateContentWithImageAsync` (Multimodal Base64 + Strict JSON Schema) và `GenerateTextAsync` (NLP & Commentary).
+  3. **Hiện thực hóa `GeminiApiClient` (Infrastructure Layer):**
+     - Tạo `GeminiApiClient.cs` kết nối REST endpoint Google Gemini 2.5 Flash (`generateContent`).
+     - Tích hợp **Visual Console Debugger**: Tự động in log màu Cyan/Green/Yellow/Red trên Terminal ghi nhận kích thước payload, độ trễ phản hồi (ms), HTTP status code và **toàn văn Raw JSON thô** từ Gemini.
+     - Bắt lỗi an toàn (Fault Tolerance): Xử lý các mã lỗi 401 (sai Key), 403, 429 (hết Quota), timeout và network error, trả về `Result<string>.Failure(...)`, chống crash máy chủ.
+     - Cài đặt package `Microsoft.Extensions.Http` 10.0.13 và đăng ký DI trong `DependencyInjection.cs`.
+  4. **Kiểm toán Chất lượng TDD:**
+     - Tạo bộ Unit Tests `GeminiApiClientTests.cs` (7 tests) kiểm tra toàn diện kịch bản phản hồi HTTP 200, 401, 429, timeout và kiểm tra tính hợp lệ dữ liệu.
+     - Tổng số test của hệ thống tăng từ 252 lên **259 / 259 Tests PASSED 100%** (83 Domain + 138 Application + 38 MAUI ViewModel). Biên dịch đạt **0 Error**.
+- **Trạng thái:** COMPLETED, AUDITED & READY FOR PHASE 46.2. Sẵn sàng cắm `IGeminiApiClient` vào dịch vụ bóc tách hóa đơn `ReceiptOcrService` và phiếu lương `PayslipOcrService`.
+
+---
+
+## [2026-10-25 12:18] - Quyết Định 132: Hoàn Thành Chặng 46.2 - Tích Hợp Google Gemini 2.5 Flash Multimodal Vision Thật Cho Bóc Tách Hóa Đơn (ReceiptOcrService) & Phiếu Lương (PayslipOcrService)
+- **Người chủ trì:** Agent 08 Andrew Ng (AI Lead), Agent 03 Cockburn BA & Agent 12 Kent Beck (QA Lead) cùng Người dùng.
+- **Kết quả thực thi Chặng 46.2:**
+  1. **Nâng Cấp ReceiptOcrService.cs (UC-03.07/03.08):**
+     - Bơm `IGeminiApiClient` vào constructor qua cơ chế Dependency Injection.
+     - Khi nhận ảnh hóa đơn (hoặc hóa đơn điện tử EVN / Nước sạch PDF/ảnh), service gửi file ảnh Base64 sang Google Gemini 2.5 Flash với Prompt kế toán chuyên sâu và Strict JSON Schema.
+     - Trích xuất tự động: Tên cửa hàng/siêu thị (`merchantName`), Ngày hóa đơn (`invoiceDate`), Tiền thuế VAT (`taxAmount`), Chiết khấu (`discountAmount`), Tổng tiền (`totalAmount`), Độ tin cậy (`confidence`) và mảng chi tiết từng món hàng (`items: [name, quantity, unitPrice, totalPrice]`).
+     - Kết nối chặt chẽ với **Mathematical Audit Engine** ($\Delta = |Total - (\sum Items - Discount + Tax)| \le 1.000$ đ) và **Auto-Categorization Service** (khớp danh mục chi tiêu tự động cho từng món hàng).
+  2. **Nâng Cấp PayslipOcrService.cs (UC-02.08):**
+     - Bơm `IGeminiApiClient` vào constructor.
+     - Trích xuất tự động từ bảng lương / phiếu lương: Cơ quan chi trả (`employerName`), Kỳ lương (`payPeriod`), Lương Gross (`grossSalary`), Lương thực nhận Net (`netSalary`), các khoản đóng bảo hiểm bắt buộc (BHXH 8%, BHYT 1.5%, BHTN 1%), Thuế TNCN, Thưởng và Phụ cấp.
+     - Chạy qua **Mathematical Audit Engine** của phiếu lương để bảo đảm tính cân đối số học triệt tiêu ảo giác (Zero-Hallucination).
+  3. **Cơ Chế Kháng Lỗi Đa Tầng (Fault-Tolerant Resilience & Safe Fallback):**
+     - Nếu chưa cấu hình API Key, mạng ngắt quãng hoặc gặp sự cố ngoại lệ, hệ thống tự động ghi nhận cảnh báo và rơi về chế độ xử lý dự phòng an toàn, chống crash máy chủ 100%.
+     - Duy trì 100% tính tương thích ngược với các payload mock test.
+  4. **Kiểm Toán Chất Lượng TDD (Quality Gate):**
+     - Bổ sung 2 test cases mới: `ReceiptOcrServiceTests.ParseReceiptAsync_WithGeminiVisionResponse_ShouldExtractMerchantAndItemsAccurately` (Hóa đơn Highlands Coffee) và `PayslipOcrServiceTests.ParsePayslipAsync_WithGeminiVisionResponse_ShouldExtractSalaryFieldsAccurately` (Bảng lương VNG Corporation).
+     - Tổng số test của hệ thống tăng lên **261 / 261 Tests PASSED 100%** (83 Domain + 140 Application + 38 MAUI ViewModel). Biên dịch đạt **0 Error**.
+- **Trạng thái:** COMPLETED, AUDITED & READY FOR PHASE 46.3.
+
+---
+
+## [2026-10-25 12:55] - Quyết Định 133: Hoàn Thành Chặng 46.3 - Hiện Thực Hóa Kiến Trúc Hybrid AI Cho Trợ Lý Giọng Nói Đa Ý Định (VoiceIntentRouterService) & Tích Hợp Google Gemini NLP Cố Vấn Tài Chính Richard Thaler Vào Báo Cáo Excel (ReportExportService)
+- **Người chủ trì:** Agent 08 Andrew Ng (AI Lead), Agent 01 Richard Thaler (Behavioral Nudge Lead), Agent 03 Cockburn BA & Agent 12 Kent Beck (QA Lead) cùng Người dùng.
+- **Kết quả thực thi Chặng 46.3:**
+  1. **Nâng Cấp `VoiceIntentRouterService.cs` Theo Kiến Trúc Hybrid AI (UC-09.05):**
+     - Bơm `IGeminiApiClient? geminiClient = null` vào constructor qua cơ chế Dependency Injection.
+     - **Local Fast-Path / Hardened Safe Fallback:**
+       * Nâng cấp bộ Regex & Heuristic Engine chỉn chu, bao quát toàn diện các phương ngữ & tiếng lóng tiền tệ Việt Nam:
+         + Đơn vị phổ thông: `k`, `ka`, `nghìn`, `ngàn`.
+         + Tiếng lóng miền Bắc: `lít` (1 lít = 100k, 2 lít = 200k, 5 lít = 500k, nửa lít = 50k).
+         + Tiếng lóng miền Nam: `xị` (1 xị = 100k, 5 xị = 500k, hai xị = 200k).
+         + Tiền triệu & tiếng lóng: `củ`, `triệu`, `trẹo`, `trẹo rưỡi`, `củ rưỡi`, `2 triệu 5`.
+         + Hàng chục: `chục` (3 chục = 30k, 5 chục = 50k, hai chục ngàn = 20k).
+         + Chữ số bằng lời: "hai trăm ngàn", "năm mươi ngàn", "một triệu", "năm trăm nghìn".
+       * Hỗ trợ toàn diện các Navigation Routes trên Mobile App: `BudgetHubPage`, `DebtTrackerPage`, `NudgeFeedPage`, `CoolingOffHubPage`, `WalletsPage`, `ReceiptOcrPage`, `AnalyticsReportPage`, `CreateGoalPage`, `CreateCategoryPage`.
+       * Đảm bảo hệ thống hoạt động siêu tốc 0ms, 0 Token với các câu ngắn, và hoạt động trơn tru 100% khi rớt mạng hoặc chưa cấu hình API Key.
+     - **Cloud Smart-Path (Google Gemini 2.5 Flash NLU):**
+       * Phân tích ngữ nghĩa câu khẩu lệnh phức tạp đời thường, đa mệnh đề.
+       * Trả về JSON bóc tách ý định (`detectedIntent`), loại hành động (`actionType`), đường dẫn (`targetRoute`), số tiền (`extractedAmount`), danh mục gợi ý (`suggestedCategory`), dữ liệu form (`prefillData`) và thông điệp xác nhận thân thiện (`confirmationMessage`).
+       * Tự động fallback về Hardened Regex nếu Gemini timeout hoặc lỗi mạng.
+  2. **Nâng Cấp `ReportExportService.cs` (UC-07.01 Alternative Flow A1):**
+     - Bơm `IGeminiApiClient? geminiClient = null` vào constructor.
+     - Khi người dùng xuất Báo cáo Điều hành Thông minh (Smart Executive Financial Report), hệ thống tổng hợp các chỉ số cốt lõi (Tổng thu, Tổng chi, Dòng tiền thặng dư/thâm hụt, Tỷ lệ tiết kiệm và Top 3 danh mục chi nhiều nhất) và gửi sang Google Gemini 2.5 Flash NLP.
+     - Gemini hóa thân thành Giáo sư Richard Thaler (Nobel Kinh Tế 2017) với văn phong đồng cảm, thấu hiểu, không phán xét, đưa ra 1 Cú Hích (Nudge) cụ thể để duy trì kỷ luật dòng tiền.
+     - Đoạn nhận định điều hành được nhúng trực tiếp vào Executive Box (ô `A4:F7`) trong trang tính `⭐ TongQuan_CoVanAI` của file Excel binary (`.xlsx`).
+     - Tích hợp sẵn template dự phòng thông minh (Deterministic Fallback) bảo đảm xuất báo cáo hoàn hảo ngay cả khi offline.
+  3. **Kiểm Toán Chất Lượng TDD (Quality Gate):**
+     - Bổ sung 5 test cases mới trong `VoiceIntentRouterServiceTests.cs` (kiểm thử Gemini NLU, kiểm thử tiếng lóng miền Bắc/Nam lít/chục, kiểm thử các route mở rộng).
+     - Bổ sung 2 test cases mới trong `ReportExportServiceTests.cs` (kiểm thử fallback template và kiểm thử nhúng nhận định Gemini Thaler vào ô Excel A4).
+     - Tổng số test của hệ thống tăng từ 261 lên **272 / 272 Tests PASSED 100%** (83 Domain + 151 Application + 38 MAUI ViewModel). Biên dịch đạt **0 Error**.
+- **Trạng thái:** COMPLETED, AUDITED & READY FOR PHASE 46.4.
+
+---
+
+## [2026-10-25 14:25] - Quyết Định 134: Bổ Sung Công Cụ Quản Trị CSDL & Khởi Tạo Admin Idempotent (DatabaseSeeder & SystemController) Cho Môi Trường Thử Nghiệm Dev / Live Demo
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 05 Martin Kleppmann (DB Lead) & Agent 12 Kent Beck (QA Lead) cùng Người dùng.
+- **Vấn đề:** Trong quá trình thử nghiệm thực chiến hệ thống với ứng dụng Mobile và Swagger API, cần có sẵn tài khoản quản trị viên và dữ liệu chuẩn ban đầu để đăng nhập và kiểm thử ngay lập tức mà không phải qua bước đăng ký thủ công, đồng thời có cơ chế làm mới (Reset) CSDL an toàn khi cần dọn dẹp các bản ghi phát sinh.
+- **Quyết định:**
+  1. **Nâng cấp `DatabaseSeeder.cs`:**
+     - Bổ sung phương thức `SeedAdminUserAsync`: Tự động khởi tạo tài khoản quản trị viên mặc định (`admin@expensetracker.vn` / `Admin@123456`) với 2 ví (`Ví Tiền Mặt` 5.000.000đ, `Tài Khoản Vietcombank` 25.000.000đ), 3 giao dịch tài chính mẫu và 1 ngân sách chi tiêu tháng hiện tại nếu chưa tồn tại (đảm bảo tính Idempotent 100%).
+     - Tích hợp tự động vào chu trình khởi động của `Program.cs`.
+     - Bổ sung phương thức `ResetDatabaseAsync`: Hỗ trợ dọn dẹp sạch toàn bộ dữ liệu giao dịch phát sinh và khôi phục CSDL về trạng thái chuẩn với danh mục hệ thống và tài khoản Admin mẫu.
+  2. **Bổ sung `SystemController.cs` (Phân hệ Hệ thống & Quản trị CSDL - Dev):**
+     - `GET /api/system/database-status`: Tra cứu nhanh số lượng bản ghi trong các bảng `Users`, `Wallets`, `Categories`, `Transactions`, `Budgets`.
+     - `POST /api/system/seed-admin`: Cung cấp nút bấm trực quan trên Swagger để khởi tạo Admin ngay tức thì.
+     - `POST /api/system/reset-database`: Cung cấp nút bấm reset database an toàn cho môi trường thử nghiệm.
+  3. **Kiểm Toán Chất Lượng TDD (Quality Gate):**
+     - Bổ sung 4 unit test mới trong `DatabaseSeederTests.cs`: Kiểm thử khởi tạo danh mục chuẩn, kiểm thử tính Idempotent khi seed lặp lại, kiểm thử tạo tài khoản Admin và các bảng liên kết.
+     - Tổng số test của hệ thống nâng lên **276 / 276 Tests PASSED 100%** (83 Domain + 155 Application + 38 MAUI ViewModel). Biên dịch đạt **0 Error**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-25 16:45] - Quyết Định 135: Mở Rộng Giai Đoạn 10 (Chặng 10.5 / PLAN-47) — Thiết Lập Động Cơ Hành Động Tự Hành Hướng Máy Chủ (Server-Driven Action Protocol) & Phân Tầng Xác Suất Jev
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 01 Richard Thaler (Nobel Kinh Tế), Agent 04 Eric Evans (DDD Lead), Agent 10 Dan Abramov (Client Lead) cùng Người dùng.
+- **Bối cảnh & Vấn đề giải quyết:**
+  1. Người dùng chỉ ra câu hỏi hiện sinh chí tử của PFM: Làm sao để ứng dụng thực sự quản lý dòng tiền của người dùng mà không phụ thuộc vào sự trung thực hay việc ghi chép thủ công chăm chỉ.
+  2. Người dùng yêu cầu loại bỏ triệt để văn phong robot AI (không dùng từ ngữ trừu tượng, sáo rỗng như "nhịp sinh học tài chính", "độ co giãn thu nhập").
+  3. Giải quyết bài toán nan giải của Autonomous Tasking: Làm sao các đề xuất hiển thị linh hoạt, thông minh, không spam thông báo rác, không dùng modal/popup chặn màn hình gây ức chế.
+  4. Quy tắc phân công giao diện: Frontend chỉ dựng **Wireframe** (XAML + ViewModel Binding) và cập nhật tài liệu kỹ thuật [`HUONG_DAN_FE.md`](../mobile-project/dotnet-maui-ver/HUONG_DAN_FE.md) để người bạn cùng nhóm phụ trách thiết kế tự do styling.
+- **Quyết định kiến trúc:**
+  1. **Kiến Trúc Server-Driven Action Protocol:**
+     - Backend sinh các gói hành động đa hình `AutonomousActionDto` (Display info, Badges, Primary/Secondary actions, Confidence score).
+     - Frontend MAUI chỉ cần duy nhất 1 linh kiện `SmartActionCard.xaml` và khay hành động `ActionInboxView` đặt gọn gàng ở đầu Dashboard (tự động ẩn khi không có việc cần xử lý).
+     - Hỗ trợ Android Interactive Push Notification với 2 nút bấm thao tác trực tiếp trên thanh thông báo `[✓ Lưu nhanh]` `[✏ Sửa]` mà không cần mở app.
+  2. **Phân Tầng Ra Quyết Định Theo Ngưỡng Xác Suất Jev (Probabilistic Gating):**
+     - $\ge 0.85$: Độ tin cậy áp đảo $\rightarrow$ Sinh thẻ có 1 nút bấm sáng nhất `[✓ Lưu nhanh]` (Lưu 1-chạm).
+     - $0.50 \le \text{Confidence} < 0.85$: Phân vân $\rightarrow$ Sinh thẻ dạng Jev Choice hiển thị 2 lựa chọn ngang hàng.
+     - $< 0.50$: Bất định cao $\rightarrow$ Tuyệt đối im lặng, không làm phiền, đưa vào danh sách chờ phân loại.
+  3. **Cập nhật Giai đoạn 11:** Bao quát kiểm toán E2E cho luồng hành động tự hành, kịch bản Demo 1-Click 1-chạm và thuyết minh kiến trúc trong báo cáo cuối kỳ.
+- **Trạng thái:** COMPLETED & VERIFIED (PLAN-47).
+
+---
+
+## [2026-10-25 19:15] - Quyết Định 136: Hoàn Tất Triển Khai & Nghiệm Thu Toàn Diện 7/7 Bước Chặng 10.5 (PLAN-47) — Động Cơ Hành Động Tự Hành & Phân Tầng Xác Suất Jev
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 04 Eric Evans, Agent 10 Dan Abramov, Agent 12 Kent Beck cùng Người dùng.
+- **Kết quả thực hiện:**
+  1. **Bước 1 (Contracts & DTOs):** Xây dựng [`AutonomousActionDtos.cs`](../mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Application/DTOs/Autonomous/AutonomousActionDtos.cs) gồm các record đa hình `AutonomousActionDto`, `ActionDisplayDto`, `ActionCommandDto`, `ActionChoiceDto`, `RawBankNotificationRequest`, `QuickCommitActionRequest`.
+  2. **Bước 2 (Backend Service & Jev Engine):** Xây dựng [`AutonomousActionEngineService.cs`](../mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Application/Services/AutonomousActionEngineService.cs) hiện thực chuẩn xác 3 phân tầng xác suất Jev ($\ge 0.85$ Lưu nhanh 1-chạm, $0.50 - 0.85$ Jev Choice lựa chọn ngang hàng, $< 0.50$ im lặng chờ phân loại). Hạch toán giao dịch ACID qua `ITransactionService.CreateExpenseAsync` và dọn sạch khay in-memory sau khi lưu.
+  3. **Bước 3 (WebApi Controller):** Xây dựng [`AutonomousActionsController.cs`](../mobile-project/dotnet-maui-ver/backend/ExpenseTracker.WebApi/Controllers/AutonomousActionsController.cs) bảo vệ JWT với 4 endpoints REST: `GET /api/actions/inbox`, `POST /api/actions/from-notification`, `POST /api/actions/quick-commit`, `POST /api/actions/{actionId}/dismiss`.
+  4. **Bước 4 (Unit Testing TDD):** Xây dựng [`AutonomousActionEngineServiceTests.cs`](../mobile-project/dotnet-maui-ver/backend/tests/ExpenseTracker.Application.UnitTests/Services/AutonomousActionEngineServiceTests.cs) gồm 13 kịch bản kiểm thử TDD toàn diện đỗ 100%. Nâng tổng test Application từ 155 lên 168 tests.
+  5. **Bước 5 (MAUI Client Models & Repositories):** Xây dựng `AutonomousActionModels.cs`, `IAutonomousActionsApi` (Refit), `IAutonomousActionRepository`, `ApiAutonomousActionRepository` và `MockAutonomousActionRepository` (hỗ trợ preview ngoại tuyến không cần bật database). Đăng ký hoàn chỉnh vào `MauiProgram.cs`.
+  6. **Bước 6 (Wireframe Client & Data Binding):** Xây dựng `ActionInboxViewModel.cs` (kèm 4 unit tests mới đạt 42/42 tests MAUI), `SmartActionCardView.xaml` (Wireframe khung sườn chuẩn), `ActionInboxView.xaml` (khay tự động ẩn khi rỗng `IsVisible = false`) và tích hợp vào đầu `WalletsPage.xaml` (Dashboard).
+  7. **Bước 7 (Tài liệu chuyển giao Frontend):** Cập nhật [`HUONG_DAN_FE.md`](../mobile-project/dotnet-maui-ver/HUONG_DAN_FE.md) thuần túy khế ước kỹ thuật và mỏ neo dữ liệu (Data Anchors & Commands), hoàn toàn không can thiệp vào thẩm mỹ giao diện của UI Lead.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - **Biên dịch toàn bộ hệ thống:** Backend WebApi và Frontend MAUI đạt **0 Warning, 0 Error**.
+  - **Hệ thống Kiểm thử:** **293 / 293 Unit Tests PASSED 100%** (Domain: 83, Application: 168, MAUI: 42).
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-25 19:50] - Quyết Định 137: Bổ Sung Đặc Tả Kiến Trúc Quản Lý Phiên Mobile & Lớp Khóa Giao Diện (App Lock)
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 11 Bruce Schneier (Security Lead) cùng Người dùng.
+- **Bối cảnh & Phân tích:**
+  1. Người dùng yêu cầu đối soát tài liệu đặc tả về hình thức duy trì phiên đăng nhập mobile (ngắn hạn như app ngân hàng vs dài hạn như tiện ích/mạng xã hội).
+  2. Hệ thống đã triển khai đầy đủ 100% ở tầng lõi: Cặp token `AccessToken` (15m) + `RefreshToken` (30d), Xoay vòng Refresh Token Rotation (OAuth 2.0 BCP) chống đánh cắp token, và lưu trữ phần cứng an toàn qua `Microsoft.Maui.Storage.SecureStorage` (Android KeyStore / iOS Keychain).
+  3. Lớp khóa giao diện (Mobile App Lock qua PIN/Biometrics khi app chuyển vào background quá 2-5 phút) được đánh giá là hữu ích cho tài liệu bảo mật nhưng có **Độ ưu tiên Thấp (Low Priority / Future Backlog)**.
+- **Quyết định:**
+  - Cập nhật Chương 4 trong [`TECHNICAL_ARCHITECTURE_SPEC.md`](../mobile-project/dotnet-maui-ver/TECHNICAL_ARCHITECTURE_SPEC.md): Bổ sung mục **4.2. Đặc Tả Lớp Khóa Giao Diện (Mobile App Lock & Inactivity Timeout)**, đánh dấu rõ ràng là *Low Priority Backlog*, không làm phân tâm hoặc cản trở tiến độ kiểm thử API và lập tài liệu báo cáo của sinh viên.
+- **Trạng thái:** RECORDED & ARCHIVED.
+
+---
+
+## [2026-10-25 22:30] - Quyết Định 138: Kích Hoạt Mặc Định Chế Độ Mock Data Frontend MAUI & Nâng Cấp Cẩm Nang Vận Hành README.md Chuẩn Đường Dẫn Tương Đối
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 10 Dan Abramov (Client Lead) cùng Người dùng.
+- **Nội dung thực hiện:**
+  1. **Cấu hình Mock Data 1-Chạm:** Cập nhật file [`MauiProgram.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/MauiProgram.cs), kích hoạt mặc định toàn bộ 11 Mock Repositories (`MockWalletRepository`, `MockTransactionRepository`, `MockBudgetRepository`...) và đóng ghi chú (comment out) các `Api*Repository` kèm hướng dẫn rõ ràng. Cho phép người dùng chạy và trải nghiệm trực tiếp toàn bộ 20 màn hình MAUI ngoại tuyến 0ms mà không cần khởi động Docker hay Backend.
+  2. **Đại tu tài liệu README.md:** Cập nhật toàn diện [`mobile-project/dotnet-maui-ver/README.md`](../mobile-project/dotnet-maui-ver/README.md):
+     - Rút gọn Hướng dẫn khởi chạy nhanh Backend thành 2 bước (Docker up & `dotnet run WebApi`).
+     - Tách riêng các tùy chọn nâng cao (Cổng 5018, Health Check `/api/health`, Postgres 16 Seeder, Bộ 251 Unit Tests).
+     - Hướng dẫn chi tiết chạy Frontend MAUI trên Windows Desktop App (`net10.0-windows10.0.19041.0`), Android Emulator (`10.0.2.2:5018`) và Điện thoại thật qua Wi-Fi LAN.
+     - Xây dựng **Cẩm nang Kiểm thử Tổng thể API (API Master Testing Playbook)** bao quát trọn vẹn 9 phân hệ bám sát 63 Use Cases qua Swagger UI.
+     - Giải trình kỹ thuật về hiện trạng và sự phát triển của kênh thời gian thực SignalR Hub từ Giai đoạn 5B đến Giai đoạn 10.5.
+     - Tuân thủ tuyệt đối quy tắc **100% đường dẫn tương đối (Relative Paths)**.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - Biên dịch Frontend MAUI: **0 Warning, 0 Error** (Build Succeeded).
+  - Kiểm thử Backend: **251 / 251 Tests Passed 100%**.
+  - Kiểm thử Frontend: **42 / 42 Tests Passed 100%**.
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-25 22:45] - Quyết Định 139: Chuẩn Hóa & Bổ Sung Các Endpoint HTTP PATCH Cho Các Thao Tác Cập Nhật Vi Mô (Micro-Updates RFC 7396)
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 04 Eric Evans (DDD Lead), Agent 10 Dan Abramov (Client Lead) cùng Người dùng.
+- **Nội dung thực hiện:**
+  1. **Khắc phục triệt để kiến trúc RESTful:** Đưa HTTP PATCH vào các trường hợp cập nhật vi mô, lật cờ trạng thái (Micro-updates) thay vì bắt buộc dùng PUT thay thế toàn bộ.
+  2. **Bổ sung `PATCH /api/wallets/{id}`:**
+     - Domain Entity: Bổ sung phương thức `Wallet.PatchDetails(name, colorHex, iconKey, isExcludedFromTotal, status)`.
+     - Application Layer: Bổ sung DTO `PatchWalletRequest` và `IWalletService.PatchWalletAsync`.
+     - WebApi: Thêm endpoint `[HttpPatch("{id:guid}")]` trong `WalletsController.cs`.
+     - Client MAUI: Bổ sung `[Patch("/api/wallets/{id}")]` trong `IWalletApi` và `PatchWalletModel`.
+  3. **Chuẩn hóa `PATCH /api/v1/notifications/{id}/read` & `PATCH /api/v1/notifications/read-all`:**
+     - Đổi `[HttpPut]` thành `[HttpPatch]` trong `NotificationsController.cs` và `INotificationsApi` (vẫn duy trì alias `[HttpPut]` để tương thích ngược).
+  4. **Chuẩn hóa `PATCH /api/savings-goals/{id}/auto-deposit`:**
+     - Bổ sung `[HttpPatch]` cho thao tác bật/tắt lịch tự động trích nạp tiền tiết kiệm trong `SavingsGoalsController.cs`.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - Biên dịch toàn bộ hệ thống (WebApi + MAUI): **0 Warning, 0 Error**.
+  - Kiểm thử tự động Full-Stack: **293 / 293 Tests Passed 100%** (Domain: 83, Application: 168, MAUI: 42).
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-25 23:15] - Quyết Định 140: Hoàn Tất Triển Khai Toàn Diện HTTP PATCH (RFC 7396) Cho Toàn Bộ 4 Phân Hệ Nghiệp Vụ Trọng Yếu
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 04 Eric Evans (DDD Lead), Agent 03 Cockburn (BA Lead), Agent 10 Dan Abramov (Client Lead) cùng Người dùng.
+- **Bối cảnh & Vấn đề:**
+  Ở bước trước, hệ thống mới chỉ hiện thực đầy đủ luồng end-to-end cho phân hệ Ví (`Wallets`), trong khi 3 phân hệ còn lại được đề xuất (`Categories`, `SavingsGoals`, `Notifications`) mới chỉ ở dạng alias hoặc chưa có DTO/Domain method chuyên biệt. Người dùng đã kịp thời nhận định và yêu cầu hoàn tất triệt để HTTP PATCH cho cả 4 phân hệ.
+- **Nội dung thực hiện chi tiết (Full-Stack 4 Microservices / Domains):**
+  1. **Phân hệ 1: Quản lý Đa Ví (`Wallets`)**:
+     - Route: `PATCH /api/wallets/{id}`
+     - Nghiệp vụ: Cập nhật vi mô tên ví, mã màu, biểu tượng hoặc đánh dấu ví yêu thích mà không làm ảnh hưởng số dư hoặc loại tiền tệ.
+  2. **Phân hệ 2: Danh mục Phân tầng (`Categories`)**:
+     - Route: `PATCH /api/categories/{id}`
+     - Domain Entity: Thêm `Category.PatchDetails(name, iconKey, colorHex, displayOrder)`.
+     - Application Layer: Thêm `PatchCategoryRequest` và `ICategoryService.PatchCategoryAsync`.
+     - WebApi: Thêm `[HttpPatch("{id:guid}")]` trong `CategoriesController.cs`.
+     - MAUI Client: Thêm `PatchCategoryModel` và `[Patch("/api/categories/{id}")]` trong `ICategoryApi`.
+  3. **Phân hệ 3: Mục tiêu Tích lũy (`SavingsGoals`)**:
+     - Routes:
+       - `PATCH /api/savings-goals/{id}` (hoặc `/api/savingsgoals/{id}`): Vi chỉnh tên, hạn chót, mức độ ưu tiên, biểu tượng, màu sắc.
+       - `PATCH /api/savings-goals/{id}/status`: Chuyển đổi trạng thái mục tiêu (`Active = 1`, `Completed = 2`, `Paused = 3`, `Cancelled = 4`).
+       - `PATCH /api/savings-goals/{id}/auto-deposit`: Cập nhật lịch trích nạp định kỳ tự động.
+     - Domain Entity: Thêm `SavingsGoal.PatchDetails(...)` và `SavingsGoal.UpdateStatus(SavingsGoalStatus)`.
+     - Application Layer: Thêm `PatchSavingsGoalDto`, `PatchSavingsGoalStatusDto` và các phương thức `PatchGoalAsync`, `PatchGoalStatusAsync` trong `ISavingsGoalService`.
+     - WebApi: Thêm `[HttpPatch("{id:guid}")]` và `[HttpPatch("{id:guid}/status")]` trong `SavingsGoalsController.cs`.
+     - MAUI Client: Thêm `PatchSavingsGoalModel`, `PatchSavingsGoalStatusModel` và Refit contract tương ứng trong `ISavingsGoalApi`.
+  4. **Phân hệ 4: Thông báo Tức thời (`Notifications`)**:
+     - Routes:
+       - `PATCH /api/v1/notifications/{id}/read`: Lật trạng thái đã đọc của 1 thông báo.
+       - `PATCH /api/v1/notifications/read-all`: Đánh dấu đã đọc tất cả thông báo.
+     - WebApi: Cấu hình `[HttpPatch]` trực tiếp trong `NotificationsController.cs`.
+     - MAUI Client: Cấu hình `[Patch]` trong `INotificationsApi`.
+  5. **Tài liệu & Kiểm thử:**
+     - Cập nhật [`mobile-project/dotnet-maui-ver/README.md`](mobile-project/dotnet-maui-ver/README.md) đầy đủ payload mẫu cho cả 4 phân hệ.
+     - Viết mới các bài kiểm thử xUnit trong `CategoryServiceTests.cs` và `SavingsGoalServiceTests.cs`.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - Biên dịch Backend: **0 Error, 20 Warnings cũ**.
+  - Biên dịch Frontend MAUI: **0 Error, 0 Warning**.
+  - Kiểm thử Backend Application: **171 / 171 Tests Passed 100%**.
+  - Kiểm thử Backend Domain: **83 / 83 Tests Passed 100%**.
+  - Kiểm thử Frontend MAUI: **42 / 42 Tests Passed 100%**.
+  - Tổng số Unit Tests đạt chuẩn: **296 / 296 Tests Passed 100%**.
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-25 23:20] - Quyết Định 141: Tách Phân Hệ Tài Liệu README & Chuẩn Hóa Gốc Định Tuyến Thư Mục (dotnet-maui-ver Root)
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 03 Cockburn (BA Lead), Agent 10 Dan Abramov cùng Người dùng.
+- **Nội dung thực hiện:**
+  1. **Tách mô-đun tài liệu:**
+     - Tệp [`README.md`](mobile-project/dotnet-maui-ver/README.md) được tinh gọn tối đa, chỉ tập trung vào 3 trọng tâm cốt lõi: (1) Giới thiệu dự án & sứ mệnh sản phẩm, (2) Kiến trúc thư mục toàn cục giải pháp, (3) Hướng dẫn khởi chạy nhanh Backend & Frontend (.NET MAUI 10).
+     - Toàn bộ nội dung Playbook kiểm thử API chi tiết 9 phân hệ (gồm toàn bộ mẫu JSON request/response, HTTP PATCH, và đánh giá kênh Realtime SignalR Hub) được tách sang tệp chuyên biệt [`API_TESTING_PLAYBOOK.md`](mobile-project/dotnet-maui-ver/API_TESTING_PLAYBOOK.md).
+  2. **Chuẩn hóa gốc định tuyến (Root Anchoring):**
+     - Đặt thư mục `dotnet-maui-ver/` làm thư mục gốc (Root) cho mọi chỉ dẫn terminal (`cd backend`, `cd frontend/ExpenseTracker.Maui`) và sơ đồ cây giải pháp, loại bỏ hoàn toàn các tiền tố đường dẫn lồng nhau không cần thiết.
+  3. **Tạo Solution Full-Stack & Khắc Phục Lỗi Mở Dự Án Trên Visual Studio:**
+     - Tạo [`dotnet-maui-ver/ExpenseTracker.slnx`](mobile-project/dotnet-maui-ver/ExpenseTracker.slnx) chứa đồng thời cả Backend và Frontend MAUI.
+     - Tạo [`dotnet-maui-ver/frontend/ExpenseTracker.Maui.slnx`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui.slnx) phục vụ mở riêng Frontend độc lập.
+     - Sửa hướng dẫn trong `README.md`: Hướng dẫn mở solution gốc `ExpenseTracker.slnx` hoặc `ExpenseTracker.Maui.slnx`, giải thích rõ không mở tệp `backend/ExpenseTracker.slnx` vì tệp đó chỉ chứa các project API Backend.
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+
+
+
+
+

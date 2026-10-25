@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels.AiAgent"
+             x:Class="ExpenseTracker.Maui.Views.AiAgent.VoiceMicModalPage"
+             x:DataType="vm:VoiceFloatingMicViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F172A">
+
+    <Grid RowDefinitions="*, Auto, Auto, Auto, *">
+        <!-- Close Button -->
+        <Button Grid.Row="0" Text="✕ Đóng"
+                Clicked="OnCloseClicked"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                Margin="16"
+                BackgroundColor="Transparent"
+                TextColor="#94A3B8" />
+
+        <!-- AI Assistant Animated Icon / Visual Ring -->
+        <VerticalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="16">
+            <Border WidthRequest="120" HeightRequest="120"
+                    BackgroundColor="{Binding IsListening, Converter={x:Null}}"
+                    Stroke="#38BDF8" StrokeThickness="3">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="60" />
+                </Border.StrokeShape>
+                <Label Text="🎙️" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+            <Label Text="{Binding FeedbackMessage}" FontSize="15" TextColor="#38BDF8" HorizontalTextAlignment="Center" Margin="24,0" />
+        </VerticalStackLayout>
+
+        <!-- Recognized Transcript Box -->
+        <Border Grid.Row="2" Margin="24,20" Padding="16" BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12" />
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Nội dung đã nhận diện:" FontSize="12" TextColor="#64748B" />
+                <Label Text="{Binding Transcript}" FontSize="16" FontAttributes="Bold" TextColor="#F8FAFC" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Microphone Action Controls -->
+        <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="20">
+            <Button Text="NÓI"
+                    Command="{Binding StartListeningCommand}"
+                    BackgroundColor="#0284C7"
+                    TextColor="#FFFFFF"
+                    FontAttributes="Bold"
+                    WidthRequest="120"
+                    HeightRequest="50"
+                    CornerRadius="25" />
+            <Button Text="DỪNG"
+                    Command="{Binding StopListeningCommand}"
+                    BackgroundColor="#EF4444"
+                    TextColor="#FFFFFF"
+                    FontAttributes="Bold"
+                    WidthRequest="120"
+                    HeightRequest="50"
+                    CornerRadius="25" />
+        </HorizontalStackLayout>
+    </Grid>
+
+</ContentPage>

@@ -1,12 +1,15 @@
 using System.Text;
 using System.Text.Json;
 using ExpenseTracker.Application.DTOs.Payslips;
+using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Application.Services;
+using ExpenseTracker.Domain.Common;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Infrastructure.Persistence;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Xunit;
 
 namespace ExpenseTracker.Application.UnitTests.Services;
@@ -295,5 +298,62 @@ public class PayslipOcrServiceTests
         result.Value.Should().NotBeNull();
         result.Value!.EmployerName.Should().Be("Công ty Công nghệ ABC");
         result.Value.NetSalary.Should().Be(21_225_000m);
+    }
+
+    [Fact]
+    public async Task ParsePayslipAsync_WithGeminiVisionResponse_ShouldExtractSalaryFieldsAccurately()
+    {
+        // Arrange
+        var geminiMock = new Mock<IGeminiApiClient>();
+        var geminiResponseJson = """
+        {
+            "employerName": "VNG Corporation",
+            "payPeriod": "10/2026",
+            "grossSalary": 35000000,
+            "netSalary": 29875000,
+            "socialInsurance": 2800000,
+            "healthInsurance": 525000,
+            "unemploymentInsurance": 350000,
+            "personalIncomeTax": 1450000,
+            "allowances": 0,
+            "bonus": 0,
+            "otherDeductions": 0,
+            "confidence": 0.98
+        }
+        """;
+
+        geminiMock.Setup(g => g.GenerateContentWithImageAsync(
+            It.IsAny<byte[]>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string?>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<string>.Success(geminiResponseJson));
+
+        var service = new PayslipOcrService(_dbContext, geminiMock.Object);
+
+        var fakeJpegBytes = new byte[] { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46 };
+        using var stream = new MemoryStream(fakeJpegBytes);
+
+        // Act
+        var result = await service.ParsePayslipAsync(stream, "vng_payslip.jpg");
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.EmployerName.Should().Be("VNG Corporation");
+        result.Value.PayPeriod.Should().Be("10/2026");
+        result.Value.GrossSalary.Should().Be(35_000_000m);
+        result.Value.NetSalary.Should().Be(29_875_000m);
+        result.Value.SocialInsurance.Should().Be(2_800_000m);
+        result.Value.HealthInsurance.Should().Be(525_000m);
+        result.Value.UnemploymentInsurance.Should().Be(350_000m);
+        result.Value.PersonalIncomeTax.Should().Be(1_450_000m);
+        result.Value.IsMathAudited.Should().BeTrue();
+        geminiMock.Verify(g => g.GenerateContentWithImageAsync(
+            It.IsAny<byte[]>(),
+            "image/jpeg",
+            It.IsAny<string>(),
+            It.IsAny<string?>(),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

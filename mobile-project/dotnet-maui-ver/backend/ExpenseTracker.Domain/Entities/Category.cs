@@ -86,4 +86,30 @@ public class Category : BaseEntity
         BudgetRuleMapping = budgetRuleMapping;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    // Partially updates category presentation and display order via HTTP PATCH (RFC 7396)
+    public void PatchDetails(
+        string? name = null,
+        string? iconKey = null,
+        string? colorHex = null,
+        int? displayOrder = null)
+    {
+        if (name is not null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Tên danh mục không được để trống.", nameof(name));
+            Name = name.Trim();
+        }
+
+        if (iconKey is not null && !string.IsNullOrWhiteSpace(iconKey))
+            IconKey = iconKey.Trim();
+
+        if (colorHex is not null && !string.IsNullOrWhiteSpace(colorHex))
+            ColorHex = colorHex.Trim();
+
+        if (displayOrder.HasValue)
+            DisplayOrder = displayOrder.Value;
+
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

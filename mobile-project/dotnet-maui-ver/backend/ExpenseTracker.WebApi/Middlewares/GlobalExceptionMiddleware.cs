@@ -38,7 +38,7 @@ public class GlobalExceptionMiddleware
         {
             Status = (int)HttpStatusCode.InternalServerError,
             Title = "Internal Server Error",
-            Detail = "An unexpected error occurred while processing your request. Please try again later.",
+            Detail = exception.Message,
             Instance = context.Request.Path
         };
 

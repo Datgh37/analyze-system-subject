@@ -30,3 +30,12 @@ public record UpdateWalletRequest(
     string IconKey = "wallet",
     bool IsExcludedFromTotal = false
 );
+
+// Request model for partially updating an existing wallet (HTTP PATCH RFC 7396)
+public record PatchWalletRequest(
+    string? Name = null,
+    string? ColorHex = null,
+    string? IconKey = null,
+    bool? IsExcludedFromTotal = null,
+    WalletStatus? Status = null
+);

@@ -78,6 +78,15 @@ public record UpdateWalletModel(
     bool IsExcludedFromTotal = false
 );
 
+// Request model for partially updating an existing wallet (HTTP PATCH)
+public record PatchWalletModel(
+    string? Name = null,
+    string? ColorHex = null,
+    string? IconKey = null,
+    bool? IsExcludedFromTotal = null,
+    int? Status = null
+);
+
 // Request model for transferring money between wallets
 public record TransferMoneyModel(
     Guid SourceWalletId,

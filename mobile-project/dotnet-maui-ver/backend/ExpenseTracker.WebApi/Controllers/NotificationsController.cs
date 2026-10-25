@@ -42,6 +42,7 @@ public class NotificationsController : ControllerBase
         return Ok(list);
     }
 
+    [HttpPatch("{id:guid}/read")]
     [HttpPut("{id:guid}/read")]
     public async Task<IActionResult> MarkAsRead(Guid id)
     {
@@ -54,6 +55,7 @@ public class NotificationsController : ControllerBase
         return Ok(new { message = "Notification marked as read" });
     }
 
+    [HttpPatch("read-all")]
     [HttpPut("read-all")]
     public async Task<IActionResult> MarkAllAsRead()
     {

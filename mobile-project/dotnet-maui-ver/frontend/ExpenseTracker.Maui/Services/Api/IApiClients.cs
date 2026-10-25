@@ -47,6 +47,9 @@ public interface IWalletApi
     [Put("/api/wallets/{id}")]
     Task<ExpenseTracker.Maui.Models.Wallets.WalletModel> UpdateWalletAsync(Guid id, [Body] ExpenseTracker.Maui.Models.Wallets.UpdateWalletModel request);
 
+    [Patch("/api/wallets/{id}")]
+    Task<ExpenseTracker.Maui.Models.Wallets.WalletModel> PatchWalletAsync(Guid id, [Body] ExpenseTracker.Maui.Models.Wallets.PatchWalletModel request);
+
     [Delete("/api/wallets/{id}")]
     Task DeleteWalletAsync(Guid id);
 
@@ -74,6 +77,9 @@ public interface ICategoryApi
 
     [Put("/api/categories/{id}")]
     Task<ExpenseTracker.Maui.Models.Categories.CategoryModel> UpdateCategoryAsync(Guid id, [Body] ExpenseTracker.Maui.Models.Categories.UpdateCategoryModel request);
+
+    [Patch("/api/categories/{id}")]
+    Task<ExpenseTracker.Maui.Models.Categories.CategoryModel> PatchCategoryAsync(Guid id, [Body] ExpenseTracker.Maui.Models.Categories.PatchCategoryModel request);
 
     [Delete("/api/categories/{id}")]
     Task DeleteCategoryAsync(Guid id, [Query] Guid? targetCategoryId = null);
@@ -257,6 +263,12 @@ public interface ISavingsGoalApi
     [Put("/api/savingsgoals/{id}")]
     Task<ExpenseTracker.Maui.Models.SavingsGoals.SavingsGoalModel> UpdateSavingsGoalAsync(Guid id, [Body] ExpenseTracker.Maui.Models.SavingsGoals.UpdateSavingsGoalModel request);
 
+    [Patch("/api/savingsgoals/{id}")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.SavingsGoalModel> PatchSavingsGoalAsync(Guid id, [Body] ExpenseTracker.Maui.Models.SavingsGoals.PatchSavingsGoalModel request);
+
+    [Patch("/api/savingsgoals/{id}/status")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.SavingsGoalModel> PatchGoalStatusAsync(Guid id, [Body] ExpenseTracker.Maui.Models.SavingsGoals.PatchSavingsGoalStatusModel request);
+
     [Delete("/api/savingsgoals/{id}")]
     Task DeleteSavingsGoalAsync(Guid id);
 
@@ -288,10 +300,10 @@ public interface INotificationsApi
     [Get("/api/v1/notifications")]
     Task<List<ExpenseTracker.Maui.Models.Notifications.InAppNotificationModel>> GetNotificationsAsync([Query] bool? unreadOnly = null, [Query] int take = 50);
 
-    [Put("/api/v1/notifications/{id}/read")]
+    [Patch("/api/v1/notifications/{id}/read")]
     Task MarkAsReadAsync(Guid id);
 
-    [Put("/api/v1/notifications/read-all")]
+    [Patch("/api/v1/notifications/read-all")]
     Task MarkAllAsReadAsync();
 
     [Post("/api/v1/notifications/test-push")]
@@ -392,4 +404,49 @@ public interface ICoolingOffApi
         Guid id,
         [Body] ExpenseTracker.Maui.Models.Behavioral.BypassCoolingOffRequestModel request);
 }
+
+// Refit declarative HTTP client contract for Voice-Driven Intent Agent (UC-03.11 Enhancement)
+public interface IVoiceAgentApi
+{
+    [Post("/api/voice-agent/parse-intent")]
+    Task<ExpenseTracker.Maui.Models.AiAgent.VoiceIntentResultModel> ParseIntentAsync(
+        [Body] ExpenseTracker.Maui.Models.AiAgent.VoiceIntentCommandRequest request);
+}
+
+// Refit declarative HTTP client contract for Hybrid Multi-source Import (UC-07.06)
+public interface IDataImportApi
+{
+    [Multipart]
+    [Post("/api/data-import/preview-spreadsheet")]
+    Task<ExpenseTracker.Maui.Models.ImportExport.ImportPreviewResultModel> PreviewSpreadsheetAsync(
+        [AliasAs("file")] StreamPart file);
+
+    [Post("/api/data-import/preview-text")]
+    Task<ExpenseTracker.Maui.Models.ImportExport.ImportPreviewResultModel> PreviewUnstructuredTextAsync(
+        [Body] object request);
+
+    [Post("/api/data-import/commit-bulk")]
+    Task<ExpenseTracker.Maui.Models.ImportExport.BulkCommitImportResultModel> CommitBulkImportAsync(
+        [Body] ExpenseTracker.Maui.Models.ImportExport.BulkCommitImportRequestModel request);
+}
+
+// Refit declarative HTTP client contract for Server-Driven Action Protocol (Chặng 10.5 / PLAN-47)
+public interface IAutonomousActionsApi
+{
+    [Get("/api/actions/inbox")]
+    Task<ExpenseTracker.Maui.Models.Autonomous.AutonomousActionInboxResponseModel> GetInboxAsync();
+
+    [Post("/api/actions/from-notification")]
+    Task<ExpenseTracker.Maui.Models.Autonomous.AutonomousActionModel> ProcessNotificationAsync(
+        [Body] ExpenseTracker.Maui.Models.Autonomous.RawBankNotificationRequestModel request);
+
+    [Post("/api/actions/quick-commit")]
+    Task<ExpenseTracker.Maui.Models.Autonomous.AutonomousActionModel> QuickCommitAsync(
+        [Body] ExpenseTracker.Maui.Models.Autonomous.QuickCommitActionRequestModel request);
+
+    [Post("/api/actions/{actionId}/dismiss")]
+    Task<bool> DismissActionAsync(string actionId);
+}
+
+
 

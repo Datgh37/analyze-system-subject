@@ -53,6 +53,17 @@ public class CategoriesController : BaseApiController
         return HandleResult(result);
     }
 
+    // Partially updates category appearance and metadata via HTTP PATCH (RFC 7396)
+    [HttpPatch("{id:guid}")]
+    [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PatchCategory(Guid id, [FromBody] PatchCategoryRequest request, CancellationToken ct)
+    {
+        var result = await _categoryService.PatchCategoryAsync(CurrentUserId, id, request, ct);
+        return HandleResult(result);
+    }
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]

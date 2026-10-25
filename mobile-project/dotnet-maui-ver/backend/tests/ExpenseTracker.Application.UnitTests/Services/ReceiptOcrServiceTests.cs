@@ -2,12 +2,15 @@ using System.Text;
 using ExpenseTracker.Application.DTOs.AutoRules;
 using ExpenseTracker.Application.DTOs.Receipts;
 using ExpenseTracker.Application.DTOs.Transactions;
+using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Application.Services;
+using ExpenseTracker.Domain.Common;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Infrastructure.Persistence;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Xunit;
 
 namespace ExpenseTracker.Application.UnitTests.Services;
@@ -201,5 +204,95 @@ public class ReceiptOcrServiceTests
             .FirstOrDefaultAsync(r => r.UserId == _userId && r.KeywordPattern == "Dầu gội Clear");
         autoRule.Should().NotBeNull();
         autoRule!.TargetCategoryId.Should().Be(_foodCategory.Id);
+    }
+
+    [Fact]
+    public async Task ParseReceiptAsync_WithEvnElectricityBill_ShouldAssignUtilityCategory()
+    {
+        // Arrange: Utility category & EVN bill JSON payload
+        var utilityCategory = new Category("Hóa đơn & Tiện ích", TransactionType.Expense, _userId);
+        _dbContext.Categories.Add(utilityCategory);
+        await _dbContext.SaveChangesAsync();
+
+        var json = """
+        {
+            "merchantName": "Tổng Công ty Điện lực EVN TP.HCM",
+            "items": [
+                { "name": "Tiền điện sinh hoạt kỳ 10/2026 (Sản lượng: 250 kWh)", "quantity": 1, "unitPrice": 450000, "totalPrice": 450000 }
+            ],
+            "discountAmount": 0,
+            "taxAmount": 36000,
+            "totalAmount": 486000,
+            "confidence": 0.98
+        }
+        """;
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+
+        // Act
+        var result = await _receiptOcrService.ParseReceiptAsync(_userId, stream, "evn_invoice.pdf");
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.MerchantName.Should().Contain("EVN");
+        result.Value.TotalAmount.Should().Be(486_000m);
+        result.Value.Items[0].SuggestedCategoryId.Should().Be(utilityCategory.Id);
+    }
+
+    [Fact]
+    public async Task ParseReceiptAsync_WithGeminiVisionResponse_ShouldExtractMerchantAndItemsAccurately()
+    {
+        // Arrange
+        var geminiMock = new Mock<IGeminiApiClient>();
+        var geminiResponseJson = """
+        {
+            "merchantName": "Highlands Coffee - Landmark 81",
+            "invoiceDate": "2026-10-25T08:30:00Z",
+            "taxAmount": 8000,
+            "discountAmount": 0,
+            "totalAmount": 88000,
+            "confidence": 0.99,
+            "items": [
+                { "name": "Phin Sữa Đá Cỡ Lớn", "quantity": 1, "unitPrice": 45000, "totalPrice": 45000 },
+                { "name": "Bánh Mì Gà Xé Nước Tương", "quantity": 1, "unitPrice": 35000, "totalPrice": 35000 }
+            ]
+        }
+        """;
+
+        geminiMock.Setup(g => g.GenerateContentWithImageAsync(
+            It.IsAny<byte[]>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string?>(),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<string>.Success(geminiResponseJson));
+
+        var service = new ReceiptOcrService(
+            _dbContext,
+            _autoRuleService,
+            _transactionService,
+            imagePreProcessor: null,
+            geminiClient: geminiMock.Object);
+
+        // Binary JPEG header bytes to trigger real image flow
+        var fakeJpegBytes = new byte[] { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46 };
+        using var stream = new MemoryStream(fakeJpegBytes);
+
+        // Act
+        var result = await service.ParseReceiptAsync(_userId, stream, "highlands_receipt.jpg");
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.MerchantName.Should().Be("Highlands Coffee - Landmark 81");
+        result.Value.TotalAmount.Should().Be(88_000m);
+        result.Value.Items.Should().HaveCount(2);
+        result.Value.Items[0].ItemName.Should().Be("Phin Sữa Đá Cỡ Lớn");
+        result.Value.Items[1].ItemName.Should().Be("Bánh Mì Gà Xé Nước Tương");
+        result.Value.IsMathDiscrepancy.Should().BeFalse();
+        geminiMock.Verify(g => g.GenerateContentWithImageAsync(
+            It.IsAny<byte[]>(),
+            "image/jpeg",
+            It.IsAny<string>(),
+            It.IsAny<string?>(),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

@@ -1,4 +1,6 @@
+using ExpenseTracker.Application.Common.Settings;
 using ExpenseTracker.Application.Interfaces;
+using ExpenseTracker.Infrastructure.Ai;
 using ExpenseTracker.Infrastructure.Persistence;
 using ExpenseTracker.Infrastructure.Security;
 using ExpenseTracker.Infrastructure.Services;
@@ -25,6 +27,13 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IBalanceOcrService, MockBalanceOcrService>();
+
+        // Register Google Gemini AI Gateway & configuration
+        services.Configure<AiSettings>(configuration.GetSection(AiSettings.SectionName));
+        services.AddHttpClient<IGeminiApiClient, GeminiApiClient>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(60);
+        });
 
         return services;
     }

@@ -47,8 +47,8 @@
 ## 3. Đánh Giá & So Sánh Các Phương Án Công Nghệ Tiềm Năng (Architectural Options)
 
 ### Phương Án A: Hệ Sinh Thái Thuần Microsoft (.NET MAUI + ASP.NET Core Web API)
-* **Frontend:** **.NET MAUI** (C# 12 / .NET 9, XAML, MVVM CommunityToolkit).
-* **Backend:** **ASP.NET Core Web API (.NET 9)**, Clean Architecture, Entity Framework Core (EF Core) hoặc Dapper.
+* **Frontend:** **.NET MAUI** (C# 14 / .NET 10, XAML, MVVM CommunityToolkit - chính thức triển khai tại PLAN-26/PLAN-31).
+* **Backend:** **ASP.NET Core Web API (.NET 10 / C# 14)**, Clean Architecture, Entity Framework Core (EF Core) PostgreSQL 16.
 * **CSDL:** Microsoft SQL Server (hoặc PostgreSQL / MySQL).
 * **Ưu điểm:**
   - Ngôn ngữ nhất quán 100% C# từ Client đến Server, tận dụng tối đa kiến trúc OOP, SOLID, Type-Safety tuyệt đối.

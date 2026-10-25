@@ -9,6 +9,8 @@ public interface ISavingsGoalService
     Task<SavingsGoalDto?> GetGoalByIdAsync(Guid userId, Guid goalId, CancellationToken ct = default);
     Task<SavingsGoalDto> CreateGoalAsync(Guid userId, CreateSavingsGoalDto request, CancellationToken ct = default);
     Task<SavingsGoalDto> UpdateGoalAsync(Guid userId, Guid goalId, UpdateSavingsGoalDto request, CancellationToken ct = default);
+    Task<SavingsGoalDto> PatchGoalAsync(Guid userId, Guid goalId, PatchSavingsGoalDto request, CancellationToken ct = default);
+    Task<SavingsGoalDto> PatchGoalStatusAsync(Guid userId, Guid goalId, int status, CancellationToken ct = default);
     Task DeleteGoalAsync(Guid userId, Guid goalId, CancellationToken ct = default);
     
     // Core transactional operations (UC-06.02, UC-06.03)

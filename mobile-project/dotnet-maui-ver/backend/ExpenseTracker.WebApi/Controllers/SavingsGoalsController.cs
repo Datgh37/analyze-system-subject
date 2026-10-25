@@ -73,6 +73,50 @@ public class SavingsGoalsController : BaseApiController
         }
     }
 
+    // Partially updates savings goal properties via HTTP PATCH (RFC 7396)
+    [HttpPatch("{id:guid}")]
+    [ProducesResponseType(typeof(SavingsGoalDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PatchGoal(Guid id, [FromBody] PatchSavingsGoalDto request, CancellationToken ct)
+    {
+        try
+        {
+            var result = await _goalService.PatchGoalAsync(CurrentUserId, id, request, ct);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    // Partially updates savings goal status (Active, Paused, Completed, Cancelled)
+    [HttpPatch("{id:guid}/status")]
+    [ProducesResponseType(typeof(SavingsGoalDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PatchGoalStatus(Guid id, [FromBody] PatchSavingsGoalStatusDto request, CancellationToken ct)
+    {
+        try
+        {
+            var result = await _goalService.PatchGoalStatusAsync(CurrentUserId, id, request.Status, ct);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -182,6 +226,7 @@ public class SavingsGoalsController : BaseApiController
 
     // Configure Auto-deposit schedule (UC-06.04)
     [HttpPost("{id:guid}/auto-deposit")]
+    [HttpPatch("{id:guid}/auto-deposit")]
     [HttpPut("{id:guid}/auto-deposit")]
     [ProducesResponseType(typeof(SavingsGoalDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

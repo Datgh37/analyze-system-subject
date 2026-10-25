@@ -79,6 +79,46 @@ public class SavingsGoalService : ISavingsGoalService
         return MapToDto(goal);
     }
 
+    public async Task<SavingsGoalDto> PatchGoalAsync(Guid userId, Guid goalId, PatchSavingsGoalDto request, CancellationToken ct = default)
+    {
+        var goal = await _context.SavingsGoals
+            .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId, ct);
+
+        if (goal == null)
+            throw new KeyNotFoundException("Không tìm thấy mục tiêu tích lũy.");
+
+        goal.PatchDetails(
+            name: request.Name,
+            description: request.Description,
+            targetAmount: request.TargetAmount,
+            targetDate: request.TargetDate,
+            priority: request.Priority.HasValue ? (SavingsGoalPriority)request.Priority.Value : null,
+            iconKey: request.IconKey,
+            colorHex: request.ColorHex,
+            status: request.Status.HasValue ? (SavingsGoalStatus)request.Status.Value : null
+        );
+
+        await _context.SaveChangesAsync(ct);
+        return MapToDto(goal);
+    }
+
+    public async Task<SavingsGoalDto> PatchGoalStatusAsync(Guid userId, Guid goalId, int status, CancellationToken ct = default)
+    {
+        var goal = await _context.SavingsGoals
+            .FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId, ct);
+
+        if (goal == null)
+            throw new KeyNotFoundException("Không tìm thấy mục tiêu tích lũy.");
+
+        if (!Enum.IsDefined(typeof(SavingsGoalStatus), status))
+            throw new ArgumentException("Trạng thái mục tiêu không hợp lệ.", nameof(status));
+
+        goal.UpdateStatus((SavingsGoalStatus)status);
+
+        await _context.SaveChangesAsync(ct);
+        return MapToDto(goal);
+    }
+
     public async Task DeleteGoalAsync(Guid userId, Guid goalId, CancellationToken ct = default)
     {
         var goal = await _context.SavingsGoals

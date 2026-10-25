@@ -147,4 +147,20 @@ public class Wallet : BaseEntity
         Status = WalletStatus.Active;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    // Partially updates wallet properties via HTTP PATCH (RFC 7396)
+    public void PatchDetails(
+        string? name = null,
+        string? colorHex = null,
+        string? iconKey = null,
+        bool? isExcludedFromTotal = null,
+        WalletStatus? status = null)
+    {
+        if (!string.IsNullOrWhiteSpace(name)) Name = name.Trim();
+        if (!string.IsNullOrWhiteSpace(colorHex)) ColorHex = colorHex.Trim();
+        if (!string.IsNullOrWhiteSpace(iconKey)) IconKey = iconKey.Trim();
+        if (isExcludedFromTotal.HasValue) IsExcludedFromTotal = isExcludedFromTotal.Value;
+        if (status.HasValue) Status = status.Value;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

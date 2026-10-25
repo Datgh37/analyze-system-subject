@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/ExpenseTracker.Maui.UnitTests/ExpenseTracker.Maui.UnitTests.csproj" />
+  </Folder>
+  <Project Path="ExpenseTracker.Maui/ExpenseTracker.Maui.csproj" />
+</Solution>

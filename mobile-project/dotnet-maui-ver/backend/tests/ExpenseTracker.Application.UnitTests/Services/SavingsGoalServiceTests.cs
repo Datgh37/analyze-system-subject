@@ -295,5 +295,49 @@ public class SavingsGoalServiceTests
         updatedGoal!.IsAutoDepositEnabled.Should().BeTrue();
         updatedGoal.AutoDepositAmount.Should().Be(1_500_000m);
     }
+
+    [Fact]
+    public async Task PatchGoalAsync_WithPartialProperties_ShouldOnlyUpdateProvidedFields()
+    {
+        // Arrange
+        var goal = new SavingsGoal(_userId, "Mua laptop", 30_000_000m, DateTime.Today, DateTime.Today.AddMonths(6));
+        _dbContext.SavingsGoals.Add(goal);
+        await _dbContext.SaveChangesAsync();
+
+        var patchDto = new PatchSavingsGoalDto(
+            Name: "Mua Macbook Pro M4",
+            ColorHex: "#6366F1"
+        );
+
+        // Act
+        var result = await _goalService.PatchGoalAsync(_userId, goal.Id, patchDto);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Mua Macbook Pro M4");
+        result.ColorHex.Should().Be("#6366F1");
+        result.TargetAmount.Should().Be(30_000_000m); // Unchanged
+    }
+
+    [Fact]
+    public async Task PatchGoalStatusAsync_WhenPausingAndResuming_UpdatesStatusCorrectly()
+    {
+        // Arrange
+        var goal = new SavingsGoal(_userId, "Đi du lịch Nhật Bản", 50_000_000m, DateTime.Today, DateTime.Today.AddYears(1));
+        _dbContext.SavingsGoals.Add(goal);
+        await _dbContext.SaveChangesAsync();
+
+        // Act: Pause
+        var paused = await _goalService.PatchGoalStatusAsync(_userId, goal.Id, (int)SavingsGoalStatus.Paused);
+
+        // Assert: Paused
+        paused.Status.Should().Be((int)SavingsGoalStatus.Paused);
+
+        // Act: Resume
+        var resumed = await _goalService.PatchGoalStatusAsync(_userId, goal.Id, (int)SavingsGoalStatus.Active);
+
+        // Assert: Resumed
+        resumed.Status.Should().Be((int)SavingsGoalStatus.Active);
+    }
 }
 

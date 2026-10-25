@@ -58,10 +58,10 @@ flowchart TD
     G4 --> G5["Giai đoạn 5: Phân hệ 6 - Quỹ Khẩn cấp & Hũ Tài Chính (XONG)"]
     G5 --> G5B["Giai đoạn 5B: Chuẩn hóa Barem Cuối kỳ Mobile (SignalR, Push) (XONG)"]
     G5B --> G6["Giai đoạn 6: Phân hệ 7 - Báo cáo & Phân tích Đa chiều (XONG)"]
-    G6 --> G7["Giai đoạn 7: Phân hệ 8 - Dự báo Chuỗi thời gian & Ngày cạn tiền (KẾ HOẠCH)"]
-    G7 --> G8["Giai đoạn 8: Phân hệ 9 - Cú hích Thaler, Khoảng trễ 24h & XAI (KẾ HOẠCH)"]
-    G8 --> G9["Giai đoạn 9: Dedicated UI/UX Styling (Bạn cùng nhóm phụ trách) (KẾ HOẠCH)"]
-    G9 --> G10["Giai đoạn 10: Tinh chỉnh & Kiểm định Hành vi Hệ thống AI (KẾ HOẠCH)"]
+    G6 --> G7["Giai đoạn 7: Phân hệ 8 - Dự báo Chuỗi thời gian & Ngày cạn tiền (XONG)"]
+    G7 --> G8["Giai đoạn 8: Phân hệ 9 - Cú hích Thaler, Khoảng trễ 24h & XAI (XONG)"]
+    G8 --> G9["Giai đoạn 9: Dedicated UI/UX Styling (Đã bàn giao HUONG_DAN_FE.md)"]
+    G9 --> G10["Giai đoạn 10: Tinh chỉnh & Kiểm định Hành vi Hệ thống AI (Họp Hội đồng & Chuẩn bị)"]
     G10 --> G11["Giai đoạn 11: Tổng kiểm toán Full-Stack & Báo cáo KLTN Word (KẾ HOẠCH)"]
 ```
 
@@ -193,50 +193,47 @@ flowchart TD
 ---
 
 ### GIAI ĐOẠN 8: PHÂN HỆ 9 — CÚ HÍCH TÂM LÝ HÀNH VI THALER, KHOẢNG TRỄ 24H & XAI
-- **Trạng thái:** `KẾ HOẠCH`
+- **Trạng thái:** `HOÀN THÀNH 100%` (Kế hoạch [`PLAN-44`](../../project_context/plans/plans-mobile-app/2026-10-23_plan_44_giai_doan_8_cu_hich_thaler_nudge_khoang_tre_24h_va_tro_ly_xai.md), [Quyết định 125 & 126](../../project_context/decisions_and_changes_log.md))
 - **Phạm vi Use Cases (5 Use Cases):** `UC-09.01` đến `UC-09.05`
-  - `UC-09.01`: Nhận diện giao dịch mua sắm bốc đồng/xa xỉ và sinh Cú hích hành vi thông minh (Nudge Alert).
-  - `UC-09.02`: Giải trình lý do tài chính bằng ngôn ngữ tự nhiên (Explainable AI - XAI).
-  - `UC-09.03`: Đề xuất tái cân đối tài chính để bù đắp khoản chi tiêu lớn.
-  - `UC-09.04`: Cơ chế phê duyệt của người dùng (Human-in-the-loop Approval).
-  - `UC-09.05`: **Khoảng trễ tâm lý (Cooling-off Period 24h-48h):** Tạm hoãn giao dịch mua sắm xa xỉ để kích hoạt tư duy lý trí System 2, giảm thiểu chi tiêu tùy tiện. Tích hợp tạo mã VietQR chuẩn Napas 247.
+  - `UC-09.01`: Nhận diện giao dịch mua sắm bốc đồng/xa xỉ và sinh Cú hích hành vi thông minh (Nudge Alert: Vượt hạn mức DSA 85%, Lệch chuẩn Kakeibo Hưởng thụ 20%, Chi tiêu lớn bất thường).
+  - `UC-09.02`: Giải trình lý do tài chính bằng ngôn ngữ tự nhiên (Explainable AI - XAI): Thấu hiểu tâm lý, đồng cảm (Empathetic Finance), diễn giải tường minh tác động tới DSA và dự báo ngày cạn tiền khả dụng.
+  - `UC-09.03`: Đề xuất tái cân đối tài chính để bù đắp khoản chi tiêu lớn (Cắt giảm chi tiêu không thiết yếu, trích từ Quỹ dự phòng tự do hoặc chia nhỏ kế hoạch chi tiêu).
+  - `UC-09.04`: Cơ chế phê duyệt của người dùng (Human-in-the-loop Approval): Đồng ý hoãn, Hủy giao dịch hoặc Bỏ qua cảnh báo để tiếp tục (ghi nhận lý do tâm lý).
+  - `UC-09.05`: **Khoảng trễ tâm lý (Cooling-off Period 24h-48h):** Tạm hoãn giao dịch mua sắm xa xỉ để kích hoạt tư duy lý trí System 2, giảm thiểu chi tiêu tùy tiện. Tích hợp tạo mã VietQR chuẩn Napas 247 khi hết thời gian khoảng trễ và người dùng quyết định tiếp tục thanh toán.
 - **Kiến trúc MVVM Repositories & Wireframe MAUI:**
-  - *Chặng 8A (Backend):* Nudge Engine, Cooling-off Manager, WebApi endpoints `api/nudges/` và TDD Unit Tests.
-  - *Chặng 8B (Frontend Wireframe):* `INudgeRepository` (Api & Mock in-memory), `NudgesViewModel`, Wireframe `NudgesPage.xaml` sẵn sàng Data Binding.
+  - *Chặng 8A (Backend):* Enums, Entities (`FinancialNudge`, `CoolingOffTransaction`), Services (`NudgeEngineService`, `CoolingOffService`), WebApi controllers (`api/nudges/`, `api/cooling-off/`), Migration `AddBehavioralNudgesAndCoolingOff`, kèm 18 Unit Tests TDD Backend.
+  - *Chặng 8B (Frontend Wireframe):* `INudgeRepository` (Api & Mock in-memory), `ICoolingOffRepository` (Api & Mock in-memory), `NudgeFeedViewModel`, `CoolingOffHubViewModel`, Wireframe `NudgeFeedPage.xaml` và `CoolingOffHubPage.xaml` sẵn sàng 100% Data Binding, kèm 10 Unit Tests Mobile ViewModel.
+- **Chất lượng kiểm thử:** Nâng tổng số test toàn hệ thống lên **233 / 233 Tests Passed 100%** (83 Domain + 118 Application + 32 Mobile ViewModel Tests). Toàn bộ Backend và Frontend MAUI đạt **0 Warning, 0 Error**.
 
 ---
 
 ### GIAI ĐOẠN 9: DEDICATED FRONTEND ART DIRECTION & UI/UX STYLING (BẠN CÙNG NHÓM PHỤ TRÁCH)
-- **Trạng thái:** `KẾ HOẠCH (DÀNH CHO BẠN CÙNG NHÓM THIẾT KẾ GIAO DIỆN)`
-- **Mục tiêu:** Bạn cùng nhóm phụ trách thiết kế giao diện tiếp quản toàn bộ hệ thống Wireframe Pages (đã gắn sẵn 100% Data Binding và Repositories):
-  1. Nạp trọn vẹn Design System tại `Resources/Styles/` (Bảng màu Slate & Warm Charcoal, Double-Bezel viền kép cao cấp, Typography Plus Jakarta Sans).
-  2. Thay thế toàn bộ Wireframe Pages bằng UI hoàn thiện, hỗ trợ Dark/Light Theme.
-  3. Tích hợp điều khiển biểu đồ trực quan hóa (Charts controls), hiệu ứng vi động lực học lò xo Anime.js, chuyển động FLIP Layout mượt mà 60fps và rung phản hồi xúc giác Haptics.
+- **Trạng thái:** `ĐÃ HOÀN TẤT BÀN GIAO KỸ THUẬT (KÈM TÀI LIỆU HUONG_DAN_FE.md)`
+- **Mục tiêu & Hiện trạng:**
+  1. Đã bàn giao tài liệu kỹ thuật chuyên biệt [`HUONG_DAN_FE.md`](HUONG_DAN_FE.md) cho bạn cùng nhóm: mô tả chi tiết ViewModel Contracts, Data Bindings, cơ chế hoán đổi 1 dòng Mock/Real Repository, xử lý trạng thái Loading/Empty/Error cho toàn bộ 20 màn hình mà hoàn toàn không can thiệp vào thẩm mỹ hay phong cách thiết kế của bạn cùng nhóm.
+  2. Toàn bộ 20 Views Wireframe đã hoàn thành khép kín, kiểm thử độc lập với Mock in-memory data, cho phép bạn cùng nhóm bắt tay ngay vào thiết kế giao diện (Design System, Styles, Dark/Light Theme, Haptics, Animation) mà không cần chờ Backend.
+  3. Bạn cùng nhóm phụ trách thiết kế giao diện tiếp quản toàn bộ hệ thống Wireframe Pages (đã gắn sẵn 100% Data Binding và Repositories):
+     - Nạp trọn vẹn Design System tại `Resources/Styles/` (Bảng màu Slate & Warm Charcoal, Double   6. **Kiến trúc An ninh Bảo mật Khóa API (Zero-Leak GitIgnore Protocol):**
+      - Phân tầng cấu hình an toàn qua `appsettings.Local.json` và biến môi trường, bảo vệ tuyệt đối không làm lộ khóa API lên Git.
+   7. **Mở Rộng Chặng 10.5 (PLAN-47 / Quyết Định 135) - Động Cơ Hành Động Tự Hành & Ngưỡng Xác Suất Jev:**
+      - *Mục tiêu:* Thu hẹp rào cản "sự trung thực của người dùng" bằng Passive Reality Capture (bắt thông báo ngân hàng) và Server-Driven Action Protocol.
+      - *Phân tầng xác suất Jev:* $\ge 0.85$ (Lưu nhanh 1-chạm), $0.50 - 0.85$ (Jev Choice 2 lựa chọn), $< 0.50$ (Im lặng không spam rác).
+      - *Quy cách Frontend:* Chỉ dựng Wireframe `SmartActionCard.xaml` và khay `ActionInboxView` trên Dashboard (không styling), cập nhật tài liệu kỹ thuật [`HUONG_DAN_FE.md`](HUONG_DAN_FE.md).
+- **Kiến trúc MVVM Repositories & UI MAUI:**
+   - *Backend:* `GeminiApiClient`, Controllers `api/voice-agent/`, `api/data-import/`, `api/actions/`, endpoint `api/analytics-reports/export-excel`.
+   - *Frontend:* `IVoiceAgentRepository`, `IDataImportRepository`, `IAutonomousActionRepository`, Views Wireframe `VoiceMicModalPage.xaml`, `ImportPreviewPage.xaml`, `SmartActionCardView.xaml`.
+- **Chất lượng kiểm thử:** Nâng tổng số test toàn hệ thống lên **276 / 276 Tests Passed 100%** (83 Domain + 155 Application + 38 Mobile ViewModel Tests). Toàn bộ Backend (`ExpenseTracker.slnx`) và Frontend MAUI (`ExpenseTracker.Maui.csproj`) biên dịch đạt **0 Warning, 0 Error**.
 
 ---
 
-### GIAI ĐOẠN 10: TINH CHỈNH, KIỂM ĐỊNH HÀNH VI & HOÀN THIỆN TOÀN DIỆN HỆ THỐNG AI
-- **Trạng thái:** `KẾ HOẠCH (DÀNH RIÊNG CHO ĐÁNH GIÁ VÀ HOÀN THIỆN TOÀN DIỆN AI)`
-- **Chuyên gia chủ trì:** Agent 08 Andrew Ng (AI Lead) & Agent 01 Richard Thaler (Behavioral Economics).
-> [!IMPORTANT]
-> **QUY CHẾ HỌP HỘI ĐỒNG & NGƯỜI DÙNG BẮT BUỘC:** Khi tiến trình dự án chạm đến Giai đoạn 10, Toàn thể Hội đồng Đa tác tử (đặc biệt là Agent 08 Andrew Ng, Agent 01 Richard Thaler, Agent 03 Cockburn BA và Agent 00 Orchestrator) sẽ cùng Người dùng tổ chức một **Phiên Họp Hội Đồng Toàn Diện (Special AI Council Session)** để bàn bạc kỹ lưỡng, mổ xẻ hành vi thực tế của các mô hình AI/Prompt, thiết lập các bộ kịch bản kiểm thử hành vi thực tế và thống nhất định hướng tinh chỉnh trước khi bắt tay thực hiện.
-- **Mục tiêu:** Tập trung giải quyết triệt để và toàn diện mọi khía cạnh về AI đã tích hợp từ các giai đoạn trước:
-  1. **Kiểm toán Hành vi & Tinh chỉnh Định hướng (Behavioral Alignment):** Kiểm tra các Nudge Cú hích Thaler, phản hồi từ Trợ lý XAI có giữ đúng văn phong học thuật, thấu hiểu tâm lý (Empathetic Finance), không phán xét tiêu cực, đưa ra khuyến nghị thực tế.
-  2. **Tối ưu hóa Prompts & Pipeline Multimodal AI OCR (Prompt Engineering & Eval Harness):**
-     - Đánh giá khả năng bóc tách ảnh/PDF hóa đơn và phiếu lương với các mẫu hóa đơn thực tế (hóa đơn siêu thị Co.opmart, WinMart, hóa đơn nhòe, nghiêng góc).
-     - Loại bỏ triệt để ảo giác (Zero-Hallucination) thông qua Strict JSON Schema & Mathematical Cross-checking.
-  3. **Khép kín Vòng lặp Học tập Thực tế (Continuous Learning Loop):** Kiểm định vòng lặp ghi nhớ quy tắc tự động phân loại (`AutoCategorizationRules`) từ hóa đơn thực tế.
-  4. **Kiểm thử Độ nhạy Thuật toán Thống kê & Chuỗi Thời Gian:** Kiểm thử mô hình Z-Score Outlier và Mô hình chuỗi thời gian ngoại suy với các tập dữ liệu biên (Edge cases: chi tiêu đột biến lớn, chu kỳ không có thu nhập, tất cả các giao dịch bằng tiền nhau).
-  5. **Tối ưu Độ trễ & Thông báo Tiến trình (Latency & Async Progress UX):** Kiểm soát tiến trình xử lý ảnh theo đúng tiêu chí Đề tài 23 trong barem môn học: `Đã nhận ảnh` $\rightarrow$ `Đang xử lý` $\rightarrow$ `Có kết quả`, thông báo đẩy khi hoàn tất.
-
----
-
-### GIAI ĐOẠN 11: TỔNG KIỂM TOÁN FULL-STACK, 1-CLICK DEMO & BÁO CÁO KHÓA LUẬN
-- **Trạng thái:** `KẾ HOẠCH`
-- **Mục tiêu:**
-  1. Kiểm toán hồi quy Full-Stack E2E (Kiểm tra rò rỉ RAM, kiểm thử tải k6).
-  2. Xây dựng Script PowerShell tự động 1-Click khởi chạy toàn bộ Backend, Docker DB và Frontend để Hội đồng/Giảng viên nghiệm thu trong 1 phút.
-  3. Đồng bộ dữ liệu, biểu đồ và ảnh chụp màn hình ứng dụng thật vào báo cáo Word [`KhoaLuanTotNghiep.docx`](../../files/KhoaLuanTotNghiep.docx) chuẩn thể thức DNTU.
+### GIAI ĐOẠN 11: TỔNG KIỂM TOÁN FULL-STACK, SCRIPT 1-CLICK DEMO, BÁO CÁO CUỐI KỲ & ĐÓNG GÓI APK
+- **Trạng thái:** `SẴN SÀNG TRIỂN KHAI (BÁM SÁT DEADLINE 1 - THỨ TƯ 28/10/2026)`
+- **Mục tiêu mở rộng:**
+  1. Kiểm toán hồi quy Full-Stack E2E (Kiểm tra luồng Bank Notification $\rightarrow$ Autonomous Action $\rightarrow$ 1-Chạm Lưu nhanh $\rightarrow$ SignalR số dư).
+  2. Hoàn thiện Báo cáo cuối kỳ môn Ứng dụng Di động (.NET MAUI) tại [`BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`](BAO_CAO_CUOI_KY_DOTNET_MAUI.docx) (bổ sung thuyết minh Server-Driven Action Protocol & Xác suất Jev).
+  3. Xây dựng Script PowerShell tự động 1-Click khởi chạy toàn bộ Backend, Docker DB và Frontend để Hội đồng/Giảng viên nghiệm thu trong 1 phút.
+  4. Quay Video Demo 5-7 phút phô diễn toàn bộ 9 Phân hệ chức năng và các tính năng AI đột phá (dành 1-2 phút demo tính năng Bắt thực tế ngân hàng & Lưu nhanh 1-chạm).
+  5. Đóng gói file cài đặt APK Android release.
 
 ---
 
@@ -252,8 +249,11 @@ flowchart TD
 | **Giai đoạn 5** | Phân hệ 6: Quỹ Mục tiêu Tích lũy Thông minh & Hũ Tài Chính Kakeibo | `UC-06.01` $\rightarrow$ `UC-06.05` (5 UCs) | `backend/` | `frontend/ (Wireframe)` | `HOÀN THÀNH (159/159 Tests Passed 100%)` |
 | **Giai đoạn 5B** | Chuẩn hóa Barem Cuối kỳ Mobile: MVVM Repositories, SignalR Hub & Push Notifications | Toàn bộ tiêu chí chấm thi Mobile | `backend/` | `frontend/` | `HOÀN THÀNH (104/104 Tests: 90 Backend + 14 Mobile ViewModel Tests, 0 Warning/Error)` |
 | **Giai đoạn 6** | Phân hệ 7: Báo cáo & Phân tích Tài chính Đa chiều (Z-Score Outlier & Net Worth) | `UC-07.01` $\rightarrow$ `UC-07.05` (5 UCs) | `backend/` | `frontend/ (Wireframe)` | `HOÀN THÀNH (189/189 Tests Passed 100%, 0 Warning/Error)` |
-| **Giai đoạn 7** | Phân hệ 8: Dự báo Tài chính Chuỗi Thời Gian & Radar Rủi Ro Thâm Hụt | `UC-08.01` $\rightarrow$ `UC-08.04` (4 UCs) | `backend/` | `frontend/ (Wireframe)` | `KẾ HOẠCH TIẾP THEO (PLAN-42)` |
-| **Giai đoạn 8** | Phân hệ 9: Cú hích Hành vi Thaler Nudge, Khoảng trễ 24h & VietQR | `UC-09.01` $\rightarrow$ `UC-09.05` (5 UCs) | `backend/` | `frontend/ (Wireframe)` | `KẾ HOẠCH` |
-| **Giai đoạn 9** | Dedicated Frontend Art Direction & UI/UX Styling | Toàn bộ 63 Use Cases | Giữ nguyên | `frontend/ (Bạn cùng nhóm phụ trách)` | `KẾ HOẠCH` |
-| **Giai đoạn 10** | Tinh Chỉnh, Kiểm Định Hành Vi & Hoàn Thiện Toàn Diện Hệ Thống AI | Toàn bộ các cấu phần AI/ML/STT | `backend/` & Models | `frontend/` Prompts & UX | `KẾ HOẠCH (AI Polish & Eval Harness)` |
-| **Giai đoạn 11** | Tổng kiểm toán Full-Stack, Script 1-Click Demo & Báo cáo Khóa luận Word | Toàn bộ 63 Use Cases | `backend/` | `frontend/` | `KẾ HOẠCH` |
+| **Giai đoạn 7** | Phân hệ 8: Dự báo Tài chính Chuỗi Thời Gian & Radar Rủi Ro Thâm Hụt | `UC-08.01` $\rightarrow$ `UC-08.04` (4 UCs) | `backend/` | `frontend/ (Wireframe)` | `HOÀN THÀNH (203/203 Tests Passed 100%, 0 Warning/Error)` |
+| **Giai đoạn 8** | Phân hệ 9: Cú hích Hành vi Thaler Nudge, Khoảng trễ 24h & VietQR | `UC-09.01` $\rightarrow$ `UC-09.05` (5 UCs) | `backend/` | `frontend/ (Wireframe)` | `HOÀN THÀNH (233/233 Tests Passed 100%, 0 Warning/Error)` |
+| **Giai đoạn 9** | Dedicated Frontend Art Direction & UI/UX Styling | Toàn bộ 63 Use Cases | Giữ nguyên | `frontend/ (Bạn cùng nhóm phụ trách)` | `ĐÃ BÀN GIAO KỸ THUẬT (Sẵn sàng 20 Wireframe Views & HUONG_DAN_FE.md)` |
+| **Giai đoạn 10** | Tinh Chỉnh AI Toàn Diện, Voice Router, Multi-Import & Chặng 10.5 Server-Driven Actions (Jev) | Toàn bộ các cấu phần AI/ML/STT (UC-03.07, UC-02.08, UC-03.11, UC-07.01 A1, UC-07.06, UC-09.02, UC-09.05, Action Engine) | `backend/` & Gemini 2.5 Flash | `frontend/` (Voice Agent, Preview & Action Card Wireframe) | `ĐANG TRIỂN KHAI CHẶNG 10.5 (PLAN-47)` |
+| **Giai đoạn 11** | Tổng kiểm toán Full-Stack, Script 1-Click Demo & Báo cáo Khóa luận Word | Toàn bộ 63 Use Cases | `backend/` | `frontend/` | `SẴN SÀNG TRIỂN KHAI (Bám sát Deadline 1: Thứ Tư 28/10/2026)` |
+
+
+

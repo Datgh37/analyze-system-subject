@@ -24,3 +24,12 @@ public record UpdateCategoryRequest(
     IncomeCategoryGroup? IncomeGroup = null,
     BudgetRuleMapping? BudgetRuleMapping = null
 );
+
+// Request to partially update an existing category via HTTP PATCH (RFC 7396)
+public record PatchCategoryRequest(
+    string? Name = null,
+    string? IconKey = null,
+    string? ColorHex = null,
+    int? DisplayOrder = null
+);
+

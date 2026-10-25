@@ -10,6 +10,7 @@ public interface IWalletService
     Task<Result<WalletDto>> GetWalletByIdAsync(Guid userId, Guid walletId, CancellationToken ct = default);
     Task<Result<WalletDto>> CreateWalletAsync(Guid userId, CreateWalletRequest request, CancellationToken ct = default);
     Task<Result<WalletDto>> UpdateWalletAsync(Guid userId, Guid walletId, UpdateWalletRequest request, CancellationToken ct = default);
+    Task<Result<WalletDto>> PatchWalletAsync(Guid userId, Guid walletId, PatchWalletRequest request, CancellationToken ct = default);
     Task<Result<bool>> DeleteWalletAsync(Guid userId, Guid walletId, CancellationToken ct = default);
     Task<Result<bool>> TransferMoneyAsync(Guid userId, TransferMoneyRequest request, CancellationToken ct = default);
     Task<Result<BalanceAdjustmentDto>> AdjustBalanceAsync(Guid userId, Guid walletId, AdjustBalanceRequest request, CancellationToken ct = default);

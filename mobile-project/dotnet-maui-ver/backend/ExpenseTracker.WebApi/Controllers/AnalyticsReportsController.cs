@@ -11,10 +11,14 @@ namespace ExpenseTracker.WebApi.Controllers;
 public class AnalyticsReportsController : BaseApiController
 {
     private readonly IAnalyticsReportService _reportService;
+    private readonly IReportExportService _exportService;
 
-    public AnalyticsReportsController(IAnalyticsReportService reportService)
+    public AnalyticsReportsController(
+        IAnalyticsReportService reportService,
+        IReportExportService exportService)
     {
         _reportService = reportService;
+        _exportService = exportService;
     }
 
     // UC-07.01: Income vs Expense Comparison over time (MoM, YoY, Group by Day/Month)
@@ -87,5 +91,23 @@ public class AnalyticsReportsController : BaseApiController
     {
         var result = await _reportService.DetectSpendingOutliersAsync(CurrentUserId, days, threshold, ct);
         return HandleResult(result);
+    }
+
+    // UC-07.01 A1: Export financial transactions to Excel (Raw or Smart Executive with AI Commentary)
+    [HttpGet("export-excel")]
+    public async Task<IActionResult> ExportExcel(
+        [FromQuery] int year,
+        [FromQuery] int month,
+        [FromQuery] bool smart = false,
+        CancellationToken ct = default)
+    {
+        var result = smart
+            ? await _exportService.ExportSmartExecutiveReportAsync(CurrentUserId, year, month, ct)
+            : await _exportService.ExportRawTransactionsExcelAsync(CurrentUserId, year, month, ct);
+
+        if (result.IsFailure || result.Value == null)
+            return HandleResult(result);
+
+        return File(result.Value.FileBytes, result.Value.ContentType, result.Value.FileName);
     }
 }

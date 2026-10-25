@@ -198,4 +198,25 @@ public class CategoryServiceTests
         var deletedCat = await _dbContext.Categories.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == catToDelete.Id);
         deletedCat!.IsDeleted.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task PatchCategoryAsync_WithPartialProperties_ShouldOnlyUpdateProvidedFields()
+    {
+        // Arrange
+        var cat = new Category("Cà phê", TransactionType.Expense, _userId, iconKey: "coffee", colorHex: "#795548", displayOrder: 1);
+        await _dbContext.Categories.AddAsync(cat);
+        await _dbContext.SaveChangesAsync();
+
+        var patchReq = new PatchCategoryRequest(ColorHex: "#3E2723", DisplayOrder: 5);
+
+        // Act
+        var result = await _categoryService.PatchCategoryAsync(_userId, cat.Id, patchReq);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value!.Name.Should().Be("Cà phê"); // unchanged
+        result.Value.IconKey.Should().Be("coffee"); // unchanged
+        result.Value.ColorHex.Should().Be("#3E2723"); // patched
+        result.Value.DisplayOrder.Should().Be(5); // patched
+    }
 }

@@ -246,6 +246,76 @@ public class SavingsGoal
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void UpdateStatus(SavingsGoalStatus newStatus)
+    {
+        switch (newStatus)
+        {
+            case SavingsGoalStatus.Active:
+                ResumeGoal();
+                break;
+            case SavingsGoalStatus.Paused:
+                PauseGoal();
+                break;
+            case SavingsGoalStatus.Completed:
+                MarkAsCompleted();
+                break;
+            case SavingsGoalStatus.Cancelled:
+                CancelGoal();
+                break;
+        }
+    }
+
+    // Partially updates savings goal metadata and status via HTTP PATCH (RFC 7396)
+    public void PatchDetails(
+        string? name = null,
+        string? description = null,
+        decimal? targetAmount = null,
+        DateTime? targetDate = null,
+        SavingsGoalPriority? priority = null,
+        string? iconKey = null,
+        string? colorHex = null,
+        SavingsGoalStatus? status = null)
+    {
+        if (name is not null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Tên mục tiêu tích lũy không được để trống.", nameof(name));
+            Name = name.Trim();
+        }
+
+        if (description is not null)
+            Description = description.Trim();
+
+        if (targetAmount.HasValue)
+        {
+            if (targetAmount.Value <= 0)
+                throw new ArgumentException("Số tiền mục tiêu tích lũy phải lớn hơn 0 đ.", nameof(targetAmount));
+            TargetAmount = targetAmount.Value;
+        }
+
+        if (targetDate.HasValue)
+        {
+            if (targetDate.Value.Date < StartDate.Date)
+                throw new ArgumentException("Hạn chót hoàn thành mục tiêu phải sau hoặc bằng ngày bắt đầu.", nameof(targetDate));
+            TargetDate = targetDate.Value.Date;
+        }
+
+        if (priority.HasValue)
+            Priority = priority.Value;
+
+        if (!string.IsNullOrWhiteSpace(iconKey))
+            IconKey = iconKey.Trim();
+
+        if (!string.IsNullOrWhiteSpace(colorHex))
+            ColorHex = colorHex.Trim();
+
+        if (status.HasValue)
+            UpdateStatus(status.Value);
+
+        CheckCompletion();
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     private void CheckCompletion()
     {
         if (CurrentAmount >= TargetAmount)

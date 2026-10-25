@@ -38,6 +38,9 @@
     <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\ForecastingViewModel.cs" Link="ViewModels\ForecastingViewModel.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\NudgeFeedViewModel.cs" Link="ViewModels\NudgeFeedViewModel.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\CoolingOffHubViewModel.cs" Link="ViewModels\CoolingOffHubViewModel.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\ImportExport\ImportPreviewViewModel.cs" Link="ViewModels\ImportExport\ImportPreviewViewModel.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\AiAgent\VoiceFloatingMicViewModel.cs" Link="ViewModels\AiAgent\VoiceFloatingMicViewModel.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\Autonomous\ActionInboxViewModel.cs" Link="ViewModels\Autonomous\ActionInboxViewModel.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\Services\Realtime\Messages\RealtimeMessages.cs" Link="Services\Realtime\Messages\RealtimeMessages.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\Services\Api\IApiClients.cs" Link="Services\Api\IApiClients.cs" />
   </ItemGroup>

@@ -32,6 +32,11 @@ public static class DependencyInjection
         services.AddScoped<IForecastingService, ForecastingService>();
         services.AddScoped<INudgeEngineService, NudgeEngineService>();
         services.AddScoped<ICoolingOffService, CoolingOffService>();
+        services.AddScoped<IImagePreProcessingService, ImagePreProcessingService>();
+        services.AddScoped<IVoiceIntentRouterService, VoiceIntentRouterService>();
+        services.AddScoped<IHybridDataImportService, HybridDataImportService>();
+        services.AddScoped<IReportExportService, ReportExportService>();
+        services.AddScoped<IAutonomousActionEngineService, AutonomousActionEngineService>();
 
         return services;
     }

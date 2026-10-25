@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Wallets"
+             xmlns:viewsAuto="clr-namespace:ExpenseTracker.Maui.Views.Autonomous"
              x:Class="ExpenseTracker.Maui.Views.WalletsPage"
              x:DataType="vm:WalletsViewModel"
              Title="{Binding Title}"
@@ -42,6 +43,9 @@
                            TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}" 
                            FontSize="12" FontAttributes="Bold" />
                 </Border>
+
+                <!-- Khay Hành Động Tự Hành Hướng Máy Chủ (Action Inbox Wireframe - PLAN-47) -->
+                <viewsAuto:ActionInboxView BindingContext="{Binding ActionInbox}" />
 
                 <!-- Total Balance / Net Worth Banner -->
                 <Border Stroke="{AppThemeBinding Light=#3B82F6, Dark=#1D4ED8}"

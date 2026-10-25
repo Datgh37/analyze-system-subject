@@ -37,3 +37,11 @@ public record UpdateCategoryModel(
     int? IncomeGroup = null,
     int? BudgetRuleMapping = null
 );
+
+public record PatchCategoryModel(
+    string? Name = null,
+    string? IconKey = null,
+    string? ColorHex = null,
+    int? DisplayOrder = null
+);
+

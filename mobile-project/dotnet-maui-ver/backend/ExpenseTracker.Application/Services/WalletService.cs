@@ -114,6 +114,38 @@ public class WalletService : IWalletService
         return Result<WalletDto>.Success(MapToDto(wallet));
     }
 
+    // Partially updates wallet properties via HTTP PATCH (RFC 7396)
+    public async Task<Result<WalletDto>> PatchWalletAsync(Guid userId, Guid walletId, PatchWalletRequest request, CancellationToken ct = default)
+    {
+        var wallet = await _context.Wallets
+            .FirstOrDefaultAsync(w => w.Id == walletId && w.UserId == userId, ct);
+
+        if (wallet == null)
+            return Result<WalletDto>.Failure("Ví không tồn tại hoặc bạn không có quyền truy cập.");
+
+        if (!string.IsNullOrWhiteSpace(request.Name))
+        {
+            var trimmedName = request.Name.Trim();
+            var isDuplicate = await _context.Wallets
+                .AnyAsync(w => w.Id != walletId && w.UserId == userId && w.Name.ToLower() == trimmedName.ToLower(), ct);
+
+            if (isDuplicate)
+                return Result<WalletDto>.Failure("Tên ví này đã tồn tại. Vui lòng đặt tên khác để dễ phân biệt.");
+        }
+
+        wallet.PatchDetails(
+            name: request.Name,
+            colorHex: request.ColorHex,
+            iconKey: request.IconKey,
+            isExcludedFromTotal: request.IsExcludedFromTotal,
+            status: request.Status
+        );
+
+        await _context.SaveChangesAsync(ct);
+
+        return Result<WalletDto>.Success(MapToDto(wallet));
+    }
+
     // Soft-deletes a wallet account
     public async Task<Result<bool>> DeleteWalletAsync(Guid userId, Guid walletId, CancellationToken ct = default)
     {

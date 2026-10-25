@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Folder Name="/backend/tests/">
+      <Project Path="backend/tests/ExpenseTracker.Application.UnitTests/ExpenseTracker.Application.UnitTests.csproj" />
+      <Project Path="backend/tests/ExpenseTracker.Domain.UnitTests/ExpenseTracker.Domain.UnitTests.csproj" />
+    </Folder>
+    <Project Path="backend/ExpenseTracker.Application/ExpenseTracker.Application.csproj" />
+    <Project Path="backend/ExpenseTracker.Domain/ExpenseTracker.Domain.csproj" />
+    <Project Path="backend/ExpenseTracker.Infrastructure/ExpenseTracker.Infrastructure.csproj" />
+    <Project Path="backend/ExpenseTracker.WebApi/ExpenseTracker.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/frontend/">
+    <Folder Name="/frontend/tests/">
+      <Project Path="frontend/tests/ExpenseTracker.Maui.UnitTests/ExpenseTracker.Maui.UnitTests.csproj" />
+    </Folder>
+    <Project Path="frontend/ExpenseTracker.Maui/ExpenseTracker.Maui.csproj" />
+  </Folder>
+</Solution>

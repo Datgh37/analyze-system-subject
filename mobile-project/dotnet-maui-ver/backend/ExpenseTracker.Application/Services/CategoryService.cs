@@ -212,6 +212,59 @@ public class CategoryService : ICategoryService
         return Result<CategoryDto>.Success(dto);
     }
 
+    // Partially updates custom user category presentation and ordering via HTTP PATCH (RFC 7396)
+    public async Task<Result<CategoryDto>> PatchCategoryAsync(Guid userId, Guid categoryId, PatchCategoryRequest request, CancellationToken ct = default)
+    {
+        var category = await _context.Categories
+            .FirstOrDefaultAsync(c => c.Id == categoryId && c.UserId == userId, ct);
+
+        if (category == null)
+            return Result<CategoryDto>.Failure("Không tìm thấy danh mục hoặc bạn không có quyền chỉnh sửa danh mục hệ thống.", 404);
+
+        if (request.Name is not null)
+        {
+            var trimmedName = request.Name.Trim();
+            if (string.IsNullOrWhiteSpace(trimmedName))
+                return Result<CategoryDto>.Failure("Tên danh mục không được để trống.");
+
+            var isDuplicate = await _context.Categories
+                .AnyAsync(c => (c.UserId == userId || c.IsSystem)
+                            && c.ParentId == category.ParentId
+                            && c.TransactionType == category.TransactionType
+                            && c.Id != categoryId
+                            && c.Name.ToLower() == trimmedName.ToLower(), ct);
+
+            if (isDuplicate)
+                return Result<CategoryDto>.Failure("Tên danh mục này đã tồn tại trong cùng nhóm. Vui lòng chọn tên khác.");
+        }
+
+        category.PatchDetails(
+            name: request.Name,
+            iconKey: request.IconKey,
+            colorHex: request.ColorHex,
+            displayOrder: request.DisplayOrder
+        );
+
+        await _context.SaveChangesAsync(ct);
+
+        var dto = new CategoryDto(
+            category.Id,
+            category.UserId,
+            category.Name,
+            category.TransactionType,
+            category.ParentId,
+            null,
+            category.IconKey,
+            category.ColorHex,
+            category.DisplayOrder,
+            category.IsSystem,
+            category.IncomeGroup,
+            category.BudgetRuleMapping
+        );
+
+        return Result<CategoryDto>.Success(dto);
+    }
+
     // Deletes custom user category with optional transaction reassignment
     public async Task<Result<bool>> DeleteCategoryAsync(Guid userId, Guid categoryId, Guid? targetCategoryId = null, CancellationToken ct = default)
     {
