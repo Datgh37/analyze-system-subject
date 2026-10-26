@@ -4215,6 +4215,7 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Chuẩn hóa lề trang `Padding="16,12,16,24"` an toàn.
   4. **Xuất bản Tài liệu Bàn giao Frontend Handoff Chuyên Nghiệp:**
      - Soạn thảo và hoàn thiện [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](mobile-project/dotnet-maui-ver/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md) dài hơn 300 dòng, cung cấp toàn bộ bản đồ kiến trúc UI, Semantic Color Tokens, Typography Scale, hướng dẫn căn chỉnh XAML, vi hoạt ảnh Anime.js v4/Spring Physics và Checklist công việc ngày mai cho thành viên phụ trách Frontend.
+     - **Chỉ thị nghiêm ngặt bãi bỏ 100% Emoji/Emote AI:** Thay thế toàn bộ emote tạm bợ bằng bộ Icon Vector chuẩn ngành (Ưu tiên số 1: Lucide Icons hoặc Google Material Symbols), cung cấp bảng ánh xạ 15+ icon chi tiết và hướng dẫn kỹ thuật tích hợp Font Icons (`lucide.ttf`) vào .NET MAUI.
   5. **Bằng chứng nghiệm thu chất lượng tối thượng (Quality Gates):**
      - Biên dịch .NET MAUI Client Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)** trong 4 phút 49 giây.
      - Bộ kiểm thử Frontend MAUI Unit Tests: **82 / 82 Tests Passed 100%**.

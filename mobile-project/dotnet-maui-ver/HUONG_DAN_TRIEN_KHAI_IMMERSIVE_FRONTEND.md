@@ -27,7 +27,7 @@ Mô hình bố cục chính của ứng dụng được xây dựng theo chuẩn
 │                                                        │
 │                                                        │
 ├────────────────────────────────────────────────────────┤
-│   [👛 Ví]    [💸 Chi]     ( 🎙️ )     [📊 Ngân]   [📑 Báo] │ <-- Bottom Nav Dock (Fixed)
+│   [Ví]       [Chi Tiêu]    ( Micro )    [Ngân Sách] [Báo Cáo]│ <-- Bottom Nav Dock (Fixed)
 ├────────────────────────────────────────────────────────┤
 │   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ │ <-- Phím điều hướng ảo Android OS
 └────────────────────────────────────────────────────────┘
@@ -39,15 +39,16 @@ Mô hình bố cục chính của ứng dụng được xây dựng theo chuẩn
    - Gồm **4 Tab chức năng chính** chia đều 2 bên:
      * Cánh trái: **Ví** (`WalletsPage`) & **Chi Tiêu** (`ExpensesPage`).
      * Cánh phải: **Ngân Sách** (`BudgetsPage`) & **Báo Cáo** (`ReportsPage`).
-   - **Chính giữa:** **Nút tròn Micro Voice AI Floating Action Button (FAB) (🎙️)** nhô cao hơn thanh bar 18px, đổ bóng phát sáng tím Cyan. Chạm vào mở ngay màn hình ra lệnh bằng giọng nói `VoiceMicModalPage`.
+   - **Chính giữa:** **Nút tròn Micro Voice AI Floating Action Button (FAB)** nhô cao hơn thanh bar 18px, đổ bóng phát sáng tím Cyan. Chạm vào mở ngay màn hình ra lệnh bằng giọng nói `VoiceMicModalPage`.
 2. **Hamburger Sidebar (`AppShell.xaml`):**
    - Đã được tái cấu trúc từ danh sách phẳng 13 mục dài lê thê thành **5 Nhóm Chuyên Đề Phân Cấp Rõ Ràng**:
-     * 💎 **Nhóm 1: Tài Chính Cốt Lõi (Core Finance)**
-     * 🤖 **Nhóm 2: AI Vision & Tiện Ích Thông Minh**
-     * 🎯 **Nhóm 3: Kỷ Luật Ngân Sách & Mục Tiêu Tích Lũy**
-     * 🧠 **Nhóm 4: Tâm Lý Hành Vi & Dự Báo Dòng Tiền**
-     * ⚙️ **Nhóm 5: Hệ Thống & Bảo Mật Tài Khoản**
+     * **Nhóm 1: Tài Chính Cốt Lõi (Core Finance)**
+     * **Nhóm 2: AI Vision & Tiện Ích Thông Minh**
+     * **Nhóm 3: Kỷ Luật Ngân Sách & Mục Tiêu Tích Lũy**
+     * **Nhóm 4: Tâm Lý Hành Vi & Dự Báo Dòng Tiền**
+     * **Nhóm 5: Hệ Thống & Bảo Mật Tài Khoản**
    - Đã áp dụng `Shell.ItemTemplate` với chiều cao hàng `44px`, bo góc nhẹ, font chữ `13pt` vừa vặn, không bị tràn viền.
+
 
 ---
 
@@ -90,13 +91,115 @@ Mô hình bố cục chính của ứng dụng được xây dựng theo chuẩn
 
 ---
 
-## 3. CẤU TRÚC THƯ MỤC FRONTEND ĐỂ BẠN LÀM VIỆC
+## 3. CHỈ THỊ THẨM MỸ BẮT BUỘC: LOẠI BỎ TRIỆT ĐỂ EMOJI/EMOTE – THAY BẰNG BỘ ICON VECTOR FINTECH CHUYÊN NGHIỆP
+
+> [!CAUTION]
+> **YÊU CẦU QUAN TRỌNG TỪ TRƯỞNG NHÓM:**  
+> **TUYỆT ĐỐI BÃI BỎ TOÀN BỘ CÁC BIỂU TƯỢNG EMOJI/EMOTE UNICODE** (như 👛, 💸, 📊, 📑, 🎙️, 💎, 🤖, 🎯, 🧠, ⚙️, 🔔, ⏰, ☕, 🧋...) trên toàn bộ giao diện ứng dụng.  
+> Các emote này là giải pháp tạm thời do AI gen sơ khởi, trông thiếu chuyên nghiệp, bị lệch nét trên các hệ điều hành khác nhau và làm giảm giá trị thẩm mỹ của đồ án tốt nghiệp. Phải thay thế 100% bằng **Bộ Icon Vector cao cấp chuẩn ngành**.
+
+### 3.1. Vì Sao Phải Loại Bỏ Emoji & Dùng Icon Vector?
+1. **Không đồng nhất trên các nền tảng (Platform Fragmentation):** Emoji trên Android (Google), Samsung OneUI, iOS và Windows có nét vẽ và màu sắc hoàn toàn khác nhau, không kiểm soát được.
+2. **Không thể đổi màu động (No Dynamic Tinting):** Emoji có màu cố định của phông chữ hệ thống. Không thể chuyển sang màu xanh Sky Blue `#38BDF8` khi Tab đang được chọn (Active) hoặc màu xám Slate `#64748B` khi không chọn (Inactive).
+3. **Mất chất "Dark Luxury Fintech":** Ứng dụng quản lý tài chính cao cấp (như Revolut, Wise, Monzo, Apple Card) luôn dùng icon vector đơn sắc, nét mỏng (1.5px - 2px) tinh tế, không bao giờ dùng emoji lòe loẹt.
+
+---
+
+### 3.2. Top 3 Bộ Icon Vector Khuyên Dùng Cho Dự Án
+
+| Bộ Icon | Nguồn Tham Khảo | Phong Cách & Ưu Điểm | Khuyến Nghị Cho Dự Án |
+| :--- | :--- | :--- | :--- |
+| **1. Lucide Icons** ⭐ *(Khuyên dùng số 1)* | [lucide.dev](https://lucide.dev) | Nét vẽ mảnh 2.0px, tối giản, hiện đại, chuẩn Vercel / Apple. Cực kỳ phong phú về icon tài chính và công nghệ. | **ƯU TIÊN SỐ 1** cho toàn bộ Bottom Nav, Sidebar và Action Buttons. |
+| **2. Google Material Symbols** | [fonts.google.com/icons](https://fonts.google.com/icons) | Phong cách Rounded hoặc Outlined. Tích hợp sâu vào Android, siêu nhẹ, chuẩn mực Material Design 3. | Rất tốt cho các nút hệ thống, điều hướng, bảo mật. |
+| **3. Tabler Icons** | [tabler.io/icons](https://tabler.io/icons) | Hơn 5,000+ vector icons độ chi tiết cao, nét vẽ đồng đều tuyệt đối ở kích thước 24x24. | Lựa chọn dự phòng tuyệt vời. |
+
+---
+
+### 3.3. Bảng Ánh Xạ Chuyển Đổi Icon Cụ Thể (Icon Migration Mapping)
+
+Bạn hãy đối chiếu bảng sau để thay thế chính xác từng vị trí trong XAML:
+
+| Vị Trí / Chức Năng | Icon Emoji Tạm Thời (CẦN BỎ) | Tên Icon Vector Khuyên Dùng (Lucide / Material) | Mô Tả Trực Quan |
+| :--- | :---: | :--- | :--- |
+| **Tab 1: Quản lý Đa Ví** | `👛` | `wallet` / `account-balance-wallet` | Chiếc ví da gấp thanh lịch |
+| **Tab 2: Sổ Chi Tiêu** | `💸` | `receipt` / `credit-card` / `arrow-down-left` | Hóa đơn chi tiết hoặc mũi tên chi ra |
+| **Tab 3: Ngân Sách DSA** | `📊` | `pie-chart` / `scale` / `target` | Biểu đồ tròn ngân sách cân đối |
+| **Tab 4: Báo Cáo Tài Chính**| `📑` | `bar-chart-3` / `trending-up` / `file-text` | Cột đồ thị xu hướng tăng trưởng |
+| **Center FAB: Micro Voice AI**| `🎙️` | `mic` / `sparkles` | Micro podcast thanh mảnh kim loại |
+| **Sidebar: Tài Chính Cốt Lõi**| `💎` | `wallet-cards` / `coins` / `layers` | Các lớp tài sản xếp tầng |
+| **Sidebar: AI Vision & Scan** | `🤖` | `scan` / `scan-line` / `cpu` | Khung quét laser công nghệ cao |
+| **Sidebar: Kỷ Luật & Mục Tiêu**| `🎯` | `target` / `compass` / `piggy-bank` | Bia mục tiêu chính xác |
+| **Sidebar: Tâm Lý & Thaler** | `🧠` | `sparkles` / `lightbulb` / `activity` | Ánh sáng cú hích nhận thức |
+| **Sidebar: Hệ Thống & Bảo Mật**| `⚙️` | `settings` / `shield-check` | Bánh răng hoặc khiên bảo mật |
+| **Nút Thông Báo** | `🔔` | `bell` / `notifications` | Quả chuông viền mỏng |
+| **Nút Báo Thức 21:00** | `⏰` | `alarm-clock` / `clock` | Đồng hồ kim tối giản |
+| **Danh Mục Ăn Uống** | `☕` / `🧋` | `utensils` / `coffee` | Dao dĩa hoặc tách cà phê |
+
+---
+
+### 3.4. Hướng Dẫn Kỹ Thuật Tích Hợp Icon Vào .NET MAUI
+
+Có 2 phương án tích hợp vector trong .NET MAUI. **Phương án 1 (Font Icon)** là giải pháp tối ưu và chuyên nghiệp nhất:
+
+#### 🌟 Phương Án 1: Sử Dụng Font Icons (TrueType Font - Khuyên Dùng Nhất)
+* **Cách thực hiện:**
+  1. Tải file font `lucide.ttf` (từ Lucide release) hoặc `MaterialSymbolsOutlined.ttf`.
+  2. Bỏ file `.ttf` vào thư mục: `frontend/ExpenseTracker.Maui/Resources/Fonts/`.
+  3. Mở [`MauiProgram.cs`](file:///d:/University%20Study%20Subjects/Information%20System%20Design%20Analysis/Project/Analyze%20System/mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/MauiProgram.cs), thêm vào cấu hình `ConfigureFonts`:
+     ```csharp
+     fonts.AddFont("lucide.ttf", "LucideIcons");
+     ```
+  4. Tạo một lớp hằng số Glyph tĩnh [`IconFont.cs`](file:///d:/University%20Study%20Subjects/Information%20System%20Design%20Analysis/Project/Analyze%20System/mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Helpers/IconFont.cs):
+     ```csharp
+     namespace ExpenseTracker.Maui.Helpers;
+     public static class IconFont
+     {
+         public const string Wallet = "\ue901";
+         public const string Receipt = "\ue902";
+         public const string PieChart = "\ue903";
+         public const string BarChart = "\ue904";
+         public const string Mic = "\ue905";
+         public const string Settings = "\ue906";
+     }
+     ```
+  5. Trong XAML, sử dụng thẻ `FontImageSource` vô cùng tiện lợi:
+     ```xml
+     <Image WidthRequest="22" HeightRequest="22">
+         <Image.Source>
+             <FontImageSource 
+                 FontFamily="LucideIcons" 
+                 Glyph="{x:Static helpers:IconFont.Wallet}" 
+                 Color="{StaticResource AccentActive}" 
+                 Size="22" />
+         </Image.Source>
+     </Image>
+     ```
+  * **Ưu điểm vượt trội:**
+    - Thay đổi màu sắc (`Color`) lập tức theo trạng thái Active/Inactive mà không cần tải nhiều file ảnh.
+    - Sắc nét tuyệt đối trên mọi mật độ điểm ảnh (Retina / Ultra HD).
+    - File font cực nhẹ (< 100KB cho hàng ngàn icon).
+
+#### 🖼️ Phương Án 2: Sử Dụng File Vector SVG Trực Tiếp
+* **Cách thực hiện:**
+  1. Tải các file SVG đơn lẻ từ Lucide (`wallet.svg`, `receipt.svg`, `mic.svg`...).
+  2. Đặt vào thư mục `frontend/ExpenseTracker.Maui/Resources/Images/`. .NET MAUI sẽ tự động biên dịch SVG thành vector native drawable.
+  3. Trong XAML hiển thị trực tiếp:
+     ```xml
+     <Image Source="ic_wallet.svg" WidthRequest="22" HeightRequest="22" />
+     ```
+
+---
+
+## 4. CẤU TRÚC THƯ MỤC FRONTEND ĐỂ BẠN LÀM VIỆC
 
 ```text
 mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
+├── Resources/
+│   ├── Fonts/                             <-- NƠI ĐẶT FILE FONT VECTOR (lucide.ttf)
+│   └── Images/                            <-- NƠI ĐẶT CÁC FILE VECTOR .SVG
 ├── Views/
 │   ├── Components/
-│   │   └── BottomNavDockView.xaml         <-- THANH ĐIỀU HƯỚNG ĐÁY CHÍNH (Đã có sẵn nút Voice FAB)
+│   │   └── BottomNavDockView.xaml         <-- THANH ĐIỀU HƯỚNG ĐÁY CHÍNH (Đã có nút Voice FAB)
 │   ├── Autonomous/
 │   │   └── ActionInboxView.xaml           <-- Hộp thư việc cần làm tự hành (Jev Protocol)
 │   ├── AiAgent/
@@ -127,7 +230,7 @@ mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
 
 ---
 
-## 4. HƯỚNG DẪN CÁCH NHÚNG BOTTOM NAV DOCK VÀO CÁC TRANG MỚI
+## 5. HƯỚNG DẪN CÁCH NHÚNG BOTTOM NAV DOCK VÀO CÁC TRANG MỚI
 
 Nếu bạn tạo một trang mới hoặc muốn trang đó có thanh điều hướng đáy giống 4 trang chính:
 
@@ -154,24 +257,29 @@ xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
 
 ---
 
-## 5. CHECKLIST CÔNG VIỆC GỢI Ý CHO BẠN TIẾP TỤC HOÀN THIỆN NGÀY MAI
+## 6. CHECKLIST CÔNG VIỆC GỢI Ý CHO BẠN TIẾP TỤC HOÀN THIỆN NGÀY MAI
 
-- [ ] **1. Rà soát căn chỉnh lề (Padding/Margin) trên các trang phụ:**
+- [ ] **🔥 ƯU TIÊN SỐ 1: Bãi bỏ toàn bộ emoji và thay bằng Icon Vector xịn:**
+  - Tải bộ font `lucide.ttf` hoặc bộ file SVG của Lucide Icons / Material Symbols.
+  - Thay thế 4 icon trên thanh `BottomNavDockView.xaml` và icon nút Mic trung tâm.
+  - Thay thế các icon nhóm trong Hamburger Sidebar `AppShell.xaml`.
+  - Thay thế các emoji trên các nút bấm Quick Action trong `WalletsPage.xaml`, `ExpensesPage.xaml` và `VoiceMicModalPage.xaml`.
+- [ ] **2. Rà soát căn chỉnh lề (Padding/Margin) trên các trang phụ:**
   - Kiểm tra `IncomesPage.xaml`, `RecurringIncomesPage.xaml`, `SavingsGoalsPage.xaml` xem có thẻ nào bị sát viền hay không.
   - Đảm bảo tất cả các trang đều có `Padding="16,12,16,24"`.
-- [ ] **2. Thẩm định kích thước font chữ trên màn hình nhỏ:**
+- [ ] **3. Thẩm định kích thước font chữ trên màn hình nhỏ:**
   - Mở app trên máy ảo, lướt qua một lượt các trang để đảm bảo không có chữ nào bị rớt dòng đơn độc (orphan word).
   - Kiểm tra các nhãn số tiền lớn đều nằm gọn trong thẻ.
-- [ ] **3. Trau chuốt thẻ Profile Người Dùng (Nếu muốn thêm):**
+- [ ] **4. Trau chuốt thẻ Profile Người Dùng (Nếu muốn thêm):**
   - Hiện tại trang `LoginPage.xaml` đang dùng để quản lý đăng nhập/đăng xuất.
   - Bạn có thể thiết kế thêm một trang `ProfilePage.xaml` đơn giản hiển thị: Tên người dùng, Email đã xác thực, Avatar tròn và Nút đăng xuất.
-- [ ] **4. Kiểm tra độ tương phản màu sắc (Accessibility):**
+- [ ] **5. Kiểm tra độ tương phản màu sắc (Accessibility):**
   - Chữ xám mờ trên nền tối nên dùng tối thiểu `#94A3B8` hoặc `#A5B4FC` để dễ đọc trong điều kiện ánh sáng mạnh.
   - Không dùng chữ xám quá tối (`#475569` trở xuống) cho các thông tin quan trọng.
 
 ---
 
-## 6. LỆNH CHẠY & KIỂM TRA MÃ NGUỒN TRONG QUÁ TRÌNH LÀM VIỆC
+## 7. LỆNH CHẠY & KIỂM TRA MÃ NGUỒN TRONG QUÁ TRÌNH LÀM VIỆC
 
 1. **Khởi chạy máy ảo và app nhanh (1 lệnh duy nhất):**
    Mở PowerShell tại thư mục `mobile-project/dotnet-maui-ver/` và chạy:

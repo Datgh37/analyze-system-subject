@@ -28,6 +28,9 @@
 3. **Hamburger Sidebar (Flyout Menu):**
    - Hiện tại là một danh sách phẳng dài 13 mục nối tiếp nhau, người dùng cuộn rất mệt và khó tìm chức năng.
    - Cần gom nhóm thành **5 phân hệ trực quan** có Header ngăn cách và icon sinh động.
+4. **Lạm dụng Emoji/Emote tạm bợ (AI-generated Emotes):**
+   - Các biểu tượng emoji hệ thống (như 👛, 💸, 📊, 📑, 🎙️, 💎, 🤖...) là giải pháp tạm thời do AI gen, hiển thị không đồng nhất trên các dòng điện thoại (Samsung, Xiaomi, Pixel, iOS), không đổi được màu theo trạng thái (Active/Inactive) và trông rẻ tiền, thiếu chất Fintech cao cấp.
+   - BẮT BUỘC phải bãi bỏ toàn bộ emoji và thay bằng bộ **Icon Vector chuyên nghiệp** (ưu tiên số 1 là **Lucide Icons** hoặc **Material Symbols**).
 
 ---
 
@@ -61,8 +64,9 @@
 - Soạn thảo tài liệu bàn giao chuyên biệt cho thành viên làm Frontend:
   - Bản đồ cấu trúc thư mục Frontend.
   - Quy tắc Design System: Bảng màu Semantic Tokens, Typography, Radius, Shadows.
+  - **Chỉ thị nghiêm ngặt bãi bỏ 100% Emoji/Emote AI**, cung cấp Bảng ánh xạ chuyển đổi Icon cụ thể và Hướng dẫn tích hợp Font Icons (`lucide.ttf`) / Vector SVG vào .NET MAUI.
   - Hướng dẫn chi tiết cách tinh chỉnh XAML, Animation và Responsive Layout.
-  - Danh sách checklist công việc cụ thể để bạn cùng nhóm tiếp quản và hoàn thiện vào ngày mai.
+  - Danh sách checklist công việc cụ thể (Ưu tiên số 1: Thay thế Icon vector) để bạn cùng nhóm tiếp quản và hoàn thiện vào ngày mai.
 
 ---
 
@@ -70,6 +74,7 @@
 - [x] 1. Giao diện có thanh Bottom Navigation Bar gồm 4 Tab chính và 1 Nút Micro Voice AI tròn nổi bật ở giữa đúng theo sketch tay.
 - [x] 2. Hamburger Sidebar được phân cấp thành 5 nhóm chuyên đề rõ ràng, không còn dải phẳng dài thô sơ.
 - [x] 3. Typography và bố cục các trang chính được thu gọn kích thước cân đối, không bị tràn viền (overflow).
-- [x] 4. Tài liệu `HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md` được xuất bản đầy đủ, chi tiết, sẵn sàng cho bạn cùng nhóm tiếp tục phát triển.
+- [x] 4. Tài liệu `HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md` được xuất bản đầy đủ, chi tiết, chỉ thị dứt khoát việc bãi bỏ Emoji tạm bợ và hướng dẫn tích hợp bộ Icon Vector cao cấp (Lucide/Material Symbols).
 - [x] 5. Toàn bộ mã nguồn biên dịch Android đạt **0 Warning, 0 Error**, 363/363 bài kiểm thử Unit Tests tiếp tục PASSED 100%.
+
 
