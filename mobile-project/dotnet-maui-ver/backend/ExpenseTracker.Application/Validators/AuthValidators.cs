@@ -52,3 +52,49 @@ public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRe
             .NotEqual(x => x.CurrentPassword).WithMessage("New password cannot be the same as current password.");
     }
 }
+
+// Validation rules for verifying OTP codes
+public class VerifyOtpRequestValidator : AbstractValidator<VerifyOtpRequestDto>
+{
+    public VerifyOtpRequestValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Invalid email format.");
+
+        RuleFor(x => x.OtpCode)
+            .NotEmpty().WithMessage("OTP code is required.")
+            .Length(6).WithMessage("OTP code must be exactly 6 digits.");
+    }
+}
+
+// Validation rules for requesting password recovery
+public class ForgotPasswordRequestValidator : AbstractValidator<ForgotPasswordRequestDto>
+{
+    public ForgotPasswordRequestValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Invalid email format.");
+    }
+}
+
+// Validation rules for resetting password with a verified OTP code
+public class ResetPasswordWithOtpRequestValidator : AbstractValidator<ResetPasswordWithOtpRequestDto>
+{
+    public ResetPasswordWithOtpRequestValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Invalid email format.");
+
+        RuleFor(x => x.OtpCode)
+            .NotEmpty().WithMessage("OTP code is required.")
+            .Length(6).WithMessage("OTP code must be exactly 6 digits.");
+
+        RuleFor(x => x.NewPassword)
+            .NotEmpty().WithMessage("New password is required.")
+            .MinimumLength(6).WithMessage("New password must be at least 6 characters long.");
+    }
+}
+

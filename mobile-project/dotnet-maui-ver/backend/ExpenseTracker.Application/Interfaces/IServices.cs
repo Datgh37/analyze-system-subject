@@ -11,6 +11,11 @@ public interface IAuthService
     Task<Result<AuthResponseDto>> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken = default);
     Task<Result<AuthResponseDto>> RefreshTokenAsync(RefreshTokenRequestDto request, CancellationToken cancellationToken = default);
     Task<Result> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
+    Task<Result<AuthResponseDto>> VerifyOtpAsync(VerifyOtpRequestDto request, CancellationToken cancellationToken = default);
+    Task<Result> ResendOtpAsync(ResendOtpRequestDto request, CancellationToken cancellationToken = default);
+    Task<Result> ForgotPasswordAsync(ForgotPasswordRequestDto request, CancellationToken cancellationToken = default);
+    Task<Result> ResetPasswordWithOtpAsync(ResetPasswordWithOtpRequestDto request, CancellationToken cancellationToken = default);
+    Task<Result<AuthResponseDto>> GoogleLoginAsync(GoogleAuthRequestDto request, CancellationToken cancellationToken = default);
 }
 
 // Service interface for user profile operations

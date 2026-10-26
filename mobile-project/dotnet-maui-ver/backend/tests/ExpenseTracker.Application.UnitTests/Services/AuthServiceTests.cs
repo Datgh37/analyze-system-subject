@@ -18,6 +18,7 @@ public class AuthServiceTests
     private readonly ApplicationDbContext _dbContext;
     private readonly Mock<IPasswordHasher> _passwordHasherMock;
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGeneratorMock;
+    private readonly Mock<IEmailService> _emailServiceMock;
     private readonly AuthService _authService;
 
     public AuthServiceTests()
@@ -29,11 +30,13 @@ public class AuthServiceTests
         _dbContext = new ApplicationDbContext(options);
         _passwordHasherMock = new Mock<IPasswordHasher>();
         _jwtTokenGeneratorMock = new Mock<IJwtTokenGenerator>();
+        _emailServiceMock = new Mock<IEmailService>();
 
         _authService = new AuthService(
             _dbContext,
             _passwordHasherMock.Object,
             _jwtTokenGeneratorMock.Object,
+            _emailServiceMock.Object,
             new RegisterRequestValidator(),
             new LoginRequestValidator()
         );
@@ -211,4 +214,166 @@ public class AuthServiceTests
         siblingToken.IsRevoked.Should().BeTrue();
         siblingToken.ReplacedByToken.Should().Be("compromised_reuse_detected");
     }
+
+    [Fact]
+    public async Task RegisterAsync_SendsOtpEmailAndPersistsOtpCode()
+    {
+        // Arrange
+        var request = new RegisterRequestDto("Jane Doe", "jane.otp@example.com", "Password123!", "VND");
+        _passwordHasherMock.Setup(h => h.HashPassword(request.Password)).Returns("hashed_pass");
+        _jwtTokenGeneratorMock.Setup(j => j.GenerateAccessToken(It.IsAny<User>()))
+            .Returns(("access_token_abc", DateTime.UtcNow.AddMinutes(60)));
+        _jwtTokenGeneratorMock.Setup(j => j.GenerateRefreshToken(It.IsAny<Guid>()))
+            .Returns(new RefreshToken(Guid.NewGuid(), "refresh_token_abc", DateTime.UtcNow.AddDays(30)));
+
+        // Act
+        var result = await _authService.RegisterAsync(request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        var otpRecord = await _dbContext.UserOtpCodes.FirstOrDefaultAsync(o => o.Email == "jane.otp@example.com");
+        otpRecord.Should().NotBeNull();
+        otpRecord!.Purpose.Should().Be(OtpPurpose.EmailVerification);
+        otpRecord.IsUsed.Should().BeFalse();
+
+        _emailServiceMock.Verify(m => m.SendOtpEmailAsync(
+            "jane.otp@example.com",
+            It.Is<string>(code => code.Length == 6),
+            OtpPurpose.EmailVerification,
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task VerifyOtpAsync_WithValidOtp_VerifiesUserAndReturnsToken()
+    {
+        // Arrange
+        var user = new User("Test User", "verify@example.com", "hash", "VND", isEmailVerified: false);
+        _dbContext.Users.Add(user);
+
+        var otp = new UserOtpCode("verify@example.com", "123456", OtpPurpose.EmailVerification, TimeSpan.FromMinutes(5), user.Id);
+        _dbContext.UserOtpCodes.Add(otp);
+        await _dbContext.SaveChangesAsync();
+
+        _jwtTokenGeneratorMock.Setup(j => j.GenerateAccessToken(It.IsAny<User>()))
+            .Returns(("verified_access_token", DateTime.UtcNow.AddMinutes(60)));
+        _jwtTokenGeneratorMock.Setup(j => j.GenerateRefreshToken(It.IsAny<Guid>()))
+            .Returns(new RefreshToken(user.Id, "verified_refresh_token", DateTime.UtcNow.AddDays(30)));
+
+        var request = new VerifyOtpRequestDto("verify@example.com", "123456", OtpPurpose.EmailVerification);
+
+        // Act
+        var result = await _authService.VerifyOtpAsync(request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value!.AccessToken.Should().Be("verified_access_token");
+        result.Value.User.IsEmailVerified.Should().BeTrue();
+
+        var updatedUser = await _dbContext.Users.FirstAsync(u => u.Id == user.Id);
+        updatedUser.IsEmailVerified.Should().BeTrue();
+
+        var updatedOtp = await _dbContext.UserOtpCodes.FirstAsync(o => o.Id == otp.Id);
+        updatedOtp.IsUsed.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task VerifyOtpAsync_WithInvalidOtp_ReturnsBadRequest()
+    {
+        // Arrange
+        var otp = new UserOtpCode("wrong@example.com", "123456", OtpPurpose.EmailVerification, TimeSpan.FromMinutes(5));
+        _dbContext.UserOtpCodes.Add(otp);
+        await _dbContext.SaveChangesAsync();
+
+        var request = new VerifyOtpRequestDto("wrong@example.com", "999999", OtpPurpose.EmailVerification);
+
+        // Act
+        var result = await _authService.VerifyOtpAsync(request);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.StatusCode.Should().Be(400);
+    }
+
+    [Fact]
+    public async Task ForgotPasswordAsync_WithValidEmail_DispatchesPasswordResetOtp()
+    {
+        // Arrange
+        var user = new User("Recover User", "recover@example.com", "hash");
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+
+        var request = new ForgotPasswordRequestDto("recover@example.com");
+
+        // Act
+        var result = await _authService.ForgotPasswordAsync(request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        var otpRecord = await _dbContext.UserOtpCodes.FirstOrDefaultAsync(o => o.Email == "recover@example.com" && o.Purpose == OtpPurpose.PasswordReset);
+        otpRecord.Should().NotBeNull();
+
+        _emailServiceMock.Verify(m => m.SendOtpEmailAsync(
+            "recover@example.com",
+            It.Is<string>(c => c.Length == 6),
+            OtpPurpose.PasswordReset,
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ResetPasswordWithOtpAsync_WithValidOtp_UpdatesPassword()
+    {
+        // Arrange
+        var user = new User("Reset User", "reset@example.com", "old_hash");
+        _dbContext.Users.Add(user);
+
+        var otp = new UserOtpCode("reset@example.com", "777888", OtpPurpose.PasswordReset, TimeSpan.FromMinutes(10), user.Id);
+        _dbContext.UserOtpCodes.Add(otp);
+        await _dbContext.SaveChangesAsync();
+
+        _passwordHasherMock.Setup(h => h.HashPassword("NewSecretPass123")).Returns("new_hashed_password");
+
+        var request = new ResetPasswordWithOtpRequestDto("reset@example.com", "777888", "NewSecretPass123");
+
+        // Act
+        var result = await _authService.ResetPasswordWithOtpAsync(request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        var updatedUser = await _dbContext.Users.FirstAsync(u => u.Id == user.Id);
+        updatedUser.PasswordHash.Should().Be("new_hashed_password");
+
+        var updatedOtp = await _dbContext.UserOtpCodes.FirstAsync(o => o.Id == otp.Id);
+        updatedOtp.IsUsed.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GoogleLoginAsync_WithNewUser_ProvisionsUserWithVerifiedEmailAndDefaultWallet()
+    {
+        // Arrange
+        var request = new GoogleAuthRequestDto("google_id_token", "google.new@example.com", "Google Account User");
+        _passwordHasherMock.Setup(h => h.HashPassword(It.IsAny<string>())).Returns("hashed_random_pass");
+        _jwtTokenGeneratorMock.Setup(j => j.GenerateAccessToken(It.IsAny<User>()))
+            .Returns(("google_jwt_token", DateTime.UtcNow.AddMinutes(60)));
+        _jwtTokenGeneratorMock.Setup(j => j.GenerateRefreshToken(It.IsAny<Guid>()))
+            .Returns(new RefreshToken(Guid.NewGuid(), "google_refresh_token", DateTime.UtcNow.AddDays(30)));
+
+        // Act
+        var result = await _authService.GoogleLoginAsync(request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value!.AccessToken.Should().Be("google_jwt_token");
+        result.Value.User.Email.Should().Be("google.new@example.com");
+        result.Value.User.FullName.Should().Be("Google Account User");
+        result.Value.User.IsEmailVerified.Should().BeTrue();
+
+        var createdUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == "google.new@example.com");
+        createdUser.Should().NotBeNull();
+        createdUser!.IsEmailVerified.Should().BeTrue();
+
+        var wallet = await _dbContext.Wallets.FirstOrDefaultAsync(w => w.UserId == createdUser.Id);
+        wallet.Should().NotBeNull();
+        wallet!.Name.Should().Be("Ví Tiền Mặt");
+    }
 }
+

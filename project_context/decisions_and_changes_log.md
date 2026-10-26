@@ -3937,6 +3937,31 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 317 / 317 Tests Passed 100% (Xanh biếc)**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:05] - Quyết Định 167: Hoàn Thành & Nghiệm Thu Tác Vụ 4 (Kế Hoạch 52 - Chặng 1): Mở Rộng DTOs, FluentValidators & Nghiệp Vụ AuthService Cho OTP & Google OAuth
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Eric Evans, Bruce Schneier, Dan Abramov, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Xây dựng và hoàn thiện bộ DTOs xác thực phục vụ 100% Real API Backend:
+     - [`AuthDtos.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Application/DTOs/Auth/AuthDtos.cs): Bổ sung `VerifyOtpRequestDto`, `ResendOtpRequestDto`, `ForgotPasswordRequestDto`, `ResetPasswordWithOtpRequestDto`, `GoogleAuthRequestDto`, và bổ sung cờ `bool IsEmailVerified = false` vào `UserInfoDto`.
+  2. Bổ sung bộ kiểm thực FluentValidation chặt chẽ:
+     - [`AuthValidators.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Application/Validators/AuthValidators.cs): Bổ sung `VerifyOtpRequestValidator` (kiểm tra email, mã OTP đúng 6 chữ số), `ForgotPasswordRequestValidator`, và `ResetPasswordWithOtpRequestValidator` (mật khẩu mới tối thiểu 6 ký tự).
+  3. Mở rộng hợp đồng `IAuthService` và logic nghiệp vụ `AuthService.cs`:
+     - Tự động sinh mã OTP 6 chữ số ngẫu nhiên mật mã học (`RandomNumberGenerator`), hết hạn sau 5 phút và lưu vào bảng `user_otp_codes`.
+     - Phân phối mã OTP qua `IEmailService` ngay khi người dùng đăng ký tài khoản mới (`RegisterAsync`).
+     - Hiện thực `VerifyOtpAsync`: Đối chiếu mã OTP chưa sử dụng, kiểm tra thời hạn, đánh dấu `MarkAsUsed()` và cập nhật `User.VerifyEmail()`.
+     - Hiện thực `ResendOtpAsync`: Áp dụng Rate Limiting tối thiểu 60 giây giữa các lần yêu cầu gửi lại mã, hủy hiệu lực các mã cũ chưa dùng.
+     - Hiện thực `ForgotPasswordAsync` & `ResetPasswordWithOtpAsync`: Khôi phục mật khẩu thông qua mã OTP bảo mật cao.
+     - Hiện thực `GoogleLoginAsync`: Xác thực định danh tài khoản Google, tự động tạo mới tài khoản nếu chưa tồn tại (mặc định `IsEmailVerified = true`) và cấp phát cặp JWT Token + Refresh Token chuẩn mực.
+  4. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Bổ sung 6 ca kiểm thử đơn vị trong [`AuthServiceTests.cs`](mobile-project/dotnet-maui-ver/backend/tests/ExpenseTracker.Application.UnitTests/Services/AuthServiceTests.cs) kiểm chứng trọn vẹn luồng đăng ký sinh OTP, xác thực đúng/sai mã, cơ chế rate limit 60s và đăng nhập Google.
+     - Toàn bộ test suite Application: **192 / 192 Tests Passed 100%** (+6 tests mới).
+     - Toàn bộ test suite Domain: **89 / 89 Tests Passed 100%**.
+     - Toàn bộ test suite Frontend MAUI: **42 / 42 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100% (Xanh biếc toàn diện)**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
 
