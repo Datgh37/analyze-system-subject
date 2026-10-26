@@ -43,6 +43,11 @@
     <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\Autonomous\ActionInboxViewModel.cs" Link="ViewModels\Autonomous\ActionInboxViewModel.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\Services\Realtime\Messages\RealtimeMessages.cs" Link="Services\Realtime\Messages\RealtimeMessages.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\Services\Api\IApiClients.cs" Link="Services\Api\IApiClients.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\Services\Security\SecureStorageTokenService.cs" Link="Services\Security\SecureStorageTokenService.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\Services\Auth\ClientAuthService.cs" Link="Services\Auth\ClientAuthService.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\VerifyOtpViewModel.cs" Link="ViewModels\VerifyOtpViewModel.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\LoginViewModel.cs" Link="ViewModels\LoginViewModel.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\RegisterViewModel.cs" Link="ViewModels\RegisterViewModel.cs" />
   </ItemGroup>
 
 </Project>

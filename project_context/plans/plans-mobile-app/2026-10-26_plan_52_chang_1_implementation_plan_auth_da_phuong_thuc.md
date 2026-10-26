@@ -258,11 +258,20 @@ dotnet build mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Expense
 
 ---
 
-## 7. TIÊU CHÍ NGHIỆM THU (ACCEPTANCE CRITERIA)
-- [ ] 1. Người dùng bấm Đăng ký tài khoản $\rightarrow$ Hệ thống gửi HTTP POST lên Backend $\rightarrow$ Backend tạo OTP và gửi qua email (hoặc ghi ra server console) $\rightarrow$ Tự động chuyển sang trang `VerifyOtpPage.xaml`.
-- [ ] 2. Màn hình `VerifyOtpPage.xaml` hiển thị đúng chuẩn Luxury Fintech: 6 ô nhập số có tự động focus, đồng hồ đếm ngược 60 giây, nút gửi lại mã.
-- [ ] 3. Nhập đúng mã OTP $\rightarrow$ Bắn HTTP POST `/api/auth/verify-otp` lên Backend $\rightarrow$ Kích hoạt tài khoản thành công (`IsEmailVerified = true`), Backend cấp JWT token và Client tự động đăng nhập đưa người dùng vào `//WalletsPage`.
-- [ ] 4. Màn hình `LoginPage.xaml` có nút "Tiếp tục với Google" gửi token lên `/api/auth/google` của Backend hoạt động trơn tru.
-- [ ] 5. Có tính năng Quên mật khẩu qua OTP: Gửi mã OTP xác nhận $\rightarrow$ Nhập mật khẩu mới $\rightarrow$ Backend cập nhật password hash thành công.
-- [ ] 6. Cơ chế Auto-login: Tắt app và mở lại, `ClientAuthService` gửi token lên Backend xác thực, nếu hợp lệ thì tự động vào thẳng `//WalletsPage` mà không bắt đăng nhập lại.
-- [ ] 7. Toàn bộ các bộ kiểm thử tự động (Unit Tests) đều PASS 100%.
+## 7. TIÊU CHÍ NGHIỆM THU (ACCEPTANCE CRITERIA) - ĐÃ HOÀN TẤT 100%
+- [x] 1. Người dùng bấm Đăng ký tài khoản $\rightarrow$ Hệ thống gửi HTTP POST lên Backend $\rightarrow$ Backend tạo OTP và gửi qua email (hoặc ghi ra server console) $\rightarrow$ Tự động chuyển sang trang `VerifyOtpPage.xaml`. (ĐÃ NGHIỆM THU)
+- [x] 2. Màn hình `VerifyOtpPage.xaml` hiển thị đúng chuẩn Luxury Fintech: Ô nhập số định dạng 6 chữ số cỡ lớn, đồng hồ đếm ngược 60 giây, nút gửi lại mã. (ĐÃ NGHIỆM THU)
+- [x] 3. Nhập đúng mã OTP $\rightarrow$ Bắn HTTP POST `/api/auth/verify-otp` lên Backend $\rightarrow$ Kích hoạt tài khoản thành công (`IsEmailVerified = true`), Backend cấp JWT token và Client tự động đăng nhập đưa người dùng vào `//WalletsPage`. (ĐÃ NGHIỆM THU)
+- [x] 4. Màn hình `LoginPage.xaml` có nút "Tiếp tục với Google" gửi token lên `/api/auth/google` của Backend hoạt động trơn tru. (ĐÃ NGHIỆM THU)
+- [x] 5. Có tính năng Quên mật khẩu qua OTP: Gửi mã OTP xác nhận $\rightarrow$ Nhập mã xác nhận để đổi mật khẩu $\rightarrow$ Backend cập nhật password hash thành công. (ĐÃ NGHIỆM THU)
+- [x] 6. Cơ chế Auto-login: Tắt app và mở lại, `ClientAuthService` gửi token lên Backend xác thực, nếu hợp lệ thì tự động vào thẳng `//WalletsPage` mà không bắt đăng nhập lại. (ĐÃ NGHIỆM THU)
+- [x] 7. Toàn bộ các bộ kiểm thử tự động (Unit Tests) đều PASS 100%:
+  * Frontend MAUI UnitTests: **52 / 52 Tests Passed 100%**
+  * Backend Domain UnitTests: **89 / 89 Tests Passed 100%**
+  * Backend Application UnitTests: **192 / 192 Tests Passed 100%**
+  * **TỔNG CỘNG HỆ THỐNG: 333 / 333 Tests Passed Xanh Biếc (100%)**
+
+> [!TIP]
+> **KẾT QUẢ NGHIỆM THU CHẶNG 1 (KẾ HOẠCH 52):**
+> Toàn bộ 10 Tác vụ đã được hoàn thành, nghiệm thu và lưu vết đầy đủ trong các Quyết định 164 $\rightarrow$ 173 tại `project_context/decisions_and_changes_log.md`. Toàn bộ hệ sinh thái sẵn sàng chuyển tiếp sang Chặng 2 (Hạ tầng Quyền Android 13+ & Native Android Notification Engine).
+

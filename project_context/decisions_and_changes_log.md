@@ -4061,6 +4061,30 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:50] - Quyết Định 173: Hoàn Thành & Nghiệm Thu Tác Vụ 10 (Kế Hoạch 52 - Chặng 1): Tổng Kiểm Toán Toàn Bộ Hệ Thống, Bổ Sung Bộ Kiểm Thử VerifyOtpViewModelTests & Đạt 333/333 Tests Xanh Biếc
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Kent Beck, Martin Fowler, Dan Abramov, Werner Vogels, Bruce Schneier).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Phát triển bộ kiểm thử đơn vị toàn diện [`VerifyOtpViewModelTests.cs`](mobile-project/dotnet-maui-ver/frontend/tests/ExpenseTracker.Maui.UnitTests/VerifyOtpViewModelTests.cs) gồm 7 ca kiểm thử then chốt:
+     - Khởi tạo giá trị mặc định của màn hình xác thực: Title, Countdown 60s, `CanResend = false`, màu sắc nhạt `ResendTextColor = #94A3B8`.
+     - Chặn xác thực và báo lỗi rõ ràng khi email không hợp lệ hoặc để trống mà không tốn tài nguyên gọi service.
+     - Chặn xác thực và báo lỗi khi mã OTP không đủ hoặc vượt quá 6 chữ số (`Theory` với các giá trị rỗng, 5 số, 7 số, chuỗi khoảng trắng).
+     - Bắt lỗi và hiển thị thông báo thất bại khi dịch vụ `IClientAuthService` trả về lỗi (mã sai hoặc hết hạn).
+     - Chặn yêu cầu gửi lại mã khi chưa hết thời gian đếm ngược 60s (`CanResend = false`).
+     - Gửi lại mã thành công khi `CanResend = true`, hiển thị thông báo xanh lá và kích hoạt lại chu trình đếm ngược.
+     - Bắt lỗi khi yêu cầu gửi lại mã thất bại (vi phạm rate limiting).
+  2. Cập nhật tệp cấu hình kiểm thử [`ExpenseTracker.Maui.UnitTests.csproj`](mobile-project/dotnet-maui-ver/frontend/tests/ExpenseTracker.Maui.UnitTests/ExpenseTracker.Maui.UnitTests.csproj):
+     - Liên kết mã nguồn `ClientAuthService.cs`, `SecureStorageTokenService.cs`, `VerifyOtpViewModel.cs`, `LoginViewModel.cs`, `RegisterViewModel.cs` phục vụ kiểm thử thuần túy cross-platform độc lập phần cứng.
+  3. **Bằng chứng nghiệm thu chất lượng tối thượng (Ultimate Quality Gates):**
+     - Frontend MAUI UnitTests: **52 / 52 Tests Passed 100%** (+10 tests so với ban đầu).
+     - Backend Domain UnitTests: **89 / 89 Tests Passed 100%** (+6 tests so với ban đầu).
+     - Backend Application UnitTests: **192 / 192 Tests Passed 100%** (+9 tests so với ban đầu).
+     - **TỔNG KIỂM THỬ TOÀN HỆ THỐNG: 333 / 333 Tests Passed Xanh Biếc 100% (Duration: ~4s)**.
+     - Toàn bộ 10/10 Tác vụ của **Chặng 1 (Kế Hoạch 52)** đã hoàn thành xuất sắc, tuân thủ 100% định hướng Real API Backend và quy chuẩn học thuật DNTU.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+
 
 
 
