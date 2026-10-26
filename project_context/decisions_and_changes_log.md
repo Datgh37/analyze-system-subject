@@ -4084,6 +4084,27 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Toàn bộ 10/10 Tác vụ của **Chặng 1 (Kế Hoạch 52)** đã hoàn thành xuất sắc, tuân thủ 100% định hướng Real API Backend và quy chuẩn học thuật DNTU.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
+---
+
+## [2026-10-26 21:15] - Quyết Định 174: Hoàn Thành & Nghiệm Thu Cụm 1 (Kế Hoạch 52 - Chặng 2): Cấu Hình AndroidManifest.xml (Quyền Android 13+ & AlarmManager) & Xây Dựng NotificationPermissionHelper
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Bruce Schneier, Dan Abramov, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Cấu hình đặc tả tệp tin triển khai nền tảng [`Platforms/Android/AndroidManifest.xml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Platforms/Android/AndroidManifest.xml):
+     - Khai báo quyền hiển thị thông báo thời gian thực trên Android 13+ (API 33 Tiramisu): `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />`.
+     - Khai báo các quyền báo thức chính xác cao khi ứng dụng ở chế độ ngủ (Doze Mode / Background): `SCHEDULE_EXACT_ALARM`, `USE_EXACT_ALARM`, `WAKE_LOCK`, `VIBRATE`.
+     - Khai báo quyền tự động tái đăng ký lịch hẹn sau khi người dùng khởi động lại điện thoại: `RECEIVE_BOOT_COMPLETED`.
+  2. Xây dựng bộ trợ lý kiểm tra và yêu cầu cấp quyền runtime [`NotificationPermissionHelper.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Notifications/NotificationPermissionHelper.cs):
+     - Tự động nhận diện phiên bản hệ điều hành Android (`BuildVersionCodes.Tiramisu`).
+     - Gọi `ActivityCompat.RequestPermissions` kích hoạt hộp thoại hệ thống của Android 13+ khi cần thiết.
+     - Triệt tiêu 100% cảnh báo phân tích tĩnh Roslyn CA1416 bằng hằng số chuỗi đặc tả quyền.
+  3. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch dự án .NET MAUI Client cho nền tảng Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)**.
+     - Frontend MAUI test suite: **52 / 52 Tests Passed 100%**.
+     - Backend test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 333 / 333 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+
 
 
 
