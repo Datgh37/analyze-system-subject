@@ -46,6 +46,60 @@ public class AuthController : BaseApiController
         return HandleResult(result);
     }
 
+    [HttpPost("verify-otp")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> VerifyOtp([FromBody] VerifyOtpRequestDto request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.VerifyOtpAsync(request, cancellationToken);
+        return HandleResult(result);
+    }
+
+    [HttpPost("resend-otp")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status429TooManyRequests)]
+    public async Task<ActionResult> ResendOtp([FromBody] ResendOtpRequestDto request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.ResendOtpAsync(request, cancellationToken);
+        return HandleResult(result);
+    }
+
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.ForgotPasswordAsync(request, cancellationToken);
+        return HandleResult(result);
+    }
+
+    [HttpPost("reset-password-otp")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ResetPasswordWithOtp([FromBody] ResetPasswordWithOtpRequestDto request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.ResetPasswordWithOtpAsync(request, cancellationToken);
+        return HandleResult(result);
+    }
+
+    [HttpPost("google")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> GoogleLogin([FromBody] GoogleAuthRequestDto request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.GoogleLoginAsync(request, cancellationToken);
+        return HandleResult(result);
+    }
+
     [HttpPost("logout")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

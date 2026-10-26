@@ -3961,6 +3961,26 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100% (Xanh biếc toàn diện)**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:10] - Quyết Định 168: Hoàn Thành & Nghiệm Thu Tác Vụ 5 (Kế Hoạch 52 - Chặng 1): Công Bố 5 RESTful Endpoints Cho Xác Thực OTP, Đổi Mật Khẩu & Google OAuth Trên AuthController
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Bruce Schneier, Dan Abramov, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Mở rộng bộ điều khiển xác thực [`AuthController.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.WebApi/Controllers/AuthController.cs) đáp ứng 100% chuẩn RESTful API cho ứng dụng di động:
+     - `POST /api/auth/verify-otp`: Tiếp nhận `VerifyOtpRequestDto`, kiểm tra mã 6 số, kích hoạt tài khoản và cấp cặp token truy cập.
+     - `POST /api/auth/resend-otp`: Tiếp nhận `ResendOtpRequestDto`, áp dụng chặn rate limit 60s và gửi lại mã OTP mới qua email.
+     - `POST /api/auth/forgot-password`: Tiếp nhận `ForgotPasswordRequestDto`, kiểm tra tài khoản và gửi mã khôi phục mật khẩu.
+     - `POST /api/auth/reset-password-otp`: Tiếp nhận `ResetPasswordWithOtpRequestDto`, xác thực mã OTP và cập nhật mật khẩu băm BCrypt mới.
+     - `POST /api/auth/google`: Tiếp nhận `GoogleAuthRequestDto` (idToken, email, displayName), xử lý Single Sign-On mượt mà.
+  2. Toàn bộ các endpoints đều được trang bị đầy đủ Swagger metadata `[ProducesResponseType]` chuẩn OpenAPI và ủy quyền xử lý mã lỗi thống nhất qua `HandleResult` (200 OK, 400 Bad Request, 404 Not Found, 429 Too Many Requests).
+  3. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch thành công dự án `ExpenseTracker.WebApi` (**0 Lỗi**).
+     - Toàn bộ backend test suite: **281 / 281 Tests Passed 100%**.
+     - Frontend MAUI test suite: **42 / 42 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
 
