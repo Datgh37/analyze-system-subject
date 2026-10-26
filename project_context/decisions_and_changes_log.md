@@ -4239,5 +4239,9 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Backend Domain Unit Tests: **89 / 89 Tests Passed 100%**.
      - Frontend MAUI Unit Tests: **82 / 82 Tests Passed 100%**.
      - **TỔNG CỘNG HỆ THỐNG: 363 / 363 Tests Passed Xanh Biếc 100%**.
+  5. **Bổ sung Đặc tả Biểu đồ Trực quan (Data Visualizations) cho Màn hình Báo cáo:**
+     - Cập nhật [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](mobile-project/dotnet-maui-ver/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md) bổ sung Mục 4 đặc tả 3 dạng biểu đồ cốt lõi (Donut Chart cơ cấu chi tiêu 50/30/20, Grouped Bar Chart so sánh Thu - Chi theo tháng, Spline/Area Chart biến thiên tài sản ròng).
+     - Đưa vào Ưu tiên số 2 trong Checklist bàn giao cho thành viên phụ trách Frontend.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
 

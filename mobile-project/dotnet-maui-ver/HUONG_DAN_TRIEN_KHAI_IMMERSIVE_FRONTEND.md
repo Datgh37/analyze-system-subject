@@ -190,7 +190,77 @@ Có 2 phương án tích hợp vector trong .NET MAUI. **Phương án 1 (Font Ic
 
 ---
 
-## 4. CẤU TRÚC THƯ MỤC FRONTEND ĐỂ BẠN LÀM VIỆC
+## 4. ĐẶC TẢ THIẾT KẾ BIỂU ĐỒ TRỰC QUAN HÓA TÀI CHÍNH (FINANCIAL DATA VISUALIZATIONS)
+
+> [!IMPORTANT]
+> **YÊU CẦU ĐẶC BIỆT TỪ TRƯỞNG NHÓM VỀ MÀN HÌNH BÁO CÁO (`ReportsPage.xaml`):**  
+> Màn hình Báo cáo hiện tại đang bị **quá nhiều chữ và con số đơn điệu**, thiếu các biểu đồ trực quan sinh động. Bạn phụ trách Frontend cần **tinh chỉnh lại bố cục, bổ sung các biểu đồ thống kê dạng đồ họa (Đường, Cột, Bánh/Donut)** để biến Báo cáo thành một Trung tâm Điều hành Tài chính (Financial Command Center) đẳng cấp, gây ấn tượng thị giác mạnh mẽ với Hội đồng chấm thi!
+
+### 4.1. Bộ 3 Biểu Đồ Cốt Lõi Bắt Buộc Cần Có Trên `ReportsPage`
+
+| Loại Biểu Đồ | Dữ Liệu Trực Quan Hóa | Vị Trí & Ý Nghĩa Nghiệp Vụ | Thẩm Mỹ Khuyên Dùng |
+| :--- | :--- | :--- | :--- |
+| **1. Biểu Đồ Bánh / Donut (Donut / Pie Chart)** 🍩 | **Cơ cấu Danh mục Chi tiêu & Mô hình 50/30/20** | Đặt ngay dưới thẻ KPI tổng quan. Cho thấy tỷ trọng % từng danh mục (Ăn uống 42%, Nhà ở 25%, Mua sắm 18%...). | Tâm rỗng hiển thị tổng chi tiêu. Các lát cắt dùng màu Pastel Neon tương phản trên nền tối. |
+| **2. Biểu Đồ Cột Kép (Grouped Bar Chart)** 📊 | **So sánh Thu Nhập vs Chi Tiêu (MoM / Inflow vs Outflow)** | Tab "Thu - Chi Tổng quan". So sánh tiền vào (Cột Xanh Emerald `#10B981`) và tiền ra (Cột Đỏ Rose `#F43F5E`) qua 6 tháng gần nhất. | Cột bo góc đỉnh (`CornerRadius 6`), có hiệu ứng Gradient đứng mờ dần xuống đáy. |
+| **3. Biểu Đồ Đường Mượt (Smooth Spline / Area Chart)** 📈 | **Biến thiên Tài Sản Ròng & Tốc Độ Chi Tiêu (Net Worth & Velocity)** | Tab "Tài Sản Ròng" & Tab "Dòng Tiền". Thể hiện đường cong tăng trưởng tích lũy theo thời gian. | Đường Line màu Sky Blue `#38BDF8` độ dày 2.5px, vùng bên dưới phủ màu Gradient trong suốt 15%. |
+
+---
+
+### 4.2. Hai Thư Viện Biểu Đồ Khuyên Dùng Trong .NET MAUI
+
+#### 🌟 Lựa Chọn 1: Microcharts.Maui (Siêu nhẹ, Tối giản, Cực kỳ mượt mà)
+* **Cài đặt NuGet:** `Microcharts.Maui` và `SkiaSharp.Views.Maui.Controls`.
+* **Khai báo trong XAML:**
+  ```xml
+  xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+  ```
+* **Nhúng View vào trang:**
+  ```xml
+  <Border Stroke="#1E293B" StrokeThickness="1" StrokeShape="RoundRectangle 16"
+          BackgroundColor="#111827" Padding="16">
+      <VerticalStackLayout Spacing="10">
+          <Label Text="PHÂN BỔ DANH MỤC CHI TIÊU" FontSize="13" FontAttributes="Bold" TextColor="#F8FAFC" />
+          <micro:ChartView Chart="{Binding CategoryDonutChart}" HeightRequest="220" />
+      </VerticalStackLayout>
+  </Border>
+  ```
+* **Cung cấp dữ liệu từ ViewModel (C#):**
+  ```csharp
+  using Microcharts;
+  using SkiaSharp;
+
+  var entries = new[]
+  {
+      new ChartEntry(4500000) { Label = "Ăn uống", ValueLabel = "4.5M", Color = SKColor.Parse("#F43F5E") },
+      new ChartEntry(2200000) { Label = "Nhà ở", ValueLabel = "2.2M", Color = SKColor.Parse("#38BDF8") },
+      new ChartEntry(1500000) { Label = "Đi lại", ValueLabel = "1.5M", Color = SKColor.Parse("#F59E0B") },
+      new ChartEntry(950000)  { Label = "Giải trí", ValueLabel = "950k", Color = SKColor.Parse("#10B981") }
+  };
+  CategoryDonutChart = new DonutChart { Entries = entries, HoleRadius = 0.6f, BackgroundColor = SKColors.Transparent };
+  ```
+
+#### 🌟 Lựa Chọn 2: Tận Dụng Sẵn Custom MAUI Shapes / Progress Bars (Không cần thư viện ngoài)
+Nếu không muốn cài thêm package NuGet, bạn có thể tái cấu trúc `ReportsPage.xaml` bằng các thanh phân bổ ngang Gradient đa sắc (Multi-segment Progress Bar) xếp tầng:
+```xml
+<!-- Khối thanh ngang phân bổ cơ cấu 50/30/20 -->
+<Grid ColumnDefinitions="50*,30*,20*" HeightRequest="12" Margin="0,8">
+    <BoxView Grid.Column="0" Color="#10B981" CornerRadius="6,0,0,6" />
+    <BoxView Grid.Column="1" Color="#38BDF8" />
+    <BoxView Grid.Column="2" Color="#F59E0B" CornerRadius="0,6,6,0" />
+</Grid>
+```
+
+---
+
+### 4.3. Bố Cục Gợi Ý Cho Trang `ReportsPage.xaml` Đẳng Cấp Hơn
+1. **Khối 1 (Đầu trang):** Thẻ KPI Hero song song: *Tài Sản Ròng (Net Worth)* bên trái, *Dòng Tiền Thuần (Net Cashflow)* bên phải.
+2. **Khối 2 (Biểu đồ trung tâm):** Biểu đồ Bánh Donut cơ cấu chi tiêu tháng này, kèm bảng danh mục chú thích màu (Color Legend) 2 cột ngay bên dưới.
+3. **Khối 3 (Biểu đồ xu hướng):** Biểu đồ Cột kép so sánh Thu - Chi qua các tháng gần nhất.
+4. **Khối 4 (Khối phân tích sâu):** Danh sách các khoản chi tiêu đột biến phát hiện bằng thuật toán Z-Score (đã có sẵn dữ liệu từ backend).
+
+---
+
+## 5. CẤU TRÚC THƯ MỤC FRONTEND ĐỂ BẠN LÀM VIỆC
 
 ```text
 mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
@@ -207,7 +277,7 @@ mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
 │   ├── WalletsPage.xaml                   <-- Màn hình Quản lý Đa Ví (Tab 1)
 │   ├── ExpensesPage.xaml                  <-- Màn hình Chi tiêu & Giao dịch (Tab 2)
 │   ├── BudgetsPage.xaml                   <-- Màn hình Ngân sách & Hạn mức DSA (Tab 3)
-│   ├── ReportsPage.xaml                   <-- Màn hình Báo cáo tài chính (Tab 4)
+│   ├── ReportsPage.xaml                   <-- Màn hình Báo cáo tài chính (Tab 4 - CẦN THÊM BIỂU ĐỒ)
 │   ├── IncomesPage.xaml                   <-- Thu nhập cá nhân
 │   ├── RecurringIncomesPage.xaml          <-- Thu nhập định kỳ
 │   ├── ReceiptOcrPage.xaml                <-- Quét hóa đơn bằng Camera/Ảnh AI OCR
@@ -230,7 +300,7 @@ mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
 
 ---
 
-## 5. HƯỚNG DẪN CÁCH NHÚNG BOTTOM NAV DOCK VÀO CÁC TRANG MỚI
+## 6. HƯỚNG DẪN CÁCH NHÚNG BOTTOM NAV DOCK VÀO CÁC TRANG MỚI
 
 Nếu bạn tạo một trang mới hoặc muốn trang đó có thanh điều hướng đáy giống 4 trang chính:
 
@@ -257,29 +327,34 @@ xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
 
 ---
 
-## 6. CHECKLIST CÔNG VIỆC GỢI Ý CHO BẠN TIẾP TỤC HOÀN THIỆN NGÀY MAI
+## 7. CHECKLIST CÔNG VIỆC GỢI Ý CHO BẠN TIẾP TỤC HOÀN THIỆN NGÀY MAI
 
 - [ ] **🔥 ƯU TIÊN SỐ 1: Bãi bỏ toàn bộ emoji và thay bằng Icon Vector xịn:**
   - Tải bộ font `lucide.ttf` hoặc bộ file SVG của Lucide Icons / Material Symbols.
   - Thay thế 4 icon trên thanh `BottomNavDockView.xaml` và icon nút Mic trung tâm.
   - Thay thế các icon nhóm trong Hamburger Sidebar `AppShell.xaml`.
   - Thay thế các emoji trên các nút bấm Quick Action trong `WalletsPage.xaml`, `ExpensesPage.xaml` và `VoiceMicModalPage.xaml`.
-- [ ] **2. Rà soát căn chỉnh lề (Padding/Margin) trên các trang phụ:**
+- [ ] **🔥 ƯU TIÊN SỐ 2: Tái cấu trúc trang Báo cáo (`ReportsPage.xaml`) với Biểu đồ Trực quan:**
+  - Tích hợp biểu đồ Bánh/Donut phân bổ chi tiêu theo danh mục (Category Breakdown).
+  - Bổ sung biểu đồ Cột so sánh Thu nhập vs Chi tiêu theo các tháng (MoM).
+  - Tinh chỉnh bố cục gọn gàng, chia khối rõ ràng, giảm bớt bảng chữ số khô khan.
+- [ ] **3. Rà soát căn chỉnh lề (Padding/Margin) trên các trang phụ:**
   - Kiểm tra `IncomesPage.xaml`, `RecurringIncomesPage.xaml`, `SavingsGoalsPage.xaml` xem có thẻ nào bị sát viền hay không.
   - Đảm bảo tất cả các trang đều có `Padding="16,12,16,24"`.
-- [ ] **3. Thẩm định kích thước font chữ trên màn hình nhỏ:**
+- [ ] **4. Thẩm định kích thước font chữ trên màn hình nhỏ:**
   - Mở app trên máy ảo, lướt qua một lượt các trang để đảm bảo không có chữ nào bị rớt dòng đơn độc (orphan word).
   - Kiểm tra các nhãn số tiền lớn đều nằm gọn trong thẻ.
-- [ ] **4. Trau chuốt thẻ Profile Người Dùng (Nếu muốn thêm):**
+- [ ] **5. Trau chuốt thẻ Profile Người Dùng (Nếu muốn thêm):**
   - Hiện tại trang `LoginPage.xaml` đang dùng để quản lý đăng nhập/đăng xuất.
   - Bạn có thể thiết kế thêm một trang `ProfilePage.xaml` đơn giản hiển thị: Tên người dùng, Email đã xác thực, Avatar tròn và Nút đăng xuất.
-- [ ] **5. Kiểm tra độ tương phản màu sắc (Accessibility):**
+- [ ] **6. Kiểm tra độ tương phản màu sắc (Accessibility):**
   - Chữ xám mờ trên nền tối nên dùng tối thiểu `#94A3B8` hoặc `#A5B4FC` để dễ đọc trong điều kiện ánh sáng mạnh.
   - Không dùng chữ xám quá tối (`#475569` trở xuống) cho các thông tin quan trọng.
 
 ---
 
-## 7. LỆNH CHẠY & KIỂM TRA MÃ NGUỒN TRONG QUÁ TRÌNH LÀM VIỆC
+## 8. LỆNH CHẠY & KIỂM TRA MÃ NGUỒN TRONG QUÁ TRÌNH LÀM VIỆC
+
 
 1. **Khởi chạy máy ảo và app nhanh (1 lệnh duy nhất):**
    Mở PowerShell tại thư mục `mobile-project/dotnet-maui-ver/` và chạy:
