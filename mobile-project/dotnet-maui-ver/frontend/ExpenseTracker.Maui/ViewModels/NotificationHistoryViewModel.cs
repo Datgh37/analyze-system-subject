@@ -66,6 +66,26 @@ public partial class NotificationHistoryViewModel : BaseViewModel
                 UnreadCount++;
             });
         });
+
+        // Listen for nudge alert events
+        WeakReferenceMessenger.Default.Register<NudgeAlertReceivedMessage>(this, (r, m) =>
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var newNotif = new InAppNotificationModel
+                {
+                    Id = m.Value.NudgeId,
+                    Title = m.Value.Title,
+                    Message = m.Value.Message,
+                    Type = "NudgeAlert",
+                    PayloadJson = m.Value.TargetRoute != null ? $"{{\"route\":\"{m.Value.TargetRoute}\"}}" : null,
+                    IsRead = false,
+                    CreatedAt = m.Value.Timestamp
+                };
+                Notifications.Insert(0, newNotif);
+                UnreadCount++;
+            });
+        });
     }
 
     [RelayCommand]

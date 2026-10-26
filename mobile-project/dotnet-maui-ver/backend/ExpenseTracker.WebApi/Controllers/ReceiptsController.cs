@@ -3,11 +3,13 @@ using ExpenseTracker.Application.DTOs.Transactions;
 using ExpenseTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ExpenseTracker.WebApi.Controllers;
 
 // API endpoints managing Multimodal AI Vision OCR receipt parsing and ledger confirmation (UC-03.07/03.08)
 [Authorize]
+[EnableRateLimiting("ai_policy")]
 [Route("api/receipts")]
 public class ReceiptsController : BaseApiController
 {

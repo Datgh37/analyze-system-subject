@@ -90,8 +90,7 @@ public class TransactionService : ITransactionService
         await using var dbTransaction = await _context.BeginTransactionAsync(ct);
         try
         {
-            var wallet = await _context.Wallets
-                .FirstOrDefaultAsync(w => w.Id == request.WalletId && w.UserId == userId, ct);
+            var wallet = await _context.GetWalletForUpdateAsync(request.WalletId, userId, ct);
 
             if (wallet == null)
                 return Result<TransactionDto>.Failure("Ví tiếp nhận không tồn tại hoặc bạn không có quyền sử dụng ví này.");
@@ -132,7 +131,12 @@ public class TransactionService : ITransactionService
             {
                 _ = _realtimeNotifier.NotifyBalanceUpdateAsync(userId, new BalanceUpdateNotificationDto(
                     wallet.Id, wallet.Balance, request.Amount, $"Thu nhập: {category.Name}", DateTime.UtcNow), ct);
+
+                _ = _realtimeNotifier.NotifyTransactionCreatedAsync(userId, new TransactionCreatedNotificationDto(
+                    transaction.Id, wallet.Id, wallet.Name, category.Id, category.Name,
+                    request.Amount, (int)transaction.TransactionType, transaction.TransactionDate, transaction.Note, DateTime.UtcNow), ct);
             }
+
 
             var dto = new TransactionDto(
                 transaction.Id,
@@ -330,8 +334,7 @@ public class TransactionService : ITransactionService
         await using var dbTransaction = await _context.BeginTransactionAsync(ct);
         try
         {
-            var wallet = await _context.Wallets
-                .FirstOrDefaultAsync(w => w.Id == request.WalletId && w.UserId == userId, ct);
+            var wallet = await _context.GetWalletForUpdateAsync(request.WalletId, userId, ct);
 
             if (wallet == null)
                 return Result<TransactionDto>.Failure("Ví thanh toán không tồn tại hoặc bạn không có quyền sử dụng ví này.");
@@ -399,7 +402,12 @@ public class TransactionService : ITransactionService
             {
                 _ = _realtimeNotifier.NotifyBalanceUpdateAsync(userId, new BalanceUpdateNotificationDto(
                     wallet.Id, wallet.Balance, -request.Amount, $"Chi tiêu: {category.Name}", DateTime.UtcNow), ct);
+
+                _ = _realtimeNotifier.NotifyTransactionCreatedAsync(userId, new TransactionCreatedNotificationDto(
+                    transaction.Id, wallet.Id, wallet.Name, category.Id, category.Name,
+                    request.Amount, (int)transaction.TransactionType, transaction.TransactionDate, transaction.Note, DateTime.UtcNow), ct);
             }
+
 
             if (activeBudget != null)
             {

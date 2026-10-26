@@ -111,6 +111,33 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
                 });
             });
 
+            _hubConnection.On<TransactionCreatedRealtimeInfo>("ReceiveTransactionCreated", info =>
+            {
+                _logger.LogInformation("Realtime: Received transaction created: {Amount}đ ({CategoryName})", info.Amount, info.CategoryName);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeakReferenceMessenger.Default.Send(new TransactionCreatedMessage(info));
+                });
+            });
+
+            _hubConnection.On<OcrProgressRealtimeInfo>("ReceiveOcrProgress", info =>
+            {
+                _logger.LogInformation("Realtime: Received OCR progress: {Step} ({Percent}%)", info.StepText, info.Percent);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeakReferenceMessenger.Default.Send(new OcrProgressMessage(info));
+                });
+            });
+
+            _hubConnection.On<NudgeAlertRealtimeInfo>("ReceiveNudgeAlert", info =>
+            {
+                _logger.LogInformation("Realtime: Received Nudge alert: {Title} - {Message}", info.Title, info.Message);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeakReferenceMessenger.Default.Send(new NudgeAlertReceivedMessage(info));
+                });
+            });
+
             await _hubConnection.StartAsync();
             UpdateStatus(true, "Đã kết nối Realtime", "#10B981");
             _logger.LogInformation("SignalR successfully connected to {HubUrl}", _hubUrl);

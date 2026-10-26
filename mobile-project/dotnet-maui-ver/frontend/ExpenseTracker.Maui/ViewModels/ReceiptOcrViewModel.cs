@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ExpenseTracker.Maui.Models.Categories;
 using ExpenseTracker.Maui.Models.Receipts;
 using ExpenseTracker.Maui.Models.Wallets;
 using ExpenseTracker.Maui.Services.Api;
+using ExpenseTracker.Maui.Services.Realtime.Messages;
 using Refit;
 
 namespace ExpenseTracker.Maui.ViewModels;
@@ -96,6 +98,12 @@ public partial class ReceiptOcrViewModel : BaseViewModel
         _categoryApi = categoryApi;
         _smartUtilityApi = smartUtilityApi;
         Title = "Bóc Tách Hóa Đơn AI (UC-03.07/03.08)";
+
+        // Listen for realtime OCR progress updates
+        WeakReferenceMessenger.Default.Register<OcrProgressMessage>(this, (r, m) =>
+        {
+            StatusMessage = $"{m.Value.StepText} ({m.Value.Percent}%)";
+        });
     }
 
     [RelayCommand]

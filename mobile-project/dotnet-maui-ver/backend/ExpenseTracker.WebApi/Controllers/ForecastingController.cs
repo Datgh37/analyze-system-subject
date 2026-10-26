@@ -6,11 +6,13 @@ using ExpenseTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ExpenseTracker.WebApi.Controllers;
 
 // API endpoints managing predictive financial forecasting, liquidity exhaustion and What-If sandbox (UC-08.01 -> UC-08.04)
 [Authorize]
+[EnableRateLimiting("ai_policy")]
 [Route("api/forecasting")]
 public class ForecastingController : BaseApiController
 {

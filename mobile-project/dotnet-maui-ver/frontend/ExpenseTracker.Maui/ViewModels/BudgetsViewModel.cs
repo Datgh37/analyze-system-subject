@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ExpenseTracker.Maui.Models.Budgets;
 using ExpenseTracker.Maui.Repositories;
+using ExpenseTracker.Maui.Services.Realtime.Messages;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
@@ -38,6 +40,41 @@ public partial class BudgetsViewModel : BaseViewModel
     {
         _budgetRepository = budgetRepository;
         Title = "Kế Hoạch Ngân Sách & Hạn Mức DSA";
+
+        // Listen for budget alerts from SignalR
+        WeakReferenceMessenger.Default.Register<BudgetAlertReceivedMessage>(this, (r, m) =>
+        {
+            StatusMessage = $"[Cảnh báo] {m.Value.CategoryName}: đã dùng {m.Value.PercentUsed:F0}% ({m.Value.SpentAmount:N0} đ / {m.Value.LimitAmount:N0} đ)";
+            var target = Allocations.FirstOrDefault(a => a.CategoryName.Equals(m.Value.CategoryName, StringComparison.OrdinalIgnoreCase));
+            if (target != null)
+            {
+                target.CurrentSpent = m.Value.SpentAmount;
+                target.RemainingAmount = Math.Max(0, target.AllocatedAmount - target.CurrentSpent);
+                target.SpentPercent = m.Value.PercentUsed;
+                target.IsAlertTriggered = true;
+                if (target.SpentPercent >= 100) target.IsExceeded = true;
+            }
+        });
+
+        // Listen for realtime transactions to update category budget allocation progress
+        WeakReferenceMessenger.Default.Register<TransactionCreatedMessage>(this, (r, m) =>
+        {
+            if (m.Value.TransactionType == 2) // Expense
+            {
+                var alloc = Allocations.FirstOrDefault(a => a.CategoryId == m.Value.CategoryId);
+                if (alloc != null)
+                {
+                    alloc.CurrentSpent += m.Value.Amount;
+                    alloc.RemainingAmount = Math.Max(0, alloc.AllocatedAmount - alloc.CurrentSpent);
+                    if (alloc.AllocatedAmount > 0)
+                    {
+                        alloc.SpentPercent = Math.Round((alloc.CurrentSpent / alloc.AllocatedAmount) * 100m, 1);
+                    }
+                    if (alloc.SpentPercent >= alloc.AlertThresholdPercent) alloc.IsAlertTriggered = true;
+                    if (alloc.SpentPercent >= 100) alloc.IsExceeded = true;
+                }
+            }
+        });
     }
 
     [RelayCommand]
