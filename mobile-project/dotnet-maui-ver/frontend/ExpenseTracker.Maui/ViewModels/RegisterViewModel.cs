@@ -68,7 +68,7 @@ public partial class RegisterViewModel : BaseViewModel
 
             if (success)
             {
-                await Shell.Current.GoToAsync("//WalletsPage");
+                await Shell.Current.GoToAsync($"VerifyOtpPage?email={Uri.EscapeDataString(Email)}");
             }
             else
             {

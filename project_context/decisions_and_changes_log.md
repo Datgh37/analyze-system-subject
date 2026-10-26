@@ -4022,6 +4022,28 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:38] - Quyết Định 171: Hoàn Thành & Nghiệm Thu Tác Vụ 8 (Kế Hoạch 52 - Chặng 1): Tích Hợp Luồng Đăng Ký Chuyển Tiếp OTP, Đăng Nhập Google SSO & Quên Mật Khẩu Trên UI
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Brad Frost, Dan Abramov, Werner Vogels, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Cải tiến luồng khởi tạo tài khoản trong [`RegisterViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/RegisterViewModel.cs):
+     - Sau khi người dùng đăng ký thành công qua Real Backend API (`RegisterAsync`), thay vì chuyển thẳng vào màn hình ví, hệ thống tự động điều hướng sang trang xác thực mã: `VerifyOtpPage?email={Uri.EscapeDataString(Email)}`, đảm bảo 100% tài khoản mới kích hoạt mã bảo mật qua email trước khi sử dụng.
+  2. Nâng cấp bộ điều khiển giao diện đăng nhập [`LoginViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/LoginViewModel.cs):
+     - Bổ sung lệnh `GoogleLoginCommand`: Hiện thực quy trình Single Sign-On với tài khoản Google, gọi API `_authService.GoogleLoginAsync`, lưu trữ cặp token xác thực và chuyển thẳng vào `//WalletsPage`.
+     - Bổ sung lệnh `ForgotPasswordCommand`: Hỗ trợ người dùng yêu cầu mã OTP khôi phục mật khẩu thông qua hộp thoại nhập email bảo mật `DisplayPromptAsync` và tự động điều hướng sang `VerifyOtpPage` để người dùng xác thực và thiết lập mật khẩu mới.
+  3. Tinh chỉnh giao diện đăng nhập [`LoginPage.xaml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/LoginPage.xaml):
+     - Bổ sung nút liên kết "Quên mật khẩu?" nhỏ gọn, tinh tế ở góc phải phía dưới ô nhập mật khẩu.
+     - Thiết lập dải phân cách thẩm mỹ `── hoặc tiếp tục với ──` chuẩn UX Fintech.
+     - Bổ sung nút bấm Google SSO `🌐 Tiếp tục với Google` với viền xám mềm mại, bo góc 10px, hiệu ứng chạm cảm ứng nhạy bén.
+  4. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch thành công dự án .NET MAUI Client cho nền tảng Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo** (Build succeeded).
+     - Frontend MAUI test suite: **42 / 42 Tests Passed 100%**.
+     - Backend test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
 
