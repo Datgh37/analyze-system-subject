@@ -4043,6 +4043,25 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:45] - Quyết Định 172: Hoàn Thành & Nghiệm Thu Tác Vụ 9 (Kế Hoạch 52 - Chặng 1): Kích Hoạt Cơ Chế Tự Động Đăng Nhập (Auto-Login) Khi Khởi Động Ứng Dụng .NET MAUI
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Dan Abramov, Werner Vogels, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Nâng cấp vòng đời khởi động ứng dụng trong [`App.xaml.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/App.xaml.cs):
+     - Tiêm phụ thuộc `IClientAuthService` trực tiếp thông qua hàm khởi tạo `App(IClientAuthService authService)`.
+     - Hiện thực phương thức kiểm tra phiên bất đồng bộ `CheckAutoLoginAsync(AppShell shell)` ngay trong sự kiện tạo cửa sổ `CreateWindow`.
+     - Gọi `_authService.InitializeAsync()` để xác thực tính toàn vẹn của token lưu trữ trong `SecureStorage` và lấy hồ sơ người dùng từ Backend.
+     - *Nếu có phiên đăng nhập hợp lệ:* Điều hướng tức thời và mượt mà vào trang tổng quan chính `//WalletsPage`.
+     - *Nếu phiên đăng nhập hết hạn hoặc chưa đăng nhập:* Tự động làm sạch token và định tuyến về màn hình xác thực `//LoginPage`.
+  2. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch thành công dự án .NET MAUI Client cho nền tảng Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo** (Build succeeded).
+     - Frontend MAUI test suite: **42 / 42 Tests Passed 100%**.
+     - Backend test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
 
