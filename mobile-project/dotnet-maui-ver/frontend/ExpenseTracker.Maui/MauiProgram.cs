@@ -179,6 +179,7 @@ public static class MauiProgram
         // Register MVVM ViewModels
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<VerifyOtpViewModel>();
         builder.Services.AddTransient<WalletsViewModel>();
         builder.Services.AddTransient<CategoriesViewModel>();
         builder.Services.AddTransient<AutoRulesViewModel>();
@@ -204,6 +205,7 @@ public static class MauiProgram
         // Register UI Views
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddTransient<VerifyOtpPage>();
         builder.Services.AddTransient<WalletsPage>();
         builder.Services.AddTransient<CategoriesPage>();
         builder.Services.AddTransient<AutoRulesPage>();

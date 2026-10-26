@@ -4000,6 +4000,29 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:30] - Quyết Định 170: Hoàn Thành & Nghiệm Thu Tác Vụ 7 (Kế Hoạch 52 - Chặng 1): Xây Dựng Giao Diện & ViewModel VerifyOtpPage (.NET MAUI) Chuẩn Luxury Fintech
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Brad Frost, Julian Garnier, Dan Abramov, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Phát triển ViewModel chuyên trách [`VerifyOtpViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/VerifyOtpViewModel.cs):
+     - Tiếp nhận tham số email điều hướng qua `[QueryProperty(nameof(Email), "email")]`.
+     - Tích hợp bộ đếm ngược thời gian thực `IDispatcherTimer` từ 60 giây về 0s, tự động kích hoạt trạng thái gửi lại mã `CanResend` và thuộc tính màu sắc động `ResendTextColor` (`#4F46E5` vs `#94A3B8`).
+     - Hiện thực lệnh `VerifyOtpCommand`: xác thực mã OTP 6 số qua Real API `_authService.VerifyOtpAsync`, nếu thành công thì dừng timer và điều hướng vào trang chính `//WalletsPage`.
+     - Hiện thực lệnh `ResendOtpCommand`: kích hoạt gửi lại mã OTP mới qua email, hiển thị banner thông báo xanh lá và khởi động lại chu kỳ đếm ngược 60s.
+  2. Thiết kế giao diện di động đỉnh cao [`VerifyOtpPage.xaml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/VerifyOtpPage.xaml) & [`VerifyOtpPage.xaml.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/VerifyOtpPage.xaml.cs):
+     - Nhận diện thương hiệu chuẩn mực với icon kim cương 💎, đổ bóng tím chàm, khung hiển thị địa chỉ email người nhận trang nhã.
+     - Ô nhập mã OTP 6 chữ số cỡ lớn (`FontSize="26"`, `CharacterSpacing="14"`, `HorizontalTextAlignment="Center"`), tự động căn chỉnh khoảng cách chữ.
+     - Banner cảnh báo lỗi đỏ `#FEF2F2` và thông báo thành công xanh lá `#F0FDF4`.
+  3. Đăng ký Route điều hướng `Routing.RegisterRoute("VerifyOtpPage", typeof(VerifyOtpPage))` trong [`AppShell.xaml.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/AppShell.xaml.cs) và đăng ký DI `VerifyOtpViewModel`, `VerifyOtpPage` trong [`MauiProgram.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/MauiProgram.cs).
+  4. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch thành công dự án .NET MAUI Client cho Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo**.
+     - Frontend MAUI test suite: **42 / 42 Tests Passed 100%**.
+     - Backend test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
 

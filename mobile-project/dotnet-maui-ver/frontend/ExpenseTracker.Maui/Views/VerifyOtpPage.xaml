@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.VerifyOtpPage"
+             x:DataType="vm:VerifyOtpViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="28" Padding="24,60,24,40" MaximumWidthRequest="460">
+            <!-- Brand Header -->
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Border StrokeThickness="0"
+                        StrokeShape="RoundRectangle 20"
+                        WidthRequest="72"
+                        HeightRequest="72"
+                        HorizontalOptions="Center"
+                        Shadow="{Shadow Brush='#4F46E5', Offset='0,8', Radius=16, Opacity=0.3}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4F46E5" Offset="0.0" />
+                            <GradientStop Color="#7C3AED" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Label Text="💎" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <Label Text="Xác Thực Email" 
+                       FontSize="26" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                <Label Text="Nhập mã 6 chữ số để kích hoạt tài khoản" 
+                       FontSize="13" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </VerticalStackLayout>
+
+            <!-- Card Container -->
+            <Border Style="{StaticResource ModernCard}"
+                    Padding="26"
+                    Shadow="{Shadow Brush='#000000', Offset='0,4', Radius=12, Opacity=0.08}">
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="Mã OTP Xác Thực" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
+
+                    <!-- Recipient Email Notice -->
+                    <Border BackgroundColor="{AppThemeBinding Light='#EEF2FF', Dark='#1E1B4B'}"
+                            Stroke="{AppThemeBinding Light='#C7D2FE', Dark='#3730A3'}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Mã xác thực đã được gửi tới địa chỉ:" 
+                                   FontSize="11" 
+                                   TextColor="{AppThemeBinding Light=#4338CA, Dark=#A5B4FC}" />
+                            <Label Text="{Binding Email}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="13" 
+                                   TextColor="{AppThemeBinding Light=#312E81, Dark=#E0E7FF}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Error Alert -->
+                    <Border BackgroundColor="#FEF2F2"
+                            Stroke="#FECACA"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                            <Label Text="{Binding ErrorMessage}" 
+                                   TextColor="#B91C1C" 
+                                   FontSize="12"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Success / Info Alert -->
+                    <Border BackgroundColor="#F0FDF4"
+                            Stroke="#BBF7D0"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12"
+                            IsVisible="{Binding InfoMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                            <Label Text="{Binding InfoMessage}" 
+                                   TextColor="#15803D" 
+                                   FontSize="12"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- 6-Digit OTP Input -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Nhập mã 6 số bí mật" 
+                               FontSize="12" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Border Stroke="{AppThemeBinding Light='#4F46E5', Dark='#6366F1'}"
+                                StrokeThickness="2"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="16,8"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Entry Placeholder="• • • • • •"
+                                   Text="{Binding OtpCode}"
+                                   Keyboard="Numeric"
+                                   MaxLength="6"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="14"
+                                   HorizontalTextAlignment="Center"
+                                   ClearButtonVisibility="WhileEditing" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Submit Button -->
+                    <Button Text="Xác Thực Ngay" 
+                            Command="{Binding VerifyOtpCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            BackgroundColor="#4F46E5"
+                            TextColor="#FFFFFF"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            CornerRadius="10"
+                            HeightRequest="48"
+                            Margin="0,4,0,0" />
+
+                    <!-- Resend OTP Action -->
+                    <Button Text="{Binding ResendButtonText}" 
+                            Command="{Binding ResendOtpCommand}"
+                            IsEnabled="{Binding CanResend}"
+                            BackgroundColor="Transparent"
+                            TextColor="{Binding ResendTextColor}"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            HeightRequest="36"
+                            HorizontalOptions="Center" />
+
+                    <!-- Loading Indicator -->
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                                       IsVisible="{Binding IsBusy}" 
+                                       Color="#4F46E5"
+                                       HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Back to Login -->
+            <Button Text="← Quay lại Đăng Nhập" 
+                    Command="{Binding NavigateToLoginCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"
+                    HeightRequest="40" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
