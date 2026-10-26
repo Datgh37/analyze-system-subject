@@ -44,10 +44,11 @@ Khi bạn tiến hành thiết kế lại giao diện, hãy lưu ý **3 nguyên 
   // builder.Services.AddScoped<IWalletRepository, ApiWalletRepository>();
   // builder.Services.AddScoped<IAutonomousActionRepository, ApiAutonomousActionRepository>();
   ```
-- **Cấu hình địa chỉ IP máy chủ Backend** (nằm ở dòng 28 của `MauiProgram.cs`):
-  - Chạy trên Windows Desktop: `"http://localhost:5000"`
-  - Chạy trên Máy ảo Android (Android Emulator): `"http://10.0.2.2:5000"`
-  - Chạy trên Điện thoại thật: Sử dụng IP mạng Wi-Fi cục bộ của máy tính chạy backend (ví dụ `"http://192.168.1.15:5000"`).
+- **Cấu hình địa chỉ máy chủ Backend** (trong `MauiProgram.cs`):
+  - Chạy trên Windows Desktop: `"http://localhost:5018"`.
+  - Chạy trên Máy ảo Android (Android Emulator): `"http://10.0.2.2:5018"`.
+  - Chạy trên Điện thoại thật: thay địa chỉ trong mã nguồn bằng IP Wi-Fi cục bộ của máy chạy backend, ví dụ `"http://192.168.1.15:5018"`.
+  - Backend hiện lắng nghe HTTP tại cổng `5018`; không dùng cổng `5000`.
 
 ---
 

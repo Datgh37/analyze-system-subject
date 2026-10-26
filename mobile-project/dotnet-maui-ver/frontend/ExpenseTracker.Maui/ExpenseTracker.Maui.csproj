@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Target frameworks: Active target is Windows for desktop development; Android can be activated by setting BuildingForAndroid=true -->
-		<TargetFrameworks Condition="'$(BuildingForAndroid)' == 'true'">net10.0-android</TargetFrameworks>
-		<TargetFrameworks Condition="'$(BuildingForAndroid)' != 'true'">net10.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- Target frameworks: Supports both Windows Desktop and Android Mobile for seamless Visual Studio target selection -->
+		<TargetFrameworks>net10.0-windows10.0.19041.0;net10.0-android</TargetFrameworks>
+
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>ExpenseTracker.Maui</RootNamespace>

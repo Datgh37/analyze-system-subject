@@ -98,9 +98,34 @@ Mở trình duyệt truy cập tài liệu API trực quan:
 
 ## 4. Hướng Dẫn Khởi Chạy Frontend (.NET MAUI 10)
 
-Ứng dụng Frontend được thiết kế theo kiến trúc **Clean MVVM 3 Tầng Repositories**, hỗ trợ chạy linh hoạt cả Offline lẫn Online:
+Ứng dụng Frontend được xây dựng trên nền tảng **.NET MAUI 10 (C# 14)** kết hợp kiến trúc **Clean MVVM 3 Tầng Repositories**, hỗ trợ chạy linh hoạt cả Offline (Mock Data 0ms) lẫn Online (kết nối Backend thật).
 
-### 4.1. Cơ Chế Chuyển Đổi Mock Data Offline vs API Backend Thật
+### 4.1. Điều Kiện Tiên Quyết (Prerequisites & Requirements Theo Nền Tảng)
+
+Tùy thuộc vào nền tảng bạn chọn để khởi chạy (Windows Desktop, Máy ảo Android, hay Điện thoại thật), vui lòng kiểm tra các yêu cầu tương ứng:
+
+#### 1. Yêu Cầu Chung (Bắt Buộc Cho Mọi Nền Tảng)
+- **.NET SDK:** Phiên bản được ghim trong [`global.json`](global.json) (hiện tại là `10.0.402`). Kiểm tra bằng lệnh: `dotnet --version`.
+- **Visual Studio 2026 / 2022:** Cài đặt workload **.NET Multi-platform App UI development** từ Visual Studio Installer.
+
+#### 2. Nếu Chạy Trên Windows Desktop (WinUI 3)
+- **Hệ điều hành:** Windows 10 (Build 19041 trở lên) hoặc Windows 11.
+- **Bật Developer Mode:** Vào `Settings > System (hoặc Privacy & Security) > For developers > Bật Developer Mode = ON` (bắt buộc để hệ điều hành Windows cho phép đăng ký và cài đặt gói ứng dụng MSIX phát triển).
+
+#### 3. Nếu Chạy Trên Máy Ảo Android (Android Emulator)
+- **Android SDK Platform:** Trình biên dịch .NET 10 MAUI yêu cầu bắt buộc cài đặt **Android API Level 36** (Android 16 Platform SDK). Kiểm tra hoặc cài đặt trong Visual Studio tại: *Tools > Android > Android SDK Manager > tích chọn Android API 36*.
+- **Máy ảo Android (AVD):** Thiết bị máy ảo chạy Android 14+ / API 34+ (khuyến nghị: Pixel 7) kèm bộ tăng tốc ảo hóa phần cứng (HAXM hoặc Windows Hypervisor Platform).
+- **Xử lý đường dẫn dài (Tùy chọn - Optional):** Nếu bạn tải/clone project vào một thư mục lồng sâu trên Windows có độ dài lớn, công cụ AAPT2 của Android SDK có thể vấp phải giới hạn 260 ký tự (`MAX_PATH`) của Windows. Khi gặp tình huống này, bạn chỉ cần chạy script `.\mount_virtual_drive.ps1` (hoặc gõ `subst X: "..."`) để mở dự án từ ổ ảo `X:\` rút ngắn đường dẫn. *Nếu thư mục dự án của bạn đã nằm ở đường dẫn ngắn (ví dụ: `C:\Projects\...` hoặc `D:\Projects\...`) thì hoàn toàn KHÔNG CẦN bước này.*
+
+#### 4. Nếu Chạy Trên Điện Thoại Android Thật
+- **Hệ điều hành:** Android 5.0 (API 21) trở lên (khuyến nghị Android 10+).
+- **Cấu hình thiết bị:** Bật **Developer Options** và **USB Debugging** trên điện thoại.
+- **Kết nối:** Cắm cáp USB vào máy tính hoặc kết nối chung mạng Wi-Fi LAN với máy tính chạy Backend.
+
+---
+
+
+### 4.2. Cơ Chế Chuyển Đổi Mock Data Offline vs API Backend Thật
 File cấu hình: `frontend/ExpenseTracker.Maui/MauiProgram.cs` (từ dòng 125 đến 155):
 
 - **CHẾ ĐỘ 1: DÙNG MOCK DATA OFFLINE (MẶC ĐỊNH ĐÃ BẬT SẴN):**  
@@ -123,55 +148,142 @@ File cấu hình: `frontend/ExpenseTracker.Maui/MauiProgram.cs` (từ dòng 125 
 
 ---
 
-### 4.2. Cách 1: Chạy Ứng Dụng Windows Desktop (WinUI 3)
-Ứng dụng .NET MAUI trên Windows được đóng gói dưới dạng **Packaged Windows App (MSIX)**:
+### 4.3. Cách 1: Chạy Ứng Dụng Windows Desktop (WinUI 3)
 
-#### Phương Án A: Khởi chạy bằng Visual Studio (Khuyên Dùng)
-Bạn có thể mở Visual Studio theo 1 trong 2 cách chính xác sau:
-- **Cách 1 (Khuyên dùng - Full-Stack):** Mở file solution tổng thể **`ExpenseTracker.slnx`** ngay tại thư mục gốc `dotnet-maui-ver/`. Khi đó Solution Explorer sẽ hiển thị đồng thời cả thư mục `/backend/` và `/frontend/`.
-- **Cách 2 (Chỉ mở riêng Frontend):** Mở file **`frontend/ExpenseTracker.Maui.slnx`** (hoặc mở trực tiếp file project `frontend/ExpenseTracker.Maui/ExpenseTracker.Maui.csproj`).
-*(Lưu ý: Không mở tệp `backend/ExpenseTracker.slnx` để chạy Frontend, vì tệp này nằm trong thư mục con backend chỉ cấu hình riêng cho các project Web API Backend)*.
-
-**Các bước chạy trên Visual Studio:**
-1. Đặt `ExpenseTracker.Maui` làm **Startup Project** (Click chuột phải vào project `ExpenseTracker.Maui` trong Solution Explorer > chọn *Set as Startup Project*).
-2. Tại thanh chọn Target Device trên thanh công cụ, chọn **Windows Machine**.
-3. Nhấn **F5** (hoặc **Ctrl + F5**) để Visual Studio tự động biên dịch, đăng ký gói MSIX và mở cửa sổ app lên màn hình.
-
-#### Phương Án B: Khởi chạy bằng PowerShell / Terminal (1-Click Không Cần Visual Studio)
-Từ thư mục gốc `dotnet-maui-ver`, chạy các lệnh sau:
+#### Phương Án A: Khởi chạy 1-Click Tự Động (Khuyên Dùng - Tránh Triệt Để Lỗi Khóa File DLL)
+Chỉ cần chạy script tiện ích đã xử lý sẵn mọi xung đột tiến trình và hủy đăng ký cũ:
 ```powershell
-cd frontend/ExpenseTracker.Maui
-dotnet build -f net10.0-windows10.0.19041.0
-Add-AppxPackage -Register .\bin\Debug\net10.0-windows10.0.19041.0\win-x64\AppxManifest.xml
-explorer.exe shell:AppsFolder\com.companyname.expensetracker.maui_9zz4h110yvjzm!App
+.\run_windows.ps1
 ```
-*(Sau khi chạy lệnh trên, ứng dụng đã được cài đặt vào máy. Bạn có thể nhấn phím **Windows** trên bàn phím, gõ tìm **ExpenseTracker.Maui** trong Start Menu để mở bất cứ lúc nào)*.
+*(Script sẽ tự động dọn dẹp tiến trình ngầm, giải phóng File Lock, biên dịch sạch và mở ứng dụng WinUI 3 lên màn hình).*
+
+#### Phương Án B: Khởi chạy bằng Visual Studio
+1. Mở file solution tổng thể **`ExpenseTracker.slnx`** ngay tại thư mục gốc `dotnet-maui-ver/`.
+2. Đặt `ExpenseTracker.Maui` làm **Startup Project** (Click chuột phải vào project `ExpenseTracker.Maui` trong Solution Explorer > chọn *Set as Startup Project*).
+3. Tại thanh chọn Target Device trên thanh công cụ, chọn **Windows Machine**.
+4. Nhấn **F5** (hoặc **Ctrl + F5**) để chạy.
+> ⚠️ **Mẹo xử lý khi bị báo lỗi khóa file DLL:** Nếu Visual Studio báo lỗi `Could not copy ... DynamicDependency.Projection.dll. Exceeded retry count of 10`, chỉ cần mở PowerShell gõ:
+> `Stop-Process -Name "ExpenseTracker.Maui" -Force; Get-AppxPackage *expensetracker* | Remove-AppxPackage` rồi bấm F5 lại là sạch bóng 100%!
 
 ---
 
-### 4.3. Cách 2: Chạy Trên Máy Ảo Android (Android Emulator)
-1. Mở Visual Studio, vào menu **Tools > Android > Android Device Manager** để tạo máy ảo (khuyến nghị: Pixel 7 hoặc thiết bị chạy Android 14+ / API 34+).
-2. Tại thanh chọn Target Device, chọn máy ảo vừa tạo.
-3. Nhấn **F5** (Debug) hoặc **Ctrl+F5** (Run).
-- *Lưu ý về IP:* `MauiProgram.cs` đã tự động thiết lập Base URL là `http://10.0.2.2:5018` để máy ảo kết nối thẳng về máy tính chạy Backend mà không cần cấu hình thêm.
+### 4.4. Cách 2: Chạy Trên Máy Ảo Android (Android Emulator)
+
+#### Bước 1: Kích hoạt ổ đĩa ảo `subst X:`
+```powershell
+.\mount_virtual_drive.ps1
+```
+
+#### Bước 2: Khởi chạy bằng Visual Studio (Khuyên Dùng)
+1. Mở Solution từ ổ đĩa ảo: **`X:\ExpenseTracker.slnx`**.
+2. Trên thanh công cụ, chọn Framework là **`net10.0-android`**.
+3. Tại mục Device, chọn máy ảo Android của bạn (nếu chưa có máy ảo, vào **Tools > Android > Android Device Manager** để tạo mới một máy ảo Pixel 7 chạy Android 14+ / API 34+).
+4. Nhấn **F5** (Debug) hoặc **Ctrl+F5** (Run).
+
+#### Bước 3: Khởi chạy bằng Terminal / Script
+```powershell
+.\run_android.ps1
+```
+*(Script sẽ tự kiểm tra ổ ảo X:, biên dịch net10.0-android và tự động deploy lên máy ảo Android đang bật).*
+
+> 💡 **Lưu ý cấu hình mạng Android:** 
+> - Ứng dụng đã được cấu hình sẵn thuộc tính `android:usesCleartextTraffic="true"` trong `AndroidManifest.xml` để cho phép kết nối HTTP.
+> - Địa chỉ kết nối Backend tự động sử dụng `http://10.0.2.2:5018` để trỏ thẳng từ máy ảo về máy chủ Backend của bạn mà không cần chỉnh sửa gì thêm.
 
 ---
 
-### 4.4. Cách 3: Chạy Trên Điện Thoại Android Thật (Qua Cáp USB hoặc Wi-Fi)
+### 4.5. Cách 3: Chạy Trên Điện Thoại Android Thật (Qua Cáp USB hoặc Wi-Fi LAN)
 1. Bật chế độ **Developer Options** và **USB Debugging** trên điện thoại Android của bạn.
-2. Cắm cáp USB vào máy tính, Visual Studio sẽ nhận diện tên thiết bị điện thoại của bạn trên thanh công cụ.
+2. Cắm cáp USB vào máy tính, Visual Studio sẽ tự nhận diện tên thiết bị điện thoại trên thanh công cụ.
 3. Nhấn **F5** để cài đặt và debug trực tiếp trên điện thoại.
 - *Lưu ý cấu hình IP LAN:* Mở file `frontend/ExpenseTracker.Maui/MauiProgram.cs` dòng 37, thay `localhost` bằng địa chỉ IP LAN của máy tính bạn (ví dụ: `"http://192.168.1.15:5018"`), và đảm bảo điện thoại cùng kết nối vào chung mạng Wi-Fi với máy tính.
 
 ---
 
-### 4.5. Chạy Kiểm Thử Tự Động Cho Frontend (42 ViewModel Tests)
+### 4.6. Chạy Kiểm Thử Tự Động Cho Frontend (42 ViewModel Tests)
 Dự án có sẵn bộ 42 Unit Tests kiểm tra tính toàn vẹn của ViewModel và logic xử lý dữ liệu:
 ```powershell
 cd frontend/tests/ExpenseTracker.Maui.UnitTests
 dotnet test
 ```
 *Kết quả:* **`42/42 Tests Passed 100%`**.
+
+---
+
+### 4.7. Cẩm Nang Dải Lệnh CLI Dành Cho Lập Trình Viên & Quy Trình Thu Thập Log Debug
+
+> 📌 **Dành cho Đội ngũ Phát triển:** Các script `.ps1` tự động phục vụ giảng viên và hội đồng thẩm định nhanh. Khi lập trình và tìm lỗi (debug), lập trình viên nên sử dụng trực tiếp dải lệnh Terminal/PowerShell dưới đây để kiểm soát từng công đoạn, xuất log MSBuild và stream logcat thời gian thực.
+
+#### A. Dải Lệnh CLI Trên Windows Desktop (WinUI 3)
+
+##### 1. Bản chất vì sao không chạy `dotnet run` trực tiếp:
+Ứng dụng WinUI 3 mặc định được đóng gói dưới dạng **MSIX Packaged App** nhằm sở hữu danh tính hệ thống (AppModel Package Identity) để truy cập bảo mật và Windows App SDK. Lệnh `dotnet run` cố gắng thực thi trực tiếp file `.exe` trần (Unpackaged mode) mà không có Package Context nên sẽ văng ngoại lệ `COMException (0x80040154: Class not registered)`. Quy trình chuẩn trên Terminal là biên dịch, đăng ký gói layout và kích hoạt qua AppModel.
+
+##### 2. Dải lệnh thực thi 4 bước (Chạy từng dòng trong PowerShell):
+```powershell
+# Bước 1: Dọn dẹp tiến trình cũ và giải phóng File Lock nếu có lần chạy trước
+Stop-Process -Name "ExpenseTracker.Maui" -Force -ErrorAction SilentlyContinue
+Get-AppxPackage *expensetracker* | Remove-AppxPackage -ErrorAction SilentlyContinue
+
+# Bước 2: Biên dịch dự án (Xuất log chi tiết ra file để phân tích nếu cần)
+dotnet build frontend/ExpenseTracker.Maui/ExpenseTracker.Maui.csproj -f net10.0-windows10.0.19041.0 -fl -flp:logfile=build_windows.log;verbosity=normal
+
+# Bước 3: Đăng ký gói AppX Layout vào hệ thống Windows
+Add-AppxPackage -Register "frontend\ExpenseTracker.Maui\bin\Debug\net10.0-windows10.0.19041.0\win-x64\AppxManifest.xml"
+
+# Bước 4: Khởi chạy ứng dụng qua Windows AppModel
+Start-Process "shell:AppsFolder\com.companyname.expensetracker.maui_9zz4h110yvjzm!App"
+```
+
+##### 3. Quy trình thu thập Log khi ứng dụng Windows gặp lỗi (Crash / Exception):
+- **Log Biên dịch:** Mở file `build_windows.log` vừa tạo ở bước 2 để xem toàn bộ cảnh báo và lỗi XAML/C#.
+- **Log Runtime & Crash:** Trong trường hợp ứng dụng mở lên rồi tự đóng (Crash do DI hoặc NullReference), mở PowerShell gõ lệnh sau để lấy ngay 5 sự kiện lỗi gần nhất kèm Full Stack Trace từ Windows Event Log:
+  ```powershell
+  Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='.NET Runtime','Application Error'} -MaxEvents 5 | Format-List TimeCreated, Message
+  ```
+  *(Sao chép nội dung `Message` này để cung cấp cho việc debug).*
+
+---
+
+#### B. Dải Lệnh CLI Trên Máy Ảo & Thiết Bị Android
+
+##### 1. Thiết lập công cụ `adb`:
+Nếu PowerShell báo chưa nhận lệnh `adb`, chỉ cần nạp tạm thời đường dẫn Android SDK vào phiên làm việc:
+```powershell
+$env:PATH += ";C:\Program Files (x86)\Android\android-sdk\platform-tools"
+adb devices
+```
+*(Đảm bảo hiển thị danh sách thiết bị dạng `emulator-5554 device` hoặc mã điện thoại thật).*
+
+##### 2. Dải lệnh thực thi từng bước:
+```powershell
+# Bước 1: Biên dịch Android Package (Lưu ý: Nếu đường dẫn thư mục gốc dài, chạy từ ổ ảo X:\)
+dotnet build frontend/ExpenseTracker.Maui/ExpenseTracker.Maui.csproj -f net10.0-android -fl -flp:logfile=build_android.log;verbosity=normal
+
+# Bước 2: Cài đặt APK Debug mới nhất vào máy ảo / thiết bị thật
+adb install -r "frontend\ExpenseTracker.Maui\bin\Debug\net10.0-android\com.companyname.expensetracker.maui-Signed.apk"
+
+# Bước 3: Khởi chạy Activity chính của ứng dụng
+adb shell am start -n com.companyname.expensetracker.maui/crc647f035efecdfd55fa.MainActivity
+```
+*(Mẹo rút gọn: Bạn cũng có thể dùng lệnh gộp của MSBuild: `dotnet build frontend/ExpenseTracker.Maui/ExpenseTracker.Maui.csproj -f net10.0-android -t:Run`)*
+
+##### 3. Quy trình Stream và Trích Xuất Live Logcat:
+- **Xem trực tiếp lỗi và cảnh báo (Realtime Log Streaming):**
+  ```powershell
+  adb logcat -c  # Xóa sạch bộ đệm log cũ
+  adb logcat | Select-String "ExpenseTracker|DOTNET|AndroidRuntime|FATAL|Exception"
+  ```
+- **Chỉ theo dõi log của tiến trình ứng dụng:**
+  ```powershell
+  $pidApp = (adb shell pidof com.companyname.expensetracker.maui).Trim()
+  adb logcat --pid=$pidApp
+  ```
+- **Xuất toàn bộ Crash Log ra file để gửi báo cáo lỗi:**
+  ```powershell
+  adb logcat -d -s "AndroidRuntime:E" "DOTNET:*" "*:F" > android_crash.log
+  ```
+  *(Chỉ cần đính kèm nội dung file `android_crash.log` hoặc `build_android.log` để định vị chính xác lỗi).*
 
 ---
 

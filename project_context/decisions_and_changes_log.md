@@ -3227,6 +3227,190 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Sửa hướng dẫn trong `README.md`: Hướng dẫn mở solution gốc `ExpenseTracker.slnx` hoặc `ExpenseTracker.Maui.slnx`, giải thích rõ không mở tệp `backend/ExpenseTracker.slnx` vì tệp đó chỉ chứa các project API Backend.
 - **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
 
+---
+
+## [2026-10-25 23:40] - Quyết Định 142: Kích Hoạt Phiên Họp Hội Đồng Toàn Thể Khởi Động Giai Đoạn 11 (Session Phase 11 Kickoff)
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 12 (Kent Beck), Agent 07 (Werner Vogels), Agent 10 (Dan Abramov), Agent 03 (Cockburn BA), Agent 08 (Andrew Ng), Agent 01 (Richard Thaler) cùng Chủ tọa đề tài (Người dùng).
+- **Mục tiêu:** Kích hoạt phiên bàn thảo chuyên sâu Giai đoạn 11: Tổng kiểm toán Full-Stack E2E, xây dựng Script tự động 1-Click Launch (`run_demo.ps1`), đóng gói APK Android Release, biên soạn Báo cáo cuối kỳ môn Ứng dụng Di động (.NET MAUI) và chuẩn bị hồ sơ Khóa luận tốt nghiệp.
+- **Tài liệu căn cứ:** Khởi tạo [`sessions/session_giai_doan_11_tong_kiem_toan_va_dong_goi/00_bien_ban_khoi_dong_phien_hop_giai_doan_11.md`](../sessions/session_giai_doan_11_tong_kiem_toan_va_dong_goi/00_bien_ban_khoi_dong_phien_hop_giai_doan_11.md).
+- **Trạng thái:** ACCEPTED & ARCHIVED.
+
+---
+
+## [2026-10-25 23:50] - Quyết Định 143: Ban Hành Bản Kế Hoạch 5 Bước Giai Đoạn 11 & Thiết Lập Cờ Đóng Băng Thực Thi (Execution Freeze) Để Khắc Phục Lỗi Runtime
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Nội dung thống nhất:**
+  1. **Thứ tự Timeline 5 bước bắt buộc của Giai đoạn 11:**
+     - *Bước 1:* Xử lý Báo cáo cuối kỳ môn Di động (.NET MAUI) bám sát barem điểm 10 tại `yeucau-cuoiky.txt` (Nền tảng 2.5đ + Push 2.0đ + MVVM B3 2.0đ + SignalR B2 ăn điểm cộng +1.0đ + Mã nguồn & Kiến trúc 1.0đ).
+     - *Bước 2:* Kịch bản Demo và Hướng dẫn thực hiện Demo 5-8 phút (User Story Journey phô diễn tính năng ăn điểm).
+     - *Bước 3:* Bộ câu hỏi Ôn tập - Q&A để kiểm tra độ thông hiểu về project và công nghệ ăn điểm trong bài thi cuối kỳ (chuẩn bị điểm vấn đáp 1.5đ cá nhân).
+     - *Bước 4:* Script khởi chạy tự động 1-Click (`run_demo.ps1`).
+     - *Bước 5:* Đóng gói bản cài đặt APK Android Release (`net10.0-android`).
+  2. **Thời hạn (Deadline):**
+     - Khóa mốc **Deadline 1 (Thứ Tư, 28/10/2026)** nộp Video Demo, Báo cáo môn Di động, File APK và bảo vệ mã nguồn.
+  3. **Thiết lập Cờ Đóng Băng Thực Thi (Execution Freeze Policy):**
+     - Theo chỉ đạo trực tiếp của Chủ tọa: Dự án hiện tại "chưa chạy được đâu" và còn nhiều nội dung runtime chưa fix.
+     - Toàn bộ công việc thực thi của Giai đoạn 11 (viết báo cáo, script, đóng gói APK) **BỊ ĐÓNG BĂNG 100% (STATUS: FROZEN)**.
+     - Toàn bộ Hội đồng chuyển ngay sang chế độ hỗ trợ Chủ tọa rà soát, chẩn đoán và khắc phục triệt để mọi lỗi kỹ thuật/runtime ngăn cản dự án khởi động thực tế.
+- **Tài liệu căn cứ:** [`project_context/plans/plans-mobile-app/2026-10-25_plan_48_giai_doan_11_tong_kiem_toan_bao_cao_va_on_tap_qa.md`](plans/plans-mobile-app/2026-10-25_plan_48_giai_doan_11_tong_kiem_toan_bao_cao_va_on_tap_qa.md).
+- **Trạng thái:** ACCEPTED & EXECUTION_FROZEN.
+
+---
+
+## [2026-10-25] - Quyết Định 144: Thử Nghiệm Cấu Hình Android Build Intermediates
+- **Bối cảnh:** Android build tái hiện lỗi AAPT2 khi đường dẫn resource trung gian ở workspace quá dài; `HUONG_DAN_FE.md` lại chỉ tới port API `5000`, trong khi backend và MAUI dùng `5018`.
+- **Quyết định:**
+  1. Thêm `mobile-project/dotnet-maui-ver/global.json` ghim .NET SDK `10.0.402` với `latestPatch`.
+  2. Đặt `BaseIntermediateOutputPath` Android vào thư mục Temp của người dùng qua `Directory.Build.props`, tránh AAPT2 gặp đường dẫn build trung gian quá sâu trên Windows.
+  3. Cập nhật README và hướng dẫn frontend: port `5018`, prerequisites MAUI/Android/Developer Mode, và lệnh Android CLI có `BuildingForAndroid=true`.
+- **Kế hoạch liên quan:** `project_context/plans/plans-mobile-app/2026-10-25_plan_49_maui_build_reliability.md`.
+- **Trạng thái:** EXPERIMENTAL — Sẽ thay thế/kết hợp với giải pháp ổ đĩa ảo `subst` trực quan, toàn diện.
+
+---
+
+## [2026-10-26 06:55] - Quyết Định 145: Phê Duyệt Kế Hoạch Kiểm Tra, Chẩn Đoán & Khắc Phục Triệt Để Lỗi Runtime Frontend .NET MAUI (Windows & Android)
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Mục tiêu:** Tháo gỡ dứt điểm 2 rào cản ngăn Frontend khởi chạy:
+  1. **Nền tảng Windows:** Xử lý Developer Mode / Registry Unlock (`AllowDevelopmentWithoutDevLicense`), đánh giá chế độ Unpackaged, và xử lý triệt để lỗi file lock DLL của Windows App SDK.
+  2. **Nền tảng Máy ảo Android:** Áp dụng giải pháp ổ đĩa ảo `subst` (tạo ổ `X:` rút ngắn >100 ký tự giải quyết triệt để lỗi AAPT2 `MAX_PATH`), cấu hình `TargetFrameworks` trong `.csproj` để Visual Studio hiển thị Android Emulator, và kiểm tra `android:usesCleartextTraffic`.
+  3. **Tài liệu README:** Bổ sung mục điều kiện tiên quyết (Prerequisites & Requirements) và cẩm nang xử lý lỗi chi tiết trước khi chạy Frontend.
+- **Tài liệu căn cứ:** [`project_context/plans/plans-mobile-app/2026-10-26_plan_49_kiem_tra_chan_doan_va_khac_phuc_frontend_maui_windows_va_android.md`](plans/plans-mobile-app/2026-10-26_plan_49_kiem_tra_chan_doan_va_khac_phuc_frontend_maui_windows_va_android.md).
+- **Trạng thái:** APPROVED & READY_FOR_EXECUTION.
+
+---
+
+## [2026-10-26 07:05] - Quyết Định 146: Hoàn Tất Chẩn Đoán & Khắc Phục Triệt Để Lỗi Khởi Chạy Nền Tảng Windows App (.NET MAUI 10)
+- **Người chủ trì:** Agent 10 Dan Abramov (Client Lead), Agent 07 Werner Vogels (DevOps Lead) cùng Người dùng.
+- **Kết quả điều tra kỹ thuật:**
+  1. **Developer Mode:** Khóa Registry `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock\AllowDevelopmentWithoutDevLicense = 1` đã được bật sẵn trên máy tính người dùng.
+  2. **Bản chất lỗi File Lock DLL (`DynamicDependency.Projection.dll` / `Exceeded retry count of 10`):** Do Windows AppModel đăng ký thư mục `bin\Debug\...\win-x64` làm `InstallLocation` của gói ứng dụng lỏng (Loose Layout MSIX). Khi app chạy ngầm hoặc sau khi tắt, hệ thống vẫn giữ handle. Khi Visual Studio Rebuild/Clean, việc cố xóa file đang bị khóa khiến thư mục rơi vào trạng thái "Pending Deletion", làm phát sinh lỗi `Could not find a part of the path`.
+  3. **Giải pháp triệt để:**
+     - Lệnh giải phóng 100% file lock: `Stop-Process -Name "ExpenseTracker.Maui" -Force` kết hợp `Get-AppxPackage *expensetracker* | Remove-AppxPackage`.
+     - Tạo script khởi chạy tự động [`mobile-project/dotnet-maui-ver/run_windows.ps1`](mobile-project/dotnet-maui-ver/run_windows.ps1) giúp dọn dẹp tiến trình, giải phóng handle, build sạch và mở app lên màn hình chỉ với 1 click.
+  4. **Kiểm chứng thực tế:**
+     - Biên dịch Windows: **Succeeded 100% (0 Error, 0 Warning)** trong 5.5 giây.
+     - Đăng ký `Add-AppxPackage -Register`: **Thành công (Status: Ok)**.
+- **Trạng thái:** COMPLETED & VERIFIED. Sẵn sàng chuyển giao sang Giai đoạn 2 (Máy ảo Android & Ổ ảo `subst`).
+
+---
+
+## [2026-10-26 07:20] - Quyết Định 147: Hoàn Tất Chẩn Đoán & Khắc Phục Triệt Để Lỗi Khởi Chạy Nền Tảng Máy Ảo Android (.NET MAUI 10)
+- **Người chủ trì:** Agent 10 Dan Abramov (Client Lead), Agent 07 Werner Vogels (DevOps Lead) cùng Người dùng.
+- **Nội dung thực hiện & Kết quả điều tra kỹ thuật:**
+  1. **Khắc phục lỗi đường dẫn dài MAX_PATH (>260 ký tự) cho AAPT2:**
+     - Thiết lập ổ đĩa ảo tạm thời qua lệnh `subst X: "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System"`.
+     - Đường dẫn làm việc rút ngắn từ 127 ký tự xuống 30 ký tự (`X:\mobile-project\dotnet-maui-ver\`), triệt tiêu 100% lỗi `PathTooLongException` / `Could not find a part of the path` của Android AAPT2.
+     - Ổ ảo này nằm trên RAM phiên làm việc, tự động biến mất khi khởi động lại máy tính (hoặc gỡ bằng `subst X: /D`).
+     - Đã tạo script tiện ích tự động hóa [`mobile-project/dotnet-maui-ver/mount_virtual_drive.ps1`](mobile-project/dotnet-maui-ver/mount_virtual_drive.ps1) và [`mobile-project/dotnet-maui-ver/run_android.ps1`](mobile-project/dotnet-maui-ver/run_android.ps1).
+  2. **Cập nhật `ExpenseTracker.Maui.csproj`:**
+     - Thay thế điều kiện `Condition="'$(BuildingForAndroid)' == 'true'"` bằng khai báo song song chuẩn mực:
+       `<TargetFrameworks>net10.0-windows10.0.19041.0;net10.0-android</TargetFrameworks>`.
+     - Cho phép Visual Studio tự động nhận diện cả 2 nền tảng, hiển thị danh sách Máy ảo Android (Emulator) trên thanh công cụ mà không cần cờ tham số thủ công.
+  3. **Cập nhật `AndroidManifest.xml`:**
+     - Bổ sung thuộc tính `android:usesCleartextTraffic="true"` vào thẻ `<application>` để máy ảo Android (API 28+) được phép gọi HTTP tới máy chủ Backend qua địa chỉ `http://10.0.2.2:5018`.
+  4. **Kiểm toán chất lượng & Kiểm thử thực tế:**
+     - Biên dịch Android trên ổ `X:\`: **Build Succeeded 100% (0 Warning, 0 Error)**.
+     - Biên dịch Windows trên ổ `X:\`: **Build Succeeded 100% (0 Warning, 0 Error)**.
+     - Bộ 42 Unit Tests ViewModel: **42 / 42 Tests Passed 100%**.
+     - Xác nhận Android SDK API 35/36 và Workload `maui-android` 10.0.110 đã sẵn sàng.
+- **Trạng thái:** COMPLETED & VERIFIED. Chuyển sang Giai đoạn 4: Cập nhật toàn diện tài liệu README.md.
+
+---
+
+## [2026-10-26 07:30] - Quyết Định 148: Loại Bỏ Directory.Build.props Dư Thừa & Chuẩn Hóa Điều Kiện Tiên Quyết Android API 36 Trong README.md
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Nội dung thực hiện:**
+  1. **Xóa tệp dư thừa:** Đã xóa bỏ tệp [`mobile-project/dotnet-maui-ver/Directory.Build.props`](mobile-project/dotnet-maui-ver/Directory.Build.props) (trước đó dùng để chuyển hướng `BaseIntermediateOutputPath` vào Temp). Giải pháp ổ đĩa ảo `subst X:` và đa mục tiêu trực tiếp trong `.csproj` đã thay thế hoàn toàn và không cần can thiệp file props này nữa.
+  2. **Tinh chỉnh tài liệu [`mobile-project/dotnet-maui-ver/README.md`](mobile-project/dotnet-maui-ver/README.md):**
+     - Xóa bỏ mục 4.0 không cần thiết.
+     - Tái cấu trúc mục 4.1 "Điều Kiện Tiên Quyết" phân nhóm rõ ràng theo từng nền tảng chạy (Chung, Windows Desktop, Máy ảo Android, Điện thoại thật).
+     - Cập nhật chuẩn xác yêu cầu: Trình biên dịch **.NET 10 MAUI yêu cầu Android SDK Platform API Level 36** (Android 16).
+     - Làm rõ cơ chế ổ đĩa ảo `subst X:` là **bước tùy chọn (Optional)**, chỉ cần thiết khi người dùng tải/clone project vào thư mục lồng sâu trên Windows vượt giới hạn `MAX_PATH` 260 ký tự; nếu thư mục nằm ở đường dẫn ngắn thì không cần thực hiện.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-26 07:38] - Quyết Định 149: Chuẩn Hóa Dải Lệnh CLI Từng Bước & Cơ Chế Thu Thập Log Debug Dành Cho Lập Trình Viên Frontend (.NET MAUI)
+- **Người chủ trì:** Agent 10 Dan Abramov (Client Lead), Agent 07 Werner Vogels (DevOps Lead) cùng Người dùng.
+- **Bối cảnh:** Các script `.ps1` tự động (`run_windows.ps1`, `run_android.ps1`) tiện lợi cho giảng viên/người chấm thi đánh giá nhanh, nhưng đội ngũ phát triển cần dải lệnh Terminal CLI từng bước để chủ động quan sát log, trích xuất lỗi phục vụ phản hồi và debug.
+- **Quyết định kỹ thuật:**
+  1. **Làm rõ bản chất cơ chế MSIX WinUI 3:**
+     - Lệnh `dotnet run` trực tiếp thất bại với ngoại lệ `COMException (0x80040154: Class not registered)` do WinUI 3 ở chế độ Packaged App bắt buộc phải có Windows AppModel Package Context.
+     - Dải lệnh chuẩn trên Windows Desktop:
+       `Stop-Process` & `Remove-AppxPackage` -> `dotnet build -fl -flp:logfile=build_windows.log;verbosity=normal` -> `Add-AppxPackage -Register` -> `Start-Process shell:AppsFolder\...`.
+     - Lệnh trích xuất Crash Log từ Windows Event Log: `Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='.NET Runtime','Application Error'} -MaxEvents 5`.
+  2. **Dải lệnh CLI trên Android (Máy ảo & Thiết bị thật):**
+     - Thiết lập công cụ `adb`: `$env:PATH += ";C:\Program Files (x86)\Android\android-sdk\platform-tools"`.
+     - Quy trình 3 bước: `dotnet build -f net10.0-android -fl -flp:logfile=build_android.log` -> `adb install -r ...` -> `adb shell am start -n ...`.
+     - Dải lệnh thu thập Logcat: Lọc theo từ khóa `adb logcat | Select-String "ExpenseTracker|DOTNET|AndroidRuntime|FATAL"` và xuất file báo cáo crash `adb logcat -d -s "AndroidRuntime:E" "DOTNET:*" "*:F" > android_crash.log`.
+  3. **Tài liệu hóa:** Đã cập nhật đầy đủ vào Mục 4.7 trong [`mobile-project/dotnet-maui-ver/README.md`](mobile-project/dotnet-maui-ver/README.md).
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-26 07:46] - Quyết Định 150: Chuẩn Hóa Gốc Ổ Đĩa Ảo X: Trỏ Trực Tiếp Vào `dotnet-maui-ver` ($PSScriptRoot) Để Phục Vụ Đóng Gói Nộp Bài
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Phát hiện & Yêu cầu từ Người dùng:**
+  - Khi sinh viên nén bài tập gửi giảng viên chấm thi, chỉ nén duy nhất thư mục `dotnet-maui-ver/`. Do đó, `dotnet-maui-ver` chính là thư mục gốc (Root) của toàn bộ dự án nộp bài, không phụ thuộc vào cấu trúc thư mục cha của workspace đồ án.
+- **Quyết định điều chỉnh:**
+  1. **Động lực hóa script `mount_virtual_drive.ps1`:**
+     - Thay thế đường dẫn cố định tuyệt đối bằng biến động `$PSScriptRoot`. Khi giảng viên hoặc sinh viên giải nén thư mục `dotnet-maui-ver` vào bất kỳ phân vùng/đường dẫn nào (`C:\...`, `D:\...`), script sẽ tự động lấy thư mục đó làm đích gắn ổ ảo `X:`.
+     - Bổ sung cơ chế tự động hủy gắn (`subst X: /D`) và gắn lại nếu ổ `X:` trước đó đang trỏ sang thư mục khác.
+  2. **Đồng bộ hóa toàn bộ đường dẫn trên `X:\`:**
+     - Solution tổng thể: `X:\ExpenseTracker.slnx` (thay vì `X:\mobile-project\dotnet-maui-ver\...`).
+     - Frontend MAUI: `X:\frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj`.
+     - Backend API: `X:\backend\ExpenseTracker.slnx`.
+  3. **Cập nhật `run_android.ps1` & `README.md`:**
+     - `run_android.ps1` tự động mount `$PSScriptRoot` vào `X:`, biên dịch `X:\frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj` và deploy `-t:Run`.
+     - `README.md` cập nhật đường dẫn mở Visual Studio: `X:\ExpenseTracker.slnx`.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-26 08:00] - Quyết Định 151: Tích Hợp Cơ Chế Tự Động Bật Máy Ảo Android (Auto-Launch Emulator) Vào `run_android.ps1`
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Bối cảnh & Phát hiện:**
+  - Người dùng hỏi lý do tại sao không tích hợp lệnh khởi chạy máy ảo trực tiếp vào file `run_android.ps1`.
+  - Khảo sát hệ thống thực tế: Trên máy người dùng, Android Studio và AVD được cài đặt tại `D:\Coding-IDE\AndroidStudioSDK` và `D:\Coding-IDE\Android_AVD\.android\avd\Pixel_8a.avd`. Tệp `.ini` trước đó trỏ nhầm đường dẫn `C:\Users\trinh` đã được sửa lại trỏ chuẩn xác sang `D:\Coding-IDE\...`.
+- **Quyết định nâng cấp `run_android.ps1`:**
+  1. **Tự động nhận diện đa tầng môi trường Android:**
+     - Kiểm tra các ứng viên đường dẫn của `adb.exe` và `emulator.exe` (D:\Coding-IDE, Program Files, LocalAppData).
+     - Thiết lập động biến môi trường `$env:ANDROID_AVD_HOME` và `$env:ANDROID_HOME` nếu phát hiện thư mục tùy biến.
+  2. **Quy trình Tự động Khởi động Máy ảo (Auto-Launch & Polling):**
+     - Nếu phát hiện chưa có thiết bị nào đang kết nối, script tự động quét danh sách AVD qua `emulator -list-avds`.
+     - Tự động gọi `Start-Process $emulatorPath -ArgumentList "-avd $targetAvd"` để bật máy ảo lên màn hình.
+     - Lắng nghe kết nối qua `adb wait-for-device` và kiểm tra vòng lặp `sys.boot_completed` cho đến khi hệ điều hành Android sẵn sàng.
+     - Tự động thực thi `dotnet build ... -t:Run` để cài đặt và mở app lên ngay trong máy ảo vừa bật.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-26 08:26] - Quyết Định 152: Khắc Phục Xung Đột Khóa Tệp (File Lock Collision) & Kiểm Chứng Thành Công 100% Android Deployment
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Vấn đề phát sinh & Phân tích nguyên nhân gốc rễ:**
+  1. *Lỗi đụng độ khóa tệp:* Lệnh `dotnet build` chạy 2 lần liên tiếp (ở bước 2 kiểm tra và bước 4 `-t:Run`) khiến các tiến trình worker nền MSBuild (Roslyn / VBCSCompiler) giữ file handle trên tệp `obj\Debug\net10.0-android\ld.libxamarin-app.x86_64.rsp`, gây ra ngoại lệ `System.IO.IOException: The process cannot access the file ... because it is being used by another process`.
+  2. *Lỗi định danh thiết bị:* `dotnet build -t:Run` báo `XA0010: No available device` khi các biến môi trường `PATH`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` chưa được đưa vào phiên làm việc hiện tại của tiến trình con.
+  3. *Lỗi mảng AVD:* Khi `emulator -list-avds` chỉ trả về 1 AVD (`Pixel_8a`), PowerShell coi đó là `string` dẫn đến `$avdList[0]` lấy ký tự `'P'`.
+- **Hành động & Giải pháp kiến trúc:**
+  1. **Khử trùng lặp Build:** Bỏ bước biên dịch riêng lẻ ban đầu. `run_android.ps1` chuyển sang quy trình tinh gọn: (1) Gắn ổ ảo X: -> (2) Dò tìm SDK / bật máy ảo -> (3) Đóng gói và deploy APK một lần duy nhất với cờ `-nr:false` (tắt MSBuild node reuse) và giải phóng server cũ qua `dotnet build-server shutdown`.
+  2. **Bọc mảng tường minh:** Dùng `@(...)` cho `$rawAvdList` bảo đảm `$avdList[0]` luôn trả về tên đầy đủ của AVD (`Pixel_8a`).
+  3. **Đồng bộ biến môi trường phiên:** Tự động bổ sung `platform-tools` và `emulator` vào `$env:PATH` để MSBuild nhận diện ngay lập tức thiết bị đang kết nối.
+  4. **Kích hoạt Activity trực tiếp:** Gọi `adb shell monkey -p com.companyname.expensetracker.maui -c android.intent.category.LAUNCHER 1` đảm bảo ứng dụng luôn hiển thị nổi trên màn hình máy ảo ngay sau khi cài đặt.
+- **Kiểm chứng thực tế (Evidence-Based Verification):**
+  - Gói APK được biên dịch thành công: `com.companyname.expensetracker.maui-Signed.apk` (13.7 MB).
+  - Deploy qua ADB thành công, ứng dụng đã cài đặt và chạy trên máy ảo `Pixel_8a`: PID `30644`.
+  - Cửa sổ ứng dụng kích hoạt thành công: `mCurrentFocus=Window{... com.companyname.expensetracker.maui/crc647b976420a17d3d28.MainActivity}`.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
+
+
+
+
+
+
+
+
 
 
 
