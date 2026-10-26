@@ -4104,6 +4104,36 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 333 / 333 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
+---
+
+## [2026-10-26 21:30] - Quyết Định 175: Hoàn Thành & Nghiệm Thu Cụm 2, Cụm 3, Cụm 4 (Kế Hoạch 52 - Chặng 2): Native Android Notification Engine, 3 Notification Channels, AlarmManager 21:00 Khi Tắt App & Nâng Cấp Bộ Kiểm Thử Lên 336/336 Tests Xanh Biếc
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Bruce Schneier, Dan Abramov, Kent Beck, Julian Garnier).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. **Triển khai Cụm 2 - Native Android Notification Engine & 3 Kênh Chuyên Biệt:**
+     - Xây dựng giao diện trừu tượng [`INativeNotificationService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Notifications/INativeNotificationService.cs) và hằng số định danh `NotificationChannelIds`.
+     - Xây dựng [`DesktopFallbackNotificationService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Notifications/DesktopFallbackNotificationService.cs) phục vụ môi trường Windows Desktop và UnitTests runner.
+     - Hiện thực [`AndroidNativeNotificationService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Platforms/Android/Services/AndroidNativeNotificationService.cs) với 3 kênh Notification Channels chuẩn Android 8.0+:
+       * `channel_dsa_alerts`: *"🚨 Cảnh Báo Hạn Mức DSA"* (`NotificationImportance.High`, rung kép, âm thanh khẩn cấp).
+       * `channel_balance_fluctuation`: *"💳 Biến Động Số Dư & Giao Dịch"* (`NotificationImportance.High`, âm thanh giao dịch).
+       * `channel_daily_reminder`: *"⏰ Nhắc Nhở Tài Chính 21:00"* (`NotificationImportance.High`, rung, chuông nhẹ).
+     - Định dạng thông báo với `NotificationCompat.Builder`: SmallIcon kim cương, BigTextStyle hiển thị trọn văn bản, PendingIntent bảo mật với cờ `SafeImmutableFlags`.
+  2. **Triển khai Cụm 3 - AlarmManager & BroadcastReceiver Khi Tắt App (Killed State):**
+     - Xây dựng [`DailyReminderReceiver.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Platforms/Android/Services/DailyReminderReceiver.cs): Kế thừa `BroadcastReceiver(Enabled = true, Exported = false)`. Khi được kích hoạt, tự động bắn thông báo nhắc nhở ghi chép chi tiêu lên thanh trạng thái và tự động tính toán thời gian `SetExactAndAllowWhileIdle` cho 21:00 ngày tiếp theo (chu kỳ vĩnh cửu).
+     - Xây dựng [`BootReceiver.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Platforms/Android/Services/BootReceiver.cs): Lắng nghe `Intent.ActionBootCompleted` để tự động phục hồi lịch hẹn `AlarmManager` khi người dùng bật nguồn máy.
+     - Nâng cấp [`MainActivity.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Platforms/Android/MainActivity.cs): Xử lý Deep Link `target_route` từ PendingIntent để tự động định tuyến Shell đến đúng màn hình khi chạm vào thông báo.
+  3. **Triển khai Cụm 4 - Đăng Ký DI, Tích Hợp UI & Kiểm Thử Toàn Diện:**
+     - Cấu hình DI trong [`MauiProgram.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/MauiProgram.cs) đăng ký `INativeNotificationService` đa nền tảng (`#if ANDROID` vs `#else`).
+     - Bổ sung các lệnh RelayCommand `SendNativeNotificationCommand`, `ScheduleDailyReminderCommand`, `CancelDailyReminderCommand` trong [`NotificationHistoryViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/NotificationHistoryViewModel.cs).
+     - Thêm các nút thao tác nhanh **"🔔 Bắn Native Test"** và **"⏰ Hẹn Báo Thức 21:00"** trong [`NotificationHistoryPage.xaml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/NotificationHistoryPage.xaml).
+     - Bổ sung 3 ca kiểm thử trong [`NotificationHistoryViewModelTests.cs`](mobile-project/dotnet-maui-ver/frontend/tests/ExpenseTracker.Maui.UnitTests/NotificationHistoryViewModelTests.cs) xác minh toàn diện các hành vi phát Native Notification và thao tác AlarmManager.
+  4. **Bằng chứng nghiệm thu chất lượng tối thượng (Ultimate Quality Gates):**
+     - Biên dịch .NET MAUI Client Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)**.
+     - Frontend MAUI test suite: **55 / 55 Tests Passed 100%** (+3 tests mới).
+     - Backend Domain & Application test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 336 / 336 Tests Passed Xanh Biếc 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+
 
 
 

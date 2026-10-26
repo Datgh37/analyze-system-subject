@@ -104,6 +104,28 @@
                         Padding="12,0"
                         CornerRadius="10"
                         FontSize="11" />
+
+                <!-- Native Android Notification & Alarm Triggers (Chặng 2) -->
+                <Button Text="🔔 Bắn Native Test"
+                        Command="{Binding SendNativeNotificationCommand}"
+                        CommandParameter="dsa"
+                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
+                        TextColor="{AppThemeBinding Light=#4F46E5, Dark=#C7D2FE}"
+                        FontAttributes="Bold"
+                        HeightRequest="36"
+                        Padding="12,0"
+                        CornerRadius="10"
+                        FontSize="11" />
+
+                <Button Text="⏰ Hẹn Báo Thức 21:00"
+                        Command="{Binding ScheduleDailyReminderCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}"
+                        TextColor="{AppThemeBinding Light=#B45309, Dark=#FDE68A}"
+                        FontAttributes="Bold"
+                        HeightRequest="36"
+                        Padding="12,0"
+                        CornerRadius="10"
+                        FontSize="11" />
             </HorizontalStackLayout>
         </ScrollView>
 

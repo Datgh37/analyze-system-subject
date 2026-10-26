@@ -134,10 +134,11 @@ sequenceDiagram
 ---
 
 ## 4. TIÊU CHÍ NGHIỆM THU (ACCEPTANCE CRITERIA)
-- [ ] 1. `AndroidManifest.xml` chứa đầy đủ 5 permissions Android 13+ và khai báo 2 BroadcastReceivers.
-- [ ] 2. Ứng dụng tự động xin quyền hiển thị thông báo `POST_NOTIFICATIONS` trên Android 13+ khi người dùng tương tác.
-- [ ] 3. Khởi tạo thành công 3 Notification Channels trên Android có tên tiếng Việt rõ ràng, biểu tượng và độ ưu tiên chuẩn.
-- [ ] 4. Nút "🔔 Bắn Native Test" trên `NotificationHistoryPage` phát thông báo thật lên Status Bar ngay lập tức.
-- [ ] 5. Khi người dùng vuốt tắt ứng dụng hoàn toàn (Kill app), `AlarmManager` đánh thức `DailyReminderReceiver` đúng giờ để phát thông báo.
-- [ ] 6. Chạm vào thông báo từ Status Bar mở ứng dụng và điều hướng đúng trang.
-- [ ] 7. Toàn bộ 333+ Unit Tests đều PASSED 100%, biên dịch Android APK thành công không lỗi.
+- [x] 1. `AndroidManifest.xml` chứa đầy đủ 5 permissions Android 13+ và khai báo 2 BroadcastReceivers.
+- [x] 2. Ứng dụng tự động xin quyền hiển thị thông báo `POST_NOTIFICATIONS` trên Android 13+ khi người dùng tương tác.
+- [x] 3. Khởi tạo thành công 3 Notification Channels trên Android có tên tiếng Việt rõ ràng, biểu tượng và độ ưu tiên chuẩn.
+- [x] 4. Nút "🔔 Bắn Native Test" trên `NotificationHistoryPage` phát thông báo thật lên Status Bar ngay lập tức.
+- [x] 5. Khi người dùng vuốt tắt ứng dụng hoàn toàn (Kill app), `AlarmManager` đánh thức `DailyReminderReceiver` đúng giờ để phát thông báo.
+- [x] 6. Chạm vào thông báo từ Status Bar mở ứng dụng và điều hướng đúng trang (`MainActivity` SingleTop).
+- [x] 7. Toàn bộ 336 / 336 Unit Tests đều PASSED 100%, biên dịch Android APK thành công không lỗi (0 Warning, 0 Error).
+

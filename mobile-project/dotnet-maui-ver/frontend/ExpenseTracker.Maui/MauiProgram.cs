@@ -169,9 +169,14 @@ public static class MauiProgram
         // builder.Services.AddScoped<IDataImportRepository, ApiDataImportRepository>();
         // builder.Services.AddScoped<IAutonomousActionRepository, ApiAutonomousActionRepository>();
 
-        // Register Realtime SignalR and Local Notifications Services
+        // Register Realtime SignalR, Local & Native Notifications Services
         builder.Services.AddSingleton<ISignalRRealtimeService, SignalRRealtimeService>();
         builder.Services.AddSingleton<ILocalNotificationService, LocalNotificationService>();
+#if ANDROID
+        builder.Services.AddSingleton<INativeNotificationService, ExpenseTracker.Maui.Platforms.Android.Services.AndroidNativeNotificationService>();
+#else
+        builder.Services.AddSingleton<INativeNotificationService, DesktopFallbackNotificationService>();
+#endif
 
         // Register client authentication manager
         builder.Services.AddSingleton<IClientAuthService, ClientAuthService>();

@@ -105,4 +105,56 @@ public class NotificationHistoryViewModelTests
         _viewModel.StatusMessage.Should().Contain("đã đọc");
         _mockRepo.Verify(r => r.MarkAllAsReadAsync(), Times.Once);
     }
+
+    [Fact]
+    public async Task SendNativeNotificationAsync_WhenTriggered_ShouldCallNativeService()
+    {
+        // Arrange
+        var mockNativeService = new Mock<ExpenseTracker.Maui.Services.Notifications.INativeNotificationService>();
+        var viewModel = new NotificationHistoryViewModel(_mockRepo.Object, mockNativeService.Object);
+
+        // Act
+        await viewModel.SendNativeNotificationAsync("dsa");
+
+        // Assert
+        mockNativeService.Verify(s => s.ShowNotificationAsync(
+            It.Is<string>(t => t.Contains("DSA")),
+            It.IsAny<string>(),
+            ExpenseTracker.Maui.Services.Notifications.NotificationChannelIds.DsaAlerts,
+            It.IsAny<int>(),
+            It.Is<string>(r => r == "///BudgetsPage")), Times.Once);
+
+        viewModel.StatusMessage.Should().Contain("Đã phát Native Notification");
+    }
+
+    [Fact]
+    public async Task ScheduleDailyReminderAsync_WhenTriggered_ShouldCallNativeService()
+    {
+        // Arrange
+        var mockNativeService = new Mock<ExpenseTracker.Maui.Services.Notifications.INativeNotificationService>();
+        var viewModel = new NotificationHistoryViewModel(_mockRepo.Object, mockNativeService.Object);
+
+        // Act
+        await viewModel.ScheduleDailyReminderAsync();
+
+        // Assert
+        mockNativeService.Verify(s => s.ScheduleDailyReminderAsync(21, 0), Times.Once);
+        viewModel.StatusMessage.Should().Contain("21:00");
+    }
+
+    [Fact]
+    public async Task CancelDailyReminderAsync_WhenTriggered_ShouldCallNativeService()
+    {
+        // Arrange
+        var mockNativeService = new Mock<ExpenseTracker.Maui.Services.Notifications.INativeNotificationService>();
+        var viewModel = new NotificationHistoryViewModel(_mockRepo.Object, mockNativeService.Object);
+
+        // Act
+        await viewModel.CancelDailyReminderAsync();
+
+        // Assert
+        mockNativeService.Verify(s => s.CancelDailyReminderAsync(), Times.Once);
+        viewModel.StatusMessage.Should().Contain("Đã hủy");
+    }
 }
+

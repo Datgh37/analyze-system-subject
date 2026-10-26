@@ -7,11 +7,14 @@ using ExpenseTracker.Maui.Models.Notifications;
 using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Realtime.Messages;
 
+using ExpenseTracker.Maui.Services.Notifications;
+
 namespace ExpenseTracker.Maui.ViewModels;
 
 public partial class NotificationHistoryViewModel : BaseViewModel
 {
     private readonly INotificationRepository _notificationRepository;
+    private readonly INativeNotificationService? _nativeNotificationService;
 
     [ObservableProperty]
     private ObservableCollection<InAppNotificationModel> _notifications = new();
@@ -28,9 +31,12 @@ public partial class NotificationHistoryViewModel : BaseViewModel
     [ObservableProperty]
     private string? _statusMessage;
 
-    public NotificationHistoryViewModel(INotificationRepository notificationRepository)
+    public NotificationHistoryViewModel(
+        INotificationRepository notificationRepository,
+        INativeNotificationService? nativeNotificationService = null)
     {
         _notificationRepository = notificationRepository;
+        _nativeNotificationService = nativeNotificationService;
         Title = "Lịch Sử Thông Báo";
 
         // Listen for realtime push notifications delivered over SignalR
@@ -264,4 +270,72 @@ public partial class NotificationHistoryViewModel : BaseViewModel
         FilterMode = mode;
         await LoadNotificationsAsync();
     }
+
+    [RelayCommand]
+    public async Task SendNativeNotificationAsync(string channelType)
+    {
+        if (_nativeNotificationService == null)
+        {
+            StatusMessage = "Dịch vụ Native Notification chưa sẵn sàng.";
+            return;
+        }
+
+        try
+        {
+            var (title, msg, channelId, route) = channelType switch
+            {
+                "dsa" => ("🚨 Cảnh Báo Hạn Mức DSA", "Cảnh báo khẩn cấp: Bạn đã chi tiêu 92% hạn mức ngân sách tháng!", NotificationChannelIds.DsaAlerts, "///BudgetsPage"),
+                "balance" => ("💳 Biến Động Số Dư Ví", "Tài khoản ACB vừa phát sinh giao dịch chi tiêu -120.000 VND.", NotificationChannelIds.BalanceFluctuation, "///WalletsPage"),
+                _ => ("⏰ Nhắc Nhở Báo Thức 21:00", "Đã 21:00 rồi! Đừng quên kiểm tra số dư và ghi chép chi tiêu hôm nay 💎", NotificationChannelIds.DailyReminder, "///ExpensesPage")
+            };
+
+            await _nativeNotificationService.ShowNotificationAsync(title, msg, channelId, 0, route);
+            StatusMessage = $"Đã phát Native Notification lên thanh trạng thái: {title}";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Lỗi khi phát Native Notification: {ex.Message}";
+        }
+    }
+
+    [RelayCommand]
+    public async Task ScheduleDailyReminderAsync()
+    {
+        if (_nativeNotificationService == null)
+        {
+            StatusMessage = "Dịch vụ Native Notification chưa sẵn sàng.";
+            return;
+        }
+
+        try
+        {
+            await _nativeNotificationService.ScheduleDailyReminderAsync(21, 0);
+            StatusMessage = "Đã hẹn lịch nhắc nhở lúc 21:00 mỗi tối (kể cả khi tắt app)! ⏰";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Lỗi hẹn báo thức: {ex.Message}";
+        }
+    }
+
+    [RelayCommand]
+    public async Task CancelDailyReminderAsync()
+    {
+        if (_nativeNotificationService == null)
+        {
+            StatusMessage = "Dịch vụ Native Notification chưa sẵn sàng.";
+            return;
+        }
+
+        try
+        {
+            await _nativeNotificationService.CancelDailyReminderAsync();
+            StatusMessage = "Đã hủy lịch nhắc nhở 21:00.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Lỗi hủy lịch: {ex.Message}";
+        }
+    }
 }
+
