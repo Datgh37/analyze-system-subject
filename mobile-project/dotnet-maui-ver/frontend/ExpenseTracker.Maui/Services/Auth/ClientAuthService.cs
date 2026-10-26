@@ -13,6 +13,11 @@ public interface IClientAuthService
     Task<bool> InitializeAsync();
     Task<(bool Success, string? ErrorMessage)> LoginAsync(string email, string password);
     Task<(bool Success, string? ErrorMessage)> RegisterAsync(string fullName, string email, string password, string baseCurrency = "VND");
+    Task<(bool Success, string? ErrorMessage)> VerifyOtpAsync(string email, string otpCode);
+    Task<(bool Success, string? ErrorMessage)> ResendOtpAsync(string email);
+    Task<(bool Success, string? ErrorMessage)> ForgotPasswordAsync(string email);
+    Task<(bool Success, string? ErrorMessage)> ResetPasswordWithOtpAsync(string email, string otpCode, string newPassword);
+    Task<(bool Success, string? ErrorMessage)> GoogleLoginAsync(string idToken, string email, string displayName);
     Task LogoutAsync();
 }
 
@@ -49,7 +54,7 @@ public class ClientAuthService : IClientAuthService
         try
         {
             var profile = await _userApi.GetProfileAsync();
-            CurrentUser = new UserInfo(profile.Id, profile.FullName, profile.Email, profile.BaseCurrency);
+            CurrentUser = new UserInfo(profile.Id, profile.FullName, profile.Email, profile.BaseCurrency, true);
             IsAuthenticated = true;
             return true;
         }
@@ -78,7 +83,7 @@ public class ClientAuthService : IClientAuthService
         }
         catch (Refit.ApiException apiEx)
         {
-            return (false, apiEx.Content ?? "Invalid email or password.");
+            return (false, ExtractErrorMessage(apiEx, "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."));
         }
         catch (Exception ex)
         {
@@ -101,7 +106,107 @@ public class ClientAuthService : IClientAuthService
         }
         catch (Refit.ApiException apiEx)
         {
-            return (false, apiEx.Content ?? "Registration failed. Please verify your inputs.");
+            return (false, ExtractErrorMessage(apiEx, "Đăng ký không thành công. Vui lòng kiểm tra lại thông tin."));
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? ErrorMessage)> VerifyOtpAsync(string email, string otpCode)
+    {
+        try
+        {
+            var request = new VerifyOtpRequest(email, otpCode);
+            var response = await _authApi.VerifyOtpAsync(request);
+
+            await _tokenStorage.SaveTokensAsync(response.AccessToken, response.RefreshToken);
+            CurrentUser = response.User;
+            IsAuthenticated = true;
+
+            return (true, null);
+        }
+        catch (Refit.ApiException apiEx)
+        {
+            return (false, ExtractErrorMessage(apiEx, "Mã xác thực không hợp lệ hoặc đã hết hạn."));
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? ErrorMessage)> ResendOtpAsync(string email)
+    {
+        try
+        {
+            var request = new ResendOtpRequest(email);
+            await _authApi.ResendOtpAsync(request);
+            return (true, null);
+        }
+        catch (Refit.ApiException apiEx)
+        {
+            return (false, ExtractErrorMessage(apiEx, "Không thể gửi lại mã xác thực vào lúc này."));
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? ErrorMessage)> ForgotPasswordAsync(string email)
+    {
+        try
+        {
+            var request = new ForgotPasswordRequest(email);
+            await _authApi.ForgotPasswordAsync(request);
+            return (true, null);
+        }
+        catch (Refit.ApiException apiEx)
+        {
+            return (false, ExtractErrorMessage(apiEx, "Yêu cầu khôi phục mật khẩu không thành công."));
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? ErrorMessage)> ResetPasswordWithOtpAsync(string email, string otpCode, string newPassword)
+    {
+        try
+        {
+            var request = new ResetPasswordWithOtpRequest(email, otpCode, newPassword);
+            await _authApi.ResetPasswordWithOtpAsync(request);
+            return (true, null);
+        }
+        catch (Refit.ApiException apiEx)
+        {
+            return (false, ExtractErrorMessage(apiEx, "Đặt lại mật khẩu không thành công. Vui lòng thử lại."));
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? ErrorMessage)> GoogleLoginAsync(string idToken, string email, string displayName)
+    {
+        try
+        {
+            var request = new GoogleAuthRequest(idToken, email, displayName);
+            var response = await _authApi.GoogleLoginAsync(request);
+
+            await _tokenStorage.SaveTokensAsync(response.AccessToken, response.RefreshToken);
+            CurrentUser = response.User;
+            IsAuthenticated = true;
+
+            return (true, null);
+        }
+        catch (Refit.ApiException apiEx)
+        {
+            return (false, ExtractErrorMessage(apiEx, "Đăng nhập Google không thành công."));
         }
         catch (Exception ex)
         {
@@ -129,5 +234,30 @@ public class ClientAuthService : IClientAuthService
             IsAuthenticated = false;
             CurrentUser = null;
         }
+    }
+
+    private static string ExtractErrorMessage(Refit.ApiException apiEx, string fallback)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(apiEx.Content))
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(apiEx.Content);
+                if (doc.RootElement.TryGetProperty("detail", out var detail) && !string.IsNullOrWhiteSpace(detail.GetString()))
+                {
+                    return detail.GetString()!;
+                }
+                if (doc.RootElement.TryGetProperty("title", out var title) && !string.IsNullOrWhiteSpace(title.GetString()))
+                {
+                    return title.GetString()!;
+                }
+            }
+        }
+        catch
+        {
+            // fallback if not valid JSON ProblemDetails
+        }
+
+        return !string.IsNullOrWhiteSpace(apiEx.Content) ? apiEx.Content : fallback;
     }
 }

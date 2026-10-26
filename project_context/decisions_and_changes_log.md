@@ -3980,6 +3980,27 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 20:20] - Quyết Định 169: Hoàn Thành & Nghiệm Thu Tác Vụ 6 (Kế Hoạch 52 - Chặng 1): Mở Rộng Refit Client IAuthApi & ClientAuthService Phục Vụ 100% Real API Backend
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Dan Abramov, Werner Vogels, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Nâng cấp bộ hợp đồng dữ liệu Client DTOs trong [`AuthModels.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Models/Auth/AuthModels.cs):
+     - Mở rộng `UserInfo` với thuộc tính `bool IsEmailVerified = false`.
+     - Bổ sung các DTOs: `VerifyOtpRequest`, `ResendOtpRequest`, `ForgotPasswordRequest`, `ResetPasswordWithOtpRequest`, `GoogleAuthRequest`.
+  2. Bổ sung 5 phương thức gọi Real API RESTful vào hợp đồng Refit [`IApiClients.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Api/IApiClients.cs) (`IAuthApi`):
+     - `VerifyOtpAsync`, `ResendOtpAsync`, `ForgotPasswordAsync`, `ResetPasswordWithOtpAsync`, `GoogleLoginAsync`.
+  3. Mở rộng tầng dịch vụ [`ClientAuthService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Auth/ClientAuthService.cs):
+     - Kết nối trực tiếp Refit `_authApi` với bộ nhớ bảo mật `_tokenStorage` và cập nhật phiên người dùng `CurrentUser`.
+     - Tích hợp hàm giải mã lỗi `ExtractErrorMessage` bóc tách cấu trúc RFC 7807 `ProblemDetails` (`detail` / `title`) từ phản hồi backend sang thông báo tiếng Việt thanh thoát, thân thiện.
+  4. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch thành công dự án .NET MAUI Client cho nền tảng Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo** (Build succeeded).
+     - Frontend MAUI test suite: **42 / 42 Tests Passed 100%**.
+     - Backend test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 323 / 323 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
 

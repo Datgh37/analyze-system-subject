@@ -15,6 +15,21 @@ public interface IAuthApi
     [Post("/api/auth/refresh-token")]
     Task<AuthResponse> RefreshTokenAsync([Body] RefreshTokenRequest request);
 
+    [Post("/api/auth/verify-otp")]
+    Task<AuthResponse> VerifyOtpAsync([Body] VerifyOtpRequest request);
+
+    [Post("/api/auth/resend-otp")]
+    Task<bool> ResendOtpAsync([Body] ResendOtpRequest request);
+
+    [Post("/api/auth/forgot-password")]
+    Task<bool> ForgotPasswordAsync([Body] ForgotPasswordRequest request);
+
+    [Post("/api/auth/reset-password-otp")]
+    Task<bool> ResetPasswordWithOtpAsync([Body] ResetPasswordWithOtpRequest request);
+
+    [Post("/api/auth/google")]
+    Task<AuthResponse> GoogleLoginAsync([Body] GoogleAuthRequest request);
+
     [Post("/api/auth/logout")]
     Task LogoutAsync([Body] object? payload = null);
 }
