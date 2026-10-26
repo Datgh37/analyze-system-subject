@@ -3,13 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Budgets"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.BudgetsPage"
              x:DataType="vm:BudgetsViewModel"
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20,16,20,32" Spacing="18" MaximumWidthRequest="720">
+    <Grid RowDefinitions="*, Auto">
+        <ScrollView Grid.Row="0">
+        <VerticalStackLayout Padding="16,12,16,24" Spacing="18" MaximumWidthRequest="720">
 
             <!-- Error Banner -->
             <Border BackgroundColor="#FEF2F2"
@@ -436,5 +438,9 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
+        <!-- Bottom Navigation Bar (Center Docked Voice Mic FAB) -->
+        <components:BottomNavDockView Grid.Row="1" ActiveTab="Budgets" />
+    </Grid>
 </ContentPage>
 

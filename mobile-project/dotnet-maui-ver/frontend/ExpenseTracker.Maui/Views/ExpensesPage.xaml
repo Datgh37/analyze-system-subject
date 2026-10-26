@@ -3,13 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Transactions"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.ExpensesPage"
              x:DataType="vm:ExpensesViewModel"
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20,16,20,36" Spacing="18" MaximumWidthRequest="640">
+    <Grid RowDefinitions="*, Auto">
+        <ScrollView Grid.Row="0">
+        <VerticalStackLayout Padding="16,12,16,24" Spacing="18" MaximumWidthRequest="640">
 
             <!-- 1. Hero Monthly Expense Summary Card (Crimson Rose Gradient) -->
             <Border Stroke="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}"
@@ -41,7 +43,7 @@
                     </Grid>
 
                     <Label Text="{Binding MonthlyTotalExpense, StringFormat='-{0:N0} VND'}"
-                           FontSize="32"
+                           FontSize="26"
                            FontAttributes="Bold"
                            TextColor="#FFFFFF"
                            Margin="0,4" />
@@ -291,7 +293,7 @@
                             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
                             Padding="24,36">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="🛒" FontSize="32" HorizontalOptions="Center" />
+                            <Label Text="🛒" FontSize="26" HorizontalOptions="Center" />
                             <Label Text="Chưa có khoản chi tiêu nào trong tháng"
                                    FontSize="15"
                                    FontAttributes="Bold"
@@ -391,4 +393,8 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
+        <!-- Bottom Navigation Bar (Center Docked Voice Mic FAB) -->
+        <components:BottomNavDockView Grid.Row="1" ActiveTab="Expenses" />
+    </Grid>
 </ContentPage>

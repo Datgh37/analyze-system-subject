@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ExpenseTracker.Maui.Views.Components.BottomNavDockView"
+             x:Name="ThisNavDock">
+
+    <!-- Outer Dock Container with safe inset and luxury glassmorphism background -->
+    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 24,24,0,0"
+            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F172A}"
+            Padding="8,4,8,8"
+            Margin="0"
+            HeightRequest="72"
+            VerticalOptions="End">
+        <Border.Shadow>
+            <Shadow Brush="#000000" Offset="0,-4" Radius="16" Opacity="{AppThemeBinding Light=0.08, Dark=0.35}" />
+        </Border.Shadow>
+
+        <Grid ColumnDefinitions="*, *, 64, *, *" VerticalOptions="Center">
+
+            <!-- 1. TAB VÍ & TỔNG QUAN -->
+            <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnWalletsTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Label Text="👛" FontSize="19" HorizontalOptions="Center" />
+                <Label Text="Ví" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
+                       TextColor="{Binding Source={x:Reference ThisNavDock}, Path=WalletsTabColor}" />
+            </VerticalStackLayout>
+
+            <!-- 2. TAB CHI TIÊU & GIAO DỊCH -->
+            <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnExpensesTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Label Text="💸" FontSize="19" HorizontalOptions="Center" />
+                <Label Text="Chi Tiêu" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
+                       TextColor="{Binding Source={x:Reference ThisNavDock}, Path=ExpensesTabColor}" />
+            </VerticalStackLayout>
+
+            <!-- 3. CENTER DOCKED FLOATING MICROPHONE BUTTON (SKETCH CENTER FAB) -->
+            <Grid Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,-22,0,0">
+                <Border WidthRequest="56" HeightRequest="56"
+                        StrokeShape="RoundRectangle 28"
+                        StrokeThickness="2"
+                        Stroke="#38BDF8">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4F46E5" Offset="0.0" />
+                            <GradientStop Color="#0284C7" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#38BDF8" Offset="0,4" Radius="16" Opacity="0.5" />
+                    </Border.Shadow>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnVoiceMicTapped" />
+                    </Border.GestureRecognizers>
+
+                    <Label Text="🎙️" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <!-- 4. TAB NGÂN SÁCH & DSA -->
+            <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBudgetsTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Label Text="📊" FontSize="19" HorizontalOptions="Center" />
+                <Label Text="Ngân Sách" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
+                       TextColor="{Binding Source={x:Reference ThisNavDock}, Path=BudgetsTabColor}" />
+            </VerticalStackLayout>
+
+            <!-- 5. TAB BÁO CÁO TÀI CHÍNH -->
+            <VerticalStackLayout Grid.Column="4" Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnReportsTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Label Text="📑" FontSize="19" HorizontalOptions="Center" />
+                <Label Text="Báo Cáo" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
+                       TextColor="{Binding Source={x:Reference ThisNavDock}, Path=ReportsTabColor}" />
+            </VerticalStackLayout>
+
+        </Grid>
+    </Border>
+
+</ContentView>

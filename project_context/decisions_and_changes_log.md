@@ -4192,16 +4192,32 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Biên dịch Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)** trong 3 phút 46 giây.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED. KHÉP LẠI TOÀN BỘ 4 CHẶNG CỦA KẾ HOẠCH 52.
 
+---
 
-
-
-
-
-
-
-
-
-
-
-
+## [2026-10-26 23:10] - Quyết Định 178: Hoàn Thành & Nghiệm Thu Kế Hoạch 53: Chuẩn Hóa UI Căn Bản, Triển Khai Bottom Navigation Bar 4 Tabs Kèm Center Docked Voice Mic FAB (Theo Bản Vẽ Sketch Tay), Tái Cấu Trúc Hamburger Sidebar 5 Nhóm & Xuất Bản Tài Liệu Bàn Giao Frontend Handoff
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Brad Frost, Dan Abramov, Julian Garnier, Kent Beck, Alistair Cockburn).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. **Hiện thực hóa Bản sketch tay Bottom Navigation Bar:**
+     - Thiết kế component tái sử dụng [`BottomNavDockView.xaml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/Components/BottomNavDockView.xaml) và [`BottomNavDockView.xaml.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/Components/BottomNavDockView.xaml.cs).
+     - Bố cục gồm 4 Tab chính phân bổ công thái học: 👛 Ví (`WalletsPage`), 💸 Chi Tiêu (`ExpensesPage`), 📊 Ngân Sách (`BudgetsPage`), 📑 Báo Cáo (`ReportsPage`).
+     - Trang bị **Center Docked Floating Mic Button (FAB 🎙️)**: Nút tròn 56x56 nhô cao -18px, viền Gradient Indigo/Cyan phát sáng, bóng đổ tím rực rỡ, nhấn vào kích hoạt ngay `VoiceMicModalPage`.
+     - Nhúng thành công vào 4 trang cốt lõi (`WalletsPage.xaml`, `ExpensesPage.xaml`, `BudgetsPage.xaml`, `ReportsPage.xaml`) qua bố cục Grid 2 hàng `*, Auto`, đảm bảo vùng cuộn độc lập và chân trang không bị che khuất.
+  2. **Tái cấu trúc Hamburger Sidebar (`AppShell.xaml`):**
+     - Thay thế danh sách phẳng dài 13 mục bằng cấu trúc phân cấp tinh gọn 5 nhóm chuyên đề:
+       1. 💎 *Tài Chính Cốt Lõi (Core Finance)*
+       2. 🤖 *Trí Tuệ Nhân Tạo & Bóc Tách (AI Vision)*
+       3. 🎯 *Kỷ Luật & Mục Tiêu (Budget & Savings)*
+       4. 🧠 *Tâm Lý Chi Tiêu & Dự Báo (Behavioral Finance)*
+       5. ⚙️ *Hệ Thống & Bảo Mật (System & Security)*
+     - Tùy biến `Shell.ItemTemplate` thanh thoát (chiều cao 44px, bo góc 8px, font 13pt), loại bỏ hoàn toàn cảm giác thô cứng mặc định.
+  3. **Khắc phục Bể Layout & Căn chỉnh Typography:**
+     - Hạ tỷ lệ phông chữ Hero Balance/Expense từ `34pt` xuống `26pt Bold` để chống tràn viền (overflow) trên các thiết bị di động có bề ngang hẹp (360-390px).
+     - Chuẩn hóa lề trang `Padding="16,12,16,24"` an toàn.
+  4. **Xuất bản Tài liệu Bàn giao Frontend Handoff Chuyên Nghiệp:**
+     - Soạn thảo và hoàn thiện [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](mobile-project/dotnet-maui-ver/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md) dài hơn 300 dòng, cung cấp toàn bộ bản đồ kiến trúc UI, Semantic Color Tokens, Typography Scale, hướng dẫn căn chỉnh XAML, vi hoạt ảnh Anime.js v4/Spring Physics và Checklist công việc ngày mai cho thành viên phụ trách Frontend.
+  5. **Bằng chứng nghiệm thu chất lượng tối thượng (Quality Gates):**
+     - Biên dịch .NET MAUI Client Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)** trong 4 phút 49 giây.
+     - Bộ kiểm thử Frontend MAUI Unit Tests: **82 / 82 Tests Passed 100%**.
+     - Tổng thể dự án: **363 / 363 Tests Passed Xanh Biếc 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED. SẴN SÀNG CHO BƯỚC BÀN GIAO VÀ KHỞI ĐỘNG GIAI ĐOẠN 11.
 

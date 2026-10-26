@@ -4,14 +4,16 @@
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Wallets"
              xmlns:viewsAuto="clr-namespace:ExpenseTracker.Maui.Views.Autonomous"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.WalletsPage"
              x:DataType="vm:WalletsViewModel"
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
 
-    <RefreshView IsRefreshing="{Binding IsBusy}" Command="{Binding LoadWalletsCommand}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="18" Padding="20,16,20,36" MaximumWidthRequest="640">
+    <Grid RowDefinitions="*, Auto">
+        <RefreshView Grid.Row="0" IsRefreshing="{Binding IsBusy}" Command="{Binding LoadWalletsCommand}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="16" Padding="16,12,16,24" MaximumWidthRequest="640">
 
                 <!-- 1. Realtime Status & Quick Notification Bar -->
                 <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}" 
@@ -124,7 +126,7 @@
 
                         <!-- Primary Net Worth Number -->
                         <Label Text="{Binding FormattedTotalBalance}"
-                               FontSize="34"
+                               FontSize="26"
                                FontAttributes="Bold"
                                TextColor="#FFFFFF"
                                Margin="0,4" />
@@ -358,4 +360,8 @@
             </VerticalStackLayout>
         </ScrollView>
     </RefreshView>
+
+    <!-- Bottom Navigation Bar Dock (Center Docked Voice Mic FAB) -->
+    <components:BottomNavDockView Grid.Row="1" ActiveTab="Wallets" />
+</Grid>
 </ContentPage>
