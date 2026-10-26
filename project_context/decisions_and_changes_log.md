@@ -4253,12 +4253,13 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
 - **Người chủ trì:** Chủ tọa đề tài & Toàn thể Hội đồng Đa tác tử (Orchestrator, Cockburn BA, Eric Evans, Martin Kleppmann, Werner Vogels, Dan Abramov, Kent Beck).
 - **Căn cứ yêu cầu:** Chỉ đạo trực tiếp của người dùng: Họp điều chỉnh Giai đoạn 11, tạm thời bỏ qua bước làm video demo, rà soát đối chiếu nội dung file [`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx) với barem chấm điểm cuối kỳ ([`yeucau-cuoiky.txt`](mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt)) và chốt Chặng 1 của Giai đoạn 11.
 - **Nội dung cuộc họp & Kết quả thực thi Chặng 1:**
-  1. **Thống nhất Điều chỉnh Phạm vi Giai đoạn 11:**
-     - Tạm thời **bỏ qua bước quay Video Demo** để tập trung nguồn lực tối đa cho chất lượng mã nguồn thực tế, báo cáo kỹ thuật chỉn chu và trải nghiệm kiểm thử tự động 1-Click trên máy ảo Android cho Giảng viên.
-     - Phân kỳ Giai đoạn 11 thành 3 chặng mạch lạc:
-       * *Chặng 1 (Hoàn thành):* Kiểm toán và Nâng cấp Báo cáo Kỹ thuật Cuối kỳ [`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx).
-       * *Chặng 2 (Tiếp theo):* Bộ kịch bản và Script 1-Click Khởi chạy & Kiểm thử Tự động E2E ([`run_android.ps1`](mobile-project/dotnet-maui-ver/run_android.ps1)).
-       * *Chặng 3:* Đóng gói Bản cài đặt APK Android Release.
+  1. **Thống nhất Phân kỳ 5 Chặng Chuẩn mực của Giai đoạn 11 (Kế thừa PLAN-48 & Bỏ qua Video Demo thành phẩm):**
+     - Theo chỉ đạo của Người dùng, hệ thống **tạm thời bỏ qua bước quay/dựng Video Demo thành phẩm**, nhưng bảo lưu nguyên vẹn các thành phần cốt lõi của kế hoạch gốc [`PLAN-48`](plans/plans-mobile-app/2026-10-25_plan_48_giai_doan_11_tong_kiem_toan_bao_cao_va_on_tap_qa.md) và Quyết định 143/161:
+       * *Chặng 1 (Đã hoàn thành 100%):* Kiểm toán và Nâng cấp Báo cáo Kỹ thuật Cuối kỳ [`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx) khớp 100% barem điểm 10.
+       * *Chặng 2 (Tiếp theo):* Kịch bản Demo & Hướng Dẫn Trình Diễn Tính Năng Ăn Điểm (User Story Journey) [`KICH_BAN_DEMO_THUC_TE_CUOI_KY.md`](mobile-project/dotnet-maui-ver/implement-docs/KICH_BAN_DEMO_THUC_TE_CUOI_KY.md) để biểu diễn trực tiếp các phân cảnh đắt giá trước Giảng viên.
+       * *Chặng 3:* Cẩm Nang Ôn Tập - Bộ Câu Hỏi Q&A Thông Hiểu Dự Án & Bảo Vệ Mã Nguồn [`BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md`](mobile-project/dotnet-maui-ver/implement-docs/BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md) (chuẩn bị ăn trọn 1.5đ vấn đáp cá nhân).
+       * *Chặng 4:* Chuẩn Hóa Bộ Script Khởi Chạy Tự Động 1-Click & Kiểm Thử E2E ([`run_android.ps1`](mobile-project/dotnet-maui-ver/quick-run-scripts/run_android.ps1), [`test_api_suite.ps1`](mobile-project/dotnet-maui-ver/quick-run-scripts/test_api_suite.ps1)).
+       * *Chặng 5:* Đóng Gói Bản Phát Hành APK Android Release (`net10.0-android` / `ExpenseTracker.apk`) kèm tài liệu hướng dẫn cài đặt [`HUONG_DAN_CAI_DAT_APK.md`](mobile-project/dotnet-maui-ver/implement-docs/HUONG_DAN_CAI_DAT_APK.md).
   2. **Kiểm toán Dòng-đối-dòng & Phát hiện Thiếu sót trong BaoCao.docx Cũ:**
      - File `BaoCao.docx` cũ thiếu đăng ký rõ ràng phương án Phần B (MVVM + SignalR để lấy trọn điểm cộng).
      - Mục 2.4 mới chỉ mô tả sơ lược LocalNotificationService, chưa phản ánh kiến trúc Native Android Notification Engine (Foreground Heads-Up, Background, và đặc biệt là **KILLED STATE qua AlarmManager + BroadcastReceiver** báo thức lúc 21:00 hàng ngày, BootReceiver tự phục hồi khi reboot, Deep Linking điều hướng form, Bank Notification Listener tự bóc tách thông báo ngân hàng MoMo, ACB, Vietcombank).
