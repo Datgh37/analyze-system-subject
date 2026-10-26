@@ -8,4 +8,7 @@ public interface ISignalRRealtimeService
 
     Task ConnectAsync();
     Task DisconnectAsync();
+
+    Task RequestLiveBalanceAsync(Guid walletId);
+    Task BroadcastWalletRefreshAsync();
 }

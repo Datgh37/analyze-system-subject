@@ -85,3 +85,8 @@ public record NudgeAlertRealtimeInfo(
     string? TargetRoute,
     DateTime Timestamp);
 
+public class WalletRefreshNeededMessage : ValueChangedMessage<bool>
+{
+    public WalletRefreshNeededMessage(bool value = true) : base(value) { }
+}
+

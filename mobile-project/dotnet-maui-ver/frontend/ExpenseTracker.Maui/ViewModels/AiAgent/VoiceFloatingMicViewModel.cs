@@ -88,20 +88,37 @@ public partial class VoiceFloatingMicViewModel : BaseViewModel
 
         try
         {
-            if (result.TargetRoute == "CreateCategoryPage" && result.PrefillData.TryGetValue("categoryName", out var catName))
-            {
-                await Shell.Current.GoToAsync($"CreateCategoryPage?name={Uri.EscapeDataString(catName)}&type=Expense");
-            }
-            else if (result.TargetRoute == "AddTransactionPage")
+            if (result.TargetRoute == "ExpensesPage" || result.TargetRoute == "AddTransactionPage")
             {
                 string amt = result.ExtractedAmount.HasValue ? result.ExtractedAmount.Value.ToString("G29") : "0";
-                string cat = result.SuggestedCategory ?? "Chi tiêu";
-                string type = result.ActionType;
-                await Shell.Current.GoToAsync($"AddTransactionPage?amount={amt}&category={Uri.EscapeDataString(cat)}&type={type}");
+                string note = result.PrefillData.TryGetValue("note", out var n) && !string.IsNullOrWhiteSpace(n)
+                    ? n
+                    : (result.SuggestedCategory ?? "Chi tiêu");
+                await Shell.Current.GoToAsync($"///ExpensesPage?amount={amt}&note={Uri.EscapeDataString(note)}");
             }
-            else if (result.TargetRoute == "AnalyticsReportPage")
+            else if (result.TargetRoute == "ReportsPage" || result.TargetRoute == "AnalyticsReportPage")
             {
-                await Shell.Current.GoToAsync("//AnalyticsReportPage");
+                await Shell.Current.GoToAsync("///ReportsPage");
+            }
+            else if (result.TargetRoute == "BudgetsPage" || result.TargetRoute == "BudgetHubPage")
+            {
+                await Shell.Current.GoToAsync("///BudgetsPage");
+            }
+            else if (result.TargetRoute == "CreateCategoryPage" || result.TargetRoute == "CategoriesPage")
+            {
+                await Shell.Current.GoToAsync("///CategoriesPage");
+            }
+            else if (result.TargetRoute == "WalletsPage")
+            {
+                await Shell.Current.GoToAsync("///WalletsPage");
+            }
+            else if (result.TargetRoute == "ReceiptOcrPage")
+            {
+                await Shell.Current.GoToAsync("///ReceiptOcrPage");
+            }
+            else
+            {
+                await Shell.Current.GoToAsync($"///{result.TargetRoute}");
             }
         }
         catch (Exception ex)

@@ -103,14 +103,73 @@
             </Button>
         </Grid>
 
-        <!-- 5. Sample Voice Prompts Pill Bar -->
-        <Border Grid.Row="4" Margin="0,0,0,8" Padding="14,10"
-                StrokeThickness="0" StrokeShape="RoundRectangle 12"
+        <!-- 5. Sample Voice Prompts Pill Bar (Interactive Demo Bar) -->
+        <Border Grid.Row="4" Margin="0,0,0,8" Padding="14,14"
+                StrokeThickness="1" Stroke="#334155" StrokeShape="RoundRectangle 16"
                 BackgroundColor="#1E293B">
-            <VerticalStackLayout Spacing="4">
-                <Label Text="💡 Gợi ý câu lệnh mẫu:" FontSize="11" FontAttributes="Bold" TextColor="#38BDF8" />
-                <Label Text="• &quot;Tiêu 45k cà phê Highland&quot; (Tự ghi nhận chi tiêu)&#x0a;• &quot;Tạo danh mục Nuôi mèo&quot; (Mở form danh mục)&#x0a;• &quot;Xem báo cáo tháng này&quot; (Mở trang phân tích)"
-                       FontSize="11" TextColor="#94A3B8" LineHeight="1.3" />
+            <VerticalStackLayout Spacing="10">
+                <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                    <Label Text="⚡" FontSize="13" TextColor="#F59E0B" VerticalOptions="Center" />
+                    <Label Text="CÂU LỆNH GIỌNG NÓI MẪU (BẤM ĐỂ THỬ NGHIỆM)" FontSize="11" FontAttributes="Bold" TextColor="#38BDF8" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <FlexLayout Wrap="Wrap" JustifyContent="Start" AlignItems="Center">
+                    <Button Text="☕ Chi 50k ăn trưa Highland"
+                            Command="{Binding ProcessTranscriptCommand}"
+                            CommandParameter="Chi 50k ăn trưa Highland"
+                            BackgroundColor="#0F172A"
+                            TextColor="#F8FAFC"
+                            BorderColor="#38BDF8"
+                            BorderWidth="1"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="18"
+                            HeightRequest="36"
+                            Padding="12,0"
+                            Margin="0,0,8,8" />
+
+                    <Button Text="🧋 Uống trà sữa Phúc Long 65k"
+                            Command="{Binding ProcessTranscriptCommand}"
+                            CommandParameter="Uống trà sữa Phúc Long 65k"
+                            BackgroundColor="#0F172A"
+                            TextColor="#F8FAFC"
+                            BorderColor="#10B981"
+                            BorderWidth="1"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="18"
+                            HeightRequest="36"
+                            Padding="12,0"
+                            Margin="0,0,8,8" />
+
+                    <Button Text="📊 Xem báo cáo tài chính"
+                            Command="{Binding ProcessTranscriptCommand}"
+                            CommandParameter="Xem báo cáo tài chính"
+                            BackgroundColor="#0F172A"
+                            TextColor="#F8FAFC"
+                            BorderColor="#818CF8"
+                            BorderWidth="1"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="18"
+                            HeightRequest="36"
+                            Padding="12,0"
+                            Margin="0,0,8,8" />
+
+                    <Button Text="🎯 Thiết lập ngân sách"
+                            Command="{Binding ProcessTranscriptCommand}"
+                            CommandParameter="Thiết lập ngân sách"
+                            BackgroundColor="#0F172A"
+                            TextColor="#F8FAFC"
+                            BorderColor="#F472B6"
+                            BorderWidth="1"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="18"
+                            HeightRequest="36"
+                            Padding="12,0"
+                            Margin="0,0,8,8" />
+                </FlexLayout>
             </VerticalStackLayout>
         </Border>
 

@@ -138,6 +138,15 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
                 });
             });
 
+            _hubConnection.On("ReceiveWalletRefreshNeeded", () =>
+            {
+                _logger.LogInformation("Realtime: Received ReceiveWalletRefreshNeeded event from server");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeakReferenceMessenger.Default.Send(new WalletRefreshNeededMessage(true));
+                });
+            });
+
             await _hubConnection.StartAsync();
             UpdateStatus(true, "Đã kết nối Realtime", "#10B981");
             _logger.LogInformation("SignalR successfully connected to {HubUrl}", _hubUrl);
@@ -146,6 +155,46 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
         {
             _logger.LogError(ex, "Failed to connect to SignalR hub at {HubUrl}", _hubUrl);
             UpdateStatus(false, "Lỗi kết nối Realtime", "#EF4444");
+        }
+    }
+
+    public async Task RequestLiveBalanceAsync(Guid walletId)
+    {
+        if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+        {
+            try
+            {
+                _logger.LogInformation("SignalR: Invoking RequestLiveBalanceAsync for wallet {WalletId}", walletId);
+                await _hubConnection.InvokeAsync("RequestLiveBalanceAsync", walletId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to invoke RequestLiveBalanceAsync for wallet {WalletId}", walletId);
+            }
+        }
+        else
+        {
+            _logger.LogWarning("SignalR: Cannot invoke RequestLiveBalanceAsync - connection is not active");
+        }
+    }
+
+    public async Task BroadcastWalletRefreshAsync()
+    {
+        if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+        {
+            try
+            {
+                _logger.LogInformation("SignalR: Invoking BroadcastWalletRefreshAsync");
+                await _hubConnection.InvokeAsync("BroadcastWalletRefreshAsync");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to invoke BroadcastWalletRefreshAsync");
+            }
+        }
+        else
+        {
+            _logger.LogWarning("SignalR: Cannot invoke BroadcastWalletRefreshAsync - connection is not active");
         }
     }
 

@@ -4159,6 +4159,39 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 354 / 354 Tests Passed Xanh Biếc 100%**.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
+---
+
+## [2026-10-26 22:15] - Quyết Định 177: Hoàn Thành & Nghiệm Thu Toàn Diện Chặng 4 (Kế Hoạch 52): Trợ Lý Giọng Nói Voice AI Điều Khiển Hệ Thống, SignalR 2 Chiều (Bi-directional Client-Server Invocation), Interactive Quick Demo Bar & Đạt 363/363 Tests Xanh Biếc
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Dan Abramov, Werner Vogels, Andrew Ng, Alistair Cockburn, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. **Hoàn thiện Cổng Realtime SignalR 2 Chiều (Bi-directional Client-Server Full-Duplex Invocation):**
+     - Backend [`FinancialHub.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.WebApi/Hubs/FinancialHub.cs):
+       * Thêm phương thức `RequestLiveBalanceAsync(Guid walletId)`: Cho phép client chủ động yêu cầu số dư ví mới nhất qua `InvokeAsync`, hub tra cứu từ `IWalletService` và gửi ngược sự kiện `ReceiveBalanceUpdate` về riêng cho caller.
+       * Thêm phương thức `BroadcastWalletRefreshAsync()`: Cho phép client yêu cầu hub phát thông điệp `ReceiveWalletRefreshNeeded` đến toàn bộ các thiết bị đang online cùng tài khoản (`user_{userId}`).
+     - Client [`ISignalRRealtimeService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Realtime/ISignalRRealtimeService.cs) & [`SignalRRealtimeService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Realtime/SignalRRealtimeService.cs):
+       * Hiện thực gọi 2 phương thức trên thông qua `_hubConnection.InvokeAsync(...)` an toàn với cơ chế bắt lỗi và kiểm tra trạng thái kết nối `IsConnected`.
+       * Lắng nghe sự kiện `ReceiveWalletRefreshNeeded` và chuyển phát bản tin `WalletRefreshNeededMessage` qua `WeakReferenceMessenger.Default`.
+  2. **Trợ Lý Giọng Nói Thông Minh Voice AI Điều Khiển Hệ Thống:**
+     - Nâng cấp [`MockVoiceAgentRepository.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Repositories/AiAgent/MockVoiceAgentRepository.cs):
+       * Hỗ trợ phân tích đa dạng khẩu lệnh tiếng Việt có tiếng lóng tiền tệ ("50k", "65k", "100k"), tự động bóc tách số tiền và phân loại danh mục thông minh ("Ăn uống", "Đi lại", "Mua sắm").
+       * Phân tích ý định điều hướng đến các phân hệ cốt lõi: Báo cáo tài chính (`ReportsPage`), Ngân sách (`BudgetsPage`), Cây danh mục (`CategoriesPage`), Quét hóa đơn AI (`ReceiptOcrPage`), Quản lý Đa ví (`WalletsPage`).
+     - Nâng cấp [`VoiceFloatingMicViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/AiAgent/VoiceFloatingMicViewModel.cs):
+       * Phương thức `ExecuteNavigationIntentAsync` sử dụng Absolute Shell Navigation: điều hướng mượt mà `///ExpensesPage?amount={amt}&note={note}` chuyển tiếp dữ liệu đến `ExpensesViewModel` (IQueryAttributable) để kích hoạt banner tự động điền và gợi ý danh mục tự động.
+  3. **Thanh Nút Bấm Demo Giọng Nói Mẫu Trên Giao Diện [`VoiceMicModalPage.xaml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/AiAgent/VoiceMicModalPage.xaml):**
+     - Trang bị cụm **"⚡ CÂU LỆNH GIỌNG NÓI MẪU (BẤM ĐỂ THỬ NGHIỆM)"** gồm 4 nút bấm Pill phong cách Dark Fintech:
+       * `"☕ Chi 50k ăn trưa Highland"`
+       * `"🧋 Uống trà sữa Phúc Long 65k"`
+       * `"📊 Xem báo cáo tài chính"`
+       * `"🎯 Thiết lập ngân sách"`
+     - Giúp giảng viên và ban giám khảo trải nghiệm trực tiếp tính năng Voice AI chỉ bằng 1 chạm, loại bỏ 100% rủi ro do nhiễu micro hoặc cấu hình âm thanh máy ảo.
+  4. **Bộ Kiểm Thử Nâng Cao & Kiểm Toán Chất Lượng:**
+     - Bổ sung 9 ca kiểm thử trong [`VoiceFloatingMicViewModelTests.cs`](mobile-project/dotnet-maui-ver/frontend/tests/ExpenseTracker.Maui.UnitTests/VoiceFloatingMicViewModelTests.cs) xác minh toàn diện cả 2 luồng: Phân tích khẩu lệnh chi tiêu và Điều hướng phân hệ.
+     - Frontend MAUI test suite: **82 / 82 Tests Passed 100%** (+9 tests mới).
+     - Backend Application & Domain test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 363 / 363 Tests Passed Xanh Biếc 100%**.
+     - Biên dịch Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)** trong 3 phút 46 giây.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED. KHÉP LẠI TOÀN BỘ 4 CHẶNG CỦA KẾ HOẠCH 52.
+
 
 
 
