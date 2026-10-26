@@ -74,6 +74,59 @@
                                Color="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}"
                                HorizontalOptions="Center" />
 
+            <!-- Auto-fill Notification Banner from Bank Listener (Chặng 3 Killer Feature) -->
+            <Border Stroke="#60A5FA"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+                    Padding="14,12"
+                    IsVisible="{Binding AutoFillBannerMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="💳" FontSize="18" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding AutoFillBannerMessage}"
+                           TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
+                           FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Quick Bank Simulation Triggers for Presentation Defense -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#111827}"
+                    Padding="14,12">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="⚡ Giả Lập Biến Động Ngân Hàng Ngoại Tuyến (Demo Bảo Vệ Đồ Án):"
+                           FontSize="11" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Spacing="8">
+                            <Button Text="Ví MoMo (-85k)"
+                                    Command="{Binding SimulateBankDeductionCommand}"
+                                    CommandParameter="momo"
+                                    BackgroundColor="{AppThemeBinding Light=#FCE7F3, Dark=#831843}"
+                                    TextColor="{AppThemeBinding Light=#BE185D, Dark=#F472B6}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
+                            <Button Text="ACB ONE (-350k)"
+                                    Command="{Binding SimulateBankDeductionCommand}"
+                                    CommandParameter="acb"
+                                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+                                    TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
+                            <Button Text="Vietcombank (-500k)"
+                                    Command="{Binding SimulateBankDeductionCommand}"
+                                    CommandParameter="vcb"
+                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                    TextColor="{AppThemeBinding Light=#047857, Dark=#6EE7B7}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Border>
+
             <!-- 4. Add Expense Interactive Card (UC-03.01) -->
             <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
                     StrokeThickness="1"

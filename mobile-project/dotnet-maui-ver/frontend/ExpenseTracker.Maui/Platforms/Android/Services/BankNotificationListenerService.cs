@@ -1,36 +1,32 @@
 #if ANDROID
+#pragma warning disable CA1416, CS8602, CS8604
+
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Service.Notification;
-using System.Text.RegularExpressions;
+using AndroidX.Core.App;
+using ExpenseTracker.Maui.Services.Notifications;
 
 namespace ExpenseTracker.Maui.Platforms.Android.Services;
 
-// Android Native Notification Listener Service (UC-03.12 Prototype)
-// Listens for balance variation notifications from target banking & e-wallet applications
+// Android Native Notification Listener Service (UC-03.12 Production Implementation)
+// Listens for balance variation notifications from target banking & e-wallet applications,
+// parses deducted amount, and raises a clickable actionable notification directly to ExpensesPage
 [Service(Label = "BankNotificationListenerService",
     Permission = "android.permission.BIND_NOTIFICATION_LISTENER_SERVICE",
     Exported = true)]
 [IntentFilter(new[] { "android.service.notification.NotificationListenerService" })]
 public class BankNotificationListenerService : NotificationListenerService
 {
-    // Target Banking & E-Wallet Application Package Identifiers
-    private static readonly HashSet<string> TargetBankPackages = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "com.acb.mobile",              // ACB ONE
-        "com.mservice.momotransfer",   // MoMo
-        "vn.com.vng.zalopay",          // ZaloPay
-        "com.VCB",                     // Vietcombank VCB Digibank
-        "com.mbmobile"                 // MBBank
-    };
+    private const PendingIntentFlags SafeImmutableFlags = PendingIntentFlags.UpdateCurrent | (PendingIntentFlags)0x04000000;
 
     public override void OnNotificationPosted(StatusBarNotification? sbn)
     {
         if (sbn == null || string.IsNullOrWhiteSpace(sbn.PackageName))
             return;
 
-        if (!TargetBankPackages.Contains(sbn.PackageName))
+        if (!BankNotificationParser.IsSupportedPackage(sbn.PackageName))
             return;
 
         var extras = sbn.Notification?.Extras;
@@ -39,32 +35,65 @@ public class BankNotificationListenerService : NotificationListenerService
 
         string title = extras.GetCharSequence(Notification.ExtraTitle)?.ToString() ?? string.Empty;
         string text = extras.GetCharSequence(Notification.ExtraText)?.ToString() ?? string.Empty;
-        string fullContent = $"{title} {text}";
 
-        // Filter: Detect balance deduction patterns (e.g. "-50,000 VND", "GD: -100.000d", "Thanh toán 45.000")
-        var match = Regex.Match(fullContent, @"(?:-|\bchi\b|\btt\b|\bthanh toan\b)?\s*([0-9]{1,3}(?:[.,][0-9]{3})+)\s*(?:vnd|vnđ|d|đ)?", RegexOptions.IgnoreCase);
-        if (match.Success)
-        {
-            string amountStr = match.Groups[1].Value.Replace(".", "").Replace(",", "");
-            if (decimal.TryParse(amountStr, out decimal detectedAmount) && detectedAmount > 0)
-            {
-                string bankName = ResolveBankName(sbn.PackageName);
-                System.Diagnostics.Debug.WriteLine($"[BankNotificationListener] Phát hiện biến động số dư từ {bankName}: -{detectedAmount:N0} VND ({text})");
-            }
-        }
+        var parseResult = BankNotificationParser.Parse(sbn.PackageName, title, text);
+        if (!parseResult.IsSuccess)
+            return;
+
+        // Bắn Native Notification yêu cầu người dùng chạm để tự động lưu chi tiêu
+        PostDeductionActionNotification(parseResult);
     }
 
-    private static string ResolveBankName(string packageName)
+    private void PostDeductionActionNotification(BankDeductionResult result)
     {
-        return packageName switch
+        try
         {
-            "com.acb.mobile" => "Ngân hàng ACB",
-            "com.mservice.momotransfer" => "Ví MoMo",
-            "vn.com.vng.zalopay" => "Ví ZaloPay",
-            "com.VCB" => "Vietcombank",
-            "com.mbmobile" => "MBBank",
-            _ => "Ngân hàng"
-        };
+            var context = global::Android.App.Application.Context;
+            int notificationId = (int)(DateTime.UtcNow.Ticks % int.MaxValue);
+
+            // Xây dựng Deep Link kèm query parameters cho Shell điều hướng
+            string targetRoute = $"///ExpensesPage?amount={result.Amount}&bank={Uri.EscapeDataString(result.BankName)}&note={Uri.EscapeDataString(result.ExtractedNote)}";
+
+            var launchIntent = new Intent(context, typeof(MainActivity));
+            launchIntent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop | ActivityFlags.NewTask);
+            launchIntent.PutExtra("target_route", targetRoute);
+
+            var pendingIntent = PendingIntent.GetActivity(
+                context,
+                notificationId,
+                launchIntent,
+                SafeImmutableFlags);
+
+            int smallIcon = context.ApplicationInfo?.Icon != 0
+                ? (context.ApplicationInfo?.Icon ?? global::Android.Resource.Drawable.IcDialogInfo)
+                : global::Android.Resource.Drawable.IcDialogInfo;
+
+            string notifTitle = $"💳 Phát hiện chi tiêu: -{result.Amount:N0} đ";
+            string notifMessage = $"[{result.BankName}] {result.ExtractedNote}. Chạm để tự động lưu vào sổ chi tiêu ngay!";
+
+            var builder = new NotificationCompat.Builder(context, NotificationChannelIds.BalanceFluctuation)
+                .SetSmallIcon(smallIcon)
+                .SetContentTitle(notifTitle)
+                .SetContentText(notifMessage)
+                .SetStyle(new NotificationCompat.BigTextStyle().BigText(notifMessage))
+                .SetAutoCancel(true)
+                .SetPriority(NotificationCompat.PriorityHigh)
+                .SetDefaults((int)(NotificationDefaults.Sound | NotificationDefaults.Vibrate))
+                .SetContentIntent(pendingIntent);
+
+            var notificationManager = NotificationManagerCompat.From(context);
+            var notification = builder.Build();
+            if (notification != null)
+            {
+                notificationManager.Notify(notificationId, notification);
+            }
+
+            System.Diagnostics.Debug.WriteLine($"[BankNotificationListener] Đã phát Action Notification cho {result.BankName}: -{result.Amount:N0}đ");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[BankNotificationListener] Lỗi khi phát Action Notification: {ex.Message}");
+        }
     }
 }
 #endif

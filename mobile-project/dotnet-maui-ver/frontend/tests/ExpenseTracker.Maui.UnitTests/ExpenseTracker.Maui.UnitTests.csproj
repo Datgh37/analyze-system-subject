@@ -49,6 +49,7 @@
     <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\LoginViewModel.cs" Link="ViewModels\LoginViewModel.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\ViewModels\RegisterViewModel.cs" Link="ViewModels\RegisterViewModel.cs" />
     <Compile Include="..\..\ExpenseTracker.Maui\Services\Notifications\INativeNotificationService.cs" Link="Services\Notifications\INativeNotificationService.cs" />
+    <Compile Include="..\..\ExpenseTracker.Maui\Services\Notifications\BankNotificationParser.cs" Link="Services\Notifications\BankNotificationParser.cs" />
   </ItemGroup>
 
 </Project>

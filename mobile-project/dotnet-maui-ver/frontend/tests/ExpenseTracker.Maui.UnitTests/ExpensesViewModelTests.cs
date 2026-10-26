@@ -126,4 +126,51 @@ public class ExpensesViewModelTests
         _viewModel.Note.Should().BeEmpty();
         _viewModel.ErrorMessage.Should().BeNull();
     }
+
+    [Fact]
+    public void ApplyQueryAttributes_WithBankExpenseParameters_ShouldAutoFillAmountNoteAndMatchWallet()
+    {
+        // Arrange
+        var walletMoMo = new WalletModel(Guid.NewGuid(), Guid.NewGuid(), "Ví MoMo", MobileWalletType.EWallet, 1500000m, 1500000m, "VND", null, null, null, null, null, "#D946EF", "momo", 1, false, 1, 1, DateTime.UtcNow, null);
+        var walletCash = new WalletModel(Guid.NewGuid(), Guid.NewGuid(), "Tiền mặt", MobileWalletType.Cash, 500000m, 500000m, "VND", null, null, null, null, null, "#10B981", "cash", 1, false, 1, 1, DateTime.UtcNow, null);
+        _viewModel.Wallets.Add(walletCash);
+        _viewModel.Wallets.Add(walletMoMo);
+
+        var query = new Dictionary<string, object>
+        {
+            { "amount", "185000" },
+            { "bank", "Ví MoMo" },
+            { "note", Uri.EscapeDataString("Thanh toán tiền mua hàng siêu thị") }
+        };
+
+        // Act
+        _viewModel.ApplyQueryAttributes(query);
+
+        // Assert
+        _viewModel.NewAmount.Should().Be(185000m);
+        _viewModel.Note.Should().Be("Thanh toán tiền mua hàng siêu thị");
+        _viewModel.SelectedWallet.Should().NotBeNull();
+        _viewModel.SelectedWallet!.Name.Should().Be("Ví MoMo");
+        _viewModel.AutoFillBannerMessage.Should().Contain(185000m.ToString("N0"));
+    }
+
+    [Fact]
+    public void SimulateBankDeduction_ShouldFillAmountAndSetAutoFillBannerMessage()
+    {
+        // Arrange
+        var walletAcb = new WalletModel(Guid.NewGuid(), Guid.NewGuid(), "Ngân hàng ACB", MobileWalletType.BankAccount, 5000000m, 5000000m, "VND", null, null, null, null, null, "#3B82F6", "acb", 1, false, 1, 1, DateTime.UtcNow, null);
+        _viewModel.Wallets.Add(walletAcb);
+
+        // Act
+        _viewModel.SimulateBankDeduction("acb");
+
+        // Assert
+        _viewModel.NewAmount.Should().Be(350000m);
+        _viewModel.Note.Should().Contain("Emart");
+        _viewModel.SelectedWallet.Should().NotBeNull();
+        _viewModel.SelectedWallet!.Name.Should().Be("Ngân hàng ACB");
+        _viewModel.AutoFillBannerMessage.Should().Contain(350000m.ToString("N0"));
+    }
 }
+
+

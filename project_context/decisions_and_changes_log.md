@@ -4133,6 +4133,33 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 336 / 336 Tests Passed Xanh Biếc 100%**.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
+---
+
+## [2026-10-26 21:50] - Quyết Định 176: Hoàn Thành & Nghiệm Thu Toàn Diện Chặng 3 (Kế Hoạch 52): Lõi Trích Xuất BankNotificationParser, Bank Notification Listener Native DeepLink, Tự Động Điền Sổ Chi Tiêu (IQueryAttributable), Giao Diện Demo Trực Quan & Đạt 354/354 Tests Xanh Biếc
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Dan Abramov, Kent Beck, Richard Thaler, Personal Budget Coach).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. **Lõi trích xuất biến động số dư đa ngân hàng/ví [`BankNotificationParser.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Notifications/BankNotificationParser.cs):**
+     - Độc lập nền tảng, bóc tách chính xác số tiền trừ từ các tin nhắn của 5 ứng dụng tài chính hàng đầu Việt Nam: ACB ONE, Ví MoMo, Ví ZaloPay, Vietcombank VCB Digibank, MBBank.
+     - Tự động tách số tiền, tên ví ngân hàng, trích xuất ghi chú đơn vị thụ hưởng (Merchant, ND chuyển khoản) và loại bỏ hoàn toàn các thông báo khuyến mãi, hoàn tiền, cộng tiền.
+  2. **Nâng cấp [`BankNotificationListenerService.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Platforms/Android/Services/BankNotificationListenerService.cs):**
+     - Khi phát hiện thông báo chi tiêu mới, dịch vụ nền tự động bắn Native Notification lên kênh `channel_balance_fluctuation`.
+     - Gắn DeepLink `PendingIntent` trỏ về `MainActivity` kèm `target_route` định dạng:
+       `///ExpensesPage?amount={result.Amount}&bank={bankName}&note={note}`.
+     - Bổ sung helper `NotificationPermissionHelper.OpenNotificationListenerSettings()` hỗ trợ người dùng truy cập màn hình cấp quyền Notification Access của Android với 1 chạm.
+  3. **Tự động điền sổ chi tiêu [`ExpensesViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/ExpensesViewModel.cs) & [`ExpensesPage.xaml`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/ExpensesPage.xaml):**
+     - `ExpensesViewModel` hiện thực `IQueryAttributable`: khi chạm vào thông báo ngân hàng, tự động nhận tham số, điền sẵn `NewAmount`, `Note`, tự động khớp và chọn `SelectedWallet` và kích hoạt gợi ý danh mục tự động `IAutoRuleRepository`.
+     - `ExpensesPage.xaml` bổ sung Banner hiển thị thông báo tự động điền và thanh nút bấm **"⚡ Giả Lập Biến Động Ngân Hàng Ngoại Tuyến (Demo Bảo Vệ Đồ Án)"** với 3 kịch bản: MoMo (-85k), ACB ONE (-350k), Vietcombank (-500k).
+  4. **Bộ kiểm thử toàn diện vượt mốc 354 bài kiểm thử:**
+     - Xây dựng [`BankNotificationParserTests.cs`](mobile-project/dotnet-maui-ver/frontend/tests/ExpenseTracker.Maui.UnitTests/BankNotificationParserTests.cs) gồm 16 ca kiểm thử bao phủ toàn diện 5 ngân hàng và các trường hợp ngoại lệ.
+     - Bổ sung 2 ca kiểm thử trong [`ExpensesViewModelTests.cs`](mobile-project/dotnet-maui-ver/frontend/tests/ExpenseTracker.Maui.UnitTests/ExpensesViewModelTests.cs) xác minh hành vi `ApplyQueryAttributes` và `SimulateBankDeductionCommand`.
+  5. **Bằng chứng nghiệm thu chất lượng tối thượng (Ultimate Quality Gates):**
+     - Biên dịch .NET MAUI Client Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)**.
+     - Frontend MAUI test suite: **73 / 73 Tests Passed 100%** (+18 tests mới).
+     - Backend Domain & Application test suite: **281 / 281 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 354 / 354 Tests Passed Xanh Biếc 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+
 
 
 

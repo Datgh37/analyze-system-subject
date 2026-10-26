@@ -13,7 +13,7 @@ using ExpenseTracker.Maui.Services.Realtime.Messages;
 namespace ExpenseTracker.Maui.ViewModels;
 
 // ViewModel managing personal expense tracking, timeline ledger, and real-time auto-categorization (Clean MVVM Architecture)
-public partial class ExpensesViewModel : BaseViewModel
+public partial class ExpensesViewModel : BaseViewModel, IQueryAttributable
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly IWalletRepository _walletRepository;
@@ -257,4 +257,77 @@ public partial class ExpensesViewModel : BaseViewModel
             IsBusy = false;
         }
     }
+
+    [ObservableProperty]
+    private string? _autoFillBannerMessage;
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query == null || query.Count == 0) return;
+
+        bool hasAutoFill = false;
+        string detectedBank = string.Empty;
+
+        if (query.TryGetValue("amount", out var amountObj))
+        {
+            if (decimal.TryParse(amountObj?.ToString(), out decimal parsedAmount) && parsedAmount > 0)
+            {
+                NewAmount = parsedAmount;
+                hasAutoFill = true;
+            }
+        }
+
+        if (query.TryGetValue("note", out var noteObj))
+        {
+            var rawNote = noteObj?.ToString();
+            if (!string.IsNullOrWhiteSpace(rawNote))
+            {
+                Note = Uri.UnescapeDataString(rawNote);
+                hasAutoFill = true;
+            }
+        }
+
+        if (query.TryGetValue("bank", out var bankObj))
+        {
+            detectedBank = Uri.UnescapeDataString(bankObj?.ToString() ?? string.Empty);
+            if (!string.IsNullOrWhiteSpace(detectedBank))
+            {
+                var matched = Wallets.FirstOrDefault(w => 
+                    w.Name.Contains(detectedBank, StringComparison.OrdinalIgnoreCase) ||
+                    detectedBank.Contains(w.Name, StringComparison.OrdinalIgnoreCase));
+
+                if (matched != null)
+                {
+                    SelectedWallet = matched;
+                }
+                hasAutoFill = true;
+            }
+        }
+
+        if (hasAutoFill)
+        {
+            AutoFillBannerMessage = $"⚡ Đã tự động điền giao dịch {NewAmount:N0} đ từ {(!string.IsNullOrEmpty(detectedBank) ? detectedBank : "Ngân hàng")}. Vui lòng kiểm tra và lưu!";
+        }
+    }
+
+    [RelayCommand]
+    public void SimulateBankDeduction(string bankType)
+    {
+        var (bankName, amount, note) = bankType switch
+        {
+            "acb" => ("Ngân hàng ACB", 350000m, "Thanh toán siêu thị Emart Gò Vấp"),
+            "vcb" => ("Vietcombank", 500000m, "Chuyển tiền tiền điện nước EVN"),
+            _ => ("Ví MoMo", 85000m, "Bán lẻ đồ uống Circle K")
+        };
+
+        var query = new Dictionary<string, object>
+        {
+            { "amount", amount },
+            { "bank", bankName },
+            { "note", note }
+        };
+
+        ApplyQueryAttributes(query);
+    }
 }
+

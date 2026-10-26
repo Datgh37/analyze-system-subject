@@ -42,4 +42,22 @@ public static class NotificationPermissionHelper
         return true;
 #endif
     }
+
+    public static void OpenNotificationListenerSettings()
+    {
+#if ANDROID
+#pragma warning disable CA1416
+        try
+        {
+            var intent = new Android.Content.Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+            intent.SetFlags(Android.Content.ActivityFlags.NewTask);
+            global::Android.App.Application.Context.StartActivity(intent);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[NotificationPermissionHelper] Cannot open listener settings: {ex.Message}");
+        }
+#pragma warning restore CA1416
+#endif
+    }
 }
