@@ -47,6 +47,38 @@ public record WalletModel(
     public string SubtitleInfo => !string.IsNullOrEmpty(BankName)
         ? $"{BankName} • {AccountNumber}"
         : WalletTypeName;
+
+    public string DisplayIcon => IconKey?.ToLowerInvariant() switch
+    {
+        "wallet" or "cash" => "💵",
+        "bank" => "🏦",
+        "momo" or "ewallet" => "📱",
+        "credit" or "card" => "💳",
+        _ => WalletType switch
+        {
+            MobileWalletType.Cash => "💵",
+            MobileWalletType.BankAccount => "🏦",
+            MobileWalletType.EWallet => "📱",
+            MobileWalletType.CreditCard => "💳",
+            _ => "💰"
+        }
+    };
+
+    public string DisplayVectorIcon => IconKey?.ToLowerInvariant() switch
+    {
+        "wallet" or "cash" => "ic_cash.png",
+        "bank" => "ic_bank.png",
+        "momo" or "ewallet" => "ic_ewallet.png",
+        "credit" or "card" => "ic_card.png",
+        _ => WalletType switch
+        {
+            MobileWalletType.Cash => "ic_cash.png",
+            MobileWalletType.BankAccount => "ic_bank.png",
+            MobileWalletType.EWallet => "ic_ewallet.png",
+            MobileWalletType.CreditCard => "ic_card.png",
+            _ => "ic_wallet.png"
+        }
+    };
 }
 
 // Request model for creating a wallet from mobile app

@@ -19,7 +19,41 @@ public record TransactionModel(
     bool IsRecurring,
     bool ExcludeFromReport,
     DateTime CreatedAt
-);
+)
+{
+    public string DisplayCategoryIcon => !string.IsNullOrWhiteSpace(CategoryIcon)
+        ? CategoryIcon
+        : (CategoryName?.ToLowerInvariant() switch
+        {
+            null => TransactionType == 1 ? "📈" : "📉",
+            var n when n.Contains("ăn") || n.Contains("uống") || n.Contains("food") || n.Contains("bữa") => "🍜",
+            var n when n.Contains("mua") || n.Contains("sắm") || n.Contains("shop") || n.Contains("chợ") || n.Contains("siêu thị") => "🛍️",
+            var n when n.Contains("xe") || n.Contains("xăng") || n.Contains("grab") || n.Contains("di chuyển") => "🚗",
+            var n when n.Contains("điện") || n.Contains("nước") || n.Contains("nhà") || n.Contains("bill") || n.Contains("mạng") => "💡",
+            var n when n.Contains("lương") || n.Contains("thu nhập") || n.Contains("thưởng") || n.Contains("salary") => "💰",
+            var n when n.Contains("học") || n.Contains("sách") || n.Contains("khóa học") => "📚",
+            var n when n.Contains("chơi") || n.Contains("giải trí") || n.Contains("phim") || n.Contains("game") => "🎬",
+            var n when n.Contains("y tế") || n.Contains("thuốc") || n.Contains("khám") => "💊",
+            var n when n.Contains("cafe") || n.Contains("cà phê") || n.Contains("trà") => "☕",
+            _ => TransactionType == 1 ? "📈" : "📉"
+        });
+
+    public string DisplayCategoryBg => !string.IsNullOrWhiteSpace(CategoryColor)
+        ? CategoryColor
+        : (TransactionType == 1 ? "#ECFDF5" : "#FFF1F2");
+
+    public string DisplayTypePrefix => TransactionType == 1 ? "+" : "-";
+
+    public string DisplayVectorIcon => (CategoryName?.ToLowerInvariant()) switch
+    {
+        var n when n != null && (n.Contains("lương") || n.Contains("thu nhập") || n.Contains("thưởng")) => "ic_income.png",
+        var n when n != null && (n.Contains("ví") || n.Contains("tiền")) => "ic_wallet.png",
+        var n when n != null && (n.Contains("ngân sách") || n.Contains("hạn mức")) => "ic_budget.png",
+        var n when n != null && (n.Contains("tích lũy") || n.Contains("tiết kiệm")) => "ic_savings.png",
+        var n when n != null && (n.Contains("quy tắc") || n.Contains("tự động")) => "ic_rules.png",
+        _ => TransactionType == 1 ? "ic_income.png" : "ic_expense.png"
+    };
+}
 
 public record CreateIncomeModel(
     Guid WalletId,

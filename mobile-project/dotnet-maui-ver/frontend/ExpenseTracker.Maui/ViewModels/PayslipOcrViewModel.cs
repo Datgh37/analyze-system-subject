@@ -5,6 +5,7 @@ using ExpenseTracker.Maui.Models.Categories;
 using ExpenseTracker.Maui.Models.Payslips;
 using ExpenseTracker.Maui.Models.RecurringIncomes;
 using ExpenseTracker.Maui.Models.Wallets;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 using Refit;
 
@@ -13,10 +14,10 @@ namespace ExpenseTracker.Maui.ViewModels;
 // ViewModel managing payslip image/PDF picking, AI Vision OCR parsing, and ledger confirmation (UC-02.08)
 public partial class PayslipOcrViewModel : BaseViewModel
 {
-    private readonly IPayslipApi _payslipApi;
-    private readonly IWalletApi _walletApi;
-    private readonly ICategoryApi _categoryApi;
-    private readonly IRecurringIncomeApi _recurringIncomeApi;
+    private readonly IPayslipRepository _payslipRepo;
+    private readonly IWalletRepository _walletRepo;
+    private readonly ICategoryRepository _categoryRepo;
+    private readonly IRecurringIncomeRepository _recurringIncomeRepo;
 
     public ObservableCollection<WalletModel> Wallets { get; } = new();
     public ObservableCollection<CategoryModel> IncomeCategories { get; } = new();
@@ -90,16 +91,16 @@ public partial class PayslipOcrViewModel : BaseViewModel
     private string? _statusMessage;
 
     public PayslipOcrViewModel(
-        IPayslipApi payslipApi,
-        IWalletApi walletApi,
-        ICategoryApi categoryApi,
-        IRecurringIncomeApi recurringIncomeApi)
+        IPayslipRepository payslipRepo,
+        IWalletRepository walletRepo,
+        ICategoryRepository categoryRepo,
+        IRecurringIncomeRepository recurringIncomeRepo)
     {
-        _payslipApi = payslipApi;
-        _walletApi = walletApi;
-        _categoryApi = categoryApi;
-        _recurringIncomeApi = recurringIncomeApi;
-        Title = "Bóc Tách Phiếu Lương AI (UC-02.08)";
+        _payslipRepo = payslipRepo;
+        _walletRepo = walletRepo;
+        _categoryRepo = categoryRepo;
+        _recurringIncomeRepo = recurringIncomeRepo;
+        Title = "Bóc Tách Phiếu Lương";
     }
 
     [RelayCommand]
@@ -112,7 +113,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
 
         try
         {
-            var wallets = await _walletApi.GetWalletsAsync();
+            var wallets = await _walletRepo.GetWalletsAsync();
             Wallets.Clear();
             foreach (var w in wallets) Wallets.Add(w);
             if (Wallets.Count > 0 && SelectedWallet == null)
@@ -120,7 +121,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
                 SelectedWallet = Wallets[0];
             }
 
-            var categories = await _categoryApi.GetCategoriesAsync(1); // 1 = Income
+            var categories = await _categoryRepo.GetCategoriesAsync(1); // 1 = Income
             IncomeCategories.Clear();
             foreach (var c in categories) IncomeCategories.Add(c);
             if (IncomeCategories.Count > 0 && SelectedCategory == null)
@@ -129,7 +130,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
                 SelectedCategory = IncomeCategories.FirstOrDefault(c => c.Name.Contains("lương", StringComparison.OrdinalIgnoreCase)) ?? IncomeCategories[0];
             }
 
-            var recurring = await _recurringIncomeApi.GetRecurringIncomesAsync();
+            var recurring = await _recurringIncomeRepo.GetRecurringIncomesAsync();
             RecurringIncomes.Clear();
             foreach (var r in recurring) RecurringIncomes.Add(r);
             if (RecurringIncomes.Count > 0 && SelectedRecurringIncome == null)
@@ -166,7 +167,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
 
             var result = await FilePicker.Default.PickAsync(new PickOptions
             {
-                PickerTitle = "Chọn tệp hình ảnh hoặc PDF phiếu lương (UC-02.08)",
+                PickerTitle = "Chọn tệp hình ảnh hoặc PDF phiếu lương",
                 FileTypes = customFileType
             });
 
@@ -178,7 +179,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
             await using var stream = await result.OpenReadAsync();
             var streamPart = new StreamPart(stream, result.FileName, "application/octet-stream");
 
-            var parsed = await _payslipApi.ParsePayslipAsync(streamPart);
+            var parsed = await _payslipRepo.ParsePayslipAsync(streamPart);
 
             EmployerName = parsed.EmployerName;
             PayPeriod = parsed.PayPeriod;
@@ -198,7 +199,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
 
             if (HasDiscrepancy)
             {
-                ErrorMessage = $"⚠️ Cảnh báo sai lệch số học: Chênh lệch {DiscrepancyAmount:N0} VND giữa Net và công thức khấu trừ (UC-02.08 E2). Vui lòng kiểm tra lại.";
+                ErrorMessage = $"⚠️ Cảnh báo sai lệch số học: Chênh lệch {DiscrepancyAmount:N0} VND giữa Net và công thức khấu trừ. Vui lòng kiểm tra lại.";
             }
             else
             {
@@ -261,7 +262,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
                 UpdateRecurringIncomeId: (UpdateRecurringIncome && SelectedRecurringIncome != null) ? SelectedRecurringIncome.Id : null
             );
 
-            await _payslipApi.ConfirmPayslipAsync(request);
+            await _payslipRepo.ConfirmPayslipAsync(request);
 
             StatusMessage = $"🎉 Ghi nhận thành công thu nhập lương {NetSalary:N0} VND vào ví {SelectedWallet.Name}!";
             HasParsedData = false;

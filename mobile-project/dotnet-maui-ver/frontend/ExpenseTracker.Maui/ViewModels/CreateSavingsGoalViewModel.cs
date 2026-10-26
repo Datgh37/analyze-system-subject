@@ -1,14 +1,29 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.SavingsGoals;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
+public class GoalTypeOption
+{
+    public SavingsGoalType Type { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
+    public override string ToString() => DisplayName;
+}
+
+public class GoalPriorityOption
+{
+    public SavingsGoalPriority Priority { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
+    public override string ToString() => DisplayName;
+}
+
 // ViewModel managing savings goal creation, deadline definition, and monthly contribution projection (UC-06.01)
 public partial class CreateSavingsGoalViewModel : BaseViewModel
 {
-    private readonly ISavingsGoalApi _savingsGoalApi;
+    private readonly ISavingsGoalRepository _savingsGoalRepo;
 
     [ObservableProperty]
     private string _name = string.Empty;
@@ -42,6 +57,29 @@ public partial class CreateSavingsGoalViewModel : BaseViewModel
     [ObservableProperty]
     private SavingsGoalPriority _selectedPriority = SavingsGoalPriority.High;
 
+    [ObservableProperty]
+    private GoalTypeOption _selectedTypeOption;
+
+    [ObservableProperty]
+    private GoalPriorityOption _selectedPriorityOption;
+
+    public List<GoalTypeOption> AvailableTypeOptions { get; } = new()
+    {
+        new() { Type = SavingsGoalType.EmergencyFund, DisplayName = "🛡️ Quỹ khẩn cấp (Emergency)" },
+        new() { Type = SavingsGoalType.MajorPurchase, DisplayName = "💻 Mua sắm lớn (Purchase)" },
+        new() { Type = SavingsGoalType.Investment, DisplayName = "📈 Đầu tư & Tích lũy (Invest)" },
+        new() { Type = SavingsGoalType.Education, DisplayName = "🎓 Học tập & Phát triển" },
+        new() { Type = SavingsGoalType.Travel, DisplayName = "✈️ Du lịch & Trải nghiệm" },
+        new() { Type = SavingsGoalType.Other, DisplayName = "🎯 Mục tiêu khác" }
+    };
+
+    public List<GoalPriorityOption> AvailablePriorityOptions { get; } = new()
+    {
+        new() { Priority = SavingsGoalPriority.High, DisplayName = "🔴 Cao (Ưu tiên hàng đầu)" },
+        new() { Priority = SavingsGoalPriority.Medium, DisplayName = "🟡 Trung bình (Chuẩn)" },
+        new() { Priority = SavingsGoalPriority.Low, DisplayName = "🟢 Thấp (Linh hoạt)" }
+    };
+
     public List<SavingsGoalType> AvailableTypes { get; } = new()
     {
         SavingsGoalType.EmergencyFund,
@@ -71,10 +109,12 @@ public partial class CreateSavingsGoalViewModel : BaseViewModel
 
     public string FormattedCalculatedMonthly => $"{CalculatedMonthlyDeposit:N0} đ/tháng";
 
-    public CreateSavingsGoalViewModel(ISavingsGoalApi savingsGoalApi)
+    public CreateSavingsGoalViewModel(ISavingsGoalRepository savingsGoalRepo)
     {
-        _savingsGoalApi = savingsGoalApi;
+        _savingsGoalRepo = savingsGoalRepo;
         Title = "Tạo Mục Tiêu Tích Lũy Mới";
+        _selectedTypeOption = AvailableTypeOptions[0];
+        _selectedPriorityOption = AvailablePriorityOptions[0];
     }
 
     [RelayCommand]
@@ -105,6 +145,9 @@ public partial class CreateSavingsGoalViewModel : BaseViewModel
 
         try
         {
+            var effectiveType = SelectedTypeOption?.Type ?? SelectedType;
+            var effectivePriority = SelectedPriorityOption?.Priority ?? SelectedPriority;
+
             var request = new CreateSavingsGoalModel
             {
                 Name = Name.Trim(),
@@ -113,13 +156,13 @@ public partial class CreateSavingsGoalViewModel : BaseViewModel
                 InitialAmount = InitialAmount,
                 StartDate = StartDate,
                 TargetDate = TargetDate,
-                Type = SelectedType,
-                Priority = SelectedPriority,
-                ColorHex = SelectedType == SavingsGoalType.EmergencyFund ? "#DC2626" : "#2563EB",
-                IconKey = SelectedType == SavingsGoalType.EmergencyFund ? "shield-check" : "piggy-bank"
+                Type = effectiveType,
+                Priority = effectivePriority,
+                ColorHex = effectiveType == SavingsGoalType.EmergencyFund ? "#DC2626" : "#2563EB",
+                IconKey = effectiveType == SavingsGoalType.EmergencyFund ? "shield-check" : "piggy-bank"
             };
 
-            await _savingsGoalApi.CreateSavingsGoalAsync(request);
+            await _savingsGoalRepo.CreateSavingsGoalAsync(request);
 
             await Shell.Current.DisplayAlertAsync(
                 "Thành công",

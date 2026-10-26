@@ -13,22 +13,22 @@ public class ExpensesViewModelTests
 {
     private readonly Mock<ITransactionRepository> _mockTxRepo;
     private readonly Mock<IWalletRepository> _mockWalletRepo;
-    private readonly Mock<ICategoryApi> _mockCategoryApi;
-    private readonly Mock<IAutoRuleApi> _mockAutoRuleApi;
+    private readonly Mock<ICategoryRepository> _mockCategoryRepo;
+    private readonly Mock<IAutoRuleRepository> _mockAutoRuleRepo;
     private readonly ExpensesViewModel _viewModel;
 
     public ExpensesViewModelTests()
     {
         _mockTxRepo = new Mock<ITransactionRepository>();
         _mockWalletRepo = new Mock<IWalletRepository>();
-        _mockCategoryApi = new Mock<ICategoryApi>();
-        _mockAutoRuleApi = new Mock<IAutoRuleApi>();
+        _mockCategoryRepo = new Mock<ICategoryRepository>();
+        _mockAutoRuleRepo = new Mock<IAutoRuleRepository>();
 
         _viewModel = new ExpensesViewModel(
             _mockTxRepo.Object,
             _mockWalletRepo.Object,
-            _mockCategoryApi.Object,
-            _mockAutoRuleApi.Object
+            _mockCategoryRepo.Object,
+            _mockAutoRuleRepo.Object
         );
     }
 
@@ -52,7 +52,7 @@ public class ExpensesViewModelTests
         };
 
         _mockWalletRepo.Setup(r => r.GetWalletsAsync()).ReturnsAsync(wallets);
-        _mockCategoryApi.Setup(a => a.GetCategoriesAsync(2)).ReturnsAsync(categories);
+        _mockCategoryRepo.Setup(r => r.GetCategoriesAsync(2)).ReturnsAsync(categories);
         _mockTxRepo.Setup(r => r.GetTransactionsAsync(null, null, null, null, 2, 1, 50)).ReturnsAsync(transactions);
         _mockTxRepo.Setup(r => r.GetMonthlyExpenseTotalAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(50000m);
 
@@ -113,7 +113,7 @@ public class ExpensesViewModelTests
             .ReturnsAsync(new TransactionModel(Guid.NewGuid(), Guid.NewGuid(), walletId, "Ví Chính", catId, "Ăn uống", "food", "#EF4444", 75000m, 2, DateTime.Today, "Tiền cà phê", false, false, false, false, DateTime.UtcNow));
 
         _mockWalletRepo.Setup(r => r.GetWalletsAsync()).ReturnsAsync(new List<WalletModel> { _viewModel.SelectedWallet });
-        _mockCategoryApi.Setup(a => a.GetCategoriesAsync(2)).ReturnsAsync(new List<CategoryModel> { _viewModel.SelectedCategory });
+        _mockCategoryRepo.Setup(a => a.GetCategoriesAsync(2)).ReturnsAsync(new List<CategoryModel> { _viewModel.SelectedCategory });
         _mockTxRepo.Setup(r => r.GetTransactionsAsync(null, null, null, null, 2, 1, 50)).ReturnsAsync(new List<TransactionModel>());
         _mockTxRepo.Setup(r => r.GetMonthlyExpenseTotalAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(75000m);
 

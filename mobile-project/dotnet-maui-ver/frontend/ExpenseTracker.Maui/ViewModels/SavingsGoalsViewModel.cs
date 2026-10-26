@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.SavingsGoals;
 using ExpenseTracker.Maui.Models.Wallets;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 
 namespace ExpenseTracker.Maui.ViewModels;
@@ -10,8 +11,8 @@ namespace ExpenseTracker.Maui.ViewModels;
 // ViewModel managing savings goals, Kakeibo jars widget, deposits, Thaler nudge withdrawals, and feasibility checks (UC-06.01 - 06.05)
 public partial class SavingsGoalsViewModel : BaseViewModel
 {
-    private readonly ISavingsGoalApi _savingsGoalApi;
-    private readonly IWalletApi _walletApi;
+    private readonly ISavingsGoalRepository _savingsGoalRepo;
+    private readonly IWalletRepository _walletRepo;
 
     public ObservableCollection<SavingsGoalSummaryModel> Goals { get; } = new();
     public ObservableCollection<JarItemModel> Jars { get; } = new();
@@ -31,11 +32,11 @@ public partial class SavingsGoalsViewModel : BaseViewModel
     [ObservableProperty]
     private string? _statusMessage;
 
-    public SavingsGoalsViewModel(ISavingsGoalApi savingsGoalApi, IWalletApi walletApi)
+    public SavingsGoalsViewModel(ISavingsGoalRepository savingsGoalRepo, IWalletRepository walletRepo)
     {
-        _savingsGoalApi = savingsGoalApi;
-        _walletApi = walletApi;
-        Title = "Mục Tiêu Tích Lũy & Hũ Tài Chính";
+        _savingsGoalRepo = savingsGoalRepo;
+        _walletRepo = walletRepo;
+        Title = "Mục Tiêu Tích Lũy";
     }
 
     [RelayCommand]
@@ -49,8 +50,8 @@ public partial class SavingsGoalsViewModel : BaseViewModel
 
         try
         {
-            var goalsTask = _savingsGoalApi.GetSavingsGoalsAsync();
-            var jarsTask = _savingsGoalApi.GetJarsSummaryAsync();
+            var goalsTask = _savingsGoalRepo.GetSavingsGoalsAsync();
+            var jarsTask = _savingsGoalRepo.GetJarsSummaryAsync();
 
             await Task.WhenAll(goalsTask, jarsTask);
 
@@ -93,7 +94,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
 
         try
         {
-            var wallets = await _walletApi.GetWalletsAsync();
+            var wallets = await _walletRepo.GetWalletsAsync();
             if (wallets == null || wallets.Count == 0)
             {
                 await Shell.Current.DisplayAlertAsync("Thông báo", "Bạn chưa có ví tiền nào để nạp vào mục tiêu. Vui lòng tạo ví trước.", "OK");
@@ -136,7 +137,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
                 Note = "Nạp tiền tích lũy từ ứng dụng di động"
             };
 
-            await _savingsGoalApi.DepositAsync(goal.Id, request);
+            await _savingsGoalRepo.DepositAsync(goal.Id, request);
             StatusMessage = $"✅ Đã nạp thành công {amount:N0} đ vào mục tiêu '{goal.Name}'.";
             await LoadGoalsAndJarsAsync();
         }
@@ -173,7 +174,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
 
             if (!proceed) return;
 
-            var wallets = await _walletApi.GetWalletsAsync();
+            var wallets = await _walletRepo.GetWalletsAsync();
             var activeWallets = wallets.Where(w => w.Status == 1).ToList();
             var walletNames = activeWallets.Select(w => w.Name).ToArray();
 
@@ -222,7 +223,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
                 Reason = reason.Trim()
             };
 
-            await _savingsGoalApi.WithdrawAsync(goal.Id, request);
+            await _savingsGoalRepo.WithdrawAsync(goal.Id, request);
             StatusMessage = $"✅ Đã rút {amount:N0} đ về ví {selectedWallet.Name}.";
             await LoadGoalsAndJarsAsync();
         }
@@ -244,7 +245,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
         IsBusy = true;
         try
         {
-            var feasibility = await _savingsGoalApi.GetGoalFeasibilityAsync(goal.Id);
+            var feasibility = await _savingsGoalRepo.GetGoalFeasibilityAsync(goal.Id);
             string statusIcon = feasibility.IsFeasible ? "🟢 Khả thi cao" : "🔴 Cần điều chỉnh";
 
             await Shell.Current.DisplayAlertAsync(
@@ -289,7 +290,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
         IsBusy = true;
         try
         {
-            await _savingsGoalApi.DeleteSavingsGoalAsync(goal.Id);
+            await _savingsGoalRepo.DeleteSavingsGoalAsync(goal.Id);
             StatusMessage = $"✅ Đã xóa mục tiêu '{goal.Name}'.";
             await LoadGoalsAndJarsAsync();
         }

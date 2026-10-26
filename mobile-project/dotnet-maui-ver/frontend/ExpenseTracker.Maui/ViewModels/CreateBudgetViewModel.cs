@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.Budgets;
 using ExpenseTracker.Maui.Models.Categories;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 
 namespace ExpenseTracker.Maui.ViewModels;
@@ -13,6 +14,27 @@ public class CategoryAllocationInputItem : ObservableObject
     public string CategoryName { get; set; } = string.Empty;
     public string? CategoryIcon { get; set; }
     public int? BudgetRuleMapping { get; set; }
+
+    public string RuleName => BudgetRuleMapping switch
+    {
+        1 => "Thiết yếu (Needs 50%)",
+        2 => "Linh hoạt (Wants 30%)",
+        3 => "Tích lũy (Savings 20%)",
+        _ => "Phân bổ khác"
+    };
+
+    public string DisplayCategoryIcon => (CategoryName?.ToLowerInvariant()) switch
+    {
+        var n when n != null && (n.Contains("ăn") || n.Contains("uống") || n.Contains("thực phẩm") || n.Contains("food")) => "🍜",
+        var n when n != null && (n.Contains("nhà") || n.Contains("tiện ích") || n.Contains("điện") || n.Contains("nước") || n.Contains("home")) => "🏠",
+        var n when n != null && (n.Contains("cà phê") || n.Contains("cafe") || n.Contains("coffee") || n.Contains("giải trí")) => "☕",
+        var n when n != null && (n.Contains("mua") || n.Contains("sắm") || n.Contains("shop")) => "🛍️",
+        var n when n != null && (n.Contains("xe") || n.Contains("xăng") || n.Contains("di chuyển") || n.Contains("grab")) => "🚗",
+        var n when n != null && (n.Contains("học") || n.Contains("sách")) => "📚",
+        var n when n != null && (n.Contains("y tế") || n.Contains("thuốc") || n.Contains("khám")) => "💊",
+        var n when n != null && (n.Contains("tích lũy") || n.Contains("tiết kiệm")) => "💰",
+        _ => !string.IsNullOrWhiteSpace(CategoryIcon) && CategoryIcon.Length <= 2 ? CategoryIcon : "🏷️"
+    };
 
     private decimal _allocatedAmount;
     public decimal AllocatedAmount
@@ -25,8 +47,8 @@ public class CategoryAllocationInputItem : ObservableObject
 // ViewModel managing creation of budget with 50/30/20, ZBB, or Kakeibo methodologies (UC-05.01)
 public partial class CreateBudgetViewModel : BaseViewModel
 {
-    private readonly IBudgetApi _budgetApi;
-    private readonly ICategoryApi _categoryApi;
+    private readonly IBudgetRepository _budgetRepo;
+    private readonly ICategoryRepository _categoryRepo;
 
     public ObservableCollection<CategoryAllocationInputItem> CategoryInputs { get; } = new();
 
@@ -77,12 +99,12 @@ public partial class CreateBudgetViewModel : BaseViewModel
     private string? _statusMessage;
 
     public CreateBudgetViewModel(
-        IBudgetApi budgetApi,
-        ICategoryApi categoryApi)
+        IBudgetRepository budgetRepo,
+        ICategoryRepository categoryRepo)
     {
-        _budgetApi = budgetApi;
-        _categoryApi = categoryApi;
-        Title = "Lập Kế Hoạch Ngân Sách Mới (UC-05.01)";
+        _budgetRepo = budgetRepo;
+        _categoryRepo = categoryRepo;
+        Title = "Lập Kế Hoạch Ngân Sách";
     }
 
     [RelayCommand]
@@ -95,7 +117,7 @@ public partial class CreateBudgetViewModel : BaseViewModel
 
         try
         {
-            var categories = await _categoryApi.GetCategoriesAsync(2); // 2 = Expense
+            var categories = await _categoryRepo.GetCategoriesAsync(2); // 2 = Expense
             CategoryInputs.Clear();
 
             foreach (var c in categories)
@@ -232,7 +254,7 @@ public partial class CreateBudgetViewModel : BaseViewModel
                 allocations
             );
 
-            await _budgetApi.CreateBudgetAsync(request);
+            await _budgetRepo.CreateBudgetAsync(request);
 
             StatusMessage = "🎉 Lập kế hoạch ngân sách thành công!";
             await Shell.Current.GoToAsync("..");

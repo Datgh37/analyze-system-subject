@@ -32,7 +32,7 @@ public partial class NudgeFeedViewModel : BaseViewModel
     public NudgeFeedViewModel(INudgeRepository repository)
     {
         _repository = repository;
-        Title = "Cú Hích Tài Chính & Trợ Lý XAI";
+        Title = "Cú Hích Thaler";
     }
 
     [RelayCommand]

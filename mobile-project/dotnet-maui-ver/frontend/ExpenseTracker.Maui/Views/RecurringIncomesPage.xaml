@@ -5,125 +5,396 @@
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.RecurringIncomes"
              x:Class="ExpenseTracker.Maui.Views.RecurringIncomesPage"
              x:DataType="vm:RecurringIncomesViewModel"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="20,16,20,36" Spacing="18" MaximumWidthRequest="640">
 
-            <!-- Title & Batch Process Action -->
-            <Label Text="Quản Lý Nguồn Thu Định Kỳ (Wireframe UC-02.07)" FontSize="18" FontAttributes="Bold" />
+            <!-- 1. Hero Card: Recurring Incomes Management & One-Click Scan -->
+            <Border Stroke="{AppThemeBinding Light=#059669, Dark=#10B981}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 22"
+                    Padding="22">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#064E3B" Offset="0.0" />
+                        <GradientStop Color="#047857" Offset="0.5" />
+                        <GradientStop Color="#059669" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="#10B981" Offset="0,8" Radius="20" Opacity="0.3" />
+                </Border.Shadow>
 
-            <Button Text="⚡ Quét &amp; Ghi Nhận Ngay Khoản Đến Hạn"
-                    Command="{Binding ProcessDueIncomesCommand}"
-                    BackgroundColor="#059669"
-                    TextColor="White" />
-
-            <!-- Messages -->
-            <Label Text="{Binding StatusMessage}"
-                   TextColor="Green"
-                   FontAttributes="Bold"
-                   IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
-
-            <Label Text="{Binding ErrorMessage}"
-                   TextColor="Red"
-                   IsVisible="{Binding HasError}" />
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}" />
-
-            <!-- Add Recurring Income Form -->
-            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Thiết Lập Nguồn Thu Định Kỳ Mới" FontAttributes="Bold" FontSize="16" />
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="NGUỒN THU ĐỊNH KỲ"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#A7F3D0"
+                               CharacterSpacing="1.2" />
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 10"
+                                BackgroundColor="#064E3B"
+                                Padding="8,4">
+                            <Label Text="Tự động cộng ví"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#6EE7B7" />
+                        </Border>
+                    </Grid>
 
-                    <!-- Name -->
-                    <Label Text="Tên nguồn thu (VD: Lương công ty, Tiền nhà cho thuê):" FontSize="13" />
-                    <Entry Placeholder="Nhập tên nguồn thu..."
-                           Text="{Binding NameInput}" />
+                    <Label Text="Lương, Tiền Thuê &amp; Thu Nhập Lặp Lại"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF" />
 
-                    <!-- Wallet Selection -->
-                    <Label Text="Ví nhận tiền:" FontSize="13" />
-                    <Picker Title="-- Chọn ví --"
-                            ItemsSource="{Binding Wallets}"
-                            ItemDisplayBinding="{Binding Name}"
-                            SelectedItem="{Binding SelectedWallet}" />
+                    <Label Text="Thiết lập lịch định kỳ để hệ thống tự động ghi nhận và cộng tiền vào ví khi đến hạn mà không cần nhập thủ công."
+                           FontSize="12"
+                           TextColor="#D1FAE5"
+                           Opacity="0.9"
+                           LineBreakMode="WordWrap" />
 
-                    <!-- Category Selection -->
-                    <Label Text="Danh mục thu nhập:" FontSize="13" />
-                    <Picker Title="-- Chọn danh mục --"
-                            ItemsSource="{Binding IncomeCategories}"
-                            ItemDisplayBinding="{Binding Name}"
-                            SelectedItem="{Binding SelectedCategory}" />
-
-                    <!-- Expected Amount -->
-                    <Label Text="Số tiền dự kiến mỗi kỳ (VND):" FontSize="13" />
-                    <Entry Placeholder="Ví dụ: 25000000"
-                           Keyboard="Numeric"
-                           Text="{Binding AmountInput}" />
-
-                    <!-- Frequency -->
-                    <Label Text="Tần suất lặp lại:" FontSize="13" />
-                    <Picker Title="-- Chọn tần suất --"
-                            ItemsSource="{Binding FrequencyOptions}"
-                            SelectedIndex="{Binding SelectedFrequencyIndex}" />
-
-                    <!-- Day of Month -->
-                    <Label Text="Ngày nhận tiền trong tháng (1 - 31):" FontSize="13" />
-                    <Entry Placeholder="Ví dụ: 5 hoặc 31"
-                           Keyboard="Numeric"
-                           Text="{Binding DayOfMonthInput}" />
-
-                    <!-- Auto Record Toggle -->
-                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                        <CheckBox IsChecked="{Binding AutoRecord}" />
-                        <Label Text="Tự động ghi nhận và cộng tiền vào ví khi đến hạn"
-                               VerticalOptions="Center"
-                               FontSize="13" />
-                    </HorizontalStackLayout>
-
-                    <!-- Submit -->
-                    <Button Text="+ Lưu Thiết Lập Định Kỳ"
-                            Command="{Binding CreateRecurringIncomeCommand}"
-                            Margin="0,8,0,0" />
+                    <Button Text="⚡ Quét &amp; Ghi Nhận Khoản Đến Hạn"
+                            Command="{Binding ProcessDueIncomesCommand}"
+                            BackgroundColor="#FFFFFF"
+                            TextColor="#065F46"
+                            FontAttributes="Bold"
+                            FontSize="13"
+                            CornerRadius="12"
+                            HeightRequest="42"
+                            Margin="0,4,0,0">
+                        <Button.Shadow>
+                            <Shadow Brush="#000000" Offset="0,4" Radius="8" Opacity="0.15" />
+                        </Button.Shadow>
+                    </Button>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- List of Recurring Incomes -->
-            <Label Text="Danh Sách Nguồn Thu Đang Hoạt Động" FontAttributes="Bold" Margin="0,8,0,0" />
+            <!-- 2. Status / Success Message -->
+            <Border Stroke="#86EFAC"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                    Padding="14"
+                    IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding StatusMessage}"
+                           TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
+                           FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                </Grid>
+            </Border>
 
+            <!-- 3. Error Banner -->
+            <Border Stroke="#FCA5A5"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                    Padding="14"
+                    IsVisible="{Binding HasError}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding ErrorMessage}"
+                           TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
+                           FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- 4. Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{AppThemeBinding Light=#059669, Dark=#10B981}"
+                               HorizontalOptions="Center" />
+
+            <!-- 5. Create Recurring Income Form Card -->
+            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 20"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                    Padding="20">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                            Offset="0,4" Radius="12" 
+                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Thiết Lập Nguồn Thu Mới"
+                               FontAttributes="Bold"
+                               FontSize="17"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                Padding="10,4">
+                            <Label Text="Tự động"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#059669, Dark=#6EE7B7}" />
+                        </Border>
+                    </Grid>
+
+                    <!-- Name -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Tên nguồn thu (VD: Lương công ty, Cho thuê nhà):" FontSize="12" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                Padding="12,4">
+                            <Entry Placeholder="Nhập tên nguồn thu..."
+                                   Text="{Binding NameInput}"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Wallet Selection -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Ví nhận tiền:" FontSize="12" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                Padding="8,2">
+                            <Picker Title="-- Chọn ví nhận --"
+                                    ItemsSource="{Binding Wallets}"
+                                    ItemDisplayBinding="{Binding Name}"
+                                    SelectedItem="{Binding SelectedWallet}"
+                                    FontSize="14"
+                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Category Selection -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Danh mục thu nhập:" FontSize="12" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                Padding="8,2">
+                            <Picker Title="-- Chọn danh mục --"
+                                    ItemsSource="{Binding IncomeCategories}"
+                                    ItemDisplayBinding="{Binding Name}"
+                                    SelectedItem="{Binding SelectedCategory}"
+                                    FontSize="14"
+                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Expected Amount -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Số tiền dự kiến mỗi kỳ (VND):" FontSize="12" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                Padding="12,4">
+                            <Entry Placeholder="Ví dụ: 25000000"
+                                   Keyboard="Numeric"
+                                   Text="{Binding AmountInput}"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Frequency & Day of Month in a 2-Column Grid -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="6">
+                            <Label Text="Tần suất:" FontSize="12" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                    Padding="8,2">
+                                <Picker Title="-- Tần suất --"
+                                        ItemsSource="{Binding FrequencyOptions}"
+                                        SelectedIndex="{Binding SelectedFrequencyIndex}"
+                                        FontSize="13"
+                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <Label Text="Ngày nhận (1-31):" FontSize="12" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                    Padding="12,4">
+                                <Entry Placeholder="Ví dụ: 5"
+                                       Keyboard="Numeric"
+                                       Text="{Binding DayOfMonthInput}"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Auto Record CheckBox Card -->
+                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                            Padding="12,8">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding AutoRecord}"
+                                      Color="{AppThemeBinding Light=#059669, Dark=#10B981}"
+                                      VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="Tự động ghi nhận khi đến hạn"
+                                       FontSize="13" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                <Label Text="Cộng số dư ví ngay khi đến ngày nhận"
+                                       FontSize="11"
+                                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Submit Button -->
+                    <Button Text="+ Lưu Thiết Lập Định Kỳ"
+                            Command="{Binding CreateRecurringIncomeCommand}"
+                            BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
+                            TextColor="#FFFFFF"
+                            FontAttributes="Bold"
+                            FontSize="15"
+                            CornerRadius="14"
+                            HeightRequest="48"
+                            Margin="0,6,0,0">
+                        <Button.Shadow>
+                            <Shadow Brush="#059669" Offset="0,4" Radius="10" Opacity="0.25" />
+                        </Button.Shadow>
+                    </Button>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 6. List of Active Recurring Incomes Header -->
+            <Grid ColumnDefinitions="*,Auto" Margin="4,8,4,0" VerticalOptions="Center">
+                <Label Grid.Column="0" Text="Nguồn Thu Đang Hoạt Động"
+                       FontSize="16" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                <Label Grid.Column="1" Text="Lịch định kỳ"
+                       FontSize="12"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+            </Grid>
+
+            <!-- 7. CollectionView Items -->
             <CollectionView ItemsSource="{Binding RecurringIncomes}">
                 <CollectionView.EmptyView>
-                    <Label Text="Chưa có nguồn thu định kỳ nào được thiết lập."
-                           HorizontalOptions="Center"
-                           Margin="0,20" />
+                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                            StrokeShape="RoundRectangle 16"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                            Padding="32" Margin="0,8">
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="📅" FontSize="40" HorizontalOptions="Center" />
+                            <Label Text="Chưa có nguồn thu định kỳ nào"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Thêm lương công ty hoặc thu nhập thụ động định kỳ để hệ thống tự động hóa dòng tiền."
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
                 </CollectionView.EmptyView>
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:RecurringIncomeModel">
-                        <Border Stroke="LightGray" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 6">
-                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                                <VerticalStackLayout Grid.Column="0">
-                                    <HorizontalStackLayout Spacing="6">
-                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="15" />
-                                        <Label Text="{Binding IsActive, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
-                                    </HorizontalStackLayout>
-                                    <Label Text="{Binding ExpectedAmount, StringFormat='Số tiền: {0:N0} VND'}" FontSize="13" TextColor="#059669" FontAttributes="Bold" />
-                                    <Label Text="{Binding WalletName, StringFormat='Ví nhận: {0}'}" FontSize="12" TextColor="Gray" />
-                                    <Label Text="{Binding CategoryName, StringFormat='Danh mục: {0}'}" FontSize="12" TextColor="Gray" />
-                                    <Label Text="{Binding NextDueDate, StringFormat='Kỳ tới: {0:dd/MM/yyyy}'}" FontSize="12" FontAttributes="Italic" />
+                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 16"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                                Padding="16" Margin="0,4,0,8">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                                        Offset="0,2" Radius="6" 
+                                        Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
+                            </Border.Shadow>
+
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                                <!-- Top: Header & Details -->
+                                <VerticalStackLayout Grid.Row="0" Spacing="6">
+                                    <!-- Row 0: Name & Expected Amount -->
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                        <Label Grid.Column="0" Text="{Binding Name}"
+                                               FontAttributes="Bold"
+                                               FontSize="16"
+                                               LineBreakMode="TailTruncation"
+                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                        <Label Grid.Column="1" Text="{Binding ExpectedAmount, StringFormat='+{0:N0} đ'}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
+                                               HorizontalOptions="End" />
+                                    </Grid>
+
+                                    <!-- Row 1: Wallet & Category -->
+                                    <Label FontSize="12" LineBreakMode="TailTruncation"
+                                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Ví: " />
+                                                <Span Text="{Binding WalletName}" FontAttributes="Bold" />
+                                                <Span Text="  •  Danh mục: " />
+                                                <Span Text="{Binding CategoryName}" FontAttributes="Bold" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <!-- Row 2: Due Date & Active Status Badge -->
+                                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding NextDueDate, StringFormat='📅 Kỳ tiếp theo: {0:dd/MM/yyyy}'}"
+                                               FontSize="12" FontAttributes="Italic"
+                                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                                               VerticalOptions="Center" />
+
+                                        <Border Grid.Column="1" StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 8"
+                                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                                Padding="8,3"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding IsActive}">
+                                            <Label Text="🟢 Đang bật"
+                                                   FontSize="10" FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light=#059669, Dark=#6EE7B7}" />
+                                        </Border>
+                                    </Grid>
                                 </VerticalStackLayout>
 
-                                <Button Grid.Column="1"
-                                        Text="Bật/Tắt"
-                                        VerticalOptions="Center"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=ToggleStatusCommand}"
-                                        CommandParameter="{Binding .}" />
+                                <!-- Bottom Row: Action Buttons -->
+                                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End" Spacing="8">
+                                    <Button Text="Bật/Tắt"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=ToggleStatusCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                            TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            CornerRadius="10"
+                                            HeightRequest="34"
+                                            Padding="14,0" />
 
-                                <Button Grid.Column="2"
-                                        Text="Xóa"
-                                        TextColor="Red"
-                                        VerticalOptions="Center"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=DeleteRecurringIncomeCommand}"
-                                        CommandParameter="{Binding .}" />
+                                    <Button Text="Xóa"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=DeleteRecurringIncomeCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
+                                            TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            CornerRadius="10"
+                                            HeightRequest="34"
+                                            Padding="14,0" />
+                                </HorizontalStackLayout>
                             </Grid>
                         </Border>
                     </DataTemplate>

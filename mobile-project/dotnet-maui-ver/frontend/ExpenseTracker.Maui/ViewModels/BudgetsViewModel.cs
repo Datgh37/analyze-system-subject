@@ -37,7 +37,7 @@ public partial class BudgetsViewModel : BaseViewModel
     public BudgetsViewModel(IBudgetRepository budgetRepository)
     {
         _budgetRepository = budgetRepository;
-        Title = "Kế Hoạch Ngân Sách & Hạn Mức DSA";
+        Title = "Ngân Sách & DSA";
     }
 
     [RelayCommand]

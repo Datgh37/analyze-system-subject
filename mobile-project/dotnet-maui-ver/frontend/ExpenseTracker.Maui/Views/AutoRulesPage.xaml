@@ -5,92 +5,270 @@
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.AutoRules"
              x:Class="ExpenseTracker.Maui.Views.AutoRulesPage"
              x:DataType="vm:AutoRulesViewModel"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="20,16,20,32" Spacing="18" MaximumWidthRequest="720">
 
-            <!-- Title Header -->
-            <Label Text="Quy Tắc Phân Loại Tự Động (UC-04.07)" FontSize="20" FontAttributes="Bold" />
+            <!-- ========================================== -->
+            <!-- 1. HERO BANNER: AUTO-RULES ENGINE          -->
+            <!-- ========================================== -->
+            <Border StrokeThickness="0"
+                    StrokeShape="RoundRectangle 20"
+                    Padding="22"
+                    Shadow="{Shadow Brush='#4F46E5', Offset='0,10', Radius=20, Opacity=0.25}">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#1E1B4B" Offset="0.0" />
+                        <GradientStop Color="#312E81" Offset="0.5" />
+                        <GradientStop Color="#4338CA" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="🤖" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="CONTINUOUS LEARNING RULES"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#A5B4FC"
+                                   CharacterSpacing="1.2"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#3730A3"
+                                Padding="8,4"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent">
+                            <Label Text="SMART AI"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="#E0E7FF" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Quy Tắc Phân Loại Tự Động"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF" />
+
+                    <Label Text="Hệ thống tự động so khớp từ khóa (WinMart, Grab, Highlands...) hoặc biểu thức chính quy (Regex) để tự động gán danh mục cho giao dịch mới."
+                           FontSize="12"
+                           TextColor="#C7D2FE"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
 
             <!-- Error Banner -->
-            <Label Text="{Binding ErrorMessage}"
-                   TextColor="Red"
-                   IsVisible="{Binding HasError}" />
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="#FEF2F2"
+                    Stroke="#FECACA"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,10">
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#B91C1C"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
 
             <!-- Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}" />
+            <Border Style="{StaticResource ModernCard}"
+                    Padding="14"
+                    IsVisible="{Binding IsBusy}">
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#4F46E5" />
+                    <Label Text="Đang cập nhật quy tắc tự động..."
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#4F46E5"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
 
-            <!-- Add Rule Form -->
-            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Thiết Lập Quy Tắc Từ Khóa Mới" FontAttributes="Bold" FontSize="16" />
+            <!-- ========================================== -->
+            <!-- 2. ADD RULE FORM                           -->
+            <!-- ========================================== -->
+            <Border Style="{StaticResource ModernCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Thiết Lập Quy Tắc Từ Khóa Mới"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
 
-                    <Label Text="Từ khóa so khớp (Pattern):" FontSize="13" />
-                    <Entry Placeholder="Ví dụ: WinMart, GrabFood, Highlands..."
-                           Text="{Binding NewKeywordPattern}" />
+                    <!-- Keyword Pattern -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Từ khóa so khớp (Pattern) (*):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="10,2"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Entry Placeholder="Ví dụ: WinMart, GrabFood, Highlands..."
+                                   Text="{Binding NewKeywordPattern}"
+                                   FontSize="13" />
+                        </Border>
+                    </VerticalStackLayout>
 
-                    <Label Text="Danh mục tự động gán:" FontSize="13" />
-                    <Picker Title="-- Chọn danh mục đích --"
-                            ItemsSource="{Binding AvailableCategories}"
-                            ItemDisplayBinding="{Binding Name}"
-                            SelectedItem="{Binding SelectedCategory}" />
+                    <!-- Target Category Picker -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Danh mục tự động gán (*):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="8,0"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Picker Title="-- Chọn danh mục đích --"
+                                    ItemsSource="{Binding AvailableCategories}"
+                                    ItemDisplayBinding="{Binding Name}"
+                                    SelectedItem="{Binding SelectedCategory}"
+                                    FontSize="13" />
+                        </Border>
+                    </VerticalStackLayout>
 
-                    <Label Text="Thứ tự ưu tiên (Priority):" FontSize="13" />
-                    <Entry Placeholder="Số nguyên (ví dụ: 1, 2, 3)"
-                           Text="{Binding PriorityOrder}"
-                           Keyboard="Numeric" />
+                    <!-- Priority Order -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Thứ tự ưu tiên (Priority):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="10,2"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Entry Placeholder="Số nguyên (ví dụ: 1, 2, 3)"
+                                   Text="{Binding PriorityOrder}"
+                                   Keyboard="Numeric"
+                                   FontSize="13" />
+                        </Border>
+                    </VerticalStackLayout>
 
-                    <HorizontalStackLayout Spacing="16">
-                        <HorizontalStackLayout Spacing="6">
-                            <CheckBox IsChecked="{Binding IsRegex}" />
-                            <Label Text="Regex" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
+                    <!-- Regex & Case Sensitive Checkboxes -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,4,0,0">
+                        <Grid Grid.Column="0" ColumnDefinitions="Auto,*" ColumnSpacing="6" VerticalOptions="Center">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsRegex}" Color="#4F46E5" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Biểu thức Regex" VerticalOptions="Center" FontSize="12" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                        </Grid>
 
-                        <HorizontalStackLayout Spacing="6">
-                            <CheckBox IsChecked="{Binding IsCaseSensitive}" />
-                            <Label Text="Phân biệt hoa/thường" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </HorizontalStackLayout>
+                        <Grid Grid.Column="1" ColumnDefinitions="Auto,*" ColumnSpacing="6" VerticalOptions="Center">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsCaseSensitive}" Color="#4F46E5" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Phân biệt hoa/thường" VerticalOptions="Center" FontSize="12" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                        </Grid>
+                    </Grid>
 
                     <Button Text="+ Lưu Quy Tắc Thông Minh"
                             Command="{Binding CreateRuleCommand}"
+                            BackgroundColor="#4F46E5"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="13"
+                            CornerRadius="10"
+                            HeightRequest="44"
                             Margin="0,6,0,0" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Rules List -->
-            <Label Text="Danh Sách Quy Tắc Hiện Tại" FontAttributes="Bold" Margin="0,8,0,0" />
+            <!-- ========================================== -->
+            <!-- 3. RULES LIST                              -->
+            <!-- ========================================== -->
+            <Label Text="Danh Sách Quy Tắc Hiện Tại"
+                   FontAttributes="Bold"
+                   FontSize="15"
+                   TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}"
+                   Margin="0,6,0,0" />
 
             <CollectionView ItemsSource="{Binding Rules}">
                 <CollectionView.EmptyView>
-                    <Label Text="Chưa có quy tắc tự động nào được thiết lập."
-                           HorizontalOptions="Center"
-                           TextColor="Gray"
-                           Margin="0,20" />
+                    <Border Style="{StaticResource ModernCard}" Padding="20">
+                        <Label Text="Chưa có quy tắc tự động nào được thiết lập."
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                    </Border>
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:AutoRuleModel">
-                        <Border Stroke="#E5E7EB" Padding="12" Margin="0,4" StrokeShape="RoundRectangle 6">
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                                <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8">
-                                    <Label Text="{Binding KeywordPattern}" FontAttributes="Bold" FontSize="15" />
-                                    <Label Text="➔" TextColor="Gray" />
-                                    <Label Text="{Binding TargetCategoryName}" TextColor="#10B981" FontAttributes="Bold" />
+                        <Border Style="{StaticResource ModernCard}"
+                                Padding="14"
+                                Margin="0,4">
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
+                                <!-- Row 0: Priority Badge, Tags & Delete Action -->
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                                    <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                                        <Border BackgroundColor="{AppThemeBinding Light='#EEF2FF', Dark='#1E1B4B'}"
+                                                Stroke="{AppThemeBinding Light='#C7D2FE', Dark='#3730A3'}"
+                                                StrokeThickness="1"
+                                                Padding="8,2"
+                                                StrokeShape="RoundRectangle 6"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding PriorityOrder, StringFormat='Ưu tiên #{0}'}"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#4F46E5" />
+                                        </Border>
+
+                                        <Border BackgroundColor="{AppThemeBinding Light='#FEF3C7', Dark='#78350F'}"
+                                                Padding="6,2"
+                                                StrokeShape="RoundRectangle 6"
+                                                Stroke="Transparent"
+                                                IsVisible="{Binding IsRegex}"
+                                                VerticalOptions="Center">
+                                            <Label Text="REGEX" FontSize="10" FontAttributes="Bold" TextColor="#D97706" />
+                                        </Border>
+
+                                        <Border BackgroundColor="{AppThemeBinding Light='#F3E8FF', Dark='#581C87'}"
+                                                Padding="6,2"
+                                                StrokeShape="RoundRectangle 6"
+                                                Stroke="Transparent"
+                                                IsVisible="{Binding IsCaseSensitive}"
+                                                VerticalOptions="Center">
+                                            <Label Text="Aa" FontSize="10" FontAttributes="Bold" TextColor="#9333EA" />
+                                        </Border>
+                                    </HorizontalStackLayout>
+
+                                    <Button Grid.Column="1"
+                                            Text="Xóa"
+                                            TextColor="#EF4444"
+                                            BackgroundColor="{AppThemeBinding Light='#FEE2E2', Dark='#450A0A'}"
+                                            FontAttributes="Bold"
+                                            FontSize="11"
+                                            HeightRequest="30"
+                                            Padding="12,0"
+                                            CornerRadius="6"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AutoRulesViewModel}}, Path=DeleteRuleCommand}"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+
+                                <!-- Row 1: Keyword Pattern Container -->
+                                <Border Grid.Row="1"
+                                        BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}"
+                                        Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="10,6">
+                                    <Label Text="{Binding KeywordPattern}"
+                                           FontAttributes="Bold"
+                                           FontSize="13"
+                                           LineBreakMode="WordWrap"
+                                           TextColor="{AppThemeBinding Light='#1E293B', Dark='#F1F5F9'}" />
+                                </Border>
+
+                                <!-- Row 2: Target Category Destination -->
+                                <HorizontalStackLayout Grid.Row="2" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="➔ Tự động gán:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" VerticalOptions="Center" />
+                                    <Border BackgroundColor="{AppThemeBinding Light='#ECFDF5', Dark='#064E3B'}"
+                                            Stroke="{AppThemeBinding Light='#A7F3D0', Dark='#047857'}"
+                                            StrokeThickness="1"
+                                            StrokeShape="RoundRectangle 6"
+                                            Padding="8,2"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding TargetCategoryName}"
+                                               TextColor="{AppThemeBinding Light='#047857', Dark='#6EE7B7'}"
+                                               FontAttributes="Bold"
+                                               FontSize="12" />
+                                    </Border>
                                 </HorizontalStackLayout>
-
-                                <Label Grid.Row="1" Grid.Column="0"
-                                       Text="{Binding PriorityOrder, StringFormat='Ưu tiên: {0}'}"
-                                       FontSize="12"
-                                       TextColor="Gray" />
-
-                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-                                        Text="Xóa"
-                                        TextColor="Red"
-                                        BackgroundColor="Transparent"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AutoRulesViewModel}}, Path=DeleteRuleCommand}"
-                                        CommandParameter="{Binding .}" />
                             </Grid>
                         </Border>
                     </DataTemplate>

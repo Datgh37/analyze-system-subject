@@ -184,7 +184,7 @@ public class SavingsGoalServiceTests
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("*vẫn còn số dư 3.000.000 đ*");
+            .WithMessage("*vẫn còn số dư*Vui lòng rút hết tiền về ví trước khi xóa mục tiêu.*");
     }
 
     [Fact]

@@ -2,14 +2,14 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.Categories;
-using ExpenseTracker.Maui.Services.Api;
+using ExpenseTracker.Maui.Repositories;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
 // ViewModel managing category taxonomy browsing, dual-type filtering and hierarchy creation
 public partial class CategoriesViewModel : BaseViewModel
 {
-    private readonly ICategoryApi _categoryApi;
+    private readonly ICategoryRepository _categoryRepository;
 
     public ObservableCollection<CategoryModel> Categories { get; } = new();
     public ObservableCollection<CategoryModel> AvailableParentCategories { get; } = new();
@@ -28,10 +28,10 @@ public partial class CategoriesViewModel : BaseViewModel
     [ObservableProperty]
     private CategoryModel? _selectedParentCategory;
 
-    public CategoriesViewModel(ICategoryApi categoryApi)
+    public CategoriesViewModel(ICategoryRepository categoryRepository)
     {
-        _categoryApi = categoryApi;
-        Title = "Cây Danh Mục Thu / Chi";
+        _categoryRepository = categoryRepository;
+        Title = "Danh Mục Thu & Chi";
     }
 
     [RelayCommand]
@@ -55,7 +55,7 @@ public partial class CategoriesViewModel : BaseViewModel
 
         try
         {
-            var list = await _categoryApi.GetCategoriesAsync(SelectedTypeFilter);
+            var list = await _categoryRepository.GetCategoriesAsync(SelectedTypeFilter);
             Categories.Clear();
             AvailableParentCategories.Clear();
 
@@ -96,7 +96,7 @@ public partial class CategoriesViewModel : BaseViewModel
                 ParentId: SelectedParentCategory?.Id
             );
 
-            await _categoryApi.CreateCategoryAsync(req);
+            await _categoryRepository.CreateCategoryAsync(req);
             NewCategoryName = string.Empty;
             SelectedParentCategory = null;
             await LoadCategoriesAsync();
@@ -125,7 +125,7 @@ public partial class CategoriesViewModel : BaseViewModel
 
         try
         {
-            await _categoryApi.DeleteCategoryAsync(category.Id);
+            await _categoryRepository.DeleteCategoryAsync(category.Id);
             await LoadCategoriesAsync();
         }
         catch (Exception ex)

@@ -2874,35 +2874,48 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - `UC-09.01 (Tiếp nhận Cú hích tài chính thời gian thực)`: Khớp 100% mọi luồng đặc tả. Tự động hóa phát hiện các sự kiện chi tiêu chạm hạn mức DSA ($Spent \ge 85\% DSA_t$), trích thưởng tiền bất thường khi nhận lương (Pay Yourself First trích 20% vào quỹ tích lũy). Cài đặt cơ chế chống làm phiền người dùng (Nudge Fatigue Mitigation - E1) tự động chặn lặp cú hích cùng loại trong vòng 4 giờ.
      - `UC-09.02 (Xem căn cứ & Lý do giải trình của thuật toán AI - XAI)`: Khớp 100% mọi luồng đặc tả. Xóa bỏ hoàn toàn định kiến "AI hộp đen" (Black Box) với cấu trúc giải trình minh bạch 3 thành phần rõ ràng: Hiện trạng kích hoạt (`TriggerContext`), Bằng chứng số liệu & Công thức toán học định lượng (`MathematicalFormula`, `EmpiricalEvidence`), và Dự phóng hệ quả tương lai (`ProjectedConsequences`, `ProjectedDailyDsaAfter`).
      - `UC-09.03 (Đề xuất Tái cân đối ngân sách động)`: Khớp 100% mọi luồng đặc tả. Thuật toán Dynamic Rebalancing Solver tự động quét các danh mục tùy chọn (`Wants`) đang dôi dư ngân sách khả dụng lớn nhất để bù đắp cho danh mục thiết yếu (`Needs`) bị thâm hụt $\Delta_{\text{deficit}}$. Bảo toàn phương trình ngân sách bất biến (Budget Invariant): Tổng hạn mức sau bù trừ bằng 100% ban đầu ($\sum Allocated' = \sum Allocated$).
-     - `UC-09.04 (Xác nhận / Phê duyệt điều chỉnh)`: Khớp 100% mọi luồng đặc tả. Hiện thực hóa nguyên tắc tối cao của Đạo đức AI: "Con người nắm quyền kiểm soát tối hậu" (Human-in-the-loop - No Silent Auto-Apply). Khi người dùng nhấn "Đồng ý", hệ thống mở Database Transaction nguyên tử (ACID), cập nhật hạn mức danh mục nguồn và đích trong `BudgetAllocations`, gán `status = Resolved` và tái tính toán DSA. Khi chọn "Bỏ qua", hệ thống giữ nguyên hiện trạng ngân sách 100%.
-     - `UC-09.05 (Đánh giá tác động mua sắm lớn & Kích hoạt Khoảng trễ tâm lý 24h)`: Khớp 100% mọi luồng đặc tả. Ứng dụng nguyên lý kiến tạo ma sát có lợi (Friction by Design & Thaler Behavioral Control) để triệt tiêu mua sắm bốc đồng (Impulse Buying). Khoản chi tùy chọn $\ge 3,000,000$ đ tự động phong tỏa 24h ở trạng thái `PendingCoolingOff`, **tuyệt đối không trừ tiền ví**. Hiển thị đồng hồ đếm ngược thời gian thực, bảng phân tích tác động DSA và **Quy đổi số giờ lao động thực tế** ($WorkHours = Amount / HourlyWage$). Sau 24h, người dùng bấm "Xác nhận mua" mới trừ tiền ví hoặc bấm "Hủy bỏ" để tiết kiệm tiền thành công. Hỗ trợ luồng phụ A1 mở khóa khẩn cấp kèm lý do giải trình bắt buộc.
-  2. **Minh bạch Phụ thuộc Liên Module (Cross-Module Dependency Audit):**
-     - *Phụ thuộc Phân hệ 10 (Giai đoạn 9: Trợ lý Chatbot AI Đa phương thức & LLM FinTech):* Dữ liệu Cú hích, giải trình XAI và các khoản đang phong tỏa tâm lý sẽ là ngữ cảnh phong phú để Trợ lý Chatbot trò chuyện, nhắc nhở và động viên tài chính tự nhiên.
-     - *Phụ thuộc Giai đoạn 11 (Dedicated UI Styling):* Người bạn cùng nhóm sẽ phủ màu sắc thương hiệu, hiệu ứng đồng hồ đếm ngược phát sáng, chuyển động vi mô (Micro-interactions) của thẻ Nudge lên giao diện Wireframe đã chuẩn hóa 100% Data Binding.
-     - *Phụ thuộc Giai đoạn 10 (Họp bàn và xây dựng Giai đoạn 10 cùng Người dùng - Kiểm định Hệ thống AI Toàn diện):* Thẩm định độ nhạy của ngưỡng kích hoạt Cú hích DSA, ma sát tâm lý và kiểm tra độ chính xác của các công thức giải trình XAI trong môi trường dữ liệu người dùng đa dạng.
-  3. **Kiểm toán Kỹ thuật Thực tế (Empirical Quality Gate):**
-     - Đạt **233 / 233 Unit Tests PASSED 100%** (83 Domain + 118 Application + 32 Mobile ViewModel), thời gian thực thi cực nhanh.
-     - Toàn bộ Solution Backend (`ExpenseTracker.slnx`) và Frontend Project MAUI (`ExpenseTracker.Maui.csproj`) biên dịch đạt **0 Warning, 0 Error**.
-     - Cấu trúc thư viện Refit, Repositories Mock/Real, CommunityToolkit.Mvvm ViewModels và Views tuân thủ 100% kiến trúc Clean MVVM barem điểm B3.
-- **Trạng thái:** `AUDITED, ACCEPTED & LOCKED`. Hoàn tất trọn vẹn Giai đoạn 8. Sẵn sàng báo cáo Người dùng và chuẩn bị bước vào Giai đoạn 9 theo đúng lộ trình roadmap.
-
-
-
-
-
-
-
-
+     - `UC-09.04 (Xác nhận / Phê duyệt điều chỉnh)`: Khớp 100% mọi luồng đặc tả. Hiện thực hóa nguyên tắc tối cao của Đạo đức AI: "Con người nắm quyền kiểm soát tối hậu" (Human-in-the-loop - No Silent Auto-Apply). Khi người dùng nhấn "Đồng ý", hệ thống mở Database Transaction nguyên tử (ACID), cập nhật hạn mức danh mục nguồn và đích trong `BudgetAllocations`, gán `status = Resolved` và tái tính toán DSA. Khi chọn "Bỏ qua", hệ thống giữ nguyên hiện trạng ngân sách- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
 ---
 
-## [2026-10-23 23:45] - Quyết Định 127: Hoàn Tất Bàn Giao Kỹ Thuật Giai Đoạn 9 Cho Bạn Cùng Nhóm (Tài Liệu HUONG_DAN_FE.md) Và Kích Hoạt Phiên Họp Hội Đồng Toàn Diện Chuẩn Bị Giai Đoạn 10 (Kiểm Định & Hoàn Thiện Toàn Diện Hệ Thống AI)
-- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Toàn thể Hội đồng Chuyên gia (Agent 08 Andrew Ng, Agent 01 Richard Thaler, Agent 03 Cockburn BA, Agent 04 Eric Evans, Agent 10 Dan Abramov).
-- **Căn cứ & Bối cảnh:**
-  1. Người dùng đã chuyển giao thành công tài liệu hướng dẫn kỹ thuật `HUONG_DAN_FE.md` cho bạn cùng nhóm phụ trách thiết kế giao diện (Giai đoạn 9).
-  2. Tài liệu bàn giao tập trung 100% vào hạ tầng kỹ thuật MVVM Repositories, Data Binding Anchors của 20 màn hình, cơ chế chuyển đổi 1 dòng giữa Mock/Real API, quản lý trạng thái tải Loading/Empty/Error, hoàn toàn không can thiệp vào thẩm mỹ hay thiết kế của bạn cùng nhóm.
-  3. Cập nhật Master Project Roadmap (`MASTER_PROJECT_ROADMAP.md`): Ghi nhận hoàn thành trọn vẹn Giai đoạn 8 (233/233 Tests Passed 100%, 0 Warning, 0 Error), trạng thái đã bàn giao của Giai đoạn 9, và chuyển tiếp sang Giai đoạn 10.
-  4. Tuân thủ cam kết chỉ đạo của Người dùng đối với Giai đoạn 10: *"riêng cái này, khi đến giai đoạn đó, hội đồng cùng tôi họp lại và bàn bạc kỹ hơn"*. Hội đồng chính thức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council Session) để cùng Người dùng mổ xẻ các khía cạnh AI cốt lõi trước khi ban hành Kế hoạch PLAN-45.
+## [2026-10-26 08:55] - Quyết Định 153: Thiết Lập Kế Hoạch Tổng Thể PLAN-48 — Chuẩn Hóa Thẩm Mỹ Frontend MAUI, Ghép Nối MVVM & Nghiệm Thu Full-Stack Cuối Kỳ
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 09 Brad Frost, Agent 10 Dan Abramov, Agent 12 Kent Beck cùng Người dùng.
+- **Bối cảnh & Căn cứ:**
+  1. Đọc và phân tích sâu sắc 2 tài liệu gốc: [`README.md`](../mobile-project/dotnet-maui-ver/README.md) (Kiến trúc giải pháp, khởi chạy Docker & WebApi, chuyển đổi Mock/Api 1-chạm) và [`HUONG_DAN_FE.md`](../mobile-project/dotnet-maui-ver/HUONG_DAN_FE.md) (Quy tắc tự do sáng tạo mỹ thuật, bảo toàn 100% mỏ neo Data Binding cho 20 màn hình, quy chuẩn 4 trạng thái UI).
+  2. Bám sát barem điểm tối đa 10.0 + 1.0 môn học Lập trình Mobile theo [`yeucau-cuoiky.txt`](../mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt).
+- **Quyết định thiết lập 5 Pha hành động (PLAN-48):**
+  - **Pha 1:** Nền tảng Design Tokens chung (`Colors.xaml`, `Styles.xaml`, `LoadingOverlay`, `ErrorBanner`, `EmptyStateView`).
+  - **Pha 2:** Nâng cấp mỹ thuật 20 màn hình chia làm 4 nhóm phân hệ, bảo toàn 100% Data Anchors.
+  - **Pha 3:** Kiểm toán tự động MVVM & 42 bài ViewModel Unit Tests.
+  - **Pha 4:** Kiểm toán tích hợp E2E Full-Stack (PostgreSQL Docker + WebApi + SignalR Realtime Hub 0ms).
+  - **Pha 5:** Đóng gói nghiệm thu cuối kỳ (Script `run-demo.ps1`, Báo cáo Word `BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`, Kịch bản Video Demo).
+- **Snapshot kế hoạch:** Đã lưu tại [`project_context/plans/plans-mobile-app/2026-10-26_plan_48_ke_hoach_tong_the_chuan_hoa_frontend_va_nghiem_thu_fullstack.md`](plans/plans-mobile-app/2026-10-26_plan_48_ke_hoach_tong_the_chuan_hoa_frontend_va_nghiem_thu_fullstack.md).
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-26 11:15] - Quyết Định 154: Hoàn Tất Toàn Diện Pha 2 (PLAN-48) — Chuẩn Hóa Mỹ Thuật Cao Cấp 20 Màn Hình Frontend MAUI, Bảo Toàn 100% Data Anchors
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 09 Brad Frost (Design System Lead), Agent 10 Dan Abramov (Client Architect) cùng Người dùng.
+- **Nội dung thực hiện chi tiết (Full Redesign 20 Screens & Subviews):**
+  1. **Nền tảng Thẩm mỹ & Tokens (`Resources/Styles/`):**
+     - Hoàn thiện `Colors.xaml` và `Styles.xaml` với hệ màu Modern Fintech (Emerald Income `#10B981`, Rose Expense `#F43F5E`, Indigo Primary `#4F46E5`, Sky Accent `#0284C7`, Slate/Charcoal Luxury Dark `#0B0F19` & `#111827`).
+     - Tích hợp toàn diện `AppThemeBinding` thích ứng mượt mà cả 2 chế độ Sáng (Light) và Tối (Dark).
+  2. **Chuẩn hóa toàn bộ 4 Nhóm Phân hệ (20 Màn hình & Subviews):**
+     - **Nhóm 1 (Xác thực & Dashboard):** `LoginPage.xaml`, `RegisterPage.xaml`, `WalletsPage.xaml`, tích hợp khay `ActionInboxView.xaml` & thẻ `SmartActionCardView.xaml`.
+     - **Nhóm 2 (Thu nhập, Chi tiêu & Multimodal AI):** `IncomesPage.xaml`, `RecurringIncomesPage.xaml`, `ExpensesPage.xaml`, `PayslipOcrPage.xaml`, `ReceiptOcrPage.xaml`, `SmartUtilitiesPage.xaml`.
+     - **Nhóm 3 (Danh mục, Ngân sách DSA & Tích lũy):** `CategoriesPage.xaml`, `AutoRulesPage.xaml`, `BudgetsPage.xaml`, `CreateBudgetPage.xaml`, `SavingsGoalsPage.xaml`, `CreateSavingsGoalPage.xaml`.
+     - **Nhóm 4 (Phân tích, Dự báo, Cú hích Thaler & Tiện ích):** `ReportsPage.xaml`, `ForecastingPage.xaml`, `NudgeFeedPage.xaml`, `CoolingOffHubPage.xaml`, `NotificationHistoryPage.xaml`, `ImportPreviewPage.xaml`, `VoiceMicModalPage.xaml`.
+  3. **Nguyên tắc bảo toàn bất di bất dịch:**
+     - Bảo toàn **100% Data Anchors** (tên thuộc tính `{Binding Property}` và lệnh tương tác `{Binding Command}`).
+     - Tuân thủ đầy đủ 4 trạng thái giao diện: *Loading (`IsBusy`)*, *Error (`HasError`, `ErrorMessage`)*, *Success (`StatusMessage`)*, và *Empty State (`CollectionView.EmptyView`)*.
+     - Thiết lập giới hạn chiều rộng tối ưu công thái học `MaximumWidthRequest="640"` cho màn hình di động và tablet.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - Backend Clean Architecture WebApi build: **0 Warning, 0 Error**.
+  - Kiểm thử Backend Domain: **83 / 83 Tests Passed 100%**.
+  - Kiểm thử Backend Application: **171 / 171 Tests Passed 100%**.
+  - Tổng số Unit Tests Backend: **254 / 254 Tests Passed 100%**.
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
+hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council Session) để cùng Người dùng mổ xẻ các khía cạnh AI cốt lõi trước khi ban hành Kế hoạch PLAN-45.
 - **Trạng thái:** `LOCKED & ACTIVATING PHASE 10 COUNCIL SESSION`.
 
 
@@ -3228,6 +3241,7 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
 - **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
 
 ---
+<<<<<<< Updated upstream
 
 ## [2026-10-25 23:40] - Quyết Định 142: Kích Hoạt Phiên Họp Hội Đồng Toàn Thể Khởi Động Giai Đoạn 11 (Session Phase 11 Kickoff)
 - **Người chủ trì:** Agent 00 Orchestrator, Agent 12 (Kent Beck), Agent 07 (Werner Vogels), Agent 10 (Dan Abramov), Agent 03 (Cockburn BA), Agent 08 (Andrew Ng), Agent 01 (Richard Thaler) cùng Chủ tọa đề tài (Người dùng).
@@ -3402,16 +3416,264 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
   - Cửa sổ ứng dụng kích hoạt thành công: `mCurrentFocus=Window{... com.companyname.expensetracker.maui/crc647b976420a17d3d28.MainActivity}`.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
 
+## [2026-10-26 08:55] - Quyết Định 153: Thiết Lập Kế Hoạch Tổng Thể PLAN-48 — Chuẩn Hóa Thẩm Mỹ Frontend MAUI, Ghép Nối MVVM & Nghiệm Thu Full-Stack Cuối Kỳ
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 09 Brad Frost, Agent 10 Dan Abramov, Agent 12 Kent Beck cùng Người dùng.
+- **Bối cảnh & Căn cứ:**
+  1. Đọc và phân tích sâu sắc 2 tài liệu gốc: [`README.md`](../mobile-project/dotnet-maui-ver/README.md) (Kiến trúc giải pháp, khởi chạy Docker & WebApi, chuyển đổi Mock/Api 1-chạm) và [`HUONG_DAN_FE.md`](../mobile-project/dotnet-maui-ver/HUONG_DAN_FE.md) (Quy tắc tự do sáng tạo mỹ thuật, bảo toàn 100% mỏ neo Data Binding cho 20 màn hình, quy chuẩn 4 trạng thái UI).
+  2. Bám sát barem điểm tối đa 10.0 + 1.0 môn học Lập trình Mobile theo [`yeucau-cuoiky.txt`](../mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt).
+- **Quyết định thiết lập 5 Pha hành động (PLAN-48):**
+  - **Pha 1:** Nền tảng Design Tokens chung (`Colors.xaml`, `Styles.xaml`, `LoadingOverlay`, `ErrorBanner`, `EmptyStateView`).
+  - **Pha 2:** Nâng cấp mỹ thuật 20 màn hình chia làm 4 nhóm phân hệ, bảo toàn 100% Data Anchors.
+  - **Pha 3:** Kiểm toán tự động MVVM & 42 bài ViewModel Unit Tests.
+  - **Pha 4:** Kiểm toán tích hợp E2E Full-Stack (PostgreSQL Docker + WebApi + SignalR Realtime Hub 0ms).
+  - **Pha 5:** Đóng gói nghiệm thu cuối kỳ (Script `run-demo.ps1`, Báo cáo Word `BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`, Kịch bản Video Demo).
+- **Snapshot kế hoạch:** Đã lưu tại [`project_context/plans/plans-mobile-app/2026-10-26_plan_48_ke_hoach_tong_the_chuan_hoa_frontend_va_nghiem_thu_fullstack.md`](plans/plans-mobile-app/2026-10-26_plan_48_ke_hoach_tong_the_chuan_hoa_frontend_va_nghiem_thu_fullstack.md).
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
 
+---
 
+## [2026-10-26 11:15] - Quyết Định 154: Hoàn Tất Toàn Diện Pha 2 (PLAN-48) — Chuẩn Hóa Mỹ Thuật Cao Cấp 20 Màn Hình Frontend MAUI, Bảo Toàn 100% Data Anchors
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 09 Brad Frost (Design System Lead), Agent 10 Dan Abramov (Client Architect) cùng Người dùng.
+- **Nội dung thực hiện chi tiết (Full Redesign 20 Screens & Subviews):**
+  1. **Nền tảng Thẩm mỹ & Tokens (`Resources/Styles/`):**
+     - Hoàn thiện `Colors.xaml` và `Styles.xaml` với hệ màu Modern Fintech (Emerald Income `#10B981`, Rose Expense `#F43F5E`, Indigo Primary `#4F46E5`, Sky Accent `#0284C7`, Slate/Charcoal Luxury Dark `#0B0F19` & `#111827`).
+     - Tích hợp toàn diện `AppThemeBinding` thích ứng mượt mà cả 2 chế độ Sáng (Light) và Tối (Dark).
+  2. **Chuẩn hóa toàn bộ 4 Nhóm Phân hệ (20 Màn hình & Subviews):**
+     - **Nhóm 1 (Xác thực & Dashboard):** `LoginPage.xaml`, `RegisterPage.xaml`, `WalletsPage.xaml`, tích hợp khay `ActionInboxView.xaml` & thẻ `SmartActionCardView.xaml`.
+     - **Nhóm 2 (Thu nhập, Chi tiêu & Multimodal AI):** `IncomesPage.xaml`, `RecurringIncomesPage.xaml`, `ExpensesPage.xaml`, `PayslipOcrPage.xaml`, `ReceiptOcrPage.xaml`, `SmartUtilitiesPage.xaml`.
+     - **Nhóm 3 (Danh mục, Ngân sách DSA & Tích lũy):** `CategoriesPage.xaml`, `AutoRulesPage.xaml`, `BudgetsPage.xaml`, `CreateBudgetPage.xaml`, `SavingsGoalsPage.xaml`, `CreateSavingsGoalPage.xaml`.
+     - **Nhóm 4 (Phân tích, Dự báo, Cú hích Thaler & Tiện ích):** `ReportsPage.xaml`, `ForecastingPage.xaml`, `NudgeFeedPage.xaml`, `CoolingOffHubPage.xaml`, `NotificationHistoryPage.xaml`, `ImportPreviewPage.xaml`, `VoiceMicModalPage.xaml`.
+  3. **Nguyên tắc bảo toàn bất di bất dịch:**
+     - Bảo toàn **100% Data Anchors** (tên thuộc tính `{Binding Property}` và lệnh tương tác `{Binding Command}`).
+     - Tuân thủ đầy đủ 4 trạng thái giao diện: *Loading (`IsBusy`)*, *Error (`HasError`, `ErrorMessage`)*, *Success (`StatusMessage`)*, và *Empty State (`CollectionView.EmptyView`)*.
+     - Thiết lập giới hạn chiều rộng tối ưu công thái học `MaximumWidthRequest="640"` cho màn hình di động và tablet.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - Backend Clean Architecture WebApi build: **0 Warning, 0 Error**.
+  - Kiểm thử Backend Domain: **83 / 83 Tests Passed 100%**.
+  - Kiểm thử Backend Application: **171 / 171 Tests Passed 100%**.
+  - Tổng số Unit Tests Backend: **254 / 254 Tests Passed 100%**.
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
 
+---
 
+## [2026-10-26 12:28] - Quyết Định 155: Khắc Phục Xung Đột JDK 26/21 & Triển Khai Thành Công 100% Ứng Dụng MAUI Lên Máy Ảo Android
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử cùng Chủ tọa đề tài (Người dùng).
+- **Vấn đề phát sinh & Phân tích nguyên nhân:**
+  1. *Lỗi kết nối ADB timeout:* Lần đầu khởi động máy ảo `Medium_Phone` cần thời gian Cold Boot (~1.5–2 phút), vượt quá ngưỡng 100 giây ban đầu của script `run_android.ps1`, dẫn đến thông báo chưa có thiết bị kết nối.
+  2. *Lỗi không tương thích phiên bản JDK (XA0030):* Máy tính cài đặt Oracle JDK 26.0.1, trong khi .NET MAUI Android Tooling bắt buộc yêu cầu JDK 21 LTS (`Building with JDK version 26.0.1 is not supported`).
+  3. *Thiếu gói nền tảng Android API 36 (XA5207):* Máy tính thiếu tệp `android.jar` cho API Level 36 (`D:\Android\Sdk\platforms\android-36`).
+- **Hành động & Giải pháp xử lý triệt để:**
+  1. Cài đặt chính thức **Microsoft OpenJDK 21** (`C:\Program Files\Microsoft\jdk-21.0.12.101-hotspot`) qua winget.
+  2. Cài đặt tự động gói nền tảng **Android API 36 Platform** qua lệnh `dotnet build -t:InstallAndroidDependencies`.
+  3. Cập nhật `run_android.ps1`: Tự động dò tìm JDK 21, thiết lập biến môi trường `$env:JAVA_HOME`, tăng thời gian chờ boot lên 180s và lọc trạng thái thiết bị `device`.
+- **Bằng chứng kiểm chứng thực tế (Evidence-Based Verification):**
+  - Biên dịch .NET MAUI Android thành công: **0 Warning(s), 0 Error(s)** (Build time: 02:22.63).
+  - Gói ứng dụng `com.companyname.expensetracker.maui` đã cài đặt lên máy ảo `emulator-5554` (`Medium_Phone`).
+  - Cửa sổ Activity kích hoạt nổi trên màn hình: `mCurrentFocus=Window{e61e577 u0 com.companyname.expensetracker.maui/crc647b976420a17d3d28.MainActivity}`.
+  - Ảnh chụp màn hình máy ảo hiển thị giao diện đăng nhập hiện đại **DuoNoPro** với nút *"Xem Trực Tiếp Giao Diện Ví (Demo Mode)"*.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
 
+## [2026-10-26 13:20] - Quyết Định 156: Hệ Thống Icon Vector Độc Quyền (Custom Vector Icons), Khắc Phục Khiếm Khuyết UI & Đóng Gói Standalone Self-Contained Cho .NET MAUI Frontend
+- **Người chủ trì:** Agent 00 Orchestrator, Agent 09 Brad Frost (Design System Lead), Agent 10 Dan Abramov (Client Architect) cùng Người dùng.
+- **Vấn đề phát sinh & Yêu cầu của người dùng:**
+  1. Người dùng yêu cầu: *"có thể làm dao diện đẹp hơn và có thêm các icon riêng mới cách điệu sửa các lỗi về dao diện"*.
+  2. *Biểu tượng mặc định thô sơ:* Ứng dụng còn mang logo robot mặc định của .NET bot trên màn hình chính Android và màn hình Splash screen; thanh menu bên (Flyout) và các thẻ giao dịch dùng nhiều emoji ký tự đơn giản thiếu tính đồng bộ thương hiệu Fintech sang trọng.
+  3. *Lỗi định dạng bố cục (Layout Flaws):* Thẻ hành động tự động (`SmartActionCardView.xaml`) có huy hiệu danh mục bị vỡ thành khối vuông dài thô kệch do nhãn Label tự xuống dòng; nút đóng thẻ `✕` thiếu vùng chạm vi mô chuẩn công thái học; menu Flyout bị co hẹp mép chữ trên một số tỉ lệ màn hình; `ExpensesPage.xaml` gặp lỗi gán `Converter={x:Null}` trên chuỗi gợi ý tự động.
+  4. *Lỗi đụng độ Fast Deployment Android (SIGABRT):* MAUI Debug mode mặc định tách cụm assembly sang thư mục `__override__/x86_64`, khi gỡ và cài lại APK thì tiến trình nền `monodroid` bị crash thoát ứng dụng ngay lập tức khi khởi động.
+- **Hành động & Giải pháp kiến trúc thực thi:**
+  1. **Bộ Nhận Diện Thương Hiệu Mới (DuoNoPro Fintech Shield Crest):**
+     - Thiết kế mới vector SVG cho Logo Launcher (`appiconfg.svg`, `appicon.svg`) và Màn hình Chào (`splash.svg`): Biểu tượng Khiên ngọc tím kết hợp kim cương vát góc (Faceted Diamond Gem), dải hào quang vàng ánh kim và các ngôi sao AI tinh xảo.
+  2. **Hệ Thống 10 Vector SVG Icons Sắc Nét Độc Quyền (`Resources/Images/`):**
+     - Xây dựng 10 biểu tượng vector độc quyền: `ic_wallet.svg` (ví tài sản), `ic_income.svg` (thu nhập), `ic_expense.svg` (chi phí), `ic_ocr.svg` (camera bóc tách hóa đơn AI), `ic_budget.svg` (hạn mức DSA), `ic_savings.svg` (mục tiêu tích lũy), `ic_rules.svg` (quy tắc tự động hóa), `ic_nudge.svg` (cú hích Thaler), `ic_cooling.svg` (khoảng trễ 24h đồng hồ cát), `ic_forecast.svg` (dự báo dòng tiền).
+     - Gắn toàn bộ 10 icon này vào 16 mục điều hướng của thanh ngăn kéo (`AppShell.xaml`) và thanh phím tắt nhanh (`WalletsPage.xaml`).
+  3. **Mô Hình Huy Hiệu Danh Mục Động (Dynamic Micro Category Badging):**
+     - Bổ sung `DisplayCategoryIcon` và `DisplayCategoryBg` vào `TransactionModel` (`TransactionModels.cs`), tự động ánh xạ thông minh danh mục chi tiêu (🍜 Ẩm thực, 🛍️ Mua sắm, 🚗 Di chuyển, 💡 Tiện ích, 💰 Lương, 📚 Học tập, 🎬 Giải trí, 💊 Y tế, ☕ Cà phê) với khung tròn 46x46 mềm mại và màu nền dịu mắt (`#ECFDF5` Thu nhập, `#FFF1F2` Chi tiêu).
+  4. **Xử Lý Triệt Để Các Khiếm Khuyết Giao Diện (UI Flaw Fixes):**
+     - *Smart Action Card:* Chuyển đổi huy hiệu danh mục sang dạng viên thuốc (Pill Badge) `RoundRectangle 20`, bổ sung `LineBreakMode="NoWrap"` để giữ nguyên chiều cao chuẩn; nút đóng `✕` được bọc khung tròn 28x28 tương phản cao hỗ trợ dark/light mode.
+     - *Menu Flyout:* Khóa cố định `FlyoutWidth="330"`, căn lề `Padding="20,44,20,20"`, tích hợp thẻ trạng thái an toàn DSA 0ms và huy hiệu PRO cao cấp.
+     - *Expenses & Incomes:* Sửa lỗi gán converter `x:Null` thành `StringIsNotNullOrEmptyConverter`, nâng cấp template danh sách giao dịch sang thẻ bo góc kép (Double-Bezel Card) chuẩn thẩm mỹ ngân hàng số.
+     - *Login & Register:* Tích hợp logo vector DuoNoPro thay thế emoji trần.
+  5. **Cấu Hình Độc Lập Toàn Phần (Standalone Self-Contained Deployment):**
+     - Thêm thiết lập `<EmbedAssembliesIntoApk Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">true</EmbedAssembliesIntoApk>` vào `ExpenseTracker.Maui.csproj`, đóng gói toàn bộ dll vào bên trong APK giúp ứng dụng hoạt động độc lập và khởi chạy trơn tru 100% trên mọi máy ảo và thiết bị vật lý.
+- **Bằng chứng kiểm chứng thực tế (Evidence-Based Verification):**
+  - Biên dịch APK thành công: `com.companyname.expensetracker.maui-Signed.apk` (0 Cảnh báo, 0 Lỗi).
+  - Cài đặt và kích hoạt thành công trên máy ảo Android `emulator-5554`:
+    - Biểu tượng ứng dụng trên màn hình chủ và khay Dock hiển thị logo DuoNoPro sắc nét (`screen_reinstalled.png`).
+    - Màn hình Splash Screen kim cương tím AI xuất hiện mượt mà khi khởi động (`app_main.png`).
+    - Menu ngăn kéo bên (Flyout) mở rộng chuẩn 330px, hiển thị đầy đủ 10 icon vector độc quyền cùng thông số DSA (`flyout_open.png`).
+    - Giao diện sổ chi tiêu và thu nhập hiển thị rõ ràng, màu sắc phân định trực quan (`expenses_tapped.png`, `app_home.png`).
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
 
+## [2026-10-26 14:15] - Quyết Định 157: Chuẩn Hóa Toàn Diện 7 Cặp Repository Độc Lập Offline (Mock & Api), Khắc Phục Triệt Để Treo Giao Diện & Làm Sạch Mã Đặc Tả Thô Trên .NET MAUI Frontend
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử (Orchestrator, Brad Frost, Dan Abramov, Eric Evans, Werner Vogels) cùng Người dùng.
+- **Vấn đề phát sinh & Yêu cầu của người dùng:**
+  1. Người dùng yêu cầu: *"tiếp tục sửa lỗi nếu vẫn còn lỗi kiểm thử xem UI có bị lỗi không có thì tiếp tục sửa"*.
+  2. Kèm 2 hình ảnh chụp từ ứng dụng:
+     - Hình ảnh 1: Tiêu đề trang bị cắt ngắn kèm mã đặc tả kỹ thuật thô: `Bóc Tách Phiếu Lương AI (UC-02....` trên thanh điều hướng.
+     - Hình ảnh 2: Biểu tượng tiền mặt cũ bị vỡ hạt pixel thô kệch.
+  3. *Lỗi treo mạng nghiêm trọng (Connection Failure 100s freeze):*
+     - Nhiều ViewModel (`SavingsGoalsViewModel`, `RecurringIncomesViewModel`, `SmartUtilitiesViewModel`, `ReceiptOcrViewModel`, `PayslipOcrViewModel`, `CreateBudgetViewModel`, `CreateSavingsGoalViewModel`) ban đầu trực tiếp gọi Refit HTTP Clients đến `http://10.0.2.2:5000`. Khi chạy độc lập trên máy ảo không có backend ASP.NET Core, HttpClient mặc định chờ 100 giây trước khi báo timeout, làm tê liệt con quay `ActivityIndicator` và gây ức chế trải nghiệm người dùng.
+  4. *Chuỗi mã kỹ thuật thô (Raw UC Codes) còn sót trên giao diện:*
+     - `ReceiptOcrPage.xaml`: `UC-03.11 NLP`, `CẢNH BÁO SAI LỆCH SỐ HỌC (UC-03.08 E1)`.
+     - `PayslipOcrPage.xaml`: `CẢNH BÁO SAI LỆCH SỐ HỌC (UC-02.08 E2)`, `(UC-02.08 A1)`.
+     - `CreateBudgetPage.xaml`: Huy hiệu `UC-05.01`.
+- **Hành động & Giải pháp kỹ thuật thực thi:**
+  1. **Xây Dựng Toàn Bộ 7 Cặp Repository (Interface + Mock + Api) Hoàn Chỉnh:**
+     - `ICategoryRepository` + `MockCategoryRepository` + `ApiCategoryRepository`
+     - `ISavingsGoalRepository` + `MockSavingsGoalRepository` + `ApiSavingsGoalRepository`
+     - `IAutoRuleRepository` + `MockAutoRuleRepository` + `ApiAutoRuleRepository`
+     - `IRecurringIncomeRepository` + `MockRecurringIncomeRepository` + `ApiRecurringIncomeRepository`
+     - `ISmartUtilityRepository` + `MockSmartUtilityRepository` + `ApiSmartUtilityRepository`
+     - `IReceiptRepository` + `MockReceiptRepository` + `ApiReceiptRepository`
+     - `IPayslipRepository` + `MockPayslipRepository` + `ApiPayslipRepository`
+  2. **Tái Cấu Trúc Toàn Diện 7 ViewModels Sang Dependency Injection Chuẩn Clean MVVM:**
+     - Thay thế 100% các lệnh gọi Refit trực tiếp sang Repository layer.
+     - Dữ liệu tham chiếu (Ví, Danh mục, Lịch thu định kỳ, Mục tiêu, Thuê bao) nạp tức thì trong 0–10ms, cho phép trải nghiệm mượt mà không có bất kỳ độ trễ mạng nào.
+  3. **Đăng Ký Đầy Đủ Vào IoC Container (`MauiProgram.cs`):**
+     - Đăng ký đầy đủ cả 2 chế độ: Chế độ 1 (Mock Data Offline) và Chế độ 2 (Api Thật kết nối Backend WebAPI).
+  4. **Làm Sạch Mỹ Thuật Giao Diện & Bố Cục UI:**
+     - Loại bỏ toàn bộ tiền tố `UC-xx.xx` khỏi thanh điều hướng và nhãn cảnh báo.
+     - Cập nhật các huy hiệu thẩm mỹ cao: `VOICE NLP`, `MULTI-METHOD`, `CẢNH BÁO SAI LỆCH SỐ HỌC`.
+- **Trạng thái:** ACCEPTED, AUDITED & LOCKED.
 
+---
 
+## [2026-10-26 15:30] - Quyết Định 158: Khắc Phục Toàn Diện Khiếm Khuyết Bố Cục UI (Grid Columns, BoxView, CheckBox WordWrap) & Đạt 100% 296/296 Unit Tests Cho .NET MAUI & Clean Architecture Backend
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử (Orchestrator, Brad Frost, Dan Abramov, Kent Beck) cùng Người dùng.
+- **Vấn đề phát sinh & Yêu cầu của người dùng:**
+  1. Người dùng yêu cầu: *"tiếp tục sửa lỗi nếu vẫn còn lỗi kiểm thử xem UI có bị lỗi không có thì tiếp tục sửa"*.
+  2. *Lỗi đụng độ cột (Column Collision Flaws):* Trên `ForecastingPage.xaml`, nhiều khối Grid 3 cột (KPI Forecast Summary, Liquidity Radar, Category Deficit Risks, What-If Selector buttons, What-If Comparison Cards) thiếu khai báo `Grid.Column` rõ ràng cho các phần tử con, khiến chúng đè chồng lên cột 0 trên Android Renderer.
+  3. *Lỗi khối đen BoxView trên Android:* Trên `ReportsPage.xaml` và `RecurringIncomesPage.xaml`, thẻ `<BoxView Grid.Column="1" Color="Transparent" />` dùng làm khoảng cách bị Android Skia biến thành các khối hình chữ nhật màu đen đặc che khuất thông tin.
+  4. *Lỗi tràn viền nhãn CheckBox:* Các nhãn văn bản đi kèm CheckBox nằm trong `HorizontalStackLayout` tính toán kích thước vô hạn (Infinite Width), làm mất phần chữ ở mép phải màn hình di động trên `IncomesPage`, `ExpensesPage`, `ReceiptOcrPage`, `PayslipOcrPage`.
+  5. *Lỗi đứt gãy kiểm thử Unit Tests:* `ExpensesViewModelTests.cs` vẫn sử dụng mock API cũ (`ICategoryApi`, `IAutoRuleApi`) sau đợt tái cấu trúc Clean Repository ở Quyết Định 157; `ActionInboxViewModelTests.cs` sử dụng chuỗi kiểm tra văn bản phụ thuộc culture hệ thống.
+- **Hành động & Giải pháp kiến trúc thực thi:**
+  1. **Khắc Phục Toàn Diện Bố Cục `ForecastingPage.xaml`:**
+     - Thiết lập tường minh `Grid.Column="0"`, `"1"`, `"2"` cho 3 thẻ KPI Forecast Summary ("Hạn Mức", "Thực Chi", "Dự Phóng").
+     - Thiết lập tường minh `Grid.Column="0"`, `"1"` cho 2 thẻ Vận Tốc Tiêu Tiền Ngày Thường vs Cuối Tuần.
+     - Thiết lập tường minh `Grid.Column="0"`, `"1"`, `"2"` cho 3 chỉ số Liquidity Depletion Radar ("Tiền Lỏng", "Tốc Độ 7 Ngày", "Dự Kiến Cạn").
+     - Tái cấu trúc ma trận thâm hụt danh mục (Category Deficit Risks) thành 3 cột riêng biệt ("Hạn mức", "Đã chi", "Dự kiến").
+     - Thiết lập tường minh `Grid.Column="0"`, `"1"`, `"2"` cho 3 nút chọn kịch bản giả định What-If ("🛍️ Mua Sắm", "💳 Vay Trả Góp", "📉 Giảm Thu").
+     - Thiết lập tường minh `Grid.Column="0"`, `"1"`, `"2"` cho 3 thẻ đối chiếu trước/sau mô phỏng ("Hạn Mức DSA", "Tỷ Số DTI", "Tài Sản Ròng").
+  2. **Khắc Phục Triệt Để Khối Đen & Tinh Chỉnh `ReportsPage.xaml`:**
+     - Khai báo rõ `Grid.Column="0"`, `"1"`, `"2"` cho 3 thẻ chỉ số "Tổng Thu", "Tổng Chi", "Thặng Dư".
+     - Xóa bỏ triệt để `<BoxView Color="Transparent" />` và tái cấu trúc sang `ColumnDefinitions="*,Auto,Auto"` trong template danh sách biến thiên chu kỳ, chấm dứt hoàn toàn hiện tượng khối đen.
+  3. **Tái Cấu Trúc Thẻ Thu Nhập Định Kỳ `RecurringIncomesPage.xaml`:**
+     - Tái cấu trúc sang cấu trúc 4 hàng khoa học: Hàng 0 (Tên nguồn thu & Số tiền), Hàng 1 (Nhãn đơn format gộp Ví & Danh mục kèm `TailTruncation`), Hàng 2 (Kỳ tiếp theo & Huy hiệu Đang bật), Hàng 3 (Cụm nút Bật/Tắt và Xóa căn phải `HorizontalOptions="End"`).
+     - Loại bỏ hoàn toàn BoxView trong suốt.
+  4. **Chuẩn Hóa Khung Bao CheckBox Chống Tràn Chữ (WordWrap Constraint):**
+     - Chuyển đổi toàn bộ cụm CheckBox từ `HorizontalStackLayout` sang `Grid ColumnDefinitions="Auto,*"` với thuộc tính `LineBreakMode="WordWrap"` trên `IncomesPage.xaml`, `ExpensesPage.xaml`, `ReceiptOcrPage.xaml` và `PayslipOcrPage.xaml`.
+  5. **Đồng Bộ Bộ Kiểm Thử Frontend & Khử Lệch Văn Hóa (Culture-Agnostic Assertions):**
+     - `ExpensesViewModelTests.cs`: Cập nhật 100% sang `Mock<ICategoryRepository>` và `Mock<IAutoRuleRepository>`.
+     - `ActionInboxViewModelTests.cs`: Sử dụng nội suy `$"{action.Display.Amount:N0} đ"` đảm bảo tính độc lập tuyệt đối với CultureInfo của môi trường chạy test.
+  6. **Biên Dịch & Cài Đặt Thực Nghiệm APK Lên Máy Ảo Android:**
+     - Biên dịch thành công gói APK mới: `com.companyname.expensetracker.maui-Signed.apk` (**0 Warning, 0 Error**).
+     - Cài đặt và nghiệm thu trực tiếp qua screencap máy ảo `emulator-5554`: Toàn bộ các màn hình (Tổng quan ví, Dự báo dòng tiền, Báo cáo tài chính, Thu nhập định kỳ, Khoảng trễ 24h, Sổ thu/chi, Bóc tách OCR) hiển thị sắc nét, không còn bất kỳ khối đen hay lỗi tràn chữ nào.
+- **Chỉ số nghiệm thu (Quality Gates):**
+  - Frontend MAUI UnitTests: **42 / 42 Tests Passed 100%** (Duration: 153ms).
+  - Backend Domain UnitTests: **83 / 83 Tests Passed 100%** (Duration: 270ms).
+  - Backend Application UnitTests: **171 / 171 Tests Passed 100%** (Duration: 2s).
+  - **TỔNG TEST SUITE: 296 / 296 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
+---
 
+## [2026-10-26 16:05] - Quyết Định 159: Khắc Phục Triệt Để Lỗi Che Khuất Danh Mục AutoRules, Nâng Cấp Huy Hiệu Danh Mục Categories, Sửa Lỗi Seeding Notification DI & Hoàn Tất Kiểm Nghiệm Toàn Diện 18 Màn Hình MAUI Trên Máy Ảo
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử (Orchestrator, Brad Frost, Dan Abramov, Kent Beck, Richard Thaler) cùng Người dùng.
+- **Vấn đề phát sinh & Yêu cầu của người dùng:**
+  1. Người dùng yêu cầu: *"tiếp tục sửa lỗi nếu vẫn còn lỗi kiểm thử xem UI có bị lỗi không có thì tiếp tục sửa"*.
+  2. *Lỗi che khuất nhãn danh mục trên `AutoRulesPage.xaml`:*
+     - Các chuỗi từ khóa dài (`WinMart, Co.opmart, Bách Hóa Xanh, Lotte`) bên trong `HorizontalStackLayout` đẩy mũi tên `➔` và nhãn danh mục đích (`Ăn uống & Thực phẩm`) lọt ra phía sau nút "Xóa" căn phải, che khuất hoàn toàn danh mục được gán.
+     - Hàng checkbox "Biểu thức Regex" và "Phân biệt hoa/thường" nằm trong `HorizontalStackLayout` không có giới hạn chiều ngang, gây nguy cơ tràn viền màn hình.
+  3. *Chuỗi kỹ thuật thô trên `CategoriesPage.xaml`:*
+     - Dòng 199 hiển thị trực tiếp chuỗi boolean `Hệ thống: True` / `Hệ thống: False` thiếu tính thẩm mỹ fintech.
+  4. *Lỗi mất dữ liệu thông báo do DI trong `MockNotificationRepository.cs`:*
+     - Khi `MockNotificationRepository` khai báo tham số tùy chọn `IEnumerable<InAppNotificationModel>? initial = null`, bộ chứa Microsoft DI tự động tiêm một mảng rỗng `Array.Empty<T>()` thay vì `null`.
+     - Điều kiện `if (initial != null)` ban đầu bị kích hoạt khiến mảng thông báo rỗng và bỏ qua hoàn toàn khối dữ liệu mẫu (mock seeding), dẫn đến trang `NotificationHistoryPage` bị rỗng thông báo khi mở lần đầu.
+- **Hành động & Giải pháp kiến trúc thực thi:**
+  1. **Tái Cấu Trúc Toàn Diện Giao Diện Quy Tắc Tự Động Hóa (`AutoRulesPage.xaml`):**
+     - Thiết kế lại template của `CollectionView` thành cấu trúc 3 hàng độc lập:
+       - Hàng 0: Huy hiệu mức ưu tiên `[Ưu tiên #X]` bên trái và nút `[Xóa]` màu đỏ bo góc 6px ở góc phải.
+       - Hàng 1: Khung chứa từ khóa/regex với nền riêng biệt, font chữ monospace rõ ràng, cho phép xuống dòng `WordWrap` tự nhiên với mọi độ dài từ khóa.
+       - Hàng 2: Huy hiệu danh mục đích `➔ Tự động gán: [Tên Danh Mục]` dạng pill màu xanh lá cây sinh động (`#15803D` / `#86EFAC`), không còn bất kỳ sự chồng lấn nào với nút xóa.
+     - Tái cấu trúc cụm CheckBox thành `Grid ColumnDefinitions="*,*"` với 2 cột cân xứng và `LineBreakMode="WordWrap"`.
+  2. **Chuẩn Hóa Huy Hiệu Danh Mục Thu & Chi (`CategoriesPage.xaml`):**
+     - Thay thế nhãn `Hệ thống: {0}` bằng 2 huy hiệu pill chuẩn thiết kế:
+       - Danh mục gốc hệ thống: `🔒 Mặc định hệ thống` (nền tím chàm `#EEF2FF`, viền `#C7D2FE`, chữ `#4338CA`).
+       - Danh mục tùy chỉnh: `👤 Tùy chỉnh cá nhân` (nền xanh lá `#F0FDF4`, viền `#BBF7D0`, chữ `#15803D`).
+  3. **Khắc Phục Lỗi Seeding Thông Báo & Đăng Ký Singleton (`MockNotificationRepository.cs` & `MauiProgram.cs`):**
+     - Cập nhật điều kiện khởi tạo trong constructor: `var initialList = initial?.ToList(); if (initialList != null && initialList.Count > 0)` đảm bảo luôn nạp đủ 3 thông báo mẫu (Cảnh báo hạn mức, Biến động số dư ví, Bóc tách OCR hoàn tất).
+     - Đăng ký `INotificationRepository` dưới dạng `AddSingleton` trong `MauiProgram.cs` để trạng thái thông báo được bảo toàn xuyên suốt các phiên điều hướng trang.
+  4. **Kiểm Tra & Nghiệm Thu Thị Giác Toàn Diện 18 Màn Hình Ứng Dụng Trên Máy Ảo Android (`emulator-5554`):**
+     - Biên dịch thành công gói cài đặt: `com.companyname.expensetracker.maui-Signed.apk` (**0 Cảnh báo, 0 Lỗi**).
+     - Cài đặt lên máy ảo `emulator-5554` và chụp ảnh kiểm chứng (Screencap) 100% các màn hình:
+       - **Quản Lý Đa Ví (`WalletsPage`):** Thẻ tổng tài sản 19,500,000 VND, danh sách việc cần xử lý, bộ nút thao tác nhanh.
+       - **Lịch Sử Thông Báo (`NotificationHistoryPage`):** Hiển thị đầy đủ 3 thông báo khởi tạo kèm nút "✓ Đọc tất cả", bộ lọc "Tất cả / Chưa đọc", nút thử nghiệm "+ Test Cảnh báo" chèn thông báo thời gian thực tức thì.
+       - **Danh Mục Thu & Chi (`CategoriesPage`):** Hiển thị đúng cây 2 cấp cha-con, phân định rõ ràng giữa `🔒 Mặc định hệ thống` và `👤 Tùy chỉnh cá nhân`.
+       - **Quy Tắc Tự Động Hóa (`AutoRulesPage`):** Cả 5 quy tắc đều hiển thị hoàn hảo 3 hàng, từ khóa dài không bị che khuất, danh mục tự động gán hiển thị trọn vẹn.
+       - **Sổ Thu Nhập Cá Nhân (`IncomesPage`):** Thẻ tổng thu 18,000,000 VND, form ghi nhận thu nhập và sổ cái ACID.
+       - **Sổ Giao Dịch Chi Tiêu (`ExpensesPage`):** Thẻ tổng chi -105,000 VND, form chi tiêu thiết yếu và lịch sử khấu trừ.
+       - **Khoản Thu Định Kỳ (`RecurringIncomesPage`):** Thẻ quản lý lương/tiền thuê, nút quét đến hạn và trạng thái kích hoạt.
+       - **Ngân Sách & DSA (`BudgetsPage`):** Thẻ 50/30/20, hạn mức an toàn ngày DSA 250,000 đ, vận tốc tiêu tiền 0.95x, tiến độ 3-band category.
+       - **Khoảng Trễ 24h Mua Sắm (`CoolingOffPage`):** Sandbox ma sát tâm lý Thaler, cửa sổ modal đánh giá giờ công lao động tương đương và tác động DSA.
+       - **Dự Báo Dòng Tiền (`ForecastingPage`):** Dự báo chi cuối kỳ ngày thường vs cuối tuần, radar cạn tiền vs kỳ lương (`🚨 BÁO ĐỘNG ĐỎ`), ma sát thâm hụt danh mục.
+       - **Báo Cáo Tài Chính (`ReportsPage`):** Tài sản ròng 110,000,000 đ, tỷ lệ tiết kiệm 38.6%, thác nước dòng tiền (Waterfall Flow), phân rã Kakeibo 4 cột trụ.
+       - **Mục Tiêu Tích Lũy (`SavingsGoalsPage`):** Thẻ 4 chiếc hũ Kakeibo, thanh tiến độ mục tiêu, nạp/rút tiền, phân tích khả thi AI.
+       - **Quét Hóa Đơn & Bóc Tách Phiếu Lương AI (`ReceiptOcrPage`, `PayslipOcrPage`):** AI Vision & Voice NLP bóc tách chi phí tức thời.
+       - **Tiện Ích & Trợ Lý AI (`SmartUtilitiesPage`):** Quét thuê bao ngầm Zombie Subscriptions và sinh mã VietQR NAPAS 247.
+  5. **Chỉ Số Chất Lượng (Quality Gates & Unit Tests):**
+     - Frontend MAUI UnitTests: **42 / 42 Tests Passed 100%**.
+     - Backend Domain UnitTests: **83 / 83 Tests Passed 100%**.
+     - Backend Application UnitTests: **171 / 171 Tests Passed 100%**.
+     - **TỔNG TEST SUITE: 296 / 296 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
+---
+
+## [2026-10-26 17:00] - Quyết Định 160: Chuẩn Hóa Nhận Diện Thương Hiệu (Icon Kim Cương 💎), Bản Địa Hóa Tiếng Việt Toàn Diện Cho Xác Thực & Modal, Loại Bỏ Command Tĩnh và Nghiệm Thu Hoàn Hảo 100% MAUI Client
+- **Người chủ trì:** Toàn thể Hội đồng Đa tác tử (Orchestrator, Brad Frost, Dan Abramov, Kent Beck, Richard Thaler) cùng Người dùng.
+- **Vấn đề phát sinh & Yêu cầu của người dùng:**
+  1. Người dùng yêu cầu: *"tiếp tục sửa lỗi nếu vẫn còn lỗi kiểm thử xem UI có bị lỗi không có thì tiếp tục sửa"*.
+  2. *Lỗi biểu tượng rỗng trên màn hình xác thực:* `LoginPage.xaml` và `RegisterPage.xaml` tham chiếu tệp `appiconfg.png` là lớp foreground của adaptive icon Android nên không hiển thị được trên `Image` control của MAUI, dẫn đến một khối màu tím trơn thiếu logo thương hiệu.
+  3. *Lỗi hiển thị chuỗi kỹ thuật thô (Raw Enum Strings):*
+     - Trên `CreateBudgetPage.xaml`, danh sách phân bổ danh mục hiển thị trực tiếp số nguyên enum `Quy tắc: 1`, `Quy tắc: 2` gây khó hiểu cho người dùng.
+     - Trên `CreateSavingsGoalPage.xaml`, các Picker phân loại mục tiêu và mức độ ưu tiên hiển thị chuỗi enum tiếng Anh thô (`EmergencyFund`, `MajorPurchase`, `High`, `Medium`).
+  4. *Lỗi rớt chữ tiêu đề trên màn hình hẹp:* Trên `SmartUtilitiesPage.xaml`, tiêu đề thẻ thuê bao dài dòng khiến từ "Chính" bị rớt xuống dòng thứ 2 một cách vụng về.
+  5. *Lỗi điều hướng không phản hồi do RelayCommand tĩnh (Static Command Binding Bug):*
+     - Các lệnh `NavigateToRegisterAsync`, `SkipToWalletsAsync` trong `LoginViewModel.cs` và `NavigateToLoginAsync` trong `RegisterViewModel.cs` bị khai báo từ khóa `static`. Trong bộ sinh mã CommunityToolkit.Mvvm, điều này tạo ra các thuộc tính tĩnh (`public static IAsyncRelayCommand`), khiến cơ chế DataBinding của MAUI XAML (`{Binding NavigateToRegisterCommand}`) trên đối tượng BindingContext thông thường không thể tìm thấy thuộc tính instance, dẫn đến nút bấm không kích hoạt điều hướng.
+- **Hành động & Giải pháp kiến trúc thực thi:**
+  1. **Chuẩn Hóa Nhận Diện Thương Hiệu Signature 💎 (Brad Frost & Julian Garnier):**
+     - Thay thế `appiconfg.png` bằng biểu tượng kim cương `💎` cỡ lớn (FontSize=36 trên `LoginPage`, FontSize=32 trên `RegisterPage`) nằm chính giữa khối Border Gradient tròn góc bo 20px với hiệu ứng bóng đổ luxury fintech, đồng nhất hoàn toàn với Flyout Header của ứng dụng.
+  2. **Bản Địa Hóa Tiếng Việt Toàn Diện & Tối Ưu Bố Cục Thẻ:**
+     - **`CreateBudgetViewModel.cs` & `CreateBudgetPage.xaml`:**
+       - Bổ sung thuộc tính `RuleName` chuyển đổi số nguyên sang tiếng Việt rõ ràng: `Thiết yếu (Needs 50%)`, `Linh hoạt (Wants 30%)`, `Tích lũy (Savings 20%)` với màu chàm (`#4F46E5`).
+       - Bổ sung thuộc tính `DisplayCategoryIcon` tự động nhận diện từ khóa tiếng Việt để gán emoji sinh động (🍜 Ăn uống, 🏠 Nhà ở, ☕ Cà phê, 🛍️ Mua sắm, 🚗 Di chuyển, 📚 Học tập, 💊 Y tế, 💰 Tiết kiệm).
+     - **`CreateSavingsGoalViewModel.cs` & `CreateSavingsGoalPage.xaml`:**
+       - Xây dựng 2 danh sách tùy chọn bọc `GoalTypeOption` và `GoalPriorityOption` có `DisplayName` tiếng Việt chuẩn:
+         - Loại mục tiêu: `🛡️ Quỹ khẩn cấp (Emergency)`, `💻 Mua sắm lớn (Purchase)`, `📈 Đầu tư & Tích lũy (Invest)`, `🎓 Học tập & Phát triển`, `✈️ Du lịch & Trải nghiệm`, `🎯 Mục tiêu khác`.
+         - Mức ưu tiên: `🔴 Cao (Ưu tiên hàng đầu)`, `🟡 Trung bình (Chuẩn)`, `🟢 Thấp (Linh hoạt)`.
+       - Ráp nối thuộc tính `ItemDisplayBinding="{Binding DisplayName}"` trên XAML Picker, đồng thời đồng bộ ngược giá trị Enum khi người dùng xác nhận tạo mục tiêu mới.
+     - **`SmartUtilitiesPage.xaml`:** Tinh chỉnh tiêu đề sang `🚨 Bẫy Thuê Bao Định Kỳ` giúp dòng chữ nằm gọn trên 1 hàng duy nhất mà không bị rớt chữ.
+     - **`LoginViewModel.cs` & `RegisterViewModel.cs`:** Chuyển đổi 100% tiêu đề (`Đăng Nhập`, `Đăng Ký Tài Khoản`) và chuỗi thông báo lỗi kiểm thực sang tiếng Việt trong trẻo, tự nhiên.
+  3. **Khắc Phục Triệt Để Lỗi Command Tĩnh & Tăng Cường Vùng Chạm Cảm Ứng (Dan Abramov):**
+     - Xóa bỏ từ khóa `static` khỏi `NavigateToRegisterAsync`, `SkipToWalletsAsync` và `NavigateToLoginAsync`, phục hồi thuộc tính instance RelayCommand tiêu chuẩn.
+     - Thay thế các thẻ `Label` chứa `TapGestureRecognizer` nhỏ hẹp bằng linh kiện `Button` nền trong suốt với chiều cao chuẩn `HeightRequest="40"`, loại bỏ hoàn toàn lỗi trượt cảm ứng trên màn hình cảm ứng di động.
+  4. **Kiểm Nghiệm Thực Tế Toàn Diện Trên Máy Ảo Android (`emulator-5554`):**
+     - Biên dịch và cập nhật thành công gói cài đặt .NET MAUI lên máy ảo Android 36 (`emulator-5554`).
+     - Nghiệm thu trực tiếp qua screencap màn hình:
+       - **`LoginPage`:** Hiển thị sắc nét logo kim cương 💎, cảnh báo lỗi tiếng Việt `⚠️ Vui lòng nhập đầy đủ email và mật khẩu.`, nút chuyển sang đăng ký phản hồi tức thời.
+       - **`RegisterPage`:** Form 5 trường với logo kim cương 💎, cảnh báo `⚠️ Vui lòng nhập họ và tên của bạn.`, nút quay về đăng nhập hoạt động trơn tru.
+       - **`CreateBudgetPage`:** Hiển thị trọn vẹn danh mục kèm emoji sinh động và huy hiệu phân bổ `Thiết yếu (Needs 50%)`, `Linh hoạt (Wants 30%)`.
+       - **`CreateSavingsGoalPage`:** Hộp thoại Picker hiển thị 100% tùy chọn tiếng Việt có biểu tượng màu sắc sinh động, không còn chuỗi enum kỹ thuật.
+       - **`SmartUtilitiesPage`:** Tiêu đề `🚨 Bẫy Thuê Bao Định Kỳ` hiển thị trên 1 hàng thẳng tắp, huy hiệu `THALER NUDGE` cân đối.
+  5. **Chỉ Số Chất Lượng (Quality Gates & Unit Tests):**
+     - Frontend MAUI UnitTests: **42 / 42 Tests Passed 100%** (Duration: 139ms).
+     - Backend Domain UnitTests: **83 / 83 Tests Passed 100%** (Duration: 50ms).
+     - Backend Application UnitTests: **171 / 171 Tests Passed 100%** (Duration: 2s).
+     - **TỔNG TEST SUITE: 296 / 296 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.

@@ -27,7 +27,7 @@ public partial class RegisterViewModel : BaseViewModel
     public RegisterViewModel(IClientAuthService authService)
     {
         _authService = authService;
-        Title = "Create Account";
+        Title = "Đăng Ký Tài Khoản";
     }
 
     [RelayCommand]
@@ -39,25 +39,25 @@ public partial class RegisterViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(FullName))
         {
-            ErrorMessage = "Please enter your full name.";
+            ErrorMessage = "Vui lòng nhập họ và tên của bạn.";
             return;
         }
 
         if (string.IsNullOrWhiteSpace(Email) || !Email.Contains('@'))
         {
-            ErrorMessage = "Please enter a valid email address.";
+            ErrorMessage = "Vui lòng nhập địa chỉ email hợp lệ.";
             return;
         }
 
         if (string.IsNullOrWhiteSpace(Password) || Password.Length < 6)
         {
-            ErrorMessage = "Password must be at least 6 characters long.";
+            ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự.";
             return;
         }
 
         if (Password != ConfirmPassword)
         {
-            ErrorMessage = "Passwords do not match.";
+            ErrorMessage = "Mật khẩu xác nhận không khớp.";
             return;
         }
 
@@ -72,7 +72,7 @@ public partial class RegisterViewModel : BaseViewModel
             }
             else
             {
-                ErrorMessage = error ?? "Registration failed. Please try again.";
+                ErrorMessage = error ?? "Đăng ký không thành công. Vui lòng thử lại.";
             }
         }
         catch (Exception ex)
@@ -86,7 +86,7 @@ public partial class RegisterViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private static async Task NavigateToLoginAsync()
+    private async Task NavigateToLoginAsync()
     {
         await Shell.Current.GoToAsync("..");
     }

@@ -7,80 +7,196 @@
              x:Class="ExpenseTracker.Maui.Views.ImportExport.ImportPreviewPage"
              x:DataType="vm:ImportPreviewViewModel"
              Title="{Binding Title}"
-             BackgroundColor="#F8FAFC">
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
 
-    <Grid RowDefinitions="Auto, Auto, *, Auto">
-        <!-- Header summary card -->
-        <Border Grid.Row="0" Margin="16,12,16,8" Padding="16" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="12" />
-            </Border.StrokeShape>
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Xác nhận dữ liệu trước khi nhập (HITL)" FontAttributes="Bold" FontSize="16" TextColor="#1E3A8A" />
-                <Label Text="{Binding SummaryMessage}" FontSize="13" TextColor="#64748B" />
+    <Grid RowDefinitions="Auto, Auto, *, Auto" MaximumWidthRequest="640">
 
-                <Grid ColumnDefinitions="*, *, *" Margin="0,4,0,0">
-                    <VerticalStackLayout Grid.Column="0">
-                        <Label Text="Tổng số dòng" FontSize="11" TextColor="#94A3B8" />
-                        <Label Text="{Binding TotalCount}" FontAttributes="Bold" FontSize="15" TextColor="#0F172A" />
-                    </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1">
-                        <Label Text="Hợp lệ" FontSize="11" TextColor="#94A3B8" />
-                        <Label Text="{Binding ValidCount}" FontAttributes="Bold" FontSize="15" TextColor="#16A34A" />
-                    </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="2">
-                        <Label Text="Tổng tiền" FontSize="11" TextColor="#94A3B8" />
-                        <Label Text="{Binding TotalAmount, StringFormat='{0:N0} đ'}" FontAttributes="Bold" FontSize="15" TextColor="#0284C7" />
-                    </VerticalStackLayout>
+        <!-- 1. Header Summary Card -->
+        <Border Grid.Row="0" Margin="20,16,20,10" Padding="18"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 20"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
+            <Border.Shadow>
+                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                        Offset="0,4" Radius="12" 
+                        Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="10">
+                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <Label Grid.Column="0" Text="Xác Nhận Dữ Liệu Nhập (HITL)"
+                           FontAttributes="Bold" FontSize="17"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                    <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+                            Padding="8,3">
+                        <Label Text="Human-in-the-loop" FontSize="10" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
+                    </Border>
+                </Grid>
+
+                <Label Text="{Binding SummaryMessage, FallbackValue='Kiểm tra và đánh dấu chọn các dòng giao dịch hợp lệ để nạp vào sổ cái.'}"
+                       FontSize="12"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                       LineBreakMode="WordWrap" />
+
+                <!-- 3-Column Summary Stats -->
+                <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8" Margin="0,4,0,0">
+                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                            StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                            Padding="10,8">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Tổng dòng" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <Label Text="{Binding TotalCount}" FontAttributes="Bold" FontSize="15"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                            StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                            Padding="10,8">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Hợp lệ" FontSize="11" TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}" />
+                            <Label Text="{Binding ValidCount}" FontAttributes="Bold" FontSize="15"
+                                   TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                            StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#172554}"
+                            Padding="10,8">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Tổng tiền" FontSize="11" TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
+                            <Label Text="{Binding TotalAmount, StringFormat='{0:N0} đ'}" FontAttributes="Bold" FontSize="14"
+                                   TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
+                        </VerticalStackLayout>
+                    </Border>
                 </Grid>
             </VerticalStackLayout>
         </Border>
 
-        <!-- Wallet Selection -->
-        <Border Grid.Row="1" Margin="16,0,16,8" Padding="12" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="8" />
-            </Border.StrokeShape>
-            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                <Label Text="Ví đích:" FontAttributes="Bold" VerticalOptions="Center" TextColor="#334155" />
-                <Picker ItemsSource="{Binding Wallets}"
-                        ItemDisplayBinding="{Binding Name}"
-                        SelectedItem="{Binding SelectedWallet}"
-                        WidthRequest="220" />
-            </HorizontalStackLayout>
+        <!-- 2. Wallet Selection Card -->
+        <Border Grid.Row="1" Margin="20,0,20,10" Padding="14,10"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 14"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
+            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12" VerticalOptions="Center">
+                <Label Grid.Column="0" Text="Ví đích nhận tiền:"
+                       FontAttributes="Bold" FontSize="13" VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" />
+                <Border Grid.Column="1"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                        StrokeShape="RoundRectangle 10"
+                        BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                        Padding="8,2">
+                    <Picker ItemsSource="{Binding Wallets}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedWallet}"
+                            FontSize="13"
+                            TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                </Border>
+            </Grid>
         </Border>
 
-        <!-- Transaction rows list -->
-        <CollectionView Grid.Row="2" Margin="16,0,16,0" ItemsSource="{Binding Rows}">
+        <!-- 3. Transaction Rows CollectionView -->
+        <CollectionView Grid.Row="2" Margin="20,0,20,6" ItemsSource="{Binding Rows}">
+            <CollectionView.EmptyView>
+                <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 20"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                        Padding="32" Margin="0,10">
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="📋" FontSize="44" HorizontalOptions="Center" />
+                        <Label Text="Chưa có dữ liệu nhập nào"
+                               FontSize="15" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Dữ liệu bóc tách từ file Excel hoặc tin nhắn sao kê sẽ hiển thị tại đây để bạn kiểm tra."
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </CollectionView.EmptyView>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ParsedImportRowModel">
-                    <Border Margin="0,4" Padding="12" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
-                        </Border.StrokeShape>
-                        <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto">
-                            <CheckBox Grid.Column="0" Grid.RowSpan="2" IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
-                            <VerticalStackLayout Grid.Column="1" Grid.Row="0" Padding="8,0">
-                                <Label Text="{Binding CategoryName}" FontAttributes="Bold" FontSize="14" TextColor="#1E293B" />
-                                <Label Text="{Binding Note}" FontSize="12" TextColor="#64748B" LineBreakMode="TailTruncation" />
+                    <Border Margin="0,4,0,6" Padding="14,12"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 14"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
+                        <Border.Shadow>
+                            <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                                    Offset="0,2" Radius="6" 
+                                    Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
+                        </Border.Shadow>
+
+                        <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="10">
+                            <!-- CheckBox selector -->
+                            <CheckBox Grid.Column="0" Grid.RowSpan="2"
+                                      IsChecked="{Binding IsSelected}"
+                                      Color="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
+                                      VerticalOptions="Center" />
+
+                            <!-- Category and note -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding CategoryName}"
+                                       FontAttributes="Bold" FontSize="14"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                <Label Text="{Binding Note}"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                                       LineBreakMode="TailTruncation" />
                             </VerticalStackLayout>
-                            <Label Grid.Column="2" Grid.Row="0" Text="{Binding Amount, StringFormat='{0:N0} đ'}" FontAttributes="Bold" FontSize="14" TextColor="{Binding TransactionType, Converter={x:Null}}" HorizontalOptions="End" />
-                            <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="{Binding ValidationMessage}" TextColor="#DC2626" FontSize="11" IsVisible="{Binding ValidationMessage, Converter={x:Null}}" Margin="8,2,0,0" />
+
+                            <!-- Amount -->
+                            <Label Grid.Column="2" Grid.Row="0"
+                                   Text="{Binding Amount, StringFormat='{0:N0} đ'}"
+                                   FontAttributes="Bold" FontSize="14"
+                                   TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
+                                   HorizontalOptions="End" VerticalOptions="Center" />
+
+                            <!-- Validation Message (if error) -->
+                            <Border Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 6"
+                                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                                    Padding="8,2" Margin="0,4,0,0"
+                                    IsVisible="{Binding ValidationMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                                <Label Text="{Binding ValidationMessage}"
+                                       TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
+                                       FontSize="11" FontAttributes="Bold" />
+                            </Border>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- Bottom Action Commit Button -->
-        <Border Grid.Row="3" Padding="16" BackgroundColor="#FFFFFF" Stroke="#E2E8F0" StrokeThickness="1">
+        <!-- 4. Bottom Action Commit Button -->
+        <Border Grid.Row="3" Padding="20,14"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+                StrokeThickness="1"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
             <Button Text="XÁC NHẬN NHẬP TẤT CẢ VÀO SỔ CÁI"
                     Command="{Binding CommitBulkCommand}"
-                    BackgroundColor="#1E3A8A"
+                    BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
                     TextColor="#FFFFFF"
                     FontAttributes="Bold"
-                    CornerRadius="8"
-                    HeightRequest="50" />
+                    FontSize="14"
+                    CornerRadius="14"
+                    HeightRequest="50">
+                <Button.Shadow>
+                    <Shadow Brush="#4F46E5" Offset="0,4" Radius="12" Opacity="0.3" />
+                </Button.Shadow>
+            </Button>
         </Border>
     </Grid>
 

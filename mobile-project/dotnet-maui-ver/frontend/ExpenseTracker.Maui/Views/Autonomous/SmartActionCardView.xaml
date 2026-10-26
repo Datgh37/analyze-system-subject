@@ -6,26 +6,34 @@
              x:Name="thisCard"
              x:DataType="models:AutonomousActionModel">
 
-    <!-- WIRED-FRAME ONLY: Clean structure and data binding, ready for visual UI styling -->
-    <Border Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}"
-            StrokeThickness="1.5"
-            StrokeShape="RoundRectangle 10"
-            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-            Padding="14"
+    <!-- Smart Action Card: 1-Tap Quick Commit (Confidence >= 0.85) or Jev Choice (0.50..0.85) -->
+    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 16"
+            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+            Padding="16"
             Margin="0,0,0,10">
+        <Border.Shadow>
+            <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                    Offset="0,2" Radius="8" 
+                    Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
+        </Border.Shadow>
         
         <VerticalStackLayout Spacing="10">
             <!-- Header Row: Category Badge + Bank/Time Subtitle + Dismiss Button -->
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
-                <!-- Category Badge -->
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <!-- Category Badge (Sleek Pill) -->
                 <Border Grid.Column="0"
-                        Stroke="Transparent"
+                        StrokeThickness="0"
                         BackgroundColor="{Binding Display.BadgeColor}"
-                        StrokeShape="RoundRectangle 6"
-                        Padding="8,3">
+                        StrokeShape="RoundRectangle 20"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Start"
+                        Padding="10,4">
                     <Label Text="{Binding Display.BadgeText}"
                            FontSize="11"
                            FontAttributes="Bold"
+                           LineBreakMode="NoWrap"
                            TextColor="#FFFFFF" />
                 </Border>
 
@@ -34,18 +42,20 @@
                        Text="{Binding Display.Subtitle}"
                        FontSize="12"
                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                       VerticalOptions="Center" />
+                       VerticalOptions="Center"
+                       LineBreakMode="TailTruncation" />
 
-                <!-- Dismiss Button -->
+                <!-- Dismiss Button (Circular Touchpoint) -->
                 <Button Grid.Column="2"
                         Text="✕"
-                        FontSize="12"
+                        FontSize="11"
+                        FontAttributes="Bold"
                         WidthRequest="28"
                         HeightRequest="28"
                         Padding="0"
                         CornerRadius="14"
-                        BackgroundColor="Transparent"
-                        TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
                         Command="{Binding Source={x:Reference thisCard}, Path=DismissCommand}"
                         CommandParameter="{Binding .}" />
             </Grid>
@@ -66,20 +76,24 @@
                             Text="{Binding PrimaryAction.Label, StringFormat='✓ {0}'}"
                             FontAttributes="Bold"
                             FontSize="13"
-                            HeightRequest="38"
-                            CornerRadius="8"
+                            HeightRequest="40"
+                            CornerRadius="10"
                             BackgroundColor="{AppThemeBinding Light=#10B981, Dark=#059669}"
                             TextColor="#FFFFFF"
                             Command="{Binding Source={x:Reference thisCard}, Path=QuickCommitCommand}"
-                            CommandParameter="{Binding .}" />
+                            CommandParameter="{Binding .}">
+                        <Button.Shadow>
+                            <Shadow Brush="#10B981" Offset="0,2" Radius="6" Opacity="0.25" />
+                        </Button.Shadow>
+                    </Button>
 
                     <!-- Secondary Change / Navigate Button -->
                     <Button Grid.Column="1"
                             Text="{Binding SecondaryAction.Label}"
                             FontSize="13"
-                            HeightRequest="38"
-                            CornerRadius="8"
-                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                            HeightRequest="40"
+                            CornerRadius="10"
+                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
                             TextColor="{AppThemeBinding Light=#334155, Dark=#F8FAFC}"
                             Command="{Binding Source={x:Reference thisCard}, Path=NavigateCommand}"
                             CommandParameter="{Binding .}" />
@@ -95,11 +109,12 @@
                             <DataTemplate x:DataType="models:ActionChoiceModel">
                                 <Button TextTransform="None"
                                         FontSize="12"
-                                        HeightRequest="34"
-                                        Padding="12,0"
-                                        CornerRadius="6"
-                                        BackgroundColor="{AppThemeBinding Light=#E0E7FF, Dark=#312E81}"
+                                        HeightRequest="36"
+                                        Padding="14,0"
+                                        CornerRadius="8"
+                                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
                                         TextColor="{AppThemeBinding Light=#4338CA, Dark=#E0E7FF}"
+                                        FontAttributes="Bold"
                                         Command="{Binding Source={x:Reference thisCard}, Path=SelectChoiceCommand}"
                                         CommandParameter="{Binding .}">
                                     <Button.Text>

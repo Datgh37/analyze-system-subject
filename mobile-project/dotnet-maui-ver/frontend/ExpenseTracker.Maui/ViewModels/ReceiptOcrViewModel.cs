@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.Categories;
 using ExpenseTracker.Maui.Models.Receipts;
+using ExpenseTracker.Maui.Models.SmartUtilities;
 using ExpenseTracker.Maui.Models.Wallets;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 using Refit;
 
@@ -12,10 +14,10 @@ namespace ExpenseTracker.Maui.ViewModels;
 // ViewModel managing supermarket/retail receipt AI Vision OCR parsing, mathematical audit, and ledger confirmation (UC-03.07/03.08)
 public partial class ReceiptOcrViewModel : BaseViewModel
 {
-    private readonly IReceiptApi _receiptApi;
-    private readonly IWalletApi _walletApi;
-    private readonly ICategoryApi _categoryApi;
-    private readonly ISmartUtilityApi _smartUtilityApi;
+    private readonly IReceiptRepository _receiptRepo;
+    private readonly IWalletRepository _walletRepo;
+    private readonly ICategoryRepository _categoryRepo;
+    private readonly ISmartUtilityRepository _smartUtilityRepo;
 
     public ObservableCollection<WalletModel> Wallets { get; } = new();
     public ObservableCollection<CategoryModel> ExpenseCategories { get; } = new();
@@ -86,16 +88,16 @@ public partial class ReceiptOcrViewModel : BaseViewModel
     private string _voiceTranscriptInput = string.Empty;
 
     public ReceiptOcrViewModel(
-        IReceiptApi receiptApi,
-        IWalletApi walletApi,
-        ICategoryApi categoryApi,
-        ISmartUtilityApi smartUtilityApi)
+        IReceiptRepository receiptRepo,
+        IWalletRepository walletRepo,
+        ICategoryRepository categoryRepo,
+        ISmartUtilityRepository smartUtilityRepo)
     {
-        _receiptApi = receiptApi;
-        _walletApi = walletApi;
-        _categoryApi = categoryApi;
-        _smartUtilityApi = smartUtilityApi;
-        Title = "Bóc Tách Hóa Đơn AI (UC-03.07/03.08)";
+        _receiptRepo = receiptRepo;
+        _walletRepo = walletRepo;
+        _categoryRepo = categoryRepo;
+        _smartUtilityRepo = smartUtilityRepo;
+        Title = "Bóc Tách Hóa Đơn AI";
     }
 
     [RelayCommand]
@@ -108,7 +110,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
 
         try
         {
-            var wallets = await _walletApi.GetWalletsAsync();
+            var wallets = await _walletRepo.GetWalletsAsync();
             Wallets.Clear();
             foreach (var w in wallets) Wallets.Add(w);
             if (Wallets.Count > 0 && SelectedWallet == null)
@@ -116,7 +118,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
                 SelectedWallet = Wallets[0];
             }
 
-            var categories = await _categoryApi.GetCategoriesAsync(2); // 2 = Expense
+            var categories = await _categoryRepo.GetCategoriesAsync(2); // 2 = Expense
             ExpenseCategories.Clear();
             foreach (var c in categories) ExpenseCategories.Add(c);
             if (ExpenseCategories.Count > 0 && SelectedCategory == null)
@@ -169,7 +171,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
             await using var stream = await result.OpenReadAsync();
             var streamPart = new StreamPart(stream, result.FileName, "application/octet-stream");
 
-            var parsed = await _receiptApi.ParseReceiptAsync(streamPart);
+            var parsed = await _receiptRepo.ParseReceiptAsync(streamPart);
 
             MerchantName = parsed.MerchantName;
             InvoiceDate = parsed.InvoiceDate;
@@ -230,7 +232,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
 
         try
         {
-            var result = await _smartUtilityApi.ParseVoiceExpenseAsync(new(VoiceTranscriptInput));
+            var result = await _smartUtilityRepo.ParseVoiceExpenseAsync(new(VoiceTranscriptInput));
             TotalAmount = result.Amount;
             Note = result.Note;
 
@@ -306,7 +308,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
                 RememberRules
             );
 
-            var createdTransaction = await _receiptApi.ConfirmReceiptAsync(request);
+            var createdTransaction = await _receiptRepo.ConfirmReceiptAsync(request);
 
             StatusMessage = $"🎉 Hóa đơn {MerchantName} ({createdTransaction.Amount:N0} đ) đã được ghi nhận vào sổ cái thành công!";
             

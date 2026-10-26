@@ -9,108 +9,148 @@
              BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="24" Padding="32,60,32,40" MaximumWidthRequest="460">
+        <VerticalStackLayout Spacing="28" Padding="24,60,24,40" MaximumWidthRequest="460">
             <!-- Brand Header -->
-            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Border StrokeThickness="0"
+                        StrokeShape="RoundRectangle 20"
+                        WidthRequest="72"
+                        HeightRequest="72"
+                        HorizontalOptions="Center"
+                        Shadow="{Shadow Brush='#4F46E5', Offset='0,8', Radius=16, Opacity=0.3}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4F46E5" Offset="0.0" />
+                            <GradientStop Color="#7C3AED" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Label Text="💎" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
                 <Label Text="DuoNoPro" 
-                       FontSize="32" 
+                       FontSize="30" 
                        FontAttributes="Bold" 
                        HorizontalOptions="Center"
                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
                 <Label Text="Smart Personal Finance &amp; Expense Planning" 
-                       FontSize="14" 
+                       FontSize="13" 
                        HorizontalOptions="Center"
                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
             </VerticalStackLayout>
 
             <!-- Card Container -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Padding="24">
+            <Border Style="{StaticResource ModernCard}"
+                    Padding="26"
+                    Shadow="{Shadow Brush='#000000', Offset='0,4', Radius=12, Opacity=0.08}">
                 <VerticalStackLayout Spacing="18">
-                    <Label Text="Sign In to your Account" 
+                    <Label Text="Đăng Nhập Tài Khoản" 
                            FontSize="20" 
                            FontAttributes="Bold" 
                            TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
 
                     <!-- Error Alert -->
-                    <Border Stroke="#FCA5A5" 
+                    <Border BackgroundColor="#FEF2F2"
+                            Stroke="#FECACA"
                             StrokeThickness="1"
                             StrokeShape="RoundRectangle 8"
-                            BackgroundColor="#FEF2F2"
                             Padding="12"
                             IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                        <Label Text="{Binding ErrorMessage}" 
-                               TextColor="#B91C1C" 
-                               FontSize="13" />
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                            <Label Text="{Binding ErrorMessage}" 
+                                   TextColor="#B91C1C" 
+                                   FontSize="12"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
                     </Border>
 
                     <!-- Email Input -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Email Address" 
-                               FontSize="13" 
+                        <Label Text="Địa chỉ Email" 
+                               FontSize="12" 
                                FontAttributes="Bold" 
                                TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Entry Placeholder="name@example.com"
-                               Keyboard="Email"
-                               Text="{Binding Email}"
-                               ClearButtonVisibility="WhileEditing" />
+                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,2"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Entry Placeholder="name@example.com"
+                                   Keyboard="Email"
+                                   Text="{Binding Email}"
+                                   FontSize="14"
+                                   ClearButtonVisibility="WhileEditing" />
+                        </Border>
                     </VerticalStackLayout>
 
                     <!-- Password Input -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Password" 
-                               FontSize="13" 
+                        <Label Text="Mật khẩu" 
+                               FontSize="12" 
                                FontAttributes="Bold" 
                                TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Entry Placeholder="••••••••"
-                               IsPassword="True"
-                               Text="{Binding Password}" />
+                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,2"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Entry Placeholder="••••••••"
+                                   IsPassword="True"
+                                   FontSize="14"
+                                   Text="{Binding Password}" />
+                        </Border>
                     </VerticalStackLayout>
 
                     <!-- Submit Button -->
-                    <Button Text="Sign In" 
+                    <Button Text="Đăng Nhập" 
                             Command="{Binding LoginCommand}"
                             IsEnabled="{Binding IsNotBusy}"
-                            BackgroundColor="#2563EB"
+                            BackgroundColor="#4F46E5"
                             TextColor="#FFFFFF"
                             FontAttributes="Bold"
+                            FontSize="14"
                             CornerRadius="10"
                             HeightRequest="48"
-                            Margin="0,12,0,0" />
+                            Margin="0,8,0,0" />
 
                     <!-- Loading Indicator -->
                     <ActivityIndicator IsRunning="{Binding IsBusy}" 
                                        IsVisible="{Binding IsBusy}" 
-                                       Color="#2563EB"
+                                       Color="#4F46E5"
                                        HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </Border>
 
             <!-- Switch to Register -->
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
-                <Label Text="Don't have an account?" 
-                       FontSize="14" 
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                <Label Text="Sign Up" 
-                       FontSize="14" 
-                       FontAttributes="Bold" 
-                       TextColor="#2563EB">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToRegisterCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
-
-            <!-- Direct Preview Link for Stage 1 Testing -->
-            <Button Text="Xem trực tiếp Giao diện Ví (Wallets Preview)"
-                    Command="{Binding SkipToWalletsCommand}"
-                    FontSize="12"
-                    TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+            <Button Text="Chưa có tài khoản? Đăng Ký Ngay" 
+                    Command="{Binding NavigateToRegisterCommand}"
                     BackgroundColor="Transparent"
-                    HorizontalOptions="Center" />
+                    TextColor="#4F46E5"
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"
+                    HeightRequest="40" />
+
+            <!-- Direct Preview Link for Demo / Báo Cáo Chấm Điểm -->
+            <Border Stroke="{AppThemeBinding Light='#E0E7FF', Dark='#312E81'}"
+                    BackgroundColor="{AppThemeBinding Light='#EEF2FF', Dark='#1E1B4B'}"
+                    Padding="14,10"
+                    StrokeShape="RoundRectangle 10"
+                    HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="2">
+                    <Button Text="🚀 Xem Trực Tiếp Giao Diện Ví (Demo Mode)"
+                            Command="{Binding SkipToWalletsCommand}"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            TextColor="#4F46E5"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Center" />
+                    <Label Text="Chế độ Demo chấm điểm Offline với Mock Repositories 0ms"
+                           FontSize="10"
+                           TextColor="{AppThemeBinding Light='#6366F1', Dark='#A5B4FC'}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
