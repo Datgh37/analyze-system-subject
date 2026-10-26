@@ -4,7 +4,7 @@
 > **Thời điểm xác lập:** 2026-10-25 23:50  
 > **Mốc thời gian áp dụng:** **DEADLINE 1 — THỨ TƯ, 28/10/2026 (Môn Lập trình Ứng dụng Di động .NET MAUI)**  
 > **Căn cứ barem chấm điểm:** [`mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt`](../../mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt)  
-> **Cờ kiểm soát điều phối:** ⚠️ **[TRẠNG THÁI: FROZEN / ĐÓNG BĂNG THỰC THI THEO CHỈ ĐẠO CỦA CHỦ TỌA]**  
+> **Cờ kiểm soát điều phối:** ✅ **[TRẠNG THÁI: UNFROZEN / ĐANG THỰC THI (KÍCH HOẠT THEO QUYẾT ĐỊNH 160)]**  
 
 ---
 

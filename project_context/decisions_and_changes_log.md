@@ -3551,6 +3551,62 @@ Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tin
      - Thời gian chạy toàn bộ: ~11 giây.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 13:45] - Quyết Định 160: Chính Thức Dỡ Bỏ Lệnh Đóng Băng (Unfreeze) Giai Đoạn 11 & Khởi Động Phiên Họp Triển Khai Tài Liệu Báo Cáo Cuối Kỳ (.NET MAUI)
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Council Orchestrator, Cockburn BA, Kent Beck, Dan Abramov).
+- **Vấn đề xem xét:**
+  - Hạ tầng Backend, CSDL PostgreSQL, SignalR Realtime, Push Notification Adapter, Khóa bi quan Concurrency, Bộ kịch bản Master Demo Story Seeding và toàn bộ 113 API Tests / 266 Unit Tests đã đạt 100% Passed.
+  - Phân định rõ ràng: Giai đoạn 9 (Dedicated Frontend Styling) do Bạn cùng nhóm phụ trách (đã bàn giao tài liệu `HUONG_DAN_FE.md`); Giai đoạn 11 (Tổng kiểm toán, Báo cáo cuối kỳ, Ôn tập Q&A, Script 1-Click, Đóng gói APK) là trọng tâm của Lead Developer.
+- **Quyết định:**
+  1. **Chính thức Dỡ Bỏ Lệnh Đóng Băng (Unfreeze) Giai đoạn 11:** Chuyển trạng thái Giai đoạn 11 trong [`MASTER_PROJECT_ROADMAP.md`](mobile-project/dotnet-maui-ver/MASTER_PROJECT_ROADMAP.md) và [`PLAN-48`](project_context/plans/plans-mobile-app/2026-10-25_plan_48_giai_doan_11_tong_kiem_toan_bao_cao_va_on_tap_qa.md) từ `FROZEN` sang **`ACTIVE & IN-PROGRESS`**.
+  2. **Ưu tiên số 1:** Khởi động ngay **Bước 1 - Hoàn thiện Tài liệu Báo cáo Cuối kỳ môn Lập trình Di động .NET MAUI** ([`BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`](mobile-project/dotnet-maui-ver/BAO_CAO_CUOI_KY_DOTNET_MAUI.docx) / `BAO_CAO_CUOI_KY_DOTNET_MAUI.md`).
+  3. Lắng nghe toàn bộ chỉ đạo, lưu ý và yêu cầu cụ thể của Chủ tọa về cấu trúc, nội dung và các quy định trình bày bài báo cáo trước khi bắt tay thực hiện.
+---
+
+## [2026-10-26 14:35] - Quyết Định 161: Khôi Phục Nguyên Vẹn Trang Bìa Gốc, Khôi Phục Trường Tự Động Word (TOC/TOF/TOT), Chuẩn Hóa Màu Đen 100% Cho Tiêu Đề Báo Cáo Cuối Kỳ (.NET MAUI)
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Council Orchestrator, Eric Evans, Dan Abramov, Cockburn BA).
+- **Vấn đề xem xét:**
+  1. Người dùng phản hồi về việc trang bìa gốc trong file ban đầu bị mất khi sinh lại bằng script trắng, tiêu đề bị gán màu xanh lạ mắt, và các mục lục/danh mục không dùng trường tự động (field codes) của Word.
+  2. Yêu cầu khôi phục ngay:
+     - Giữ nguyên vẹn 100% Trang bìa gốc của nhóm (Trường ĐH Công Nghệ Đồng Nai, Khoa CNTT, Nhóm 46 - Trịnh Thành Đạt & Trần Trọng Đại).
+     - Trang thứ 2 là Bảng phân công nhiệm vụ và tỷ lệ đóng góp (50% Đạt - 50% Đại), đẩy Mục lục và các mục sau xuống.
+     - Khôi phục đúng trường tự động OpenXML Word cho Mục lục (`TOC \o "1-3" \h \z \u`), Danh mục hình ảnh (`TOC \c "Hình" \h \z`), Danh mục bảng biểu (`TOC \c "Bảng" \h \z`) và bật cờ `w:updateFields="true"`.
+     - Chuyển 100% màu tiêu đề (Heading 1, 2, Captions) về **MÀU ĐEN HỌC THUẬT (`#000000`)**.
+- **Quyết định & Kết quả triển khai:**
+  1. Trích xuất file gốc từ Git commit `ad20f2d` ([`scratch/BAO_CAO_ad20f2d.docx`](mobile-project/dotnet-maui-ver/scratch/BAO_CAO_ad20f2d.docx)), dùng làm base template bảo tồn 100% trang bìa và cấu trúc Document.
+  2. Phát triển script chuẩn hóa [`scratch/generate_standard_report.py`](mobile-project/dotnet-maui-ver/scratch/generate_standard_report.py):
+     - Giữ nguyên các paragraph 0 - 10 (Toàn bộ Trang bìa và ngắt trang).
+     - Chèn Trang 2: Bảng phân công nhiệm vụ chi tiết 5 cột + Ngắt trang.
+     - Chèn Trang 3, 4, 5: MỤC LỤC TỰ ĐỘNG, DANH MỤC HÌNH ẢNH TỰ ĐỘNG, DANH MỤC BẢNG BIỂU TỰ ĐỘNG (Word Field Codes) + Ngắt trang.
+     - Chèn nội dung Mục 6, 7, 8 (Backend), 9 (Frontend), 10 (Kết luận & Test demo) với 100% tiêu đề MÀU ĐEN chuẩn học thuật, 22 vị trí chèn ảnh đúng quy tắc DNTU và 5 đoạn code mẫu đắt giá.
+  3. Xuất bản tệp hoàn chỉnh: [`mobile-project/dotnet-maui-ver/BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`](mobile-project/dotnet-maui-ver/BAO_CAO_CUOI_KY_DOTNET_MAUI.docx) (97 paragraphs, 32 tables, đầy đủ trang bìa, trường tự động cập nhật).
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+---
+
+## [2026-10-26 18:48] - Quyết Định 162: Tạm Thời Đóng Băng (Freeze) Các Chặng Tiếp Theo Của Kế Hoạch 50 (Giai Đoạn 11) & Khởi Động Kế Hoạch Chen Giữa 52 (Interim Plan 52)
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Council Orchestrator, Bruce Schneier, Dan Abramov, Kent Beck, Andrew Ng).
+- **Vấn đề xem xét:**
+  1. Sau khi hoàn thành Chặng 1 của Giai đoạn 11 (Báo cáo cuối kỳ .NET MAUI chuẩn mực DNTU), qua rà soát đối chiếu văn bản yêu cầu chính thức [`yeucau-cuoiky.txt`](mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt) và Biên bản Hội đàm Giai đoạn 10, phát hiện các điểm then chốt cần bổ sung và nâng cấp thực tế:
+     - Xác thực nâng cao: Kích hoạt tài khoản bằng mã OTP qua Email/SĐT, giao diện `VerifyOtpPage.xaml`, đăng nhập đa phương thức Google OAuth, quên mật khẩu và Auto-login.
+     - Push Notification ngoại tuyến & Killed App: Cần khắc phục việc thông báo bị tắt khi app bị kill bằng Native Android Notification và `AlarmManager` cho lịch nhắc nhở 21:00.
+     - Killer Feature: Lắng nghe biến động số dư ngân hàng (ACB, MoMo, ZaloPay, VCB, MBBank) qua `BankNotificationListenerService` $\rightarrow$ Bắn Native Notification $\rightarrow$ Chạm vào mở thẳng `AddTransactionPage` tự điền tiền.
+     - Trợ lý Voice AI điều khiển hệ thống và hoàn thiện SignalR 2 chiều (`InvokeAsync`).
+  2. Quyết định về việc đóng gói ứng dụng (APK Release): Tạm hoãn, để dành cho Chặng cuối cùng của Giai đoạn 11 sau khi mọi tính năng và kiểm thử đã hoàn tất 100%.
+- **Quyết định & Kết quả triển khai:**
+  1. **Đóng băng (Freeze):** Tạm dừng thực hiện Chặng 2, 3, 4, 5 của Kế hoạch 50 (Giai đoạn 11).
+  2. **Phê duyệt Kế hoạch Chen Giữa 52 (Interim Plan 52):**
+     - Ban hành tệp kế hoạch chính thức: [`project_context/plans/plans-mobile-app/2026-10-26_plan_52_auth_da_phuong_thuc_otp_google_va_offline_bank_push_notification.md`](project_context/plans/plans-mobile-app/2026-10-26_plan_52_auth_da_phuong_thuc_otp_google_va_offline_bank_push_notification.md).
+     - Phân bổ 4 chặng thực thi khép kín:
+       * *Chặng 1:* Nâng cấp Xác thực Toàn diện (Email OTP, Google OAuth, Quên mật khẩu, Auto-Login).
+       * *Chặng 2:* Hạ tầng Quyền Android 13+ & Native Android Notification Engine (AlarmManager khi tắt app).
+       * *Chặng 3:* Push Notification Ngoại Tuyến Bắt Biến Động Ngân Hàng (Bank Listener $\rightarrow$ Deep Link `AddTransactionPage`).
+       * *Chặng 4:* Trợ lý Voice AI Điều Khiển Hệ Thống, SignalR 2 Chiều (`InvokeAsync`) & Kiểm thử Toàn diện (42 ViewModel tests + 183 Backend tests).
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
+
 
 
 
