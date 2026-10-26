@@ -46,7 +46,7 @@ public partial class ReportsViewModel : BaseViewModel
     public ReportsViewModel(IAnalyticsReportRepository repository)
     {
         _repository = repository;
-        Title = "Báo Cáo & Phân Tích Đa Chiều";
+        Title = "Báo Cáo Tài Chính";
     }
 
     [RelayCommand]

@@ -17,8 +17,8 @@ public partial class ExpensesViewModel : BaseViewModel
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly IWalletRepository _walletRepository;
-    private readonly ICategoryApi _categoryApi;
-    private readonly IAutoRuleApi _autoRuleApi;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly IAutoRuleRepository _autoRuleRepository;
 
     public ObservableCollection<TransactionModel> Expenses { get; } = new();
     public ObservableCollection<WalletModel> Wallets { get; } = new();
@@ -51,13 +51,13 @@ public partial class ExpensesViewModel : BaseViewModel
     public ExpensesViewModel(
         ITransactionRepository transactionRepository,
         IWalletRepository walletRepository,
-        ICategoryApi categoryApi,
-        IAutoRuleApi autoRuleApi)
+        ICategoryRepository categoryRepository,
+        IAutoRuleRepository autoRuleRepository)
     {
         _transactionRepository = transactionRepository;
         _walletRepository = walletRepository;
-        _categoryApi = categoryApi;
-        _autoRuleApi = autoRuleApi;
+        _categoryRepository = categoryRepository;
+        _autoRuleRepository = autoRuleRepository;
         Title = "Sổ Giao Dịch Chi Tiêu";
 
         // Listen for realtime transaction created events (Instant 0ms timeline prepend)
@@ -106,7 +106,7 @@ public partial class ExpensesViewModel : BaseViewModel
 
         try
         {
-            var match = await _autoRuleApi.MatchCategoryAsync(value.Trim());
+            var match = await _autoRuleRepository.MatchCategoryAsync(value.Trim());
             if (match.CategoryId.HasValue)
             {
                 var matchedCat = Categories.FirstOrDefault(c => c.Id == match.CategoryId.Value);
@@ -150,7 +150,7 @@ public partial class ExpensesViewModel : BaseViewModel
             }
 
             // Load expense categories (type = 2)
-            var categories = await _categoryApi.GetCategoriesAsync(2);
+            var categories = await _categoryRepository.GetCategoriesAsync(2);
             Categories.Clear();
             foreach (var c in categories)
             {

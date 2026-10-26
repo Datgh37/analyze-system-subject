@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.Categories;
 using ExpenseTracker.Maui.Models.RecurringIncomes;
 using ExpenseTracker.Maui.Models.Wallets;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 
 namespace ExpenseTracker.Maui.ViewModels;
@@ -11,9 +12,9 @@ namespace ExpenseTracker.Maui.ViewModels;
 // ViewModel managing recurring income schedules, manual processing triggers, and status toggles (UC-02.07)
 public partial class RecurringIncomesViewModel : BaseViewModel
 {
-    private readonly IRecurringIncomeApi _recurringIncomeApi;
-    private readonly IWalletApi _walletApi;
-    private readonly ICategoryApi _categoryApi;
+    private readonly IRecurringIncomeRepository _recurringIncomeRepo;
+    private readonly IWalletRepository _walletRepo;
+    private readonly ICategoryRepository _categoryRepo;
 
     public ObservableCollection<RecurringIncomeModel> RecurringIncomes { get; } = new();
     public ObservableCollection<WalletModel> Wallets { get; } = new();
@@ -54,14 +55,14 @@ public partial class RecurringIncomesViewModel : BaseViewModel
     private string? _statusMessage;
 
     public RecurringIncomesViewModel(
-        IRecurringIncomeApi recurringIncomeApi,
-        IWalletApi walletApi,
-        ICategoryApi categoryApi)
+        IRecurringIncomeRepository recurringIncomeRepo,
+        IWalletRepository walletRepo,
+        ICategoryRepository categoryRepo)
     {
-        _recurringIncomeApi = recurringIncomeApi;
-        _walletApi = walletApi;
-        _categoryApi = categoryApi;
-        Title = "Khoản Thu Định Kỳ (UC-02.07)";
+        _recurringIncomeRepo = recurringIncomeRepo;
+        _walletRepo = walletRepo;
+        _categoryRepo = categoryRepo;
+        Title = "Khoản Thu Định Kỳ";
     }
 
     [RelayCommand]
@@ -75,18 +76,18 @@ public partial class RecurringIncomesViewModel : BaseViewModel
 
         try
         {
-            var list = await _recurringIncomeApi.GetRecurringIncomesAsync();
+            var list = await _recurringIncomeRepo.GetRecurringIncomesAsync();
             RecurringIncomes.Clear();
             foreach (var item in list)
             {
                 RecurringIncomes.Add(item);
             }
 
-            var wallets = await _walletApi.GetWalletsAsync();
+            var wallets = await _walletRepo.GetWalletsAsync();
             Wallets.Clear();
             foreach (var w in wallets) Wallets.Add(w);
 
-            var categories = await _categoryApi.GetCategoriesAsync(1); // 1 = Income
+            var categories = await _categoryRepo.GetCategoriesAsync(1); // 1 = Income
             IncomeCategories.Clear();
             foreach (var c in categories) IncomeCategories.Add(c);
         }
@@ -151,7 +152,7 @@ public partial class RecurringIncomesViewModel : BaseViewModel
                 AutoRecord: AutoRecord
             );
 
-            await _recurringIncomeApi.CreateRecurringIncomeAsync(request);
+            await _recurringIncomeRepo.CreateRecurringIncomeAsync(request);
 
             // Reset inputs
             NameInput = string.Empty;
@@ -182,7 +183,7 @@ public partial class RecurringIncomesViewModel : BaseViewModel
 
         try
         {
-            await _recurringIncomeApi.ToggleRecurringIncomeStatusAsync(item.Id);
+            await _recurringIncomeRepo.ToggleRecurringIncomeStatusAsync(item.Id);
             await LoadDataAsync();
         }
         catch (Exception ex)
@@ -205,7 +206,7 @@ public partial class RecurringIncomesViewModel : BaseViewModel
 
         try
         {
-            await _recurringIncomeApi.DeleteRecurringIncomeAsync(item.Id);
+            await _recurringIncomeRepo.DeleteRecurringIncomeAsync(item.Id);
             await LoadDataAsync();
         }
         catch (Exception ex)
@@ -227,7 +228,7 @@ public partial class RecurringIncomesViewModel : BaseViewModel
 
         try
         {
-            var result = await _recurringIncomeApi.ProcessDueRecurringIncomesAsync(new ProcessRecurringIncomesModel(DateTime.UtcNow));
+            var result = await _recurringIncomeRepo.ProcessDueRecurringIncomesAsync(new ProcessRecurringIncomesModel(DateTime.UtcNow));
             StatusMessage = result.Message;
             await LoadDataAsync();
         }

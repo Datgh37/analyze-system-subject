@@ -8,9 +8,10 @@ public class MockNotificationRepository : INotificationRepository
 
     public MockNotificationRepository(IEnumerable<InAppNotificationModel>? initial = null)
     {
-        if (initial != null)
+        var initialList = initial?.ToList();
+        if (initialList != null && initialList.Count > 0)
         {
-            _notifications.AddRange(initial);
+            _notifications.AddRange(initialList);
         }
         else
         {

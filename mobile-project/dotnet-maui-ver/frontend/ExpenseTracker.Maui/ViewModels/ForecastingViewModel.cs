@@ -44,7 +44,7 @@ public partial class ForecastingViewModel : BaseViewModel
     public ForecastingViewModel(IForecastingRepository repository)
     {
         _repository = repository;
-        Title = "Dự Báo & Radar Rủi Ro Thâm Hụt";
+        Title = "Dự Báo Dòng Tiền";
     }
 
     [RelayCommand]

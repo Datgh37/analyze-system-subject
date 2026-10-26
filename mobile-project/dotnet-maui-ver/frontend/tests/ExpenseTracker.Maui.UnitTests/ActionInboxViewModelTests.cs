@@ -69,7 +69,7 @@ public class ActionInboxViewModelTests
         // Assert
         _viewModel.PendingActions.Should().NotContain(action);
         _viewModel.HasPendingActions.Should().BeFalse();
-        _viewModel.ActionStatusMessage.Should().Contain("185.000 đ");
+        _viewModel.ActionStatusMessage.Should().Contain($"{action.Display.Amount:N0} đ");
     }
 
     [Fact]

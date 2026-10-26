@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Models.SmartUtilities;
 using ExpenseTracker.Maui.Models.Wallets;
+using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 
 namespace ExpenseTracker.Maui.ViewModels;
@@ -10,8 +11,8 @@ namespace ExpenseTracker.Maui.ViewModels;
 // ViewModel managing Smart Financial Utilities: Subscription Trap Audit, VietQR Napas 247, and Voice STT (UC-03.09 - 03.11)
 public partial class SmartUtilitiesViewModel : BaseViewModel
 {
-    private readonly ISmartUtilityApi _smartUtilityApi;
-    private readonly IWalletApi _walletApi;
+    private readonly ISmartUtilityRepository _smartUtilityRepo;
+    private readonly IWalletRepository _walletRepo;
 
     public ObservableCollection<DetectedSubscriptionModel> Subscriptions { get; } = new();
     public ObservableCollection<WalletModel> BankWallets { get; } = new();
@@ -59,12 +60,12 @@ public partial class SmartUtilitiesViewModel : BaseViewModel
     private string? _statusMessage;
 
     public SmartUtilitiesViewModel(
-        ISmartUtilityApi smartUtilityApi,
-        IWalletApi walletApi)
+        ISmartUtilityRepository smartUtilityRepo,
+        IWalletRepository walletRepo)
     {
-        _smartUtilityApi = smartUtilityApi;
-        _walletApi = walletApi;
-        Title = "Tiện Ích Tài Chính Thông Minh (AI & VietQR)";
+        _smartUtilityRepo = smartUtilityRepo;
+        _walletRepo = walletRepo;
+        Title = "Tiện Ích & Trợ Lý AI";
     }
 
     [RelayCommand]
@@ -79,7 +80,7 @@ public partial class SmartUtilitiesViewModel : BaseViewModel
     {
         try
         {
-            var wallets = await _walletApi.GetWalletsAsync();
+            var wallets = await _walletRepo.GetWalletsAsync();
             BankWallets.Clear();
             foreach (var w in wallets.Where(x => x.WalletType == MobileWalletType.BankAccount || x.WalletType == MobileWalletType.EWallet))
             {
@@ -118,7 +119,7 @@ public partial class SmartUtilitiesViewModel : BaseViewModel
 
         try
         {
-            var result = await _smartUtilityApi.DetectSubscriptionsAsync();
+            var result = await _smartUtilityRepo.DetectSubscriptionsAsync();
             Subscriptions.Clear();
             foreach (var sub in result.Subscriptions)
             {
@@ -163,7 +164,7 @@ public partial class SmartUtilitiesViewModel : BaseViewModel
                 string.IsNullOrWhiteSpace(QrNote) ? null : QrNote.Trim()
             );
 
-            GeneratedQr = await _smartUtilityApi.GenerateVietQrAsync(request);
+            GeneratedQr = await _smartUtilityRepo.GenerateVietQrAsync(request);
             HasGeneratedQr = true;
             StatusMessage = "✅ Đã tạo mã VietQR Napas 247 thành công!";
         }

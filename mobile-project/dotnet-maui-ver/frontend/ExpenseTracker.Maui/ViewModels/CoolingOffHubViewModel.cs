@@ -40,7 +40,7 @@ public partial class CoolingOffHubViewModel : BaseViewModel
     public CoolingOffHubViewModel(ICoolingOffRepository repository)
     {
         _repository = repository;
-        Title = "Khoảng Trễ Tâm Lý 24h (Hạ Nhiệt Chi Tiêu)";
+        Title = "Khoảng Trễ 24h Mua Sắm";
     }
 
     [RelayCommand]

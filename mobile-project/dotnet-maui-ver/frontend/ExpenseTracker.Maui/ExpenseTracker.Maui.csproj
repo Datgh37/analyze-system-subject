@@ -19,6 +19,9 @@
 		<!-- Display name -->
 		<ApplicationTitle>ExpenseTracker.Maui</ApplicationTitle>
 
+		<!-- Standalone Self-contained APK (No Fast Deployment assembly dependency) -->
+		<EmbedAssembliesIntoApk Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">true</EmbedAssembliesIntoApk>
+
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.expensetracker.maui</ApplicationId>
 

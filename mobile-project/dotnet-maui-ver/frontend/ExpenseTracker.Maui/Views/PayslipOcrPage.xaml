@@ -4,162 +4,437 @@
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              x:Class="ExpenseTracker.Maui.Views.PayslipOcrPage"
              x:DataType="vm:PayslipOcrViewModel"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="20,16,20,32" Spacing="18" MaximumWidthRequest="720">
 
-            <!-- Title & Introduction -->
-            <Label Text="Bóc Tách Phiếu Lương AI Vision OCR (Wireframe UC-02.08)" FontSize="18" FontAttributes="Bold" />
-            <Label Text="Hỗ trợ tải tệp ảnh (JPEG/PNG) hoặc tài liệu PDF phiếu lương. AI sẽ bóc tách cấu trúc lương Gross, Net, bảo hiểm và tự động kiểm toán công thức."
-                   FontSize="12" TextColor="Gray" />
+            <!-- ========================================== -->
+            <!-- 1. HERO BANNER: AI PAYSLIP OCR             -->
+            <!-- ========================================== -->
+            <Border StrokeThickness="0"
+                    StrokeShape="RoundRectangle 20"
+                    Padding="22"
+                    Shadow="{Shadow Brush='#059669', Offset='0,10', Radius=20, Opacity=0.25}">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#064E3B" Offset="0.0" />
+                        <GradientStop Color="#065F46" Offset="0.5" />
+                        <GradientStop Color="#0F766E" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="💼" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="PAYROLL AI OCR ENGINE"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#A7F3D0"
+                                   CharacterSpacing="1.2"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#047857"
+                                Padding="8,4"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent">
+                            <Label Text="PAYROLL RECONCILIATION"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="#ECFDF5" />
+                        </Border>
+                    </Grid>
 
-            <!-- File Upload Action Button -->
-            <Button Text="📷 Chọn Tệp Ảnh / PDF Phiếu Lương"
-                    Command="{Binding PickAndParsePayslipCommand}"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontAttributes="Bold" />
-
-            <Label Text="{Binding SelectedFileName, StringFormat='Tệp đã chọn: {0}'}"
-                   FontSize="12"
-                   IsVisible="{Binding SelectedFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
-
-            <!-- Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}" />
-
-            <!-- Status Banner -->
-            <Label Text="{Binding StatusMessage}"
-                   TextColor="Green"
-                   FontAttributes="Bold"
-                   IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
-
-            <!-- Error / Discrepancy Banner (UC-02.08 E2) -->
-            <Border Stroke="#F59E0B" BackgroundColor="#FEF3C7" Padding="12" StrokeShape="RoundRectangle 6"
-                    IsVisible="{Binding HasDiscrepancy}">
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="⚠️ CẢNH BÁO SAI LỆCH SỐ HỌC (UC-02.08 E2)"
+                    <Label Text="Bóc Tách Phiếu Lương AI Vision"
+                           FontSize="22"
                            FontAttributes="Bold"
-                           TextColor="#B45309"
-                           FontSize="13" />
-                    <Label Text="{Binding DiscrepancyAmount, StringFormat='Phát hiện chênh lệch {0:N0} VND giữa Net và công thức khấu trừ (Gross - Khấu trừ + Phụ cấp). Vui lòng kiểm tra lại số liệu trước khi xác nhận lưu.'}"
-                           TextColor="#92400E"
-                           FontSize="12" />
+                           TextColor="#FFFFFF" />
+
+                    <Label Text="Hỗ trợ tải tệp ảnh (JPEG/PNG) hoặc tài liệu PDF phiếu lương. AI bóc tách cấu trúc lương Gross, Net, bảo hiểm (BHXH, BHYT, BHTN) và tự động kiểm toán công thức."
+                           FontSize="12"
+                           TextColor="#D1FAE5"
+                           LineHeight="1.3" />
                 </VerticalStackLayout>
             </Border>
 
-            <Label Text="{Binding ErrorMessage}"
-                   TextColor="Red"
-                   IsVisible="{Binding HasError}" />
-
-            <!-- Payslip Preview Breakdown (UC-02.08 Step 7) -->
-            <Border Stroke="Gray" Padding="14" StrokeShape="RoundRectangle 8"
-                    IsVisible="{Binding HasParsedData}">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Bảng Phân Tích Cơ Cấu Lương (Payslip Preview)" FontAttributes="Bold" FontSize="16" />
-
-                    <!-- Employer & Period -->
-                    <Grid ColumnDefinitions="*,*">
-                        <VerticalStackLayout Grid.Column="0">
-                            <Label Text="Đơn vị chi trả:" FontSize="12" TextColor="Gray" />
-                            <Entry Text="{Binding EmployerName}" FontSize="13" />
+            <!-- ========================================== -->
+            <!-- 2. UPLOAD & OCR ACTION CARD                -->
+            <!-- ========================================== -->
+            <Border Style="{StaticResource ModernCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Tải Lên Phiếu Lương Hàng Tháng"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
+                            <Label Text="Tài liệu sẽ được phân tích cục bộ và gửi tới Vision AI bảo mật"
+                                   FontSize="11"
+                                   TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1">
-                            <Label Text="Kỳ lương:" FontSize="12" TextColor="Gray" />
-                            <Entry Text="{Binding PayPeriod}" FontSize="13" />
+                        <Label Grid.Column="1" Text="📸" FontSize="24" VerticalOptions="Center" />
+                    </Grid>
+
+                    <Button Text="📷 Chọn Tệp Ảnh / PDF Phiếu Lương"
+                            Command="{Binding PickAndParsePayslipCommand}"
+                            BackgroundColor="#10B981"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="13"
+                            CornerRadius="10"
+                            HeightRequest="46" />
+
+                    <!-- Selected File Badge -->
+                    <Border BackgroundColor="{AppThemeBinding Light='#EFF6FF', Dark='#1E293B'}"
+                            Stroke="#BFDBFE"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12,8"
+                            IsVisible="{Binding SelectedFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="📄" FontSize="14" VerticalOptions="Center" />
+                            <Label Text="{Binding SelectedFileName, StringFormat='Tệp đã chọn: {0}'}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#1D4ED8"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Loading Indicator -->
+            <Border Style="{StaticResource ModernCard}"
+                    Padding="16"
+                    IsVisible="{Binding IsBusy}">
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#10B981" />
+                    <Label Text="AI Vision đang bóc tách cơ cấu lương &amp; đối soát bảo hiểm..."
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="#10B981"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Status Banner -->
+            <Border BackgroundColor="#ECFDF5"
+                    Stroke="#A7F3D0"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,10"
+                    IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <Label Text="{Binding StatusMessage}"
+                           TextColor="#065F46"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- ========================================== -->
+            <!-- 3. MATHEMATICAL DISCREPANCY WARNING BANNER -->
+            <!-- ========================================== -->
+            <Border Stroke="#F59E0B"
+                    StrokeThickness="1.5"
+                    BackgroundColor="#FEF3C7"
+                    Padding="16"
+                    StrokeShape="RoundRectangle 12"
+                    IsVisible="{Binding HasDiscrepancy}"
+                    Shadow="{Shadow Brush='#F59E0B', Offset='0,4', Radius=8, Opacity=0.2}">
+                <VerticalStackLayout Spacing="6">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="6">
+                            <Label Text="⚠️" FontSize="16" VerticalOptions="Center" />
+                            <Label Text="CẢNH BÁO SAI LỆCH SỐ HỌC"
+                                   FontAttributes="Bold"
+                                   TextColor="#B45309"
+                                   FontSize="13"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#FDE68A"
+                                Padding="6,2"
+                                StrokeShape="RoundRectangle 4"
+                                Stroke="Transparent">
+                            <Label Text="PAYROLL AUDIT" FontSize="10" FontAttributes="Bold" TextColor="#92400E" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="{Binding DiscrepancyAmount, StringFormat='Phát hiện chênh lệch {0:N0} VND giữa Net và công thức khấu trừ (Gross - Khấu trừ + Phụ cấp). Vui lòng kiểm tra lại số liệu trước khi xác nhận lưu.'}"
+                           TextColor="#92400E"
+                           FontSize="12"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Error Banner -->
+            <Border BackgroundColor="#FEF2F2"
+                    Stroke="#FECACA"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,10"
+                    IsVisible="{Binding HasError}">
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#B91C1C"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- ========================================== -->
+            <!-- 4. PAYSLIP BREAKDOWN PREVIEW (UC-02.08)   -->
+            <!-- ========================================== -->
+            <Border Style="{StaticResource ModernCard}"
+                    Padding="18"
+                    IsVisible="{Binding HasParsedData}">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Section Header -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Bảng Phân Tích Cơ Cấu Lương" 
+                                   FontAttributes="Bold"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
+                            <Label Text="Xem lại chi tiết từng khoản trước khi ghi nhận vào ví"
+                                   FontSize="11"
+                                   TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                Style="{StaticResource PillBadge}"
+                                VerticalOptions="Center">
+                            <Label Text="PREVIEW" FontSize="10" FontAttributes="Bold" TextColor="#10B981" />
+                        </Border>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}" />
+
+                    <!-- Employer & Pay Period -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Đơn vị chi trả:" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="10,2"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Entry Text="{Binding EmployerName}" FontSize="13" FontAttributes="Bold" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Kỳ lương:" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="10,2"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Entry Text="{Binding PayPeriod}" FontSize="13" />
+                            </Border>
                         </VerticalStackLayout>
                     </Grid>
 
                     <!-- Gross Salary -->
-                    <Label Text="Lương tổng (Gross Salary):" FontSize="12" TextColor="Gray" />
-                    <Entry Text="{Binding GrossSalary}" Keyboard="Numeric" FontAttributes="Bold" />
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Lương tổng (Gross Salary):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,2"
+                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                            <Entry Text="{Binding GrossSalary}" Keyboard="Numeric" FontAttributes="Bold" FontSize="15" />
+                        </Border>
+                    </VerticalStackLayout>
 
-                    <!-- Deductions -->
-                    <Label Text="Các khoản trích theo lương &amp; Thuế:" FontAttributes="Bold" FontSize="13" Margin="0,4,0,0" />
+                    <!-- Deductions & Insurance -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Các khoản trích theo lương &amp; Thuế:"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light='#1E293B', Dark='#F1F5F9'}" />
 
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="6" ColumnSpacing="8">
-                        <VerticalStackLayout Grid.Row="0" Grid.Column="0">
-                            <Label Text="BHXH (8%):" FontSize="11" TextColor="Gray" />
-                            <Entry Text="{Binding SocialInsurance}" Keyboard="Numeric" FontSize="12" />
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="8" ColumnSpacing="10">
+                            <!-- BHXH -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                <Label Text="BHXH (8%):" FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                                <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="10,2"
+                                        BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                    <Entry Text="{Binding SocialInsurance}" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- BHYT -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                <Label Text="BHYT (1.5%):" FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                                <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="10,2"
+                                        BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                    <Entry Text="{Binding HealthInsurance}" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- BHTN -->
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                <Label Text="BHTN (1%):" FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                                <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="10,2"
+                                        BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                    <Entry Text="{Binding UnemploymentInsurance}" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- Thuế TNCN -->
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                                <Label Text="Thuế TNCN:" FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                                <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="10,2"
+                                        BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                    <Entry Text="{Binding PersonalIncomeTax}" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <!-- Additions: Allowance & Bonus -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Phụ cấp:" FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="10,2"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Entry Text="{Binding Allowances}" Keyboard="Numeric" FontSize="12" />
+                            </Border>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                            <Label Text="BHYT (1.5%):" FontSize="11" TextColor="Gray" />
-                            <Entry Text="{Binding HealthInsurance}" Keyboard="Numeric" FontSize="12" />
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
-                            <Label Text="BHTN (1%):" FontSize="11" TextColor="Gray" />
-                            <Entry Text="{Binding UnemploymentInsurance}" Keyboard="Numeric" FontSize="12" />
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                            <Label Text="Thuế TNCN:" FontSize="11" TextColor="Gray" />
-                            <Entry Text="{Binding PersonalIncomeTax}" Keyboard="Numeric" FontSize="12" />
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Thưởng hiệu quả:" FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="10,2"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Entry Text="{Binding Bonus}" Keyboard="Numeric" FontSize="12" />
+                            </Border>
                         </VerticalStackLayout>
                     </Grid>
 
-                    <!-- Additions -->
-                    <Grid ColumnDefinitions="*,*">
-                        <VerticalStackLayout Grid.Column="0">
-                            <Label Text="Phụ cấp:" FontSize="11" TextColor="Gray" />
-                            <Entry Text="{Binding Allowances}" Keyboard="Numeric" FontSize="12" />
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1">
-                            <Label Text="Thưởng hiệu quả:" FontSize="11" TextColor="Gray" />
-                            <Entry Text="{Binding Bonus}" Keyboard="Numeric" FontSize="12" />
-                        </VerticalStackLayout>
-                    </Grid>
-
-                    <!-- Net Salary (Highlighted) -->
-                    <Border Stroke="#059669" BackgroundColor="#ECFDF5" Padding="12" StrokeShape="RoundRectangle 6">
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="LƯƠNG THỰC NHẬN VÀO TÀI KHOẢN (NET SALARY):" FontSize="12" TextColor="#065F46" FontAttributes="Bold" />
-                            <Entry Text="{Binding NetSalary}" Keyboard="Numeric" FontSize="20" FontAttributes="Bold" TextColor="#047857" />
+                    <!-- Net Salary (Highlighted Hero Card) -->
+                    <Border Stroke="#10B981"
+                            StrokeThickness="1.5"
+                            BackgroundColor="{AppThemeBinding Light='#ECFDF5', Dark='#064E3B'}"
+                            Padding="16"
+                            StrokeShape="RoundRectangle 12"
+                            Shadow="{Shadow Brush='#10B981', Offset='0,4', Radius=8, Opacity=0.2}">
+                        <VerticalStackLayout Spacing="4">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="LƯƠNG THỰC NHẬN VÀO TÀI KHOẢN (NET SALARY):"
+                                       FontSize="11"
+                                       TextColor="{AppThemeBinding Light='#065F46', Dark='#A7F3D0'}"
+                                       FontAttributes="Bold" />
+                                <Label Grid.Column="1" Text="💰" FontSize="16" />
+                            </Grid>
+                            <Entry Text="{Binding NetSalary}"
+                                   Keyboard="Numeric"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light='#047857', Dark='#34D399'}" />
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Ledger Destination Options -->
-                    <Label Text="Thiết Lập Tiếp Nhận Tiền Lương:" FontAttributes="Bold" FontSize="14" Margin="0,8,0,0" />
+                    <!-- ========================================== -->
+                    <!-- 5. LEDGER DESTINATION OPTIONS              -->
+                    <!-- ========================================== -->
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Thiết Lập Tiếp Nhận Tiền Lương"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
 
-                    <!-- Wallet -->
-                    <Label Text="Ví nhận tiền lương thực tế:" FontSize="12" />
-                    <Picker Title="-- Chọn ví --"
-                            ItemsSource="{Binding Wallets}"
-                            ItemDisplayBinding="{Binding Name}"
-                            SelectedItem="{Binding SelectedWallet}" />
+                        <!-- Wallet -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Ví nhận tiền lương thực tế:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="8,0"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Picker Title="-- Chọn ví --"
+                                        ItemsSource="{Binding Wallets}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding SelectedWallet}" />
+                            </Border>
+                        </VerticalStackLayout>
 
-                    <!-- Category -->
-                    <Label Text="Danh mục thu nhập:" FontSize="12" />
-                    <Picker Title="-- Chọn danh mục --"
-                            ItemsSource="{Binding IncomeCategories}"
-                            ItemDisplayBinding="{Binding Name}"
-                            SelectedItem="{Binding SelectedCategory}" />
+                        <!-- Category -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Danh mục thu nhập:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="8,0"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Picker Title="-- Chọn danh mục --"
+                                        ItemsSource="{Binding IncomeCategories}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding SelectedCategory}" />
+                            </Border>
+                        </VerticalStackLayout>
 
-                    <!-- Update Recurring Schedule (UC-02.08 A1) -->
-                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                        <CheckBox IsChecked="{Binding UpdateRecurringIncome}" />
-                        <Label Text="Cập nhật mức lương này cho lịch thu định kỳ hàng tháng (UC-02.08 A1)"
-                               VerticalOptions="Center"
-                               FontSize="12" />
-                    </HorizontalStackLayout>
+                        <!-- Update Recurring Schedule -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center" Margin="0,4,0,0">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding UpdateRecurringIncome}" Color="#10B981" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Cập nhật mức lương này cho lịch thu định kỳ hàng tháng"
+                                   VerticalOptions="Center"
+                                   FontSize="12" LineBreakMode="WordWrap"
+                                   TextColor="{AppThemeBinding Light='#334155', Dark='#CBD5E1'}" />
+                        </Grid>
 
-                    <VerticalStackLayout IsVisible="{Binding UpdateRecurringIncome}">
-                        <Label Text="Chọn nguồn thu định kỳ cần cập nhật:" FontSize="12" TextColor="Gray" />
-                        <Picker Title="-- Chọn nguồn thu định kỳ --"
-                                ItemsSource="{Binding RecurringIncomes}"
-                                ItemDisplayBinding="{Binding Name}"
-                                SelectedItem="{Binding SelectedRecurringIncome}" />
+                        <VerticalStackLayout IsVisible="{Binding UpdateRecurringIncome}" Spacing="4">
+                            <Label Text="Chọn nguồn thu định kỳ cần cập nhật:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
+                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="8,0"
+                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                <Picker Title="-- Chọn nguồn thu định kỳ --"
+                                        ItemsSource="{Binding RecurringIncomes}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding SelectedRecurringIncome}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Confirm Button -->
+                        <Button Text="💾 Xác Nhận Lưu Thu Nhập Lương Vào Sổ Cái"
+                                Command="{Binding ConfirmPayslipCommand}"
+                                BackgroundColor="#10B981"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                FontSize="14"
+                                CornerRadius="12"
+                                HeightRequest="50"
+                                Margin="0,10,0,0" />
                     </VerticalStackLayout>
-
-                    <!-- Confirm Button -->
-                    <Button Text="💾 Xác Nhận Lưu Thu Nhập Lương Vào Sổ Cái"
-                            Command="{Binding ConfirmPayslipCommand}"
-                            BackgroundColor="#059669"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            Margin="0,10,0,0" />
                 </VerticalStackLayout>
             </Border>
 
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

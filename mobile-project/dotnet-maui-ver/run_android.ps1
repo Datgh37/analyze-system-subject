@@ -110,9 +110,22 @@ if ($emulatorPath) {
     $env:PATH = (Split-Path $adbPath -Parent) + ";" + (Split-Path $emulatorPath -Parent) + ";" + $env:PATH
 }
 
+# 2.3. Tu dong do tim JDK 21 (yeu cau boi .NET Android SDK, tranh dung JDK 26)
+$candidateJdkDirs = @(
+    "C:\Program Files\Microsoft",
+    "C:\Program Files\Eclipse Adoptium",
+    "C:\Program Files\Java",
+    "D:\Program Files\Java"
+)
+$detectedJdk = Get-ChildItem -Path $candidateJdkDirs -Filter "*21*" -Directory -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($detectedJdk) {
+    $env:JAVA_HOME = $detectedJdk.FullName
+    $env:PATH = (Join-Path $detectedJdk.FullName "bin") + ";" + $env:PATH
+}
+
 # 3. Kiem tra va Tu dong Khoi dong May ao Android
 if ($adbPath) {
-    $devices = & $adbPath devices | Where-Object { $_ -and -not $_.StartsWith("List") }
+    $devices = & $adbPath devices | Where-Object { $_ -and -not $_.StartsWith("List") -and $_.Contains("device") }
 
     # Neu chua co thiet bi nao bat, thu tu dong khoi dong May ao (Emulator)
     if (-not $devices -and $emulatorPath) {
@@ -129,14 +142,18 @@ if ($adbPath) {
             Write-Host "    Dang cho he dieu hanh Android boot xong (sys.boot_completed)..." -ForegroundColor Yellow
             $booted = ""
             $retryCount = 0
-            while ($booted -ne "1" -and $retryCount -lt 50) {
+            while ($booted -ne "1" -and $retryCount -lt 90) {
                 Start-Sleep -Seconds 2
                 $booted = (& $adbPath shell getprop sys.boot_completed 2>$null)
                 if ($booted) { $booted = $booted.Trim() }
                 $retryCount++
             }
-            Write-Host "[V] May ao Android '$targetAvd' da khoi dong xong!" -ForegroundColor Green
-            $devices = & $adbPath devices | Where-Object { $_ -and -not $_.StartsWith("List") }
+            if ($booted -eq "1") {
+                Write-Host "[V] May ao Android '$targetAvd' da khoi dong xong!" -ForegroundColor Green
+            } else {
+                Write-Host "[!] May ao Android '$targetAvd' dang tiep tuc boot..." -ForegroundColor Yellow
+            }
+            $devices = & $adbPath devices | Where-Object { $_ -and -not $_.StartsWith("List") -and $_.Contains("device") }
         }
     }
 

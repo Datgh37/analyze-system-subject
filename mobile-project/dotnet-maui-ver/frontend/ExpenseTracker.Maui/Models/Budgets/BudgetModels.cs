@@ -39,6 +39,19 @@ public class BudgetAllocationModel
         3 => "Tích lũy (Savings 20%)",
         _ => "Phân bổ khác"
     };
+
+    public string DisplayCategoryIcon => (CategoryName?.ToLowerInvariant()) switch
+    {
+        var n when n != null && (n.Contains("ăn") || n.Contains("uống") || n.Contains("thực phẩm") || n.Contains("food")) => "🍜",
+        var n when n != null && (n.Contains("nhà") || n.Contains("tiện ích") || n.Contains("điện") || n.Contains("nước") || n.Contains("home")) => "🏠",
+        var n when n != null && (n.Contains("cà phê") || n.Contains("cafe") || n.Contains("coffee") || n.Contains("giải trí")) => "☕",
+        var n when n != null && (n.Contains("mua") || n.Contains("sắm") || n.Contains("shop")) => "🛍️",
+        var n when n != null && (n.Contains("xe") || n.Contains("xăng") || n.Contains("di chuyển") || n.Contains("grab")) => "🚗",
+        var n when n != null && (n.Contains("học") || n.Contains("sách")) => "📚",
+        var n when n != null && (n.Contains("y tế") || n.Contains("thuốc") || n.Contains("khám")) => "💊",
+        var n when n != null && (n.Contains("tích lũy") || n.Contains("tiết kiệm")) => "💰",
+        _ => !string.IsNullOrWhiteSpace(CategoryIcon) && CategoryIcon.Length <= 2 ? CategoryIcon : "🏷️"
+    };
 }
 
 public record CreateBudgetAllocationModel(

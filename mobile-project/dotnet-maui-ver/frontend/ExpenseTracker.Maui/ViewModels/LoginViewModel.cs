@@ -18,7 +18,7 @@ public partial class LoginViewModel : BaseViewModel
     public LoginViewModel(IClientAuthService authService)
     {
         _authService = authService;
-        Title = "Sign In";
+        Title = "Đăng Nhập";
     }
 
     [RelayCommand]
@@ -30,7 +30,7 @@ public partial class LoginViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
         {
-            ErrorMessage = "Please enter both email and password.";
+            ErrorMessage = "Vui lòng nhập đầy đủ email và mật khẩu.";
             return;
         }
 
@@ -45,7 +45,7 @@ public partial class LoginViewModel : BaseViewModel
             }
             else
             {
-                ErrorMessage = error ?? "Invalid credentials. Please try again.";
+                ErrorMessage = error ?? "Thông tin đăng nhập không chính xác. Vui lòng thử lại.";
             }
         }
         catch (Exception ex)
@@ -59,14 +59,14 @@ public partial class LoginViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private static async Task NavigateToRegisterAsync()
+    private async Task NavigateToRegisterAsync()
     {
         await Shell.Current.GoToAsync("RegisterPage");
     }
 
     // Allows previewing Wallets UI directly during inspection
     [RelayCommand]
-    private static async Task SkipToWalletsAsync()
+    private async Task SkipToWalletsAsync()
     {
         await Shell.Current.GoToAsync("//WalletsPage");
     }

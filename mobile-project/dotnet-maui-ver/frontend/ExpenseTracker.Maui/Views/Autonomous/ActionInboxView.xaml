@@ -21,13 +21,14 @@
                    VerticalOptions="Center" />
 
             <Button Grid.Column="1"
-                    Text="Làm mới"
+                    Text="🔄 Làm mới"
                     FontSize="11"
-                    HeightRequest="28"
-                    Padding="10,0"
-                    CornerRadius="6"
-                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
-                    TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}"
+                    FontAttributes="Bold"
+                    HeightRequest="30"
+                    Padding="12,0"
+                    CornerRadius="15"
+                    BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                    TextColor="{AppThemeBinding Light=#4F46E5, Dark=#A5B4FC}"
                     Command="{Binding LoadInboxCommand}" />
         </Grid>
 
