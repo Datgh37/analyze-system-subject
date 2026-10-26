@@ -36,6 +36,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasConversion<int>();
 
+        builder.Property(u => u.IsEmailVerified)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.Property(u => u.CreatedAt)
             .IsRequired();
 
@@ -52,6 +56,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.RefreshTokens)
             .WithOne(t => t.User)
             .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(u => u.OtpCodes)
+            .WithOne(o => o.User)
+            .HasForeignKey(o => o.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

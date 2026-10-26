@@ -3899,4 +3899,23 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG CỘNG HỆ THỐNG: 314 / 314 Tests Xanh Biếc (100% Passed)**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 19:45] - Quyết Định 165: Hoàn Thành & Nghiệm Thu Tác Vụ 2 (Kế Hoạch 52 - Chặng 1): Cấu Hình CSDL PostgreSQL Cho Entity UserOtpCode & Cập Nhật DbContext
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Martin Kleppmann, Eric Evans, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Mở rộng trừu tượng và hiện thực CSDL cho thực thể `UserOtpCode`:
+     - Bổ sung `DbSet<UserOtpCode> UserOtpCodes { get; }` vào [`IApplicationDbContext.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Application/Interfaces/IApplicationDbContext.cs).
+     - Khởi tạo `public DbSet<UserOtpCode> UserOtpCodes => Set<UserOtpCode>();` trong [`ApplicationDbContext.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/Persistence/ApplicationDbContext.cs).
+  2. Xây dựng cấu hình EntityTypeConfiguration chuẩn mực PostgreSQL:
+     - Tạo mới [`UserOtpCodeConfiguration.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/Persistence/Configurations/UserOtpCodeConfiguration.cs): Ánh xạ bảng `user_otp_codes`, ràng buộc độ dài `Email` (255), `OtpCode` (16), `PhoneNumber` (32), `Purpose` (int), và thiết lập chỉ mục kép tối ưu truy vấn `Index(Email, Purpose, IsUsed)` cùng `Index(UserId)`.
+     - Cập nhật [`UserConfiguration.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/Persistence/Configurations/UserConfiguration.cs): Ánh xạ `IsEmailVerified` (mặc định false) và liên kết quan hệ 1-Nhiều cascade với `OtpCodes`.
+  3. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Biên dịch toàn bộ dự án `ExpenseTracker.Infrastructure` thành công (**0 Lỗi**).
+     - Toàn bộ test suite Domain: **89 / 89 Tests Passed (100%)**.
+     - Toàn bộ test suite Application: **183 / 183 Tests Passed (100%)**.
+     - **TỔNG KIỂM TOÁN BACKEND: 272 / 272 Tests Passed 100%**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
