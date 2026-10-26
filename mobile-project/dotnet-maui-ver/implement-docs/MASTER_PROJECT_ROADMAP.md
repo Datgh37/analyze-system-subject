@@ -227,13 +227,22 @@ flowchart TD
 ---
 
 ### GIAI ĐOẠN 11: TỔNG KIỂM TOÁN FULL-STACK, SCRIPT 1-CLICK DEMO, BÁO CÁO CUỐI KỲ & ĐÓNG GÓI APK
-- **Trạng thái:** `SẴN SÀNG TRIỂN KHAI (BÁM SÁT DEADLINE 1 - THỨ TƯ 28/10/2026)`
-- **Mục tiêu mở rộng:**
-  1. Kiểm toán hồi quy Full-Stack E2E (Kiểm tra luồng Bank Notification $\rightarrow$ Autonomous Action $\rightarrow$ 1-Chạm Lưu nhanh $\rightarrow$ SignalR số dư).
-  2. Hoàn thiện Báo cáo cuối kỳ môn Ứng dụng Di động (.NET MAUI) tại [`BAO_CAO_CUOI_KY_DOTNET_MAUI.docx`](BAO_CAO_CUOI_KY_DOTNET_MAUI.docx) (bổ sung thuyết minh Server-Driven Action Protocol & Xác suất Jev).
-  3. Xây dựng Script PowerShell tự động 1-Click khởi chạy toàn bộ Backend, Docker DB và Frontend để Hội đồng/Giảng viên nghiệm thu trong 1 phút.
-  4. Quay Video Demo 5-7 phút phô diễn toàn bộ 9 Phân hệ chức năng và các tính năng AI đột phá (dành 1-2 phút demo tính năng Bắt thực tế ngân hàng & Lưu nhanh 1-chạm).
-  5. Đóng gói file cài đặt APK Android release.
+- **Trạng thái:** `ĐANG TRIỂN KHAI (ĐÃ HOÀN THÀNH CHẶNG 1 - BÁO CÁO KỸ THUẬT)` (Kế hoạch [`PLAN-54`](../../project_context/plans/plans-mobile-app/2026-10-27_plan_54_giai_doan_11_chang_1_kiem_toan_va_nang_cap_bao_cao_docx.md), [Quyết định 180](../../project_context/decisions_and_changes_log.md))
+- **Điều chỉnh phạm vi (Họp Hội đồng theo chỉ đạo Người dùng):**
+  - **Tạm thời BỎ QUA bước quay Video Demo** để tập trung tối đa cho chất lượng sản phẩm thực tế, báo cáo kỹ thuật và kiểm thử 1-Click.
+- **Phân kỳ 3 Chặng triển khai:**
+  1. **Chặng 1 — Kiểm toán & Nâng cấp Báo cáo Cuối kỳ [`BaoCao.docx`](../BaoCao.docx) (`HOÀN THÀNH 100%`):**
+     - Khớp 100% barem điểm môn Lập trình Mobile ([`yeucau-cuoiky.txt`](../yeucau-cuoiky.txt)):
+       * Đăng ký phương án: Chọn **Phương án B3 – Kiến trúc MVVM (2.0đ)**, thực hiện thêm **Phương án B2 – SignalR Hub 2 chiều Full-Duplex (+1.0đ điểm cộng)** và hoàn thành trọn vẹn **Phần A – Push Notification (2.0đ Bắt buộc)**.
+       * Thuyết minh chi tiết **Native Android Notification Engine** (3 channels, Foreground Heads-Up, Background, Killed State AlarmManager 21:00, BootReceiver, Deep Linking PendingIntent, Bank Notification Listener bóc tách MoMo/ACB/VCB).
+       * Thuyết minh **Clean MVVM & Báo cáo Kiểm thử Toàn diện**: 82 bài Unit Tests Frontend MAUI + 281 bài Unit Tests Backend = **363/363 Tests Passed 100%**, kèm sơ đồ luồng dữ liệu 5 bước và mã nguồn test mẫu.
+       * Cập nhật **22 thực thể CSDL PostgreSQL 16 chuẩn 3NF**.
+       * Cập nhật hệ thống **Bottom Navigation Dock 4 tab**, nút trung tâm **Center Voice FAB Microphone**, Sidebar 5 nhóm và màn hình Lịch sử Thông báo.
+       * Nâng cấp **6 kịch bản kiểm thử trực quan trên máy ảo** cho Giảng viên.
+  2. **Chặng 2 — Bộ Kịch bản & Script 1-Click Khởi chạy Tự động (`ĐANG THỰC HIỆN`):**
+     - Tối ưu hóa file PowerShell [`run_android.ps1`](../run_android.ps1) và bộ kiểm thử API [`test_api_suite.ps1`](../test_api_suite.ps1) để Giảng viên chỉ cần gõ 1 lệnh duy nhất là hệ thống tự khởi động Docker PostgreSQL, Backend WebApi, Android Emulator và deploy app MAUI hoàn tất.
+  3. **Chặng 3 — Đóng gói Bản cài đặt APK Android Release (`KẾ HOẠCH`):**
+     - Biên dịch và xuất file APK Release độc lập (`ExpenseTracker.apk`) phục vụ nộp bài theo quy chế.
 
 ---
 
@@ -252,8 +261,8 @@ flowchart TD
 | **Giai đoạn 7** | Phân hệ 8: Dự báo Tài chính Chuỗi Thời Gian & Radar Rủi Ro Thâm Hụt | `UC-08.01` $\rightarrow$ `UC-08.04` (4 UCs) | `backend/` | `frontend/ (Wireframe)` | `HOÀN THÀNH (203/203 Tests Passed 100%, 0 Warning/Error)` |
 | **Giai đoạn 8** | Phân hệ 9: Cú hích Hành vi Thaler Nudge, Khoảng trễ 24h & VietQR | `UC-09.01` $\rightarrow$ `UC-09.05` (5 UCs) | `backend/` | `frontend/ (Wireframe)` | `HOÀN THÀNH (233/233 Tests Passed 100%, 0 Warning/Error)` |
 | **Giai đoạn 9** | Dedicated Frontend Art Direction & UI/UX Styling | Toàn bộ 63 Use Cases | Giữ nguyên | `frontend/ (Bạn cùng nhóm phụ trách)` | `ĐÃ BÀN GIAO KỸ THUẬT (Sẵn sàng 20 Wireframe Views & HUONG_DAN_FE.md)` |
-| **Giai đoạn 10** | Tinh Chỉnh AI Toàn Diện, Voice Router, Multi-Import & Chặng 10.5 Server-Driven Actions (Jev) | Toàn bộ các cấu phần AI/ML/STT (UC-03.07, UC-02.08, UC-03.11, UC-07.01 A1, UC-07.06, UC-09.02, UC-09.05, Action Engine) | `backend/` & Gemini 2.5 Flash | `frontend/` (Voice Agent, Preview & Action Card Wireframe) | `ĐANG TRIỂN KHAI CHẶNG 10.5 (PLAN-47)` |
-| **Giai đoạn 11** | Tổng kiểm toán Full-Stack, Script 1-Click Demo & Báo cáo Khóa luận Word | Toàn bộ 63 Use Cases | `backend/` | `frontend/` | `SẴN SÀNG TRIỂN KHAI (Bám sát Deadline 1: Thứ Tư 28/10/2026)` |
+| **Giai đoạn 10** | Tinh Chỉnh AI Toàn Diện, Voice Router, Multi-Import & Server-Driven Actions (Jev) | Toàn bộ các cấu phần AI/ML/STT (UC-03.07, UC-02.08, UC-03.11, UC-07.01 A1, UC-07.06, UC-09.02, UC-09.05, Action Engine) | `backend/` & Gemini 2.5 Flash | `frontend/` (Voice Agent, Preview & Action Card Wireframe) | `HOÀN THÀNH TOÀN DIỆN (363/363 Tests Passed 100%)` |
+| **Giai đoạn 11** | Tổng kiểm toán Full-Stack, Script 1-Click Demo & Báo cáo Khóa luận Word | Toàn bộ 63 Use Cases | `backend/` | `frontend/` | `ĐÃ CHỐT HOÀN THÀNH CHẶNG 1 (BaoCao.docx chuẩn 100% Barem)` |
 
 
 

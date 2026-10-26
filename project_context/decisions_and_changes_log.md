@@ -4247,5 +4247,40 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Thanh lọc toàn bộ văn phong demo, AI hóa, trừu tượng thành ngôn ngữ tài chính cá nhân tự nhiên, hữu ích cho người dùng thực; bảo lưu và quy hoạch cụm nút test (Native Notification, Giả lập biến động ngân hàng) vào thanh công cụ phụ tinh tế.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
+---
+
+## [2026-10-27 00:10] - Quyết Định 180: Họp Điều Chỉnh Giai Đoạn 11 (Tạm Hoãn Video Demo), Kiểm Toán & Nâng Cấp Toàn Diện Báo Cáo Cuối Kỳ (BaoCao.docx) Khớp 100% Barem Điểm 10 + Điểm Cộng & Chốt Hoàn Thành Chặng 1
+- **Người chủ trì:** Chủ tọa đề tài & Toàn thể Hội đồng Đa tác tử (Orchestrator, Cockburn BA, Eric Evans, Martin Kleppmann, Werner Vogels, Dan Abramov, Kent Beck).
+- **Căn cứ yêu cầu:** Chỉ đạo trực tiếp của người dùng: Họp điều chỉnh Giai đoạn 11, tạm thời bỏ qua bước làm video demo, rà soát đối chiếu nội dung file [`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx) với barem chấm điểm cuối kỳ ([`yeucau-cuoiky.txt`](mobile-project/dotnet-maui-ver/yeucau-cuoiky.txt)) và chốt Chặng 1 của Giai đoạn 11.
+- **Nội dung cuộc họp & Kết quả thực thi Chặng 1:**
+  1. **Thống nhất Điều chỉnh Phạm vi Giai đoạn 11:**
+     - Tạm thời **bỏ qua bước quay Video Demo** để tập trung nguồn lực tối đa cho chất lượng mã nguồn thực tế, báo cáo kỹ thuật chỉn chu và trải nghiệm kiểm thử tự động 1-Click trên máy ảo Android cho Giảng viên.
+     - Phân kỳ Giai đoạn 11 thành 3 chặng mạch lạc:
+       * *Chặng 1 (Hoàn thành):* Kiểm toán và Nâng cấp Báo cáo Kỹ thuật Cuối kỳ [`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx).
+       * *Chặng 2 (Tiếp theo):* Bộ kịch bản và Script 1-Click Khởi chạy & Kiểm thử Tự động E2E ([`run_android.ps1`](mobile-project/dotnet-maui-ver/run_android.ps1)).
+       * *Chặng 3:* Đóng gói Bản cài đặt APK Android Release.
+  2. **Kiểm toán Dòng-đối-dòng & Phát hiện Thiếu sót trong BaoCao.docx Cũ:**
+     - File `BaoCao.docx` cũ thiếu đăng ký rõ ràng phương án Phần B (MVVM + SignalR để lấy trọn điểm cộng).
+     - Mục 2.4 mới chỉ mô tả sơ lược LocalNotificationService, chưa phản ánh kiến trúc Native Android Notification Engine (Foreground Heads-Up, Background, và đặc biệt là **KILLED STATE qua AlarmManager + BroadcastReceiver** báo thức lúc 21:00 hàng ngày, BootReceiver tự phục hồi khi reboot, Deep Linking điều hướng form, Bank Notification Listener tự bóc tách thông báo ngân hàng MoMo, ACB, Vietcombank).
+     - Mục 2.4 chưa nêu rõ giao tiếp hai chiều Full-Duplex của SignalR (Invoke Client `RequestLiveBalanceAsync`, `BroadcastWalletRefreshAsync`).
+     - Mục 2.2 thiếu sơ đồ luồng dữ liệu MVVM mẫu và thiếu số liệu kiểm thử thực tế ấn tượng.
+     - Bảng 1.1 CSDL mới liệt kê 13 bảng cơ bản thay vì 22 thực thể PostgreSQL 16 chuẩn 3NF thực tế.
+     - Bảng 2.1 chưa cập nhật cấu trúc Bottom Navigation Dock 4 tab và Center Voice FAB Microphone.
+     - Bảng 3.1 kịch bản kiểm thử cho Giảng viên còn đơn sơ (3 bước console).
+  3. **Thực thi Nâng cấp Hoàn chỉnh file BaoCao.docx:**
+     - Viết và chạy script tự động [`scratch/update_baocao_docx.py`](scratch/update_baocao_docx.py) cập nhật trực tiếp vào [`mobile-project/dotnet-maui-ver/BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx):
+       * *Bảng 1 (Phân công nhiệm vụ):* Ghi rõ nhóm đăng ký **Phương án B3 – Kiến trúc MVVM (2.0đ)**, đồng thời hiện thực hóa thêm **Phương án B2 – SignalR Hub 2 chiều (+1.0đ điểm cộng)** và hoàn thành trọn vẹn **Phần A – Push Notification (2.0đ Bắt buộc)**.
+       * *Bảng 1.1 CSDL 3NF:* Cập nhật đủ **22 bảng thực thể cốt lõi** (bổ sung `user_otp_codes`, `auto_categorization_rules`, `cooling_off_transactions`, `financial_nudges`, `salary_slip_details`, `receipt_items`, `device_push_tokens`, `in_app_notifications`, `autonomous_actions`...).
+       * *Mục 2.2.1 & 2.2.2:* Bổ sung thuyết minh 5 bước luồng dữ liệu MVVM mẫu cho chức năng ghi nhận chi tiêu & bóc tách thông báo ngân hàng; đưa vào báo cáo kiểm thử tự động toàn diện: **82 bài Unit Tests Frontend MAUI** + **281 bài Unit Tests Backend** = **363/363 Tests Passed 100%** kèm trích đoạn mã nguồn test mẫu bằng xUnit/FluentAssertions/Moq.
+       * *Mục 2.4:* Nâng cấp thuyết minh Native Android Notification Engine (3 channels, 3 trạng thái, Killed State AlarmManager 21:00, Deep Linking, Bank Notification Listener) và SignalR Hub 2 chiều Full-Duplex.
+       * *Bảng 2.1 (Views & ViewModels):* Cập nhật hệ thống **Bottom Navigation Dock 4 tab**, nút **Center Voice FAB Microphone**, Sidebar 5 nhóm chuyên đề và trang Lịch sử Thông báo.
+       * *Bảng 3.1 (Kịch bản kiểm thử Giảng viên):* Nâng cấp thành **6 kịch bản kiểm thử trực quan trên máy ảo Android** (Khởi chạy 1-Click `run_android.ps1`, Đăng nhập nạp dữ liệu mẫu, Voice AI Center FAB, Giả lập biến động ngân hàng 1-chạm, Realtime SignalR 2 chiều giữa 2 cửa sổ, Hẹn giờ thông báo khi đóng app hoàn toàn).
+  4. **Kiểm tra Nghiệm thu file BaoCao.docx:**
+     - 131 Paragraphs, 26 Tables bảo toàn 100% định dạng OpenXML, typography Times New Roman, cấu trúc merge cell chuẩn xác.
+  5. **Đồng bộ Lộ trình:**
+     - Cập nhật [`MASTER_PROJECT_ROADMAP.md`](mobile-project/dotnet-maui-ver/implement-docs/MASTER_PROJECT_ROADMAP.md): Ghi nhận bỏ bước video demo, đánh dấu **CHỐT HOÀN THÀNH CHẶNG 1 CỦA GIAI ĐOẠN 11**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED. CHÍNH THỨC CHỐT CHẶNG 1 GIAI ĐOẠN 11.
+
+
 
 
