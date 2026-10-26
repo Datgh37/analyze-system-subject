@@ -3882,3 +3882,21 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
        * *Chặng 4:* Trợ lý Voice AI Điều Khiển Hệ Thống, SignalR 2 Chiều (`InvokeAsync`) & Kiểm thử Toàn diện (42 ViewModel tests + 183 Backend tests).
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 19:35] - Quyết Định 164: Hoàn Thành & Nghiệm Thu Tác Vụ 1 (Kế Hoạch 52 - Chặng 1): Xây Dựng Domain Entities & Enums Cho Xác Thực OTP (UserOtpCode, OtpPurpose, User.VerifyEmail)
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Eric Evans, Bruce Schneier, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Triển khai Tác vụ 1 của Kế hoạch Chen Giữa 52 (Chặng 1) theo định hướng **100% Real API Backend**:
+     - Tạo mới Enum [`OtpPurpose.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Domain/Enums/OtpPurpose.cs): Hỗ trợ `EmailVerification = 1`, `PasswordReset = 2`, `PhoneVerification = 3`.
+     - Tạo mới Entity [`UserOtpCode.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Domain/Entities/UserOtpCode.cs): Kế thừa `BaseEntity`, lưu mã OTP 6 số, email chuẩn hóa, thời điểm hết hạn (`ExpiredAt`), cờ `IsUsed`, `UsedAt`, các phương thức domain đóng gói `IsValid(inputCode)` và `MarkAsUsed()`.
+     - Cập nhật Aggregate Root [`User.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Domain/Entities/User.cs): Thêm thuộc tính `IsEmailVerified`, danh tập `OtpCodes`, và domain method `VerifyEmail()`, đảm bảo tương thích ngược 100% với các hàm khởi tạo cũ.
+  2. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Bổ sung bộ kiểm thử đơn vị [`UserOtpCodeTests.cs`](mobile-project/dotnet-maui-ver/backend/tests/ExpenseTracker.Domain.UnitTests/UserOtpCodeTests.cs) gồm 6 ca kiểm thử bao phủ toàn bộ vòng đời mã OTP và kích hoạt tài khoản.
+     - Toàn bộ test suite Domain: **89 / 89 Tests Passed 100%** (+6 tests mới).
+     - Toàn bộ test suite Application: **183 / 183 Tests Passed 100%**.
+     - Toàn bộ test suite Frontend MAUI: **42 / 42 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 314 / 314 Tests Xanh Biếc (100% Passed)**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+

@@ -11,6 +11,7 @@ public class User : BaseEntity
     public string PasswordHash { get; private set; } = string.Empty;
     public string BaseCurrency { get; private set; } = "VND";
     public UserStatus Status { get; private set; } = UserStatus.Active;
+    public bool IsEmailVerified { get; private set; } = false;
 
     public ICollection<RefreshToken> RefreshTokens { get; private set; } = new List<RefreshToken>();
     public ICollection<Wallet> Wallets { get; private set; } = new List<Wallet>();
@@ -19,17 +20,19 @@ public class User : BaseEntity
     public ICollection<RecurringIncome> RecurringIncomes { get; private set; } = new List<RecurringIncome>();
     public ICollection<SalarySlipDetail> SalarySlipDetails { get; private set; } = new List<SalarySlipDetail>();
     public ICollection<AutoCategorizationRule> AutoCategorizationRules { get; private set; } = new List<AutoCategorizationRule>();
+    public ICollection<UserOtpCode> OtpCodes { get; private set; } = new List<UserOtpCode>();
 
     // Parameterless constructor for EF Core materialization
     private User() { }
 
-    public User(string fullName, string email, string passwordHash, string baseCurrency = "VND")
+    public User(string fullName, string email, string passwordHash, string baseCurrency = "VND", bool isEmailVerified = false)
     {
         FullName = fullName.Trim();
         Email = email.Trim().ToLowerInvariant();
         PasswordHash = passwordHash;
         BaseCurrency = string.IsNullOrWhiteSpace(baseCurrency) ? "VND" : baseCurrency.Trim().ToUpperInvariant();
         Status = UserStatus.Active;
+        IsEmailVerified = isEmailVerified;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -45,6 +48,13 @@ public class User : BaseEntity
     public void UpdatePassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    // Marks user's email address as verified after valid OTP confirmation
+    public void VerifyEmail()
+    {
+        IsEmailVerified = true;
         UpdatedAt = DateTime.UtcNow;
     }
 
