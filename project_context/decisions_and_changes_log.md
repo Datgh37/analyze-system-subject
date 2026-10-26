@@ -3917,5 +3917,26 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **TỔNG KIỂM TOÁN BACKEND: 272 / 272 Tests Passed 100%**.
 - **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
 
+---
+
+## [2026-10-26 19:50] - Quyết Định 166: Hoàn Thành & Nghiệm Thu Tác Vụ 3 (Kế Hoạch 52 - Chặng 1): Hiện Thực Hạ Tầng Gửi Email Real SMTP & Resilient Logger Fallback Cho Mã OTP
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Bruce Schneier, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. Xây dựng dịch vụ phân phối email chuẩn công nghiệp phục vụ xác thực tài khoản:
+     - Khởi tạo interface [`IEmailService.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Application/Interfaces/IEmailService.cs) với các phương thức gửi thư tổng quát `SendEmailAsync` và gửi mã OTP chuyên biệt `SendOtpEmailAsync`.
+     - Hiện thực dịch vụ [`EmailService.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/Services/EmailService.cs):
+       * *Chế độ Production:* Kết nối máy chủ SMTP thật (`SmtpClient`, SSL/TLS, port 587) theo cấu hình từ `appsettings.json`.
+       * *Cơ chế Resilient Console Fallback:* Khi chưa cấu hình thông tin đăng nhập SMTP hoặc khi gặp sự cố mạng, hệ thống tự động bắt lỗi và in mã OTP rõ ràng ra Server Console/Logger mà không làm gián đoạn luồng gọi REST API (luôn phản hồi HTTP 200 thành công).
+     - Định dạng email OTP sang trọng chuẩn Luxury Fintech: Tiêu đề rõ ràng, mã OTP 6 số nổi bật trong khung `[ 123456 ]`, thời hạn 5 phút và hướng dẫn bảo mật.
+     - Đăng ký DI `services.AddScoped<IEmailService, EmailService>()` trong [`DependencyInjection.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/DependencyInjection.cs) và bổ sung template cấu hình SMTP trong [`appsettings.json`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.WebApi/appsettings.json).
+  2. **Bằng chứng nghiệm thu chất lượng (Quality Gates):**
+     - Bổ sung bộ kiểm thử đơn vị [`EmailServiceTests.cs`](mobile-project/dotnet-maui-ver/backend/tests/ExpenseTracker.Application.UnitTests/Services/EmailServiceTests.cs) gồm 3 ca kiểm thử: Gửi OTP xác thực email, Gửi OTP đổi mật khẩu, và Fallback mượt mà khi không có cấu hình SMTP.
+     - Toàn bộ test suite Application: **186 / 186 Tests Passed 100%** (+3 tests mới).
+     - Toàn bộ test suite Domain: **89 / 89 Tests Passed 100%**.
+     - Toàn bộ test suite Frontend MAUI: **42 / 42 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 317 / 317 Tests Passed 100% (Xanh biếc)**.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED.
+
+
 
 
