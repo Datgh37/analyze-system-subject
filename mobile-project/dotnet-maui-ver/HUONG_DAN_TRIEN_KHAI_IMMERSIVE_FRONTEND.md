@@ -260,7 +260,60 @@ Nếu không muốn cài thêm package NuGet, bạn có thể tái cấu trúc `
 
 ---
 
-## 5. CẤU TRÚC THƯ MỤC FRONTEND ĐỂ BẠN LÀM VIỆC
+## 5. CHỈ THỊ UX COPYWRITING: BIẾN APP THÀNH SẢN PHẨM THẬT (XÓA SẠCH MÃ UC-XX & THANH LỌC VĂN PHONG DEMO/AI)
+
+> [!CAUTION]
+> **YÊU CẦU QUAN TRỌNG TỪ TRƯỞNG NHÓM:**  
+> Ứng dụng phải toát lên cảm giác của một **Sản Phẩm Fintech Thương Mại Thực Thụ (Production-Grade Real Product)**, phục vụ người dùng thật, không phải là một bài tập thực hành hay bản demo thô sơ!  
+> Tuyệt đối **KHÔNG ĐƯỢC BÊ Y CHANG NỘI DUNG ĐẶC TẢ KỸ THUẬT VÀO GIAO DIỆN**, loại bỏ toàn bộ văn phong lủng củng, sáo rỗng, trừu tượng kiểu AI tạo ra.
+
+### 5.1. Quy Tắc 1: Xóa Sạch 100% Các Mã Kỹ Thuật (Mã `UC-XX`)
+* **Thực trạng:** Trước đây do xây dựng theo tài liệu phân tích nghiệp vụ nên một số tiêu đề và nhãn bị để nguyên mã Use Case (ví dụ: `Bóc Tách Hóa Đơn AI (UC-03.07/03.08)`, `Khung giờ (UC-07.01)`, `Z-Score (UC-07.05)`...).
+* **Chỉ thị:** **Bắt buộc xóa bỏ hoàn toàn tất cả các tiền tố / hậu tố `(UC-...)` khỏi giao diện người dùng**. Người dùng bình thường chỉ quan tâm tính năng này giúp gì cho họ, không ai muốn nhìn thấy mã kỹ thuật của tài liệu phần mềm!
+
+---
+
+### 5.2. Quy Tắc 2: Thanh Lọc Văn Phong AI Hóa, Trừu Tượng & Hàn Lâm
+Hãy chuyển đổi toàn bộ các thuật ngữ kỹ thuật mang tính sách vở sang **ngôn ngữ tài chính cá nhân đời thường, gần gũi, tinh tế**:
+
+| Thuật Ngữ Kỹ Thuật Cũ (CẦN BỎ / ĐỔI) | Văn Phong Thực Tế Khuyên Dùng (Thân Thiện & Hữu Ích) | Giải Thích Bản Chất |
+| :--- | :--- | :--- |
+| `Bóc tách hóa đơn AI & Kiểm toán toán học E2` | **Quét Hóa Đơn Thông Minh** | Tự động đọc biên lai và kiểm tra số tiền các món có khớp tổng tiền không. |
+| `Phân rã dòng tiền thác nước Waterfall Flow` | **Dòng Tiền Thuần & Xu Hướng** | Cho thấy tiền vào từ đâu và phân bổ đi những đâu. |
+| `Cảnh báo đột biến Z-Score Outlier Detection` | **Phát Hiện Khoản Chi Bất Thường** | Nhắc người dùng xem lại khoản chi cao đột biến so với thói quen hàng ngày. |
+| `Hạn mức thích ứng DSA quy hoạch động` | **Hạn Mức Chi Tiêu Hôm Nay** | Số tiền an toàn bạn có thể tiêu hôm nay mà không bị lạm vào tiền tiết kiệm. |
+| `Tốc độ chi tiêu Spending Velocity` | **Tốc Độ Tiêu Tiền & Dự Báo Hết Tiền** | Cảnh báo với tốc độ tiêu này thì bao nhiêu ngày nữa sẽ cạn tiền. |
+| `Cơ chế ma sát nhận thức 24h Cooling-Off` | **Khoảng Trễ Mua Sắm 24 Giờ** | Tạm giữ khoản chi lớn trong 24h để bạn suy nghĩ thấu đáo trước khi bấm xác nhận. |
+| `Kiến trúc lựa chọn Thaler Nudge & XAI Rationale` | **Gợi Ý Chi Tiêu Thông Minh (Trợ Lý AI)** | Lời khuyên thiết thực giúp bạn cân đối lại ví khi sắp bội chi. |
+| `Bẫy thuê bao Zombie Subscriptions Trap` | **Quản Lý Gói Dịch Vụ Định Kỳ** | Tìm và cảnh báo các ứng dụng đang âm thầm trừ tiền hàng tháng (Netflix, Spotify...). |
+| `Hộp thư tự hành Jev Protocol Action Inbox` | **Việc Cần Xử Lý** | Danh sách các giao dịch hoặc hóa đơn cần bạn xác nhận 1 chạm. |
+
+---
+
+### 5.3. Quy Tắc 3: Giữ Lại Các Nút Test/Demo Nhưng Bố Trí Tinh Tế
+* Các nút tiện ích phục vụ chấm thi (như nút **"🔔 Bắn Native Test"**, **"⏰ Hẹn Báo Thức 21:00"**, **"⚡ Giả Lập Biến Động Ngân Hàng"**):
+  - **VẪN GIỮ LẠI NGUYÊN VẸN** để phục vụ bạn và ban giám khảo chấm điểm trực tiếp trên máy ảo mà không cần thiết bị ngoại vi.
+  - **Cách bố trí:** Hãy gom các nút này vào một Card hoặc Thanh công cụ nhỏ đặt ở chân trang hoặc có tiêu đề tinh tế: `"🛠️ Công Cụ Trải Nghiệm Demo (Dành Cho Giám Khảo)"` với viền nét đứt nhẹ nhàng, không để chúng lấn át luồng thao tác người dùng chính.
+
+---
+
+### 5.4. Bảng Chuẩn Hóa Tiêu Đề Màn Hình (Page Titles Standard)
+
+| Màn Hình (XAML View) | Tiêu Đề Cũ / Thô | Tiêu Đề Mới Sang Trọng Chuẩn Fintech |
+| :--- | :--- | :--- |
+| `ReceiptOcrPage.xaml` | `Bóc Tách Hóa Đơn AI (UC-03.07/03.08)` | **Quét Hóa Đơn Thông Minh** |
+| `PayslipOcrPage.xaml` | `Bóc Tách Bảng Lương (UC-02.08)` | **Bóc Tách & Đối Soát Bảng Lương** |
+| `CoolingOffHubPage.xaml` | `Khoảng Trễ 24h (UC-09.05)` | **Khoảng Trễ Mua Sắm 24h** |
+| `NudgeFeedPage.xaml` | `Cú Hích Tài Chính & Trợ Lý XAI` | **Trợ Lý Gợi Ý Tài Chính** |
+| `ForecastingPage.xaml` | `Dự Báo Dòng Tiền (UC-08.01 - 08.04)` | **Dự Báo & Mô Phỏng Tài Chính** |
+| `SmartUtilitiesPage.xaml` | `Tiện Ích & Trợ Lý AI` | **Tiện Ích VietQR & Quản Lý Gói Đăng Ký** |
+| `BudgetsPage.xaml` | `Kế Hoạch Ngân Sách & Hạn Mức DSA` | **Kế Hoạch Ngân Sách & Hạn Mức Ngày** |
+| `ReportsPage.xaml` | `Báo Cáo & Phân Tích Đa Chiều` | **Báo Cáo & Phân Tích Tài Chính** |
+| `SavingsGoalsPage.xaml` | `Mục Tiêu Tích Lũy (UC-06.01 - 06.05)` | **Hũ Tiết Kiệm & Mục Tiêu Tích Lũy** |
+
+---
+
+## 6. CẤU TRÚC THƯ MỤC FRONTEND ĐỂ BẠN LÀM VIỆC
 
 ```text
 mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
@@ -271,24 +324,24 @@ mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
 │   ├── Components/
 │   │   └── BottomNavDockView.xaml         <-- THANH ĐIỀU HƯỚNG ĐÁY CHÍNH (Đã có nút Voice FAB)
 │   ├── Autonomous/
-│   │   └── ActionInboxView.xaml           <-- Hộp thư việc cần làm tự hành (Jev Protocol)
+│   │   └── ActionInboxView.xaml           <-- Hộp thư việc cần xử lý
 │   ├── AiAgent/
 │   │   └── VoiceMicModalPage.xaml         <-- Modal Trợ lý Voice AI (Đã có 4 nút câu lệnh mẫu)
 │   ├── WalletsPage.xaml                   <-- Màn hình Quản lý Đa Ví (Tab 1)
 │   ├── ExpensesPage.xaml                  <-- Màn hình Chi tiêu & Giao dịch (Tab 2)
-│   ├── BudgetsPage.xaml                   <-- Màn hình Ngân sách & Hạn mức DSA (Tab 3)
+│   ├── BudgetsPage.xaml                   <-- Màn hình Ngân sách & Hạn mức Ngày (Tab 3)
 │   ├── ReportsPage.xaml                   <-- Màn hình Báo cáo tài chính (Tab 4 - CẦN THÊM BIỂU ĐỒ)
 │   ├── IncomesPage.xaml                   <-- Thu nhập cá nhân
 │   ├── RecurringIncomesPage.xaml          <-- Thu nhập định kỳ
-│   ├── ReceiptOcrPage.xaml                <-- Quét hóa đơn bằng Camera/Ảnh AI OCR
+│   ├── ReceiptOcrPage.xaml                <-- Quét hóa đơn thông minh
 │   ├── PayslipOcrPage.xaml                <-- Bóc tách bảng lương
-│   ├── SmartUtilitiesPage.xaml            <-- Tiện ích tạo mã VietQR & Quản lý gói Zombie Subscriptions
+│   ├── SmartUtilitiesPage.xaml            <-- Tiện ích tạo mã VietQR & Quản lý gói đăng ký
 │   ├── SavingsGoalsPage.xaml              <-- Mục tiêu tích lũy & Hũ tiết kiệm
 │   ├── CategoriesPage.xaml                <-- Cây danh mục Thu Chi
 │   ├── AutoRulesPage.xaml                 <-- Quy tắc tự động phân loại
-│   ├── NudgeFeedPage.xaml                 <-- Bảng tin Cú hích tài chính Thaler Nudge
-│   ├── CoolingOffHubPage.xaml             <-- Không gian khoảng trễ 24h triệt tiêu mua sắm bốc đồng
-│   ├── ForecastingPage.xaml               <-- Dự báo dòng tiền & Ngày cạn tiền
+│   ├── NudgeFeedPage.xaml                 <-- Trợ lý gợi ý tài chính
+│   ├── CoolingOffHubPage.xaml             <-- Khoảng trễ mua sắm 24h
+│   ├── ForecastingPage.xaml               <-- Dự báo & Mô phỏng tài chính
 │   ├── NotificationHistoryPage.xaml       <-- Lịch sử thông báo & Nút test chuông báo thức 21:00
 │   └── LoginPage.xaml / RegisterPage.xaml / VerifyOtpPage.xaml <-- Bộ 3 màn hình xác thực Auth OTP
 │
@@ -300,7 +353,7 @@ mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/
 
 ---
 
-## 6. HƯỚNG DẪN CÁCH NHÚNG BOTTOM NAV DOCK VÀO CÁC TRANG MỚI
+## 7. HƯỚNG DẪN CÁCH NHÚNG BOTTOM NAV DOCK VÀO CÁC TRANG MỚI
 
 Nếu bạn tạo một trang mới hoặc muốn trang đó có thanh điều hướng đáy giống 4 trang chính:
 
@@ -327,7 +380,7 @@ xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
 
 ---
 
-## 7. CHECKLIST CÔNG VIỆC GỢI Ý CHO BẠN TIẾP TỤC HOÀN THIỆN NGÀY MAI
+## 8. CHECKLIST CÔNG VIỆC GỢI Ý CHO BẠN TIẾP TỤC HOÀN THIỆN NGÀY MAI
 
 - [ ] **🔥 ƯU TIÊN SỐ 1: Bãi bỏ toàn bộ emoji và thay bằng Icon Vector xịn:**
   - Tải bộ font `lucide.ttf` hoặc bộ file SVG của Lucide Icons / Material Symbols.
@@ -338,22 +391,27 @@ xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
   - Tích hợp biểu đồ Bánh/Donut phân bổ chi tiêu theo danh mục (Category Breakdown).
   - Bổ sung biểu đồ Cột so sánh Thu nhập vs Chi tiêu theo các tháng (MoM).
   - Tinh chỉnh bố cục gọn gàng, chia khối rõ ràng, giảm bớt bảng chữ số khô khan.
-- [ ] **3. Rà soát căn chỉnh lề (Padding/Margin) trên các trang phụ:**
+- [ ] **🔥 ƯU TIÊN SỐ 3: Chuẩn hóa UX Copywriting, xóa sạch mã `UC-XX` & câu từ demo:**
+  - Xóa toàn bộ các mã kỹ thuật `(UC-XX)` còn sót lại trên tiêu đề trang, nhãn nút và thẻ Card.
+  - Viết lại câu từ theo phong cách sản phẩm tài chính thật: gần gũi, ngắn gọn, tự nhiên, dễ hiểu.
+  - Gom các nút Test/Giả lập vào cụm công cụ phụ tinh tế, không làm rối màn hình chính.
+- [ ] **4. Rà soát căn chỉnh lề (Padding/Margin) trên các trang phụ:**
   - Kiểm tra `IncomesPage.xaml`, `RecurringIncomesPage.xaml`, `SavingsGoalsPage.xaml` xem có thẻ nào bị sát viền hay không.
   - Đảm bảo tất cả các trang đều có `Padding="16,12,16,24"`.
-- [ ] **4. Thẩm định kích thước font chữ trên màn hình nhỏ:**
+- [ ] **5. Thẩm định kích thước font chữ trên màn hình nhỏ:**
   - Mở app trên máy ảo, lướt qua một lượt các trang để đảm bảo không có chữ nào bị rớt dòng đơn độc (orphan word).
   - Kiểm tra các nhãn số tiền lớn đều nằm gọn trong thẻ.
-- [ ] **5. Trau chuốt thẻ Profile Người Dùng (Nếu muốn thêm):**
+- [ ] **6. Trau chuốt thẻ Profile Người Dùng (Nếu muốn thêm):**
   - Hiện tại trang `LoginPage.xaml` đang dùng để quản lý đăng nhập/đăng xuất.
   - Bạn có thể thiết kế thêm một trang `ProfilePage.xaml` đơn giản hiển thị: Tên người dùng, Email đã xác thực, Avatar tròn và Nút đăng xuất.
-- [ ] **6. Kiểm tra độ tương phản màu sắc (Accessibility):**
+- [ ] **7. Kiểm tra độ tương phản màu sắc (Accessibility):**
   - Chữ xám mờ trên nền tối nên dùng tối thiểu `#94A3B8` hoặc `#A5B4FC` để dễ đọc trong điều kiện ánh sáng mạnh.
   - Không dùng chữ xám quá tối (`#475569` trở xuống) cho các thông tin quan trọng.
 
 ---
 
-## 8. LỆNH CHẠY & KIỂM TRA MÃ NGUỒN TRONG QUÁ TRÌNH LÀM VIỆC
+## 9. LỆNH CHẠY & KIỂM TRA MÃ NGUỒN TRONG QUÁ TRÌNH LÀM VIỆC
+
 
 
 1. **Khởi chạy máy ảo và app nhanh (1 lệnh duy nhất):**

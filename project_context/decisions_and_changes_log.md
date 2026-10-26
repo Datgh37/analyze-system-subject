@@ -4242,6 +4242,10 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
   5. **Bổ sung Đặc tả Biểu đồ Trực quan (Data Visualizations) cho Màn hình Báo cáo:**
      - Cập nhật [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](mobile-project/dotnet-maui-ver/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md) bổ sung Mục 4 đặc tả 3 dạng biểu đồ cốt lõi (Donut Chart cơ cấu chi tiêu 50/30/20, Grouped Bar Chart so sánh Thu - Chi theo tháng, Spline/Area Chart biến thiên tài sản ròng).
      - Đưa vào Ưu tiên số 2 trong Checklist bàn giao cho thành viên phụ trách Frontend.
+  6. **Chỉ thị UX Copywriting & Chuẩn Hóa Sản Phẩm Thực Tế:**
+     - Cập nhật Mục 5 [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](mobile-project/dotnet-maui-ver/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md) yêu cầu xóa sạch 100% các mã ca sử dụng kỹ thuật `(UC-XX)` khỏi giao diện, thay thế tiêu đề trong [`ReceiptOcrViewModel.cs`](mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/ReceiptOcrViewModel.cs) thành "Quét Hóa Đơn Thông Minh".
+     - Thanh lọc toàn bộ văn phong demo, AI hóa, trừu tượng thành ngôn ngữ tài chính cá nhân tự nhiên, hữu ích cho người dùng thực; bảo lưu và quy hoạch cụm nút test (Native Notification, Giả lập biến động ngân hàng) vào thanh công cụ phụ tinh tế.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED.
+
 
 

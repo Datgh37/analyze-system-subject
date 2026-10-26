@@ -99,7 +99,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
         _walletRepo = walletRepo;
         _categoryRepo = categoryRepo;
         _smartUtilityRepo = smartUtilityRepo;
-        Title = "Bóc Tách Hóa Đơn AI (UC-03.07/03.08)";
+        Title = "Quét Hóa Đơn Thông Minh";
 
         // Listen for realtime OCR progress updates
         WeakReferenceMessenger.Default.Register<OcrProgressMessage>(this, (r, m) =>
