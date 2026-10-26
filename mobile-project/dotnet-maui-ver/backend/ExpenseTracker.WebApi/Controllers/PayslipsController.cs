@@ -2,11 +2,13 @@ using ExpenseTracker.Application.DTOs.Payslips;
 using ExpenseTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ExpenseTracker.WebApi.Controllers;
 
 // API endpoints managing AI Vision OCR payslip parsing, mathematical audit, and ledger persistence (UC-02.08)
 [Authorize]
+[EnableRateLimiting("ai_policy")]
 public class PayslipsController : BaseApiController
 {
     private readonly IPayslipOcrService _payslipOcrService;

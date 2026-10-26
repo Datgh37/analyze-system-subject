@@ -1,10 +1,13 @@
+using ExpenseTracker.Application.DTOs;
 using ExpenseTracker.Application.DTOs.Transactions;
+using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Application.Services;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Infrastructure.Persistence;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Xunit;
 
 namespace ExpenseTracker.Application.UnitTests.Services;
@@ -198,5 +201,43 @@ public class TransactionServiceTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Contain("số dư khả dụng hiện tại của ví không đủ để khấu trừ");
+    }
+
+    [Fact]
+    public async Task CreateIncomeAsync_WhenRealtimeNotifierInjected_ShouldBroadcastRealtimeEvents()
+    {
+        // Arrange
+        var notifierMock = new Mock<IFinancialRealtimeNotifier>();
+        var service = new TransactionService(_dbContext, notifierMock.Object);
+
+        var request = new CreateIncomeTransactionRequest(
+            WalletId: _wallet.Id,
+            CategoryId: _category.Id,
+            Amount: 1_250_000m,
+            TransactionDate: DateTime.UtcNow,
+            Note: "Thưởng dự án"
+        );
+
+        // Act
+        var result = await service.CreateIncomeAsync(_userId, request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+
+        notifierMock.Verify(n => n.NotifyTransactionCreatedAsync(
+            _userId,
+            It.Is<TransactionCreatedNotificationDto>(dto =>
+                dto.WalletId == _wallet.Id &&
+                dto.CategoryId == _category.Id &&
+                dto.Amount == 1_250_000m &&
+                dto.TransactionType == (int)TransactionType.Income),
+            It.IsAny<CancellationToken>()), Times.Once);
+
+        notifierMock.Verify(n => n.NotifyBalanceUpdateAsync(
+            _userId,
+            It.Is<BalanceUpdateNotificationDto>(dto =>
+                dto.WalletId == _wallet.Id &&
+                dto.ChangeAmount == 1_250_000m),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

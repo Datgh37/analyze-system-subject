@@ -2,8 +2,10 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ExpenseTracker.Maui.Models.Behavioral;
 using ExpenseTracker.Maui.Repositories;
+using ExpenseTracker.Maui.Services.Realtime.Messages;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
@@ -32,7 +34,30 @@ public partial class NudgeFeedViewModel : BaseViewModel
     public NudgeFeedViewModel(INudgeRepository repository)
     {
         _repository = repository;
-        Title = "Cú Hích Thaler";
+        Title = "Cú Hích Tài Chính & Trợ Lý XAI";
+
+        // Listen for realtime Nudge alerts
+        WeakReferenceMessenger.Default.Register<NudgeAlertReceivedMessage>(this, (r, m) =>
+        {
+            var existing = Nudges.FirstOrDefault(n => n.Id == m.Value.NudgeId);
+            if (existing == null)
+            {
+                var newNudge = new FinancialNudgeModel
+                {
+                    Id = m.Value.NudgeId,
+                    UserId = Guid.Empty,
+                    NudgeType = NudgeType.DsaThreshold,
+                    Title = m.Value.Title,
+                    Message = m.Value.Message,
+                    TriggerContext = "RealtimeAlert",
+                    Status = NudgeStatus.Active,
+                    IsApprovedByUser = false,
+                    CreatedAt = m.Value.Timestamp
+                };
+                Nudges.Insert(0, newNudge);
+                StatusMessage = $"Cảnh báo mới: {m.Value.Title}";
+            }
+        });
     }
 
     [RelayCommand]

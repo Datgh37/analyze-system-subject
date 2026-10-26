@@ -7,6 +7,9 @@ using ExpenseTracker.Maui.Models.Wallets;
 using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 
+using CommunityToolkit.Mvvm.Messaging;
+using ExpenseTracker.Maui.Services.Realtime.Messages;
+
 namespace ExpenseTracker.Maui.ViewModels;
 
 // ViewModel managing personal expense tracking, timeline ledger, and real-time auto-categorization (Clean MVVM Architecture)
@@ -56,6 +59,39 @@ public partial class ExpensesViewModel : BaseViewModel
         _categoryRepository = categoryRepository;
         _autoRuleRepository = autoRuleRepository;
         Title = "Sổ Giao Dịch Chi Tiêu";
+
+        // Listen for realtime transaction created events (Instant 0ms timeline prepend)
+        WeakReferenceMessenger.Default.Register<TransactionCreatedMessage>(this, (r, m) =>
+        {
+            if (m.Value.TransactionType == 2) // Expense
+            {
+                var existing = Expenses.FirstOrDefault(e => e.Id == m.Value.TransactionId);
+                if (existing == null)
+                {
+                    var newExpense = new TransactionModel(
+                        m.Value.TransactionId,
+                        Guid.Empty,
+                        m.Value.WalletId,
+                        m.Value.WalletName,
+                        m.Value.CategoryId,
+                        m.Value.CategoryName,
+                        "receipt.png",
+                        "#EF4444",
+                        m.Value.Amount,
+                        m.Value.TransactionType,
+                        m.Value.TransactionDate,
+                        m.Value.Note,
+                        true,
+                        false,
+                        false,
+                        false,
+                        m.Value.Timestamp
+                    );
+                    Expenses.Insert(0, newExpense);
+                    MonthlyTotalExpense += m.Value.Amount;
+                }
+            }
+        });
     }
 
 

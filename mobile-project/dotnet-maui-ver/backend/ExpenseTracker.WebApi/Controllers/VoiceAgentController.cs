@@ -2,11 +2,13 @@ using ExpenseTracker.Application.DTOs.AiAgent;
 using ExpenseTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ExpenseTracker.WebApi.Controllers;
 
 // API endpoints managing Voice-Driven Intent Agent and AppShell action routing (UC-03.11 Enhancement)
 [Authorize]
+[EnableRateLimiting("ai_policy")]
 [Route("api/voice-agent")]
 public class VoiceAgentController : BaseApiController
 {

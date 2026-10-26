@@ -44,7 +44,7 @@ public class WalletService : IWalletService
             .FirstOrDefaultAsync(w => w.Id == walletId && w.UserId == userId, ct);
 
         if (wallet == null)
-            return Result<WalletDto>.Failure("Ví không tồn tại hoặc bạn không có quyền truy cập.");
+            return Result<WalletDto>.Failure("Ví không tồn tại hoặc bạn không có quyền truy cập.", 404);
 
         return Result<WalletDto>.Success(MapToDto(wallet));
     }
@@ -52,6 +52,9 @@ public class WalletService : IWalletService
     // Creates a new wallet account with initial balance
     public async Task<Result<WalletDto>> CreateWalletAsync(Guid userId, CreateWalletRequest request, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(request.Name))
+            return Result<WalletDto>.Failure("Tên ví không được để trống.");
+
         var trimmedName = request.Name.Trim();
         var isDuplicate = await _context.Wallets
             .AnyAsync(w => w.UserId == userId && w.Name.ToLower() == trimmedName.ToLower(), ct);
@@ -180,14 +183,19 @@ public class WalletService : IWalletService
         await using var transaction = await _context.BeginTransactionAsync(ct);
         try
         {
-            var sourceWallet = await _context.Wallets
-                .FirstOrDefaultAsync(w => w.Id == request.SourceWalletId && w.UserId == userId, ct);
+            // Deadlock Prevention: Order wallet IDs to guarantee consistent locking sequence
+            bool sourceIsFirst = request.SourceWalletId.CompareTo(request.DestinationWalletId) < 0;
+            var firstLockId = sourceIsFirst ? request.SourceWalletId : request.DestinationWalletId;
+            var secondLockId = sourceIsFirst ? request.DestinationWalletId : request.SourceWalletId;
+
+            var firstWallet = await _context.GetWalletForUpdateAsync(firstLockId, userId, ct);
+            var secondWallet = await _context.GetWalletForUpdateAsync(secondLockId, userId, ct);
+
+            var sourceWallet = sourceIsFirst ? firstWallet : secondWallet;
+            var destWallet = sourceIsFirst ? secondWallet : firstWallet;
 
             if (sourceWallet == null)
                 return Result<bool>.Failure("Ví nguồn không tồn tại.");
-
-            var destWallet = await _context.Wallets
-                .FirstOrDefaultAsync(w => w.Id == request.DestinationWalletId && w.UserId == userId, ct);
 
             if (destWallet == null)
                 return Result<bool>.Failure("Ví đích không tồn tại.");

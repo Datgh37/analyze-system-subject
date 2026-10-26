@@ -7,6 +7,8 @@ namespace ExpenseTracker.WebApi.Controllers;
 
 // API endpoints managing scheduled recurring income streams (UC-02.07)
 [Authorize]
+[Route("api/recurring-incomes")]
+[Route("api/recurringincomes")]
 public class RecurringIncomesController : BaseApiController
 {
     private readonly IRecurringIncomeService _recurringIncomeService;

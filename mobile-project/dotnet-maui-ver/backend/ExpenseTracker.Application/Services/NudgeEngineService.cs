@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ExpenseTracker.Domain.Common;
+using ExpenseTracker.Application.DTOs;
 using ExpenseTracker.Application.DTOs.Nudges;
 using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Domain.Entities;
@@ -14,12 +15,18 @@ public class NudgeEngineService : INudgeEngineService
 {
     private readonly IApplicationDbContext _context;
     private readonly ILogger<NudgeEngineService> _logger;
+    private readonly IFinancialRealtimeNotifier? _realtimeNotifier;
 
-    public NudgeEngineService(IApplicationDbContext context, ILogger<NudgeEngineService> logger)
+    public NudgeEngineService(
+        IApplicationDbContext context,
+        ILogger<NudgeEngineService> logger,
+        IFinancialRealtimeNotifier? realtimeNotifier = null)
     {
         _context = context;
         _logger = logger;
+        _realtimeNotifier = realtimeNotifier;
     }
+
 
     public async Task<Result<List<FinancialNudgeDto>>> GetActiveNudgesAsync(Guid userId, CancellationToken ct = default)
     {
@@ -271,6 +278,12 @@ public class NudgeEngineService : INudgeEngineService
 
                     _context.FinancialNudges.Add(nudge);
                     await _context.SaveChangesAsync(ct);
+
+                    if (_realtimeNotifier != null)
+                    {
+                        _ = _realtimeNotifier.NotifyNudgeAlertAsync(userId, new NudgeAlertNotificationDto(
+                            nudge.Id, nudge.Title, nudge.Message, "Warning", "app://nudge-feed", DateTime.UtcNow), ct);
+                    }
                 }
             }
         }
@@ -309,5 +322,11 @@ public class NudgeEngineService : INudgeEngineService
 
         _context.FinancialNudges.Add(nudge);
         await _context.SaveChangesAsync(ct);
+
+        if (_realtimeNotifier != null)
+        {
+            _ = _realtimeNotifier.NotifyNudgeAlertAsync(userId, new NudgeAlertNotificationDto(
+                nudge.Id, nudge.Title, nudge.Message, "Info", "app://nudge-feed", DateTime.UtcNow), ct);
+        }
     }
 }

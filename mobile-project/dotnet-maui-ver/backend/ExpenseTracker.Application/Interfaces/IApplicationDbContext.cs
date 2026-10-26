@@ -31,4 +31,5 @@ public interface IApplicationDbContext
 
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<Wallet?> GetWalletForUpdateAsync(Guid walletId, Guid userId, CancellationToken cancellationToken = default);
 }

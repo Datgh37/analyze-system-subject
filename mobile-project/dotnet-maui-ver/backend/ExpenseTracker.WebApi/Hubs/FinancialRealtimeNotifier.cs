@@ -42,4 +42,32 @@ public class FinancialRealtimeNotifier : IFinancialRealtimeNotifier
 
         await _hubContext.Clients.Group(groupName).SendAsync("ReceiveNotification", dto, cancellationToken);
     }
+
+    public async Task NotifyTransactionCreatedAsync(Guid userId, TransactionCreatedNotificationDto dto, CancellationToken cancellationToken = default)
+    {
+        var groupName = $"user_{userId}";
+        _logger.LogInformation("Broadcasting ReceiveTransactionCreated to group {Group}: {Amount}đ ({CategoryName})",
+            groupName, dto.Amount, dto.CategoryName);
+
+        await _hubContext.Clients.Group(groupName).SendAsync("ReceiveTransactionCreated", dto, cancellationToken);
+    }
+
+    public async Task NotifyOcrProgressAsync(Guid userId, OcrProgressNotificationDto dto, CancellationToken cancellationToken = default)
+    {
+        var groupName = $"user_{userId}";
+        _logger.LogInformation("Broadcasting ReceiveOcrProgress to group {Group}: Job {JobId} - {StepText} ({Percent}%)",
+            groupName, dto.JobId, dto.StepText, dto.Percent);
+
+        await _hubContext.Clients.Group(groupName).SendAsync("ReceiveOcrProgress", dto, cancellationToken);
+    }
+
+    public async Task NotifyNudgeAlertAsync(Guid userId, NudgeAlertNotificationDto dto, CancellationToken cancellationToken = default)
+    {
+        var groupName = $"user_{userId}";
+        _logger.LogInformation("Broadcasting ReceiveNudgeAlert to group {Group}: {Title} - {Message}",
+            groupName, dto.Title, dto.Message);
+
+        await _hubContext.Clients.Group(groupName).SendAsync("ReceiveNudgeAlert", dto, cancellationToken);
+    }
 }
+

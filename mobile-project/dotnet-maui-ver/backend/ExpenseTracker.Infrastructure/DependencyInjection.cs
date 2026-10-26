@@ -19,7 +19,10 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        {
+            options.UseNpgsql(connectionString);
+            options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        });
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<ApplicationDbContext>());
@@ -34,6 +37,14 @@ public static class DependencyInjection
         {
             client.Timeout = TimeSpan.FromSeconds(60);
         });
+
+        // Register Push Notification Services (Adapter Pattern: FCM v1 with Graceful Mock Fallback)
+        services.AddHttpClient("FcmClient", client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(15);
+        });
+        services.AddScoped<MockPushNotificationSender>();
+        services.AddScoped<IPushNotificationSender, FirebasePushNotificationSender>();
 
         return services;
     }

@@ -5,6 +5,8 @@ using ExpenseTracker.Maui.Models.Categories;
 using ExpenseTracker.Maui.Models.Transactions;
 using ExpenseTracker.Maui.Models.Wallets;
 using ExpenseTracker.Maui.Repositories;
+using CommunityToolkit.Mvvm.Messaging;
+using ExpenseTracker.Maui.Services.Realtime.Messages;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
@@ -50,6 +52,40 @@ public partial class IncomesViewModel : BaseViewModel
         _walletRepository = walletRepository;
         _categoryRepository = categoryRepository;
         Title = "Sổ Thu Nhập Cá Nhân";
+
+        // Listen for realtime transaction created events (Instant 0ms timeline prepend)
+        WeakReferenceMessenger.Default.Register<TransactionCreatedMessage>(this, (r, m) =>
+        {
+            if (m.Value.TransactionType == 1) // Income
+            {
+                var existing = Incomes.FirstOrDefault(e => e.Id == m.Value.TransactionId);
+                if (existing == null)
+                {
+                    var newIncome = new TransactionModel(
+                        m.Value.TransactionId,
+                        Guid.Empty,
+                        m.Value.WalletId,
+                        m.Value.WalletName,
+                        m.Value.CategoryId,
+                        m.Value.CategoryName,
+                        "income.png",
+                        "#10B981",
+                        m.Value.Amount,
+                        m.Value.TransactionType,
+                        m.Value.TransactionDate,
+                        m.Value.Note,
+                        true,
+                        false,
+                        false,
+                        false,
+                        m.Value.Timestamp
+                    );
+                    Incomes.Insert(0, newIncome);
+                    MonthlyTotalIncome += m.Value.Amount;
+                    FormattedMonthlyTotal = $"{MonthlyTotalIncome:N0} VND";
+                }
+            }
+        });
     }
 
     [RelayCommand]

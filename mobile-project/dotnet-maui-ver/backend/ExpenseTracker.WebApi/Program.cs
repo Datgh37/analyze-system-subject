@@ -1,11 +1,17 @@
+using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 using ExpenseTracker.Application;
 using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Infrastructure;
 using ExpenseTracker.WebApi.Hubs;
 using ExpenseTracker.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
+
+// Allow Npgsql to accept all DateTime kinds (UTC, Local, Unspecified) seamlessly
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -104,6 +110,36 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Configure Rate Limiting for resource-intensive AI endpoints (5 requests / minute per user)
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            "{\"message\":\"Hệ thống đang bận. Vui lòng thử lại sau 1 phút.\"}",
+            cancellationToken: token);
+    };
+
+    options.AddPolicy("ai_policy", httpContext =>
+    {
+        var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? httpContext.User.FindFirst("sub")?.Value
+            ?? httpContext.Connection.RemoteIpAddress?.ToString()
+            ?? "anonymous_client";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: userId,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
+
 var app = builder.Build();
 
 // Register global exception handler middleware
@@ -124,6 +160,7 @@ app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 // Health check endpoint for container and client ping
 app.MapGet("/api/health", () => Results.Ok(new

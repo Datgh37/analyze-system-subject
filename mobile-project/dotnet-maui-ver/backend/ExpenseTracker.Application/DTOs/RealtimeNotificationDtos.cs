@@ -37,3 +37,30 @@ public record SendTestNotificationRequest(
     string Type,
     string? TargetRoute,
     string? TargetId);
+
+public record TransactionCreatedNotificationDto(
+    Guid TransactionId,
+    Guid WalletId,
+    string WalletName,
+    Guid CategoryId,
+    string CategoryName,
+    decimal Amount,
+    int TransactionType,
+    DateTime TransactionDate,
+    string? Note,
+    DateTime Timestamp);
+
+public record OcrProgressNotificationDto(
+    string JobId,
+    string StepText,
+    int Percent,
+    DateTime Timestamp);
+
+public record NudgeAlertNotificationDto(
+    Guid NudgeId,
+    string Title,
+    string Message,
+    string Severity,
+    string? TargetRoute,
+    DateTime Timestamp);
+

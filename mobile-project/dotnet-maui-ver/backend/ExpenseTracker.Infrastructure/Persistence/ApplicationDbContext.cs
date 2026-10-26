@@ -40,6 +40,19 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         return Database.BeginTransactionAsync(cancellationToken);
     }
 
+    public async Task<Wallet?> GetWalletForUpdateAsync(Guid walletId, Guid userId, CancellationToken cancellationToken = default)
+    {
+        if (Database.ProviderName?.Contains("Npgsql", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return await Wallets
+                .FromSqlRaw("SELECT * FROM \"wallets\" WHERE \"Id\" = {0} AND \"UserId\" = {1} AND \"IsDeleted\" = false FOR UPDATE", walletId, userId)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        return await Wallets
+            .FirstOrDefaultAsync(w => w.Id == walletId && w.UserId == userId, cancellationToken);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

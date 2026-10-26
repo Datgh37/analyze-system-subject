@@ -1,16 +1,3 @@
-Tài khoản phpadmin:
-sql_nhom46_itimi
-0a530d0c23153
-
-Kết nối filezilla:
-host: nhom46.itimit.id.vn
-username: ftp_nhom46_itimit_id_vn
-password: e5e971e19bbb18
-
-
-link server: https://103.139.203.43:887/phpmyadmin_cd13194c0d96d231/index.php?lang=en
-
-*hiện tại server chưa sẵn sàng nên sẽ test trên local WAMP server
 
 Yêu cầu bài báo cáo:
 

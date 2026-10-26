@@ -11,16 +11,19 @@ public class NotificationService : INotificationService
 {
     private readonly IApplicationDbContext _context;
     private readonly IFinancialRealtimeNotifier _realtimeNotifier;
+    private readonly IPushNotificationSender? _pushSender;
     private readonly ILogger<NotificationService> _logger;
 
     public NotificationService(
         IApplicationDbContext context,
         IFinancialRealtimeNotifier realtimeNotifier,
-        ILogger<NotificationService> logger)
+        ILogger<NotificationService> logger,
+        IPushNotificationSender? pushSender = null)
     {
         _context = context;
         _realtimeNotifier = realtimeNotifier;
         _logger = logger;
+        _pushSender = pushSender;
     }
 
     public async Task RegisterPushTokenAsync(Guid userId, RegisterPushTokenRequest request, CancellationToken cancellationToken = default)
@@ -125,7 +128,7 @@ public class NotificationService : INotificationService
             entity.ReadAt,
             entity.CreatedAt);
 
-        // Broadcast realtime over SignalR
+        // Broadcast realtime over SignalR (for online/active app users)
         try
         {
             await _realtimeNotifier.NotifyInAppAsync(userId, dto, cancellationToken);
@@ -133,6 +136,37 @@ public class NotificationService : INotificationService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to broadcast realtime in-app notification to user {UserId}", userId);
+        }
+
+        // Dispatch Server Push Notification (for background / terminated devices)
+        if (_pushSender != null)
+        {
+            try
+            {
+                Dictionary<string, string>? dataDict = null;
+                if (payload != null && payloadJson != null)
+                {
+                    dataDict = new Dictionary<string, string>();
+                    try
+                    {
+                        using var doc = JsonDocument.Parse(payloadJson);
+                        foreach (var prop in doc.RootElement.EnumerateObject())
+                        {
+                            dataDict[prop.Name] = prop.Value.ToString();
+                        }
+                    }
+                    catch
+                    {
+                        dataDict["rawPayload"] = payloadJson;
+                    }
+                }
+
+                _ = _pushSender.SendToUserAsync(userId, title, message, type, dataDict, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to dispatch push notification for user {UserId}", userId);
+            }
         }
 
         return dto;

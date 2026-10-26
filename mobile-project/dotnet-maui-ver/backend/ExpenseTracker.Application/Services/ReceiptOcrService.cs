@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ExpenseTracker.Application.DTOs;
 using ExpenseTracker.Application.DTOs.AutoRules;
 using ExpenseTracker.Application.DTOs.Receipts;
 using ExpenseTracker.Application.DTOs.Transactions;
@@ -19,20 +20,24 @@ public class ReceiptOcrService : IReceiptOcrService
     private readonly ITransactionService _transactionService;
     private readonly IImagePreProcessingService _imagePreProcessor;
     private readonly IGeminiApiClient? _geminiClient;
+    private readonly IFinancialRealtimeNotifier? _realtimeNotifier;
 
     public ReceiptOcrService(
         IApplicationDbContext context,
         IAutoCategorizationService autoRuleService,
         ITransactionService transactionService,
         IImagePreProcessingService? imagePreProcessor = null,
-        IGeminiApiClient? geminiClient = null)
+        IGeminiApiClient? geminiClient = null,
+        IFinancialRealtimeNotifier? realtimeNotifier = null)
     {
         _context = context;
         _autoRuleService = autoRuleService;
         _transactionService = transactionService;
         _imagePreProcessor = imagePreProcessor ?? new ImagePreProcessingService();
         _geminiClient = geminiClient;
+        _realtimeNotifier = realtimeNotifier;
     }
+
 
     // Parses uploaded receipt image/PDF and validates mathematical receipt balance (UC-03.07 & UC-03.08)
     public async Task<Result<ReceiptParsedDataDto>> ParseReceiptAsync(Guid userId, Stream fileStream, string fileName, CancellationToken ct = default)
@@ -49,6 +54,11 @@ public class ReceiptOcrService : IReceiptOcrService
         }
 
         // Apply Image Pre-processing for contrast and clarity
+        if (_realtimeNotifier != null)
+        {
+            _ = _realtimeNotifier.NotifyOcrProgressAsync(userId, new OcrProgressNotificationDto(fileName, "Đang đọc ảnh...", 30, DateTime.UtcNow), ct);
+        }
+
         var processedStream = await _imagePreProcessor.PreprocessReceiptImageAsync(fileStream, fileName, ct);
 
         // Read stream into bytes for Gemini multimodal payload
@@ -289,6 +299,11 @@ public class ReceiptOcrService : IReceiptOcrService
         }
 
         // Mathematical Audit Engine (UC-03.08): Δ = |Total - (Σ Items - Discount + Tax)| <= 1,000 VND
+        if (_realtimeNotifier != null)
+        {
+            _ = _realtimeNotifier.NotifyOcrProgressAsync(userId, new OcrProgressNotificationDto(fileName, "Đang kiểm tra số tiền...", 80, DateTime.UtcNow), ct);
+        }
+
         decimal calculatedTotal = sumItems - discountAmount + taxAmount;
         decimal discrepancy = Math.Abs(totalAmount - calculatedTotal);
         bool isMathDiscrepancy = discrepancy > 1_000m;
@@ -311,7 +326,13 @@ public class ReceiptOcrService : IReceiptOcrService
             ConfidenceScore: confidence
         );
 
+        if (_realtimeNotifier != null)
+        {
+            _ = _realtimeNotifier.NotifyOcrProgressAsync(userId, new OcrProgressNotificationDto(fileName, "Hoàn tất", 100, DateTime.UtcNow), ct);
+        }
+
         return Result<ReceiptParsedDataDto>.Success(resultDto);
+
     }
 
     // Commits reviewed receipt into financial ledger and debits destination wallet balance (UC-03.08 Step 6)
