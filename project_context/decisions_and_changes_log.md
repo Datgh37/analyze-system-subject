@@ -4218,7 +4218,26 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **Chỉ thị nghiêm ngặt bãi bỏ 100% Emoji/Emote AI:** Thay thế toàn bộ emote tạm bợ bằng bộ Icon Vector chuẩn ngành (Ưu tiên số 1: Lucide Icons hoặc Google Material Symbols), cung cấp bảng ánh xạ 15+ icon chi tiết và hướng dẫn kỹ thuật tích hợp Font Icons (`lucide.ttf`) vào .NET MAUI.
   5. **Bằng chứng nghiệm thu chất lượng tối thượng (Quality Gates):**
      - Biên dịch .NET MAUI Client Android (`net10.0-android`): **0 Lỗi, 0 Cảnh báo (Build succeeded)** trong 4 phút 49 giây.
-     - Bộ kiểm thử Frontend MAUI Unit Tests: **82 / 82 Tests Passed 100%**.
-     - Tổng thể dự án: **363 / 363 Tests Passed Xanh Biếc 100%**.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED. SẴN SÀNG CHO BƯỚC BÀN GIAO VÀ KHỞI ĐỘNG GIAI ĐOẠN 11.
+
+---
+
+## [2026-10-26 23:33] - Quyết Định 179: Rà Soát Cơ Chế Tự Động Migrate Database (EF Core Auto-Migration on Startup), Sinh Migration AddUserOtpCodes & Đồng Bộ 100% CSDL PostgreSQL Trong Docker
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Martin Kleppmann, Werner Vogels, Bruce Schneier, Kent Beck).
+- **Vấn đề xem xét & Kết quả thực thi:**
+  1. **Khảo sát cơ chế Auto-Migration hiện có:**
+     - Trong [`Program.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.WebApi/Program.cs) (dòng 186) đã tích hợp sẵn lệnh `await context.Database.MigrateAsync()`. Khi WebApi khởi động, hệ thống sẽ tự động so sánh mã nguồn với bảng `__EFMigrationsHistory` và áp dụng mọi migration mới vào CSDL PostgreSQL container.
+  2. **Phát hiện & Khắc phục nguyên nhân Docker Database chưa cập nhật:**
+     - Lệnh `dotnet ef migrations has-pending-model-changes` phát hiện entity [`UserOtpCode.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Domain/Entities/UserOtpCode.cs) (bổ sung từ Kế hoạch 52 để hỗ trợ xác thực mã OTP) chưa được sinh file Migration. Vì thiếu file Migration trong code nên `MigrateAsync()` khi WebApi start không có gì để áp dụng vào PostgreSQL.
+     - Đã tạo Fluent API configuration [`UserOtpCodeConfiguration.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/Configurations/UserOtpCodeConfiguration.cs) (khóa ngoại User cascade, chỉ mục `Email_Purpose_IsUsed`, `ExpiredAt`, `UserId`).
+     - Đã sinh Migration chuẩn [`20261026162952_AddUserOtpCodes.cs`](mobile-project/dotnet-maui-ver/backend/ExpenseTracker.Infrastructure/Migrations/20261026162952_AddUserOtpCodes.cs).
+  3. **Áp dụng thành công vào CSDL Docker PostgreSQL:**
+     - Chạy `dotnet ef database update`: Tạo mới bảng `user_otp_codes`, chuẩn hóa kiểu `timestamp without time zone` tương thích 100% .NET DateTime, cập nhật bảng `__EFMigrationsHistory`.
+     - Xác minh: Lệnh `dotnet ef migrations has-pending-model-changes` báo `No changes have been made to the model since the last migration` (Khớp 100%).
+  4. **Bằng chứng kiểm thử toàn vẹn (Quality Gates):**
+     - Backend Application Unit Tests: **192 / 192 Tests Passed 100%**.
+     - Backend Domain Unit Tests: **89 / 89 Tests Passed 100%**.
+     - Frontend MAUI Unit Tests: **82 / 82 Tests Passed 100%**.
+     - **TỔNG CỘNG HỆ THỐNG: 363 / 363 Tests Passed Xanh Biếc 100%**.
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED.
 
