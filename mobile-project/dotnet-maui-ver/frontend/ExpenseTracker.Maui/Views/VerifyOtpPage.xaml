@@ -24,7 +24,7 @@
                             <GradientStop Color="#7C3AED" Offset="1.0" />
                         </LinearGradientBrush>
                     </Border.Background>
-                    <Label Text="💎" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Image Source="ic_diamond.png" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
 
                 <Label Text="Xác Thực Email" 

@@ -37,16 +37,21 @@
                                    LineBreakMode="TailTruncation" />
                         </VerticalStackLayout>
 
-                        <Button Grid.Column="1"
-                                Text="🔄 Làm Mới"
-                                Command="{Binding LoadPendingTransactionsCommand}"
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 10"
+                                StrokeThickness="0"
                                 BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                                TextColor="#FFFFFF"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                CornerRadius="10"
                                 HeightRequest="36"
-                                Padding="14,0" />
+                                Padding="12,0"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LoadPendingTransactionsCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
                     </Grid>
                 </Border>
 
@@ -268,7 +273,7 @@
 
                                         <!-- Cancel Purchase (Save money) Button -->
                                         <Button Grid.Column="1"
-                                                Text="🎉 Hủy (Giữ Tiền)"
+                                                Text="Hủy Bỏ (Giữ Tiền)"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CoolingOffHubViewModel}}, Path=CancelPurchaseCommand}"
                                                 CommandParameter="{Binding .}"
                                                 BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
@@ -327,10 +332,11 @@
                                TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
                         <Button Grid.Column="1" Text="✕"
                                 Command="{Binding CloseEvaluateModalCommand}"
-                                BackgroundColor="Transparent"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
                                 TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                FontSize="18" Padding="0"
-                                WidthRequest="32" HeightRequest="32" />
+                                FontSize="14" FontAttributes="Bold"
+                                CornerRadius="18"
+                                WidthRequest="36" HeightRequest="36" Padding="0" />
                     </Grid>
 
                     <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
@@ -398,15 +404,16 @@
 
                 <VerticalStackLayout Spacing="14">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="🚨 Mở Khóa Khẩn Cấp Khoản Chi"
+                        <Label Grid.Column="0" Text="Mở Khóa Khẩn Cấp Khoản Chi"
                                FontSize="16" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#E11D48, Dark=#FB7185}" />
                         <Button Grid.Column="1" Text="✕"
                                 Command="{Binding CloseBypassModalCommand}"
-                                BackgroundColor="Transparent"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
                                 TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                FontSize="18" Padding="0"
-                                WidthRequest="32" HeightRequest="32" />
+                                FontSize="14" FontAttributes="Bold"
+                                CornerRadius="18"
+                                WidthRequest="36" HeightRequest="36" Padding="0" />
                     </Grid>
 
                     <Label Text="Khoảng trễ tâm lý được thiết kế để bảo vệ bạn khỏi chi tiêu bốc đồng. Để mở khóa ngay lập tức và trừ tiền ví, bạn bắt buộc phải nhập lý do khẩn cấp chính đáng."

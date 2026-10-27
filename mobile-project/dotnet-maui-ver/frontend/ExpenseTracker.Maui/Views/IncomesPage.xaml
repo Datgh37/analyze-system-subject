@@ -34,7 +34,7 @@
                                FontAttributes="Bold"
                                TextColor="#A7F3D0"
                                CharacterSpacing="1.2" />
-                        <Label Grid.Column="1" Text="📈 Dòng tiền vào"
+                        <Label Grid.Column="1" Text="Dòng tiền vào"
                                FontSize="11"
                                FontAttributes="Bold"
                                TextColor="#D1FAE5" />
@@ -226,7 +226,7 @@
                             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
                             Padding="24,36">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="💰" FontSize="32" HorizontalOptions="Center" />
+                            <Image Source="ic_income.png" WidthRequest="36" HeightRequest="36" Opacity="0.4" HorizontalOptions="Center" />
                             <Label Text="Chưa có khoản thu nhập nào"
                                    FontSize="15"
                                    FontAttributes="Bold"
@@ -320,16 +320,17 @@
                                            TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}"
                                            HorizontalOptions="End" />
 
-                                    <Button Text="🗑️"
-                                            TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
-                                            FontSize="12"
-                                            BackgroundColor="Transparent"
-                                            HeightRequest="28"
-                                            WidthRequest="28"
-                                            Padding="0"
-                                            HorizontalOptions="End"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:IncomesViewModel}}, Path=DeleteIncomeCommand}"
-                                            CommandParameter="{Binding .}" />
+                                    <ImageButton Source="ic_trash.png"
+                                                 BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#2A1215}"
+                                                 CornerRadius="8"
+                                                 HeightRequest="34"
+                                                 WidthRequest="34"
+                                                 Padding="8"
+                                                 Aspect="AspectFit"
+                                                 HorizontalOptions="End"
+                                                 ToolTipProperties.Text="Xóa thu nhập"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:IncomesViewModel}}, Path=DeleteIncomeCommand}"
+                                                 CommandParameter="{Binding .}" />
                                 </VerticalStackLayout>
                             </Grid>
                         </Border>

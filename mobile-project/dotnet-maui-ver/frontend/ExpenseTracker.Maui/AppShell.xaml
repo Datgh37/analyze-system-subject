@@ -27,7 +27,7 @@
                 <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                     <Border WidthRequest="46" HeightRequest="46" StrokeShape="RoundRectangle 14"
                             StrokeThickness="0" BackgroundColor="#4F46E5">
-                        <Label Text="💎" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center" />
+                        <Image Source="ic_diamond.png" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center" />
                     </Border>
                     <VerticalStackLayout Spacing="2" VerticalOptions="Center">
                         <Label Text="DuoNoPro" FontSize="18" FontAttributes="Bold" TextColor="#FFFFFF" />
@@ -57,6 +57,10 @@
     <Shell.ItemTemplate>
         <DataTemplate>
             <Grid HeightRequest="44" Padding="16,4" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <Image Grid.Column="0"
+                       Source="{Binding FlyoutIcon}"
+                       WidthRequest="22" HeightRequest="22"
+                       VerticalOptions="Center" />
                 <Label Grid.Column="1"
                        Text="{Binding Title}"
                        FontSize="13"
@@ -70,87 +74,87 @@
     <!-- ======================================================== -->
     <!-- NHÓM 1: TÀI CHÍNH CỐT LÕI (CORE FINANCE)                 -->
     <!-- ======================================================== -->
-    <FlyoutItem Title="👛  Quản Lý Đa Ví (Tổng Quan)" Route="WalletsPage">
+    <FlyoutItem Title="Quản Lý Đa Ví (Tổng Quan)" FlyoutIcon="ic_wallet.png" Route="WalletsPage">
         <ShellContent ContentTemplate="{DataTemplate views:WalletsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="💸  Chi Tiêu &amp; Khoản Chi" Route="ExpensesPage">
+    <FlyoutItem Title="Chi Tiêu &amp; Khoản Chi" FlyoutIcon="ic_expense.png" Route="ExpensesPage">
         <ShellContent ContentTemplate="{DataTemplate views:ExpensesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="💰  Thu Nhập Cá Nhân" Route="IncomesPage">
+    <FlyoutItem Title="Thu Nhập Cá Nhân" FlyoutIcon="ic_income.png" Route="IncomesPage">
         <ShellContent ContentTemplate="{DataTemplate views:IncomesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="🔄  Thu Nhập Định Kỳ" Route="RecurringIncomesPage">
+    <FlyoutItem Title="Thu Nhập Định Kỳ" FlyoutIcon="ic_rules.png" Route="RecurringIncomesPage">
         <ShellContent ContentTemplate="{DataTemplate views:RecurringIncomesPage}" />
     </FlyoutItem>
 
     <!-- ======================================================== -->
     <!-- NHÓM 2: TRÍ TUỆ NHÂN TẠO & TIỆN ÍCH (AI VISION)          -->
     <!-- ======================================================== -->
-    <FlyoutItem Title="🧾  Quét Hóa Đơn AI OCR" Route="ReceiptOcrPage">
+    <FlyoutItem Title="Quét Hóa Đơn AI OCR" FlyoutIcon="ic_ocr.png" Route="ReceiptOcrPage">
         <ShellContent ContentTemplate="{DataTemplate views:ReceiptOcrPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="📑  Bóc Tách Phiếu Lương" Route="PayslipOcrPage">
+    <FlyoutItem Title="Bóc Tách Phiếu Lương" FlyoutIcon="ic_reports.png" Route="PayslipOcrPage">
         <ShellContent ContentTemplate="{DataTemplate views:PayslipOcrPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="⚡  Tiện Ích &amp; VietQR" Route="SmartUtilitiesPage">
+    <FlyoutItem Title="Tiện Ích &amp; VietQR" FlyoutIcon="ic_card.png" Route="SmartUtilitiesPage">
         <ShellContent ContentTemplate="{DataTemplate views:SmartUtilitiesPage}" />
     </FlyoutItem>
 
     <!-- ======================================================== -->
     <!-- NHÓM 3: KỶ LUẬT NGÂN SÁCH (BUDGET & SAVINGS)             -->
     <!-- ======================================================== -->
-    <FlyoutItem Title="📊  Ngân Sách &amp; Hạn Mức DSA" Route="BudgetsPage">
+    <FlyoutItem Title="Ngân Sách &amp; Hạn Mức DSA" FlyoutIcon="ic_budget.png" Route="BudgetsPage">
         <ShellContent ContentTemplate="{DataTemplate views:BudgetsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="🎯  Mục Tiêu Tích Lũy" Route="SavingsGoalsPage">
+    <FlyoutItem Title="Mục Tiêu Tích Lũy" FlyoutIcon="ic_savings.png" Route="SavingsGoalsPage">
         <ShellContent ContentTemplate="{DataTemplate views:SavingsGoalsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="🏷️  Cây Danh Mục Thu Chi" Route="CategoriesPage">
+    <FlyoutItem Title="Cây Danh Mục Thu Chi" FlyoutIcon="ic_category.png" Route="CategoriesPage">
         <ShellContent ContentTemplate="{DataTemplate views:CategoriesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="⚙️  Quy Tắc Tự Động Hóa" Route="AutoRulesPage">
+    <FlyoutItem Title="Quy Tắc Tự Động Hóa" FlyoutIcon="ic_rules.png" Route="AutoRulesPage">
         <ShellContent ContentTemplate="{DataTemplate views:AutoRulesPage}" />
     </FlyoutItem>
 
     <!-- ======================================================== -->
     <!-- NHÓM 4: TÂM LÝ HÀNH VI & DỰ BÁO (BEHAVIORAL FINANCE)     -->
     <!-- ======================================================== -->
-    <FlyoutItem Title="💡  Cú Hích Thaler Nudge" Route="NudgeFeedPage">
+    <FlyoutItem Title="Cú Hích Thaler Nudge" FlyoutIcon="ic_nudge.png" Route="NudgeFeedPage">
         <ShellContent ContentTemplate="{DataTemplate views:NudgeFeedPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="⏳  Khoảng Trễ 24h Mua Sắm" Route="CoolingOffHubPage">
+    <FlyoutItem Title="Khoảng Trễ 24h Mua Sắm" FlyoutIcon="ic_cooling.png" Route="CoolingOffHubPage">
         <ShellContent ContentTemplate="{DataTemplate views:CoolingOffHubPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="📈  Dự Báo Dòng Tiền &amp; Rủi Ro" Route="ForecastingPage">
+    <FlyoutItem Title="Dự Báo Dòng Tiền &amp; Rủi Ro" FlyoutIcon="ic_forecast.png" Route="ForecastingPage">
         <ShellContent ContentTemplate="{DataTemplate views:ForecastingPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="📑  Báo Cáo Tài Chính Đa Chiều" Route="ReportsPage">
+    <FlyoutItem Title="Báo Cáo Tài Chính Đa Chiều" FlyoutIcon="ic_reports.png" Route="ReportsPage">
         <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" />
     </FlyoutItem>
 
     <!-- ======================================================== -->
     <!-- NHÓM 5: THIẾT LẬP & TÀI KHOẢN (SYSTEM & SECURITY)        -->
     <!-- ======================================================== -->
-    <FlyoutItem Title="🔔  Lịch Sử &amp; Thông Báo" Route="NotificationHistoryPage">
+    <FlyoutItem Title="Lịch Sử &amp; Thông Báo" FlyoutIcon="ic_bell.png" Route="NotificationHistoryPage">
         <ShellContent ContentTemplate="{DataTemplate views:NotificationHistoryPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="⚙️  Cài Đặt Máy Chủ &amp; Demo" Route="SettingsPage">
+    <FlyoutItem Title="Cài Đặt Máy Chủ &amp; Demo" FlyoutIcon="ic_settings.png" Route="SettingsPage">
         <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="👤  Tài Khoản &amp; Đăng Nhập" Route="LoginPage">
+    <FlyoutItem Title="Tài Khoản &amp; Đăng Nhập" FlyoutIcon="ic_user.png" Route="LoginPage">
         <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
     </FlyoutItem>
 

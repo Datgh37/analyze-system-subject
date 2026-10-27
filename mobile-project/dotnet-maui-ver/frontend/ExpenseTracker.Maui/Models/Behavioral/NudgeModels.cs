@@ -36,13 +36,13 @@ public class FinancialNudgeModel
 
     public string NudgeTypeDisplay => NudgeType switch
     {
-        NudgeType.DsaThreshold => "⚠️ Cảnh Báo Hạn Mức DSA",
-        NudgeType.WindfallSavings => "🎉 Quản Trị Tiền Bất Thường",
-        NudgeType.DeficitRebalance => "⚖️ Đề Xuất Tái Cân Đối Ngân Sách",
-        NudgeType.CoolingOffSuggestion => "⏳ Đề Xuất Khoảng Trễ 24h",
-        NudgeType.PayYourselfFirst => "💎 Tiết Kiệm Trước Khi Tiêu",
-        NudgeType.WeekendSpendingAlert => "📅 Cảnh Báo Cuối Tuần",
-        _ => "💡 Gợi Ý Tài Chính"
+        NudgeType.DsaThreshold => "Cảnh Báo Hạn Mức DSA",
+        NudgeType.WindfallSavings => "Quản Trị Tiền Bất Thường",
+        NudgeType.DeficitRebalance => "Tái Cân Đối Ngân Sách",
+        NudgeType.CoolingOffSuggestion => "Khoảng Trễ 24h",
+        NudgeType.PayYourselfFirst => "Tiết Kiệm Trước Khi Tiêu",
+        NudgeType.WeekendSpendingAlert => "Cảnh Báo Cuối Tuần",
+        _ => "Gợi Ý Tài Chính"
     };
 
     public string NudgeBadgeColor => NudgeType switch

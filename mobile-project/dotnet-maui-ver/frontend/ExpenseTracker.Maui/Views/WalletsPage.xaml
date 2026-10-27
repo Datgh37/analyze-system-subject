@@ -50,7 +50,7 @@
                                 <TapGestureRecognizer Tapped="OnNotificationsClicked" />
                             </Border.GestureRecognizers>
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                <Label Text="🔔" FontSize="13" VerticalOptions="Center" />
+                                <Image Source="ic_bell.png" WidthRequest="15" HeightRequest="15" VerticalOptions="Center" />
                                 <Label Text="Thông Báo" FontSize="11" FontAttributes="Bold" 
                                        TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}" 
                                        VerticalOptions="Center" />
@@ -237,18 +237,21 @@
                                TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
                     </VerticalStackLayout>
 
-                    <Button Grid.Column="1"
-                            Text="🔄 Làm mới"
-                            Command="{Binding LoadWalletsCommand}"
-                            FontSize="12"
-                            FontAttributes="Bold"
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
                             HeightRequest="36"
-                            Padding="14,0"
-                            CornerRadius="10"
-                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                            TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}"
-                            BorderWidth="1"
-                            BorderColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}" />
+                            Padding="12,0"
+                            VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoadWalletsCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Làm mới" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
                 </Grid>
 
                 <!-- 7. Wallets Collection (Polished ATM Card Style) -->
@@ -268,10 +271,11 @@
                                         StrokeThickness="0"
                                         BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E293B}"
                                         HorizontalOptions="Center">
-                                    <Label Text="💳"
-                                           FontSize="28"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                    <Image Source="ic_wallet_card.png"
+                                       WidthRequest="32"
+                                       HeightRequest="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
                                 </Border>
                                 <Label Text="Chưa có ví nào được tạo"
                                        FontSize="16"

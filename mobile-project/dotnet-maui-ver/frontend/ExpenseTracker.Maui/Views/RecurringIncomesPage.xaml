@@ -57,7 +57,7 @@
                            Opacity="0.9"
                            LineBreakMode="WordWrap" />
 
-                    <Button Text="⚡ Quét &amp; Ghi Nhận Khoản Đến Hạn"
+                    <Button Text="Quét &amp; Ghi Nhận Khoản Đến Hạn"
                             Command="{Binding ProcessDueIncomesCommand}"
                             BackgroundColor="#FFFFFF"
                             TextColor="#065F46"

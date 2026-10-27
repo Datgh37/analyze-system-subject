@@ -131,7 +131,7 @@
                         </Border>
                     </Grid>
 
-                    <Button Text="🔍 Rà Soát Bẫy Thuê Bao Ngay"
+                    <Button Text="Rà Soát Bẫy Thuê Bao Ngay"
                             Command="{Binding AuditSubscriptionsCommand}"
                             BackgroundColor="#DC2626"
                             TextColor="White"
@@ -316,7 +316,7 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <Button Text="⚡ Sinh Mã VietQR Ngay"
+                    <Button Text="Sinh Mã VietQR Ngay"
                             Command="{Binding GenerateVietQrCommand}"
                             BackgroundColor="#2563EB"
                             TextColor="White"

@@ -36,10 +36,16 @@
                                FontAttributes="Bold"
                                TextColor="#FECDD3"
                                CharacterSpacing="1.2" />
-                        <Label Grid.Column="1" Text="📉 Chi phí"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               TextColor="#FFE4E6" />
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 8"
+                                BackgroundColor="#9F1239"
+                                Padding="8,3">
+                            <Label Text="Chi Phí"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#FFE4E6" />
+                        </Border>
                     </Grid>
 
                     <Label Text="{Binding MonthlyTotalExpense, StringFormat='-{0:N0} VND'}"
@@ -292,8 +298,12 @@
                             StrokeShape="RoundRectangle 16"
                             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
                             Padding="24,36">
-                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="🛒" FontSize="26" HorizontalOptions="Center" />
+                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                            <Image Source="ic_expense.png"
+                                   WidthRequest="36"
+                                   HeightRequest="36"
+                                   Opacity="0.4"
+                                   HorizontalOptions="Center" />
                             <Label Text="Chưa có khoản chi tiêu nào trong tháng"
                                    FontSize="15"
                                    FontAttributes="Bold"
@@ -374,16 +384,17 @@
                                            TextColor="{AppThemeBinding Light=#E11D48, Dark=#FB7185}"
                                            HorizontalOptions="End" />
 
-                                    <Button Text="🗑️"
-                                            TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
-                                            FontSize="12"
-                                            BackgroundColor="Transparent"
-                                            HeightRequest="28"
-                                            WidthRequest="28"
-                                            Padding="0"
-                                            HorizontalOptions="End"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExpensesViewModel}}, Path=DeleteExpenseCommand}"
-                                            CommandParameter="{Binding .}" />
+                                    <ImageButton Source="ic_trash.png"
+                                                 BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#2A1215}"
+                                                 CornerRadius="8"
+                                                 HeightRequest="34"
+                                                 WidthRequest="34"
+                                                 Padding="8"
+                                                 Aspect="AspectFit"
+                                                 HorizontalOptions="End"
+                                                 ToolTipProperties.Text="Xóa chi tiêu"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExpensesViewModel}}, Path=DeleteExpenseCommand}"
+                                                 CommandParameter="{Binding .}" />
                                 </VerticalStackLayout>
                             </Grid>
                         </Border>

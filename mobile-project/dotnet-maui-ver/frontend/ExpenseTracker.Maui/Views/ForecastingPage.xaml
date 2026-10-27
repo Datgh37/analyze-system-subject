@@ -35,16 +35,21 @@
                                LineBreakMode="TailTruncation" />
                     </VerticalStackLayout>
 
-                    <Button Grid.Column="1"
-                            Text="🔄 Làm Mới"
-                            Command="{Binding LoadForecastDataCommand}"
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0"
                             BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0369A1}"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="12"
-                            CornerRadius="10"
                             HeightRequest="36"
-                            Padding="14,0" />
+                            Padding="12,0"
+                            VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoadForecastDataCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
                 </Grid>
             </Border>
 
@@ -394,7 +399,7 @@
                     <!-- Scenario Selectors -->
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
                         <Button Grid.Column="0"
-                                Text="🛍️ Mua Sắm"
+                                Text="Mua Sắm"
                                 Command="{Binding SelectScenarioCommand}"
                                 CommandParameter="LumpSum"
                                 BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -406,7 +411,7 @@
                                 Padding="4,0" />
 
                         <Button Grid.Column="1"
-                                Text="💳 Vay Trả Góp"
+                                Text="Vay Trả Góp"
                                 Command="{Binding SelectScenarioCommand}"
                                 CommandParameter="Installment"
                                 BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -418,7 +423,7 @@
                                 Padding="4,0" />
 
                         <Button Grid.Column="2"
-                                Text="📉 Giảm Thu"
+                                Text="Giảm Thu"
                                 Command="{Binding SelectScenarioCommand}"
                                 CommandParameter="IncomeReduction"
                                 BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -446,7 +451,7 @@
                                 MaximumTrackColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
                                 ThumbColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
 
-                        <Button Text="⚡ Chạy Mô Phỏng Tác Động"
+                        <Button Text="Chạy Mô Phỏng Tác Động"
                                 Command="{Binding RunWhatIfSimulationCommand}"
                                 BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0284C7}"
                                 TextColor="#FFFFFF"

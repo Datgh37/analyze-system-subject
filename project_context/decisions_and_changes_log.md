@@ -4413,3 +4413,62 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Đạt tỷ lệ vượt qua **363 / 363 Tests Passed 100%** (82 Frontend MAUI + 192 Application + 89 Domain).
 - **Trạng thái:** COMPLETED, TESTED & AUDITED 100%. SẴN SÀNG CHUYỂN SANG CHẶNG 4 MỚI: ĐÓNG GÓI BẢN CÀI ĐẶT APK ANDROID RELEASE.
 
+---
+
+## [2026-10-27 21:50] - Quyết Định 186: Chuẩn Hóa Toàn Diện Hệ Thống Nút Bấm, Triệt Tiêu Emoji Thô & Nâng Cấp Hệ Thống Vector SVG Icon Chuyên Biệt Cho Toàn Bộ Ứng Dụng .NET MAUI
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Brad Frost, Julian Garnier, Dan Abramov, Kent Beck, Orchestrator).
+- **Căn cứ chỉ đạo:** Thực hiện yêu cầu người dùng về việc sửa lại toàn bộ các nút bị lỗi, trang bị hệ thống icon thực sự cách biệt, tinh tế, đẹp mắt và không sử dụng icon mặc định hay emoji Unicode thô; tuân thủ triệt để quy chuẩn `HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`.
+- **Nội dung cải tiến & Hoàn tất:**
+  1. **Bổ sung 10 tệp Vector SVG Icons chuyên biệt vào `Resources/Images/`:**
+     - `ic_reports.svg`: Biểu đồ cột phân tích tài chính đa chiều.
+     - `ic_mic.svg`: Microphone Voice AI trung tâm dạng FAB.
+     - `ic_refresh.svg`: Vòng xoay làm mới dữ liệu mượt mà.
+     - `ic_trash.svg`: Thùng rác xóa phần tử với sắc thái cảnh báo crimson.
+     - `ic_check.svg`: Dấu tích phê duyệt xác nhận emerald.
+     - `ic_xai.svg`: Bộ não tư duy minh bạch giải thích XAI.
+     - `ic_camera.svg`: Ống kính chụp ảnh tài sản và quét OCR.
+     - `ic_settings.svg`: Bánh răng cài đặt hệ thống.
+     - `ic_google.svg`: Logo Google 4 màu chuẩn thương hiệu phục vụ SSO.
+     - `ic_diamond.svg`: Kim cương Fintech sang trọng nhận diện thương hiệu.
+  2. **Chuẩn hóa thanh điều hướng Bottom Dock & Sidebar Flyout:**
+     - [`BottomNavDockView.xaml`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/Components/BottomNavDockView.xaml): Thay thế toàn bộ emoji bằng vector icons (`ic_wallet.png`, `ic_expense.png`, `ic_mic.png`, `ic_budget.png`, `ic_reports.png`); mở rộng vùng cảm ứng chạm (hit target) đạt chuẩn 64px chiều cao và `Fill` toàn bộ độ rộng cột.
+     - [`BottomNavDockView.xaml.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/Components/BottomNavDockView.xaml.cs): Chuẩn hóa đường dẫn Shell Route từ `///` sang `//`.
+     - [`AppShell.xaml`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/AppShell.xaml): Bổ sung `FlyoutIcon` vector riêng biệt cho tất cả 17 danh mục Flyout; xóa bỏ hoàn toàn tiền tố emoji thô ráp trong tiêu đề menu; thay nhãn kim cương bằng `ic_diamond.png`.
+  3. **Khắc phục lỗi kích thước nút & Thay thế Emoji trên toàn bộ 15 trang XAML:**
+     - `ExpensesPage.xaml` & `IncomesPage.xaml` & `SavingsGoalsPage.xaml`: Thay thế nút xóa nhỏ 28x28 emoji `🗑️` bằng `ImageButton` vector `ic_trash.png` chuẩn 34-38px, bo góc `CornerRadius=8`, nền hồng nhạt/dark crimson và tooltip trợ năng.
+     - `NudgeFeedPage.xaml`: Nâng cấp nút Làm mới (`ic_refresh.png`), Giải thích XAI (`ic_xai.png`), Đồng ý áp dụng (`ic_check.png`), nút đóng Modal `✕` bo tròn 36x36.
+     - `ReportsPage.xaml`: Nâng cấp nút Chụp Tài Sản (`ic_camera.png`), Làm Mới (`ic_refresh.png`) và làm sạch typography các chip Tab phân tích.
+     - `BudgetsPage.xaml` & `WalletsPage.xaml`: Thay thế emoji nút làm mới và chuông thông báo bằng `ic_refresh.png` và `ic_bell.png`.
+     - `LoginPage.xaml`: Nâng cấp nút Google SSO với logo `ic_google.png`, chuẩn hóa các nút preset Localhost/Tunnel/Ping.
+     - `RegisterViewModel.cs`: Bảo vệ lệnh điều hướng `NavigateToLoginAsync()` với cơ chế fallback tuyệt đối `//LoginPage`.
+  4. **Kiểm thử & Biên dịch:**
+     - 100% kiểm thử tự động vượt qua: **363 / 363 Tests Passed** (82 Frontend MAUI + 192 Application + 89 Domain).
+     - Biên dịch nền tảng Android (`net10.0-android`) thành công 0 lỗi.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED 100%.
+
+---
+
+## [2026-10-27 22:50] - Quyết Định 187: Khắc Phục Triệt Để Lỗi Căn Giữa Nút Bấm, Chuẩn Hóa Đồng Bộ Kích Thước Icon Vector & Tái Thiết Kế Layout Header Chống Tràn Chữ
+- **Người chủ trì:** Lead UI Architect (Agent 10 - Dan Abramov), Visual Art Director (Agent 09 - Brad Frost) & Orchestrator.
+- **Vấn đề nhận diện từ thực nghiệm:**
+  1. **Nút chữ không được căn giữa:** Do .NET MAUI `<Button ImageSource="..." Text="..." />` trên Android sử dụng `MaterialButton` compound drawable không căn chỉnh trục dọc (vertical baseline alignment), khiến chữ bị lệch khỏi tâm nút.
+  2. **Icon lúc to lúc nhỏ:** Các file SVG có viewBox và inner bounding box không đồng nhất (`ic_refresh` quá lớn chiếm toàn bộ 24dp, trong khi `ic_xai` hay `ic_camera` bị lồng hình tròn đặc thu nhỏ chi tiết).
+  3. **Lỗi chữ bị ngắt dòng từng từ:** Trong `ReportsPage.xaml`, layout header 1 dòng `ColumnDefinitions="*,Auto,Auto"` chứa tiêu đề dài cùng 2 nút hành động đã bóp nghẹt cột tiêu đề còn ~70px, ép chữ "Báo Cáo & Phân Tích Đa Chiều" gãy thành 5 dòng dọc.
+- **Nội dung cải tiến & Giải pháp kỹ thuật:**
+  1. **Chuẩn hóa hệ thống Icon Vector:**
+     - Thiết lập thuộc tính `<MauiImage Update="Resources\Images\ic_*.svg" Resize="True" BaseSize="24,24" />` trong `ExpenseTracker.Maui.csproj` quy chuẩn hóa độ phân giải hiển thị đồng nhất 24x24dp.
+     - Tinh chỉnh lại toàn bộ SVG glyphs (`ic_refresh`, `ic_camera`, `ic_check`, `ic_xai`, `ic_trash`) sang dạng line-art màu trắng/tương phản cao, loại bỏ hình tròn đặc thừa, đưa về kích thước đồng bộ 18x18px.
+  2. **Tái cấu trúc linh kiện Nút bấm sang `<Border>` Container chuẩn xác 100%:**
+     - Thay thế toàn bộ `<Button ImageSource="..." Text="..." />` bằng cấu trúc `<Border>` kết hợp `<Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8" HorizontalOptions="Center" VerticalOptions="Center">`.
+     - Icon `<Image WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />` và nhãn chữ `<Label VerticalOptions="Center" />` được khóa chặt cùng một trục tâm dọc và ngang.
+     - Đấu nối sự kiện thông qua `<TapGestureRecognizer Command="{Binding ...}" CommandParameter="{Binding ...}" />`.
+  3. **Tái thiết kế Layout Header chống tràn chữ:**
+     - `ReportsPage.xaml`: Tách thành layout 2 tầng (Tầng 1: Tiêu đề & Subtitle trải rộng 100% chiều ngang; Tầng 2: 2 nút "Chụp Tài Sản" và "Làm Mới" đối xứng 50/50 qua `ColumnDefinitions="*,*"`).
+     - `NudgeFeedPage.xaml`: Loại bỏ emoji thô ráp trong `NudgeModels.cs` (`NudgeTypeDisplay`), chuẩn hóa huy hiệu văn bản sắc nét và đồng bộ nút bấm "Giải Thích XAI", "Đồng Ý", "Bỏ Qua".
+- **Kiểm định thực tế trên Android Emulator:**
+  - 100% unit tests vượt qua: **82/82 Maui Tests Passed**, Android build 0 Warning, 0 Error.
+  - Chụp ảnh kiểm chứng live: `app_screen_reports_fixed.png`, `app_screen_nudge_fixed_real.png` xác nhận các nút và chữ hiển thị thẳng thớm, cân đối tuyệt đối.
+- **Trạng thái:** COMPLETED, VERIFIED & LOCKED 100%.
+
+
+

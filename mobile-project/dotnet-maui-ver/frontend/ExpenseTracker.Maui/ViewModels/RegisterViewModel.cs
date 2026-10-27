@@ -88,6 +88,13 @@ public partial class RegisterViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToLoginAsync()
     {
-        await Shell.Current.GoToAsync("..");
+        try
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+        catch
+        {
+            await Shell.Current.GoToAsync("//LoginPage");
+        }
     }
 }

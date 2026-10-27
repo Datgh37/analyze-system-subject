@@ -69,15 +69,21 @@
                         HeightRequest="44"
                         Command="{Binding NavigateToCreateGoalCommand}" />
 
-                <Button Grid.Column="1"
-                        Text="🔄 Tải lại"
-                        BackgroundColor="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                        TextColor="{AppThemeBinding Light='#334155', Dark='#F1F5F9'}"
-                        FontAttributes="Bold"
-                        FontSize="13"
-                        CornerRadius="10"
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
                         HeightRequest="44"
-                        Command="{Binding LoadGoalsAndJarsCommand}" />
+                        Padding="16,0"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadGoalsAndJarsCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="Tải lại" TextColor="#FFFFFF" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
             </Grid>
 
             <!-- ========================================== -->
@@ -154,7 +160,7 @@
             <VerticalStackLayout Spacing="10">
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
-                           Text="🏺 Hũ Tài Chính Kakeibo (4 Hũ Cốt Lõi)"
+                           Text="Hũ Tài Chính Kakeibo (4 Hũ Cốt Lõi)"
                            FontSize="15"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
@@ -209,7 +215,7 @@
                         Style="{StaticResource ModernCard}"
                         Padding="26">
                     <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                        <Label Text="🌱" FontSize="36" HorizontalOptions="Center" />
+                        <Image Source="ic_savings.png" WidthRequest="36" HeightRequest="36" Opacity="0.4" HorizontalOptions="Center" />
                         <Label Text="Chưa có mục tiêu tích lũy nào"
                                FontSize="16"
                                FontAttributes="Bold"
@@ -332,7 +338,7 @@
                                                 CommandParameter="{Binding .}" />
 
                                         <Button Grid.Column="2"
-                                                Text="💡 Khả thi"
+                                                Text="Khả thi"
                                                 BackgroundColor="{AppThemeBinding Light='#EEF2FF', Dark='#312E81'}"
                                                 TextColor="{AppThemeBinding Light='#4F46E5', Dark='#A5B4FC'}"
                                                 FontAttributes="Bold"
@@ -342,16 +348,17 @@
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SavingsGoalsViewModel}}, Path=CheckFeasibilityCommand}"
                                                 CommandParameter="{Binding .}" />
 
-                                        <Button Grid.Column="3"
-                                                Text="🗑️"
-                                                BackgroundColor="{AppThemeBinding Light='#FEF2F2', Dark='#450A0A'}"
-                                                TextColor="#DC2626"
-                                                FontSize="12"
-                                                HeightRequest="38"
-                                                WidthRequest="38"
-                                                CornerRadius="8"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SavingsGoalsViewModel}}, Path=DeleteGoalCommand}"
-                                                CommandParameter="{Binding .}" />
+                                        <ImageButton Grid.Column="3"
+                                                 Source="ic_trash.png"
+                                                 BackgroundColor="{AppThemeBinding Light='#FEF2F2', Dark='#450A0A'}"
+                                                 CornerRadius="8"
+                                                 HeightRequest="38"
+                                                 WidthRequest="38"
+                                                 Padding="9"
+                                                 Aspect="AspectFit"
+                                                 ToolTipProperties.Text="Xóa mục tiêu"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SavingsGoalsViewModel}}, Path=DeleteGoalCommand}"
+                                                 CommandParameter="{Binding .}" />
                                     </Grid>
 
                                 </VerticalStackLayout>

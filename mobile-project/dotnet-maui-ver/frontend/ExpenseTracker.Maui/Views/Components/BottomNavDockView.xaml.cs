@@ -50,22 +50,22 @@ public partial class BottomNavDockView : ContentView
 
     private async void OnWalletsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("///WalletsPage");
+        await Shell.Current.GoToAsync("//WalletsPage");
     }
 
     private async void OnExpensesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("///ExpensesPage");
+        await Shell.Current.GoToAsync("//ExpensesPage");
     }
 
     private async void OnBudgetsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("///BudgetsPage");
+        await Shell.Current.GoToAsync("//BudgetsPage");
     }
 
     private async void OnReportsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("///ReportsPage");
+        await Shell.Current.GoToAsync("//ReportsPage");
     }
 
     private async void OnVoiceMicTapped(object? sender, EventArgs e)

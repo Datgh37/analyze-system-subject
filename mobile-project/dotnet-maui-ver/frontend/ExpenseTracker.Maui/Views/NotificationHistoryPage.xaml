@@ -45,7 +45,7 @@
                 </VerticalStackLayout>
 
                 <Button Grid.Column="1"
-                        Text="✓ Đọc tất cả"
+                        Text="Đọc tất cả"
                         Command="{Binding MarkAllAsReadCommand}"
                         BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
                         TextColor="#FFFFFF"
@@ -106,18 +106,22 @@
                         FontSize="11" />
 
                 <!-- Native Android Notification & Alarm Triggers (Chặng 2) -->
-                <Button Text="🔔 Bắn Native Test"
-                        Command="{Binding SendNativeNotificationCommand}"
-                        CommandParameter="dsa"
+                <Border StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
                         BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
-                        TextColor="{AppThemeBinding Light=#4F46E5, Dark=#C7D2FE}"
-                        FontAttributes="Bold"
                         HeightRequest="36"
                         Padding="12,0"
-                        CornerRadius="10"
-                        FontSize="11" />
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SendNativeNotificationCommand}" CommandParameter="dsa" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image Grid.Column="0" Source="ic_bell.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="Bắn Native Test" TextColor="{AppThemeBinding Light=#4F46E5, Dark=#C7D2FE}" FontSize="11" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
 
-                <Button Text="⏰ Hẹn Báo Thức 21:00"
+                <Button Text="Hẹn Báo Thức 21:00"
                         Command="{Binding ScheduleDailyReminderCommand}"
                         BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}"
                         TextColor="{AppThemeBinding Light=#B45309, Dark=#FDE68A}"
@@ -199,7 +203,7 @@
 
                                 <!-- Action Button -->
                                 <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
-                                    <Button Text="Xem ➔"
+                                    <Button Text="Chi Tiết"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationHistoryViewModel}}, Path=OpenNotificationDetailCommand}"
                                             CommandParameter="{Binding .}"
                                             BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"

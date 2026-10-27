@@ -18,7 +18,7 @@
                     Padding="20">
                 <VerticalStackLayout Spacing="8">
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                        <Label Text="⚙️" FontSize="24" VerticalOptions="Center" />
+                        <Image Source="ic_settings.png" WidthRequest="26" HeightRequest="26" VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
                             <Label Text="Trung Tâm Điều Khiển Hạ Tầng" FontSize="18" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
@@ -94,7 +94,7 @@
                     <!-- Các nút chọn nhanh máy chủ 1-chạm -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                         <Button Grid.Column="0"
-                                Text="🏠 Chọn Localhost"
+                                Text="Chọn Localhost"
                                 Command="{Binding UseLocalhostCommand}"
                                 BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
                                 TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}"
@@ -104,7 +104,7 @@
                                 FontAttributes="Bold" />
 
                         <Button Grid.Column="1"
-                                Text="🌐 Chọn Tunnel (Live)"
+                                Text="Chọn Tunnel (Live)"
                                 Command="{Binding UseTunnelCommand}"
                                 BackgroundColor="{AppThemeBinding Light=#FAF5FF, Dark=#3B0764}"
                                 TextColor="{AppThemeBinding Light=#7E22CE, Dark=#E9D5FF}"
@@ -116,7 +116,7 @@
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                         <Button Grid.Column="0"
-                                Text="💾 Lưu URL"
+                                Text="Lưu URL"
                                 Command="{Binding SaveServerUrlCommand}"
                                 BackgroundColor="#3B82F6"
                                 TextColor="#FFFFFF"
@@ -125,7 +125,7 @@
                                 FontAttributes="Bold" />
 
                         <Button Grid.Column="1"
-                                Text="📡 Ping Server"
+                                Text="Ping Server"
                                 Command="{Binding PingServerCommand}"
                                 BackgroundColor="#10B981"
                                 TextColor="#FFFFFF"
@@ -140,11 +140,18 @@
                            FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center"
                            TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}" />
 
-                    <Button Text="🔄 Khôi Phục Mặc Định"
-                            Command="{Binding ResetDefaultsCommand}"
+                    <Border StrokeShape="RoundRectangle 8"
+                            StrokeThickness="0"
                             BackgroundColor="Transparent"
-                            TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                            FontSize="12" />
+                            HeightRequest="36">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ResetDefaultsCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Khôi Phục Mặc Định" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="12" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
                 </VerticalStackLayout>
             </Border>
 
@@ -161,7 +168,7 @@
                     <Label Text="Bấm nút bên dưới để mô phỏng tức thì một thông báo trừ tiền từ Ví MoMo (-75.000đ tại Highlands Coffee) để kiểm tra luồng bóc tách tự động và đẩy Native Heads-Up Notification:"
                            FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
 
-                    <Button Text="⚡ Giả Lập Biến Động MoMo (-75.000đ)"
+                    <Button Text="Giả Lập Biến Động MoMo (-75.000đ)"
                             Command="{Binding SimulateBankNotificationCommand}"
                             BackgroundColor="#8B5CF6"
                             TextColor="#FFFFFF"

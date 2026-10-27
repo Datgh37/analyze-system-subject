@@ -71,15 +71,21 @@
                         HeightRequest="44"
                         Command="{Binding NavigateToCreateBudgetCommand}" />
 
-                <Button Grid.Column="1"
-                        Text="🔄 Tải lại"
-                        BackgroundColor="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                        TextColor="{AppThemeBinding Light='#334155', Dark='#F1F5F9'}"
-                        FontAttributes="Bold"
-                        FontSize="13"
-                        CornerRadius="10"
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
                         HeightRequest="44"
-                        Command="{Binding LoadActiveBudgetProgressCommand}" />
+                        Padding="16,0"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadActiveBudgetProgressCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="Tải lại" TextColor="#FFFFFF" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
             </Grid>
 
             <!-- EMPTY STATE: When No Active Budget Exists -->
@@ -87,7 +93,7 @@
                     Style="{StaticResource ModernCard}"
                     Padding="28">
                 <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Label Text="📋" FontSize="40" HorizontalOptions="Center" />
+                    <Image Source="ic_budget.png" WidthRequest="44" HeightRequest="44" Opacity="0.5" HorizontalOptions="Center" />
                     <Label Text="Chưa có kế hoạch ngân sách đang hoạt động"
                            FontSize="17"
                            FontAttributes="Bold"

@@ -28,7 +28,7 @@
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
                         <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
                             <Label Text="Kiến Trúc Lựa Chọn Thaler &amp; XAI"
-                                   FontSize="18"
+                                   FontSize="17"
                                    FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
                             <Label Text="Cú hích kinh tế hành vi, ma sát tích cực &amp; minh bạch toán học"
@@ -37,16 +37,21 @@
                                    LineBreakMode="TailTruncation" />
                         </VerticalStackLayout>
 
-                        <Button Grid.Column="1"
-                                Text="🔄 Làm Mới"
-                                Command="{Binding LoadNudgesCommand}"
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 10"
+                                StrokeThickness="0"
                                 BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                                TextColor="#FFFFFF"
-                                FontAttributes="Bold"
-                                FontSize="12"
-                                CornerRadius="10"
                                 HeightRequest="36"
-                                Padding="14,0" />
+                                Padding="12,0"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LoadNudgesCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
                     </Grid>
                 </Border>
 
@@ -170,38 +175,41 @@
                                     <!-- Actions Row -->
                                     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,4,0,0">
                                         <!-- XAI Rationale Button -->
-                                        <Button Grid.Column="0"
-                                                Text="🧠 Giải Thích XAI"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ViewXaiRationaleCommand}"
-                                                CommandParameter="{Binding .}"
+                                        <Border Grid.Column="0"
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0"
                                                 BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0369A1}"
-                                                TextColor="#FFFFFF"
-                                                CornerRadius="10"
                                                 HeightRequest="38"
-                                                FontSize="12"
-                                                FontAttributes="Bold">
-                                            <Button.Shadow>
-                                                <Shadow Brush="#0284C7" Offset="0,2" Radius="6" Opacity="0.2" />
-                                            </Button.Shadow>
-                                        </Button>
+                                                Padding="12,0"
+                                                VerticalOptions="Center">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ViewXaiRationaleCommand}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                                <Image Grid.Column="0" Source="ic_xai.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                                <Label Grid.Column="1" Text="Giải Thích XAI" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                                            </Grid>
+                                        </Border>
 
                                         <!-- Approve / Apply Rebalance Button -->
-                                        <Button Grid.Column="1"
-                                                Text="✅ Đồng Ý"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ApproveNudgeCommand}"
-                                                CommandParameter="{Binding .}"
+                                        <Border Grid.Column="1"
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0"
                                                 BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                                                TextColor="#FFFFFF"
-                                                CornerRadius="10"
                                                 HeightRequest="38"
-                                                FontSize="12"
-                                                FontAttributes="Bold"
                                                 Padding="14,0"
+                                                VerticalOptions="Center"
                                                 IsVisible="{Binding HasRebalanceProposal}">
-                                            <Button.Shadow>
-                                                <Shadow Brush="#059669" Offset="0,2" Radius="6" Opacity="0.2" />
-                                            </Button.Shadow>
-                                        </Button>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ApproveNudgeCommand}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                                <Image Grid.Column="0" Source="ic_check.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                                <Label Grid.Column="1" Text="Đồng Ý" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                                            </Grid>
+                                        </Border>
 
                                         <!-- Dismiss Button -->
                                         <Button Grid.Column="2"
@@ -246,15 +254,20 @@
                     <VerticalStackLayout Spacing="14">
                         <!-- Modal Header -->
                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                            <Label Grid.Column="0" Text="🧠 Giải Thích Minh Bạch XAI"
-                                   FontSize="16" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                <Image Source="ic_xai.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                                <Label Text="Giải Thích Minh Bạch XAI"
+                                       FontSize="16" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
                             <Button Grid.Column="1" Text="✕"
                                     Command="{Binding CloseXaiModalCommand}"
-                                    BackgroundColor="Transparent"
+                                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
                                     TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                    FontSize="18" Padding="0"
-                                    WidthRequest="32" HeightRequest="32" />
+                                    FontSize="14" FontAttributes="Bold"
+                                    CornerRadius="18"
+                                    WidthRequest="36" HeightRequest="36" Padding="0" />
                         </Grid>
 
                         <Label Text="{Binding SelectedNudge.Title}"

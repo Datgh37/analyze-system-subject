@@ -25,8 +25,8 @@
                             Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
                 </Border.Shadow>
 
-                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10" VerticalOptions="Center">
-                    <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="14">
+                    <VerticalStackLayout Spacing="4">
                         <Label Text="Báo Cáo &amp; Phân Tích Đa Chiều"
                                FontSize="18"
                                FontAttributes="Bold"
@@ -37,28 +37,42 @@
                                LineBreakMode="TailTruncation" />
                     </VerticalStackLayout>
 
-                    <Button Grid.Column="1"
-                            Text="📸 Chụp Tài Sản"
-                            Command="{Binding TakeSnapshotCommand}"
-                            BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0369A1}"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="12"
-                            CornerRadius="10"
-                            HeightRequest="36"
-                            Padding="12,0" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <!-- Button Chụp Tài Sản -->
+                        <Border Grid.Column="0"
+                                StrokeShape="RoundRectangle 10"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0369A1}"
+                                HeightRequest="38"
+                                Padding="12,0"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TakeSnapshotCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="ic_camera.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="Chụp Tài Sản" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
 
-                    <Button Grid.Column="2"
-                            Text="🔄 Làm Mới"
-                            Command="{Binding LoadReportsCommand}"
-                            BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="12"
-                            CornerRadius="10"
-                            HeightRequest="36"
-                            Padding="12,0" />
-                </Grid>
+                        <!-- Button Làm Mới -->
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 10"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
+                                HeightRequest="38"
+                                Padding="12,0"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LoadReportsCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
             </Border>
 
             <!-- 2. ERROR NOTIFICATION -->
@@ -85,7 +99,7 @@
             <!-- 4. TAB SELECTOR CHIPS -->
             <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
                 <HorizontalStackLayout Spacing="8">
-                    <Button Text="📊 Thu - Chi (MoM/YoY)"
+                    <Button Text="Thu - Chi (MoM/YoY)"
                             Command="{Binding SelectTabCommand}"
                             CommandParameter="Overview"
                             BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -96,7 +110,7 @@
                             FontSize="12"
                             Padding="14,0" />
 
-                    <Button Text="💎 Tài Sản Ròng"
+                    <Button Text="Tài Sản Ròng"
                             Command="{Binding SelectTabCommand}"
                             CommandParameter="NetWorth"
                             BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -107,7 +121,7 @@
                             FontSize="12"
                             Padding="14,0" />
 
-                    <Button Text="🌊 Dòng Tiền Thác Nước"
+                    <Button Text="Dòng Tiền Thác Nước"
                             Command="{Binding SelectTabCommand}"
                             CommandParameter="Cashflow"
                             BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -118,7 +132,7 @@
                             FontSize="12"
                             Padding="14,0" />
 
-                    <Button Text="🎯 50/30/20 &amp; Kakeibo"
+                    <Button Text="50/30/20 &amp; Kakeibo"
                             Command="{Binding SelectTabCommand}"
                             CommandParameter="Structure"
                             BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -129,7 +143,7 @@
                             FontSize="12"
                             Padding="14,0" />
 
-                    <Button Text="🚨 Đột Biến Z-Score"
+                    <Button Text="Đột Biến Z-Score"
                             Command="{Binding SelectTabCommand}"
                             CommandParameter="Outliers"
                             BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"

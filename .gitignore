@@ -55,6 +55,7 @@ appsettings*.Secrets.json
 *.secrets.json
 
 # Temporary & Backup Files
+~$*
 *.bak*
 *.bak_*
 mobile-project/screen_*.png

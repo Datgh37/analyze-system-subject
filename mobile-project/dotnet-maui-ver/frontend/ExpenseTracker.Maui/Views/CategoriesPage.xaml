@@ -79,7 +79,7 @@
             <!-- Dual-type Filter Tabs -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                 <Button Grid.Column="0"
-                        Text="💰 Danh Mục Thu Nhập"
+                        Text="Danh Mục Thu Nhập"
                         Command="{Binding SwitchTypeFilterCommand}"
                         CommandParameter="1"
                         BackgroundColor="{AppThemeBinding Light='#ECFDF5', Dark='#064E3B'}"
@@ -90,7 +90,7 @@
                         HeightRequest="42" />
 
                 <Button Grid.Column="1"
-                        Text="💳 Danh Mục Chi Tiêu"
+                        Text="Danh Mục Chi Tiêu"
                         Command="{Binding SwitchTypeFilterCommand}"
                         CommandParameter="2"
                         BackgroundColor="{AppThemeBinding Light='#FFF1F2', Dark='#4C0519'}"
