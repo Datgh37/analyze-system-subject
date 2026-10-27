@@ -74,6 +74,24 @@ public partial class SettingsViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task UseLocalhostAsync()
+    {
+        ServerUrl = ServerConfigService.LocalhostUrl;
+        _serverConfig.ServerBaseUrl = ServerUrl;
+        LoadConfig();
+        await PingServerAsync();
+    }
+
+    [RelayCommand]
+    private async Task UseTunnelAsync()
+    {
+        ServerUrl = ServerConfigService.ProductionTunnelUrl;
+        _serverConfig.ServerBaseUrl = ServerUrl;
+        LoadConfig();
+        await PingServerAsync();
+    }
+
+    [RelayCommand]
     private async Task PingServerAsync()
     {
         if (IsPinging) return;

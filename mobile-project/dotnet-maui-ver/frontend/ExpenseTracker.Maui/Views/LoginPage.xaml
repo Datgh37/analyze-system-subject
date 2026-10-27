@@ -38,6 +38,105 @@
                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
             </VerticalStackLayout>
 
+            <!-- DATA SOURCE & SERVER SELECTOR CARD -->
+            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="16,12"
+                    Shadow="{Shadow Brush='#000000', Offset='0,2', Radius=8, Opacity=0.06}">
+                <VerticalStackLayout Spacing="8">
+                    <!-- Row 1: Mode Switch & Status Indicator -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="{Binding ModeIcon}" FontSize="18" VerticalOptions="Center" Margin="0,0,8,0" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <HorizontalStackLayout Spacing="6">
+                                <Label Text="{Binding ModeTitle}" FontSize="13" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                <Border BackgroundColor="{Binding ModeBadgeColor}"
+                                        Padding="6,2"
+                                        StrokeShape="RoundRectangle 6"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding ModeBadgeText}" FontSize="9" FontAttributes="Bold" TextColor="#FFFFFF" />
+                                </Border>
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding ServerUrlSummary}" FontSize="11"
+                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                                   LineBreakMode="TailTruncation" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="2" IsToggled="{Binding IsLiveApiMode}"
+                                OnColor="#4F46E5" ThumbColor="#FFFFFF"
+                                VerticalOptions="Center" />
+                    </Grid>
+
+                    <!-- Row 2: Expandable Configuration Button -->
+                    <Button Text="{Binding ServerConfigButtonText}"
+                            Command="{Binding ToggleShowServerConfigCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}"
+                            FontSize="11"
+                            FontAttributes="Bold"
+                            Padding="0"
+                            HeightRequest="26"
+                            HorizontalOptions="Center" />
+
+                    <!-- Row 3: Expanded Server Settings -->
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding ShowServerConfig}">
+                        <Border Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="10,2"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+                            <Entry Text="{Binding ServerUrl}"
+                                   Placeholder="http://localhost:5018 hoặc https://..."
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Border>
+
+                        <!-- Quick Presets -->
+                        <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="6">
+                            <Button Grid.Column="0"
+                                    Text="🏠 Localhost"
+                                    Command="{Binding UseLocalhostCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                    TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}"
+                                    CornerRadius="6"
+                                    HeightRequest="32"
+                                    FontSize="11"
+                                    FontAttributes="Bold" />
+
+                            <Button Grid.Column="1"
+                                    Text="🌐 Tunnel"
+                                    Command="{Binding UseTunnelCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#FAF5FF, Dark=#3B0764}"
+                                    TextColor="{AppThemeBinding Light=#7E22CE, Dark=#E9D5FF}"
+                                    CornerRadius="6"
+                                    HeightRequest="32"
+                                    FontSize="11"
+                                    FontAttributes="Bold" />
+
+                            <Button Grid.Column="2"
+                                    Text="📡 Ping"
+                                    Command="{Binding PingServerCommand}"
+                                    BackgroundColor="#10B981"
+                                    TextColor="#FFFFFF"
+                                    CornerRadius="6"
+                                    HeightRequest="32"
+                                    FontSize="11"
+                                    FontAttributes="Bold"
+                                    Padding="12,0" />
+                        </Grid>
+
+                        <!-- Ping Result Feedback -->
+                        <Label Text="{Binding PingResult}"
+                               IsVisible="{Binding PingResult, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
+                               FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
             <!-- Card Container -->
             <Border Style="{StaticResource ModernCard}"
                     Padding="26"

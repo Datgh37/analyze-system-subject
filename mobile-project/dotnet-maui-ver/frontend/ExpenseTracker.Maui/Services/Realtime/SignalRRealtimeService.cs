@@ -37,13 +37,34 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
 
     public async Task ConnectAsync()
     {
+        if (_serverConfig != null && !_serverConfig.IsLiveApiMode)
+        {
+            UpdateStatus(false, "Chế độ Ngoại Tuyến (Offline Mock)", "#9CA3AF");
+            return;
+        }
+
+        var token = await _tokenStorage.GetAccessTokenAsync();
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            _logger.LogInformation("SignalR: Chế độ khách hoặc chưa có Access Token. Bỏ qua kết nối Hub.");
+            UpdateStatus(false, "Chế độ Khách (Chưa đăng nhập)", "#6B7280");
+            return;
+        }
+
         if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
         {
+            UpdateStatus(true, "Đã kết nối Realtime", "#10B981");
             return;
         }
 
         try
         {
+            if (_hubConnection != null)
+            {
+                try { await _hubConnection.DisposeAsync(); } catch { }
+                _hubConnection = null;
+            }
+
             if (_serverConfig != null && !string.IsNullOrWhiteSpace(_serverConfig.ServerBaseUrl))
             {
                 _hubUrl = $"{_serverConfig.ServerBaseUrl.TrimEnd('/')}/hubs/financial";

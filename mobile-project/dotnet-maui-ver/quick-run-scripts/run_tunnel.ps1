@@ -45,8 +45,19 @@ if (-not (Test-Path $toolsDir)) {
 
 $cloudflaredExe = Join-Path $toolsDir "cloudflared.exe"
 
-# 2. Kiểm tra hoặc tải portable cloudflared.exe nếu chưa có
-if (-not (Test-Path $cloudflaredExe)) {
+# 2. Kiểm tra hoặc tải portable cloudflared.exe nếu chưa có hoặc file hỏng
+$needsDownload = $true
+if (Test-Path $cloudflaredExe) {
+    $fileSize = (Get-Item $cloudflaredExe).Length
+    if ($fileSize -gt 20000000) { # Phải lớn hơn 20MB
+        $needsDownload = $false
+    } else {
+        Write-Host " [!] Phat hien file cloudflared.exe bi loi/thieu dung luong ($fileSize bytes). Dang tien hanh tai lai..." -ForegroundColor Yellow
+        Remove-Item $cloudflaredExe -Force -ErrorAction SilentlyContinue
+    }
+}
+
+if ($needsDownload) {
     # Kiểm tra xem hệ thống đã có lệnh cloudflared trong PATH chưa
     $sysCloudflared = Get-Command "cloudflared" -ErrorAction SilentlyContinue
     if ($sysCloudflared) {
@@ -54,11 +65,16 @@ if (-not (Test-Path $cloudflaredExe)) {
         Write-Host " [+] Tim thay cloudflared tren he thong: $cloudflaredExe" -ForegroundColor Green
     }
     else {
-        Write-Host " [!] Chua co cloudflared.exe. Dang tu dong tai ban portable chinh thuc tu Cloudflare..." -ForegroundColor Yellow
+        Write-Host " [!] Dang tu dong tai ban portable chinh thuc tu Cloudflare..." -ForegroundColor Yellow
         $downloadUrl = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe"
         try {
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
-            Invoke-WebRequest -Uri $downloadUrl -OutFile $cloudflaredExe -UseBasicParsing
+            $curlCmd = Get-Command "curl.exe" -ErrorAction SilentlyContinue
+            if ($curlCmd) {
+                & curl.exe -L -o "$cloudflaredExe" "$downloadUrl"
+            } else {
+                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
+                Start-BitsTransfer -Source $downloadUrl -Destination $cloudflaredExe -ErrorAction Stop
+            }
             Write-Host " [+] Da tai thanh cong cloudflared.exe ve: $cloudflaredExe" -ForegroundColor Green
         }
         catch {

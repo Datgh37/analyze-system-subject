@@ -2,7 +2,24 @@
 
 Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tinh chỉnh phạm vi (De-scoping), và các quyết định kiến trúc quan trọng từ lúc bắt đầu dự án đến nay.
 
+## [2026-10-27] - Quyết Định 103: Tự Động Kích Hoạt SignalR Realtime & Cơ Chế Chuyển Đổi Dynamic Repository Factory
+- **Vấn đề phát hiện:**
+  1. Trên giao diện Mobile MAUI, nhãn trạng thái Realtime ở màn hình Ví (`WalletsPage`) luôn dừng ở mức *"Chờ kết nối Realtime..."* mà không đổi màu hoặc phản ứng kết nối.
+  2. Người dùng cần xác nhận cơ chế hoạt động khi chuyển sang chế độ "Real API Mode" thì hệ thống có kết nối trực tiếp đến Web API thật không hay vẫn chạy Mock Data.
+- **Nguyên nhân kỹ thuật:**
+  - `ISignalRRealtimeService` đã được đăng ký Singleton trong DI container, nhưng hàm `ConnectAsync()` chưa từng được kích hoạt tự động ở bất kỳ View/ViewModel nào.
+  - Hub `/hubs/financial` của WebApi được gắn `[Authorize]`, yêu cầu JWT Bearer Token. Khi người dùng chưa đăng nhập hoặc đang ở chế độ Offline Mock, việc cố kết nối có thể gây ngoại lệ 401 hoặc gây hiểu lầm.
+- **Quyết định & Giải pháp triển khai:**
+  1. **Đồng bộ hóa Trạng thái Realtime tự động:**
+     - Cập nhật `SignalRRealtimeService.cs`: Bổ sung kiểm tra Access Token và chế độ `IsLiveApiMode`. Nếu chưa đăng nhập hoặc ở Offline Mock, hiển thị nhãn rõ ràng: *"Chế độ Ngoại Tuyến (Offline Mock)"* hoặc *"Chế độ Khách (Chưa đăng nhập)"*.
+     - Cập nhật `WalletsViewModel.cs`: Tự động gọi `SyncRealtimeConnection()` khi tải ví. Nếu đang ở Real API Mode và đã có JWT Token, tự động kết nối ngầm tới `/hubs/financial` và chuyển nhãn sang `🟢 Realtime: Đang hoạt động`.
+     - Cập nhật `LoginViewModel.cs`: Ngay sau khi đăng nhập thành công (Standard hoặc Google SSO), tự động gọi `_realtimeService.ConnectAsync()` để kích hoạt kết nối WebSocket trước khi điều hướng vào Dashboard.
+  2. **Khẳng định Cơ Chế Dynamic Repository Factory:**
+     - Toàn bộ 18 Repositories được đăng ký dạng Dynamic Scoped Factory trong `MauiProgram.cs`. Khi `IsLiveApiMode = true`, toàn bộ lượt gọi dữ liệu chuyển 100% sang `Api*Repository` (Refit REST Client) bắn thẳng tới WebApi, kiểm chứng trực quan bằng Serilog HTTP logs (200 OK). Khi tắt sang Offline, hệ thống lấy dữ liệu nội bộ 0ms từ `Mock*Repository`.
+- **Trạng thái:** `ACCEPTED & VERIFIED (82/82 Unit Tests Passed, Android Compile Succeeded)`.
+
 ---
+
 
 ## [2026-08-23] - Quyết Định 01: Tinh Gọn Phạm Vi Đề Tài (Micro vs Macro)
 - **Vấn đề ban đầu:** Đề xuất ban đầu có nhắc đến *"Dự báo tài chính" (Financial Forecasting)*, dễ bị Hội đồng ĐATN hiểu nhầm sang các mô hình quản trị tài chính doanh nghiệp/chứng khoán vĩ mô phức tạp.

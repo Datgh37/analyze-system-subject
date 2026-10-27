@@ -91,6 +91,29 @@
                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
                     </Border>
 
+                    <!-- Các nút chọn nhanh máy chủ 1-chạm -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="🏠 Chọn Localhost"
+                                Command="{Binding UseLocalhostCommand}"
+                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}"
+                                CornerRadius="8"
+                                HeightRequest="38"
+                                FontSize="12"
+                                FontAttributes="Bold" />
+
+                        <Button Grid.Column="1"
+                                Text="🌐 Chọn Tunnel (Live)"
+                                Command="{Binding UseTunnelCommand}"
+                                BackgroundColor="{AppThemeBinding Light=#FAF5FF, Dark=#3B0764}"
+                                TextColor="{AppThemeBinding Light=#7E22CE, Dark=#E9D5FF}"
+                                CornerRadius="8"
+                                HeightRequest="38"
+                                FontSize="12"
+                                FontAttributes="Bold" />
+                    </Grid>
+
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                         <Button Grid.Column="0"
                                 Text="💾 Lưu URL"

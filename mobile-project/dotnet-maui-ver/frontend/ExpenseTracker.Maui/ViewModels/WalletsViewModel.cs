@@ -7,12 +7,19 @@ using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Realtime.Messages;
 using ExpenseTracker.Maui.ViewModels.Autonomous;
 
+using ExpenseTracker.Maui.Services.Config;
+using ExpenseTracker.Maui.Services.Realtime;
+using ExpenseTracker.Maui.Services.Security;
+
 namespace ExpenseTracker.Maui.ViewModels;
 
 // ViewModel managing user's multi-wallet overview, balance aggregation and quick operations (MVVM Architecture)
 public partial class WalletsViewModel : BaseViewModel
 {
     private readonly IWalletRepository _walletRepository;
+    private readonly ISignalRRealtimeService? _realtimeService;
+    private readonly IServerConfigService? _serverConfig;
+    private readonly ITokenStorageService? _tokenStorage;
 
     public ActionInboxViewModel? ActionInbox { get; }
 
@@ -39,10 +46,18 @@ public partial class WalletsViewModel : BaseViewModel
     [ObservableProperty]
     private string? _statusMessage;
 
-    public WalletsViewModel(IWalletRepository walletRepository, ActionInboxViewModel? actionInbox = null)
+    public WalletsViewModel(
+        IWalletRepository walletRepository, 
+        ActionInboxViewModel? actionInbox = null,
+        ISignalRRealtimeService? realtimeService = null,
+        IServerConfigService? serverConfig = null,
+        ITokenStorageService? tokenStorage = null)
     {
         _walletRepository = walletRepository;
         ActionInbox = actionInbox;
+        _realtimeService = realtimeService;
+        _serverConfig = serverConfig;
+        _tokenStorage = tokenStorage;
         Title = "Quản lý Đa Ví";
 
         // Listen for realtime connection state changes (Indicator Dot)
@@ -123,6 +138,40 @@ public partial class WalletsViewModel : BaseViewModel
         {
             await ActionInbox.LoadInboxAsync();
         }
+
+        // Tự động kiểm tra và đồng bộ trạng thái Realtime / Mock Mode
+        SyncRealtimeConnection();
+    }
+
+    private void SyncRealtimeConnection()
+    {
+        if (_serverConfig != null && !_serverConfig.IsLiveApiMode)
+        {
+            IsRealtimeConnected = false;
+            RealtimeStatusText = "Chế độ Ngoại Tuyến (Offline Mock)";
+            RealtimeDotColor = "#9CA3AF";
+            return;
+        }
+
+        if (_realtimeService == null) return;
+
+        if (_realtimeService.IsConnected)
+        {
+            IsRealtimeConnected = true;
+            RealtimeStatusText = "Đã kết nối Realtime";
+            RealtimeDotColor = "#10B981";
+            return;
+        }
+
+        // Kích hoạt kết nối SignalR ngầm khi đang ở chế độ Real API
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _realtimeService.ConnectAsync();
+            }
+            catch { }
+        });
     }
 
     // Executes quick money transfer between wallets

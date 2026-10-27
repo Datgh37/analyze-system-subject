@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Services.Auth;
+using ExpenseTracker.Maui.Services.Config;
+using ExpenseTracker.Maui.Services.Realtime;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
@@ -8,6 +10,8 @@ namespace ExpenseTracker.Maui.ViewModels;
 public partial class LoginViewModel : BaseViewModel
 {
     private readonly IClientAuthService _authService;
+    private readonly IServerConfigService? _serverConfig;
+    private readonly ISignalRRealtimeService? _realtimeService;
 
     [ObservableProperty]
     private string _email = string.Empty;
@@ -15,10 +19,118 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     private string _password = string.Empty;
 
-    public LoginViewModel(IClientAuthService authService)
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ModeTitle))]
+    [NotifyPropertyChangedFor(nameof(ModeBadgeText))]
+    [NotifyPropertyChangedFor(nameof(ModeBadgeColor))]
+    [NotifyPropertyChangedFor(nameof(ModeIcon))]
+    [NotifyPropertyChangedFor(nameof(ServerUrlSummary))]
+    private bool _isLiveApiMode;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ServerUrlSummary))]
+    private string _serverUrl = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ServerConfigButtonText))]
+    private bool _showServerConfig;
+
+    [ObservableProperty]
+    private bool _isPinging;
+
+    [ObservableProperty]
+    private string? _pingResult;
+
+    public string ModeTitle => IsLiveApiMode ? "Backend Web API Thật" : "Demo Ngoại Tuyến (Offline Mock)";
+    public string ModeBadgeText => IsLiveApiMode ? "LIVE" : "OFFLINE";
+    public string ModeBadgeColor => IsLiveApiMode ? "#10B981" : "#F59E0B";
+    public string ModeIcon => IsLiveApiMode ? "🟢" : "🟠";
+    public string ServerUrlSummary => IsLiveApiMode 
+        ? (string.IsNullOrWhiteSpace(ServerUrl) ? "Chưa cấu hình URL" : ServerUrl) 
+        : "Dữ liệu mẫu 0ms (Không cần server)";
+    public string ServerConfigButtonText => ShowServerConfig ? "▲ Thu gọn cấu hình" : "⚙️ Cài đặt máy chủ & URL...";
+
+    public LoginViewModel(
+        IClientAuthService authService, 
+        IServerConfigService? serverConfig = null,
+        ISignalRRealtimeService? realtimeService = null)
     {
         _authService = authService;
+        _serverConfig = serverConfig;
+        _realtimeService = realtimeService;
         Title = "Đăng Nhập";
+
+        if (_serverConfig != null)
+        {
+            _isLiveApiMode = _serverConfig.IsLiveApiMode;
+            _serverUrl = _serverConfig.ServerBaseUrl;
+
+            _serverConfig.OnConfigChanged += (s, e) =>
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    IsLiveApiMode = _serverConfig.IsLiveApiMode;
+                    ServerUrl = _serverConfig.ServerBaseUrl;
+                });
+            };
+        }
+    }
+
+    partial void OnIsLiveApiModeChanged(bool value)
+    {
+        if (_serverConfig != null && _serverConfig.IsLiveApiMode != value)
+        {
+            _serverConfig.IsLiveApiMode = value;
+        }
+    }
+
+    [RelayCommand]
+    private void ToggleShowServerConfig()
+    {
+        ShowServerConfig = !ShowServerConfig;
+    }
+
+    [RelayCommand]
+    private async Task UseLocalhostAsync()
+    {
+        if (_serverConfig == null) return;
+        ServerUrl = ServerConfigService.LocalhostUrl;
+        _serverConfig.ServerBaseUrl = ServerUrl;
+        await PingServerAsync();
+    }
+
+    [RelayCommand]
+    private async Task UseTunnelAsync()
+    {
+        if (_serverConfig == null) return;
+        ServerUrl = ServerConfigService.ProductionTunnelUrl;
+        _serverConfig.ServerBaseUrl = ServerUrl;
+        await PingServerAsync();
+    }
+
+    [RelayCommand]
+    private async Task PingServerAsync()
+    {
+        if (_serverConfig == null || IsPinging) return;
+
+        try
+        {
+            IsPinging = true;
+            PingResult = "Đang kiểm tra...";
+
+            bool isAlive = await _serverConfig.PingServerAsync(ServerUrl);
+            PingResult = isAlive 
+                ? "🟢 Máy chủ phản hồi tốt (HTTP 200 OK)" 
+                : "🔴 Không thể kết nối tới máy chủ!";
+        }
+        catch (Exception ex)
+        {
+            PingResult = $"🔴 Lỗi: {ex.Message}";
+        }
+        finally
+        {
+            IsPinging = false;
+        }
     }
 
     [RelayCommand]
@@ -41,6 +153,10 @@ public partial class LoginViewModel : BaseViewModel
 
             if (success)
             {
+                if (_realtimeService != null)
+                {
+                    _ = Task.Run(async () => await _realtimeService.ConnectAsync());
+                }
                 await Shell.Current.GoToAsync("//WalletsPage");
             }
             else
@@ -75,6 +191,10 @@ public partial class LoginViewModel : BaseViewModel
             var (success, error) = await _authService.GoogleLoginAsync(dummyToken, email, displayName);
             if (success)
             {
+                if (_realtimeService != null)
+                {
+                    _ = Task.Run(async () => await _realtimeService.ConnectAsync());
+                }
                 await Shell.Current.GoToAsync("//WalletsPage");
             }
             else

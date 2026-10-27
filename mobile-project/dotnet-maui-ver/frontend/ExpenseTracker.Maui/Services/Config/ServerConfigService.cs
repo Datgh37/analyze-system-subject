@@ -10,11 +10,15 @@ public class ServerConfigService : IServerConfigService
 
     public const string ProductionTunnelUrl = "https://expense-api.hobbyshop-ecommerce.me";
 
+    public static string LocalhostUrl => DeviceInfo.Platform == DevicePlatform.Android
+        ? "http://10.0.2.2:5018"
+        : "http://localhost:5018";
+
     public event EventHandler? OnConfigChanged;
 
     public static string GetDefaultServerUrl()
     {
-        // Mặc định sử dụng URL Cloudflare Tunnel cố định HTTPS của dự án
+        // Mặc định: Ưu tiên LocalhostUrl nếu đang phát triển trên máy tính, hoặc Tunnel cho bản release
         return ProductionTunnelUrl;
     }
 
@@ -88,7 +92,19 @@ public class ServerConfigService : IServerConfigService
         {
             // Lần 1: Ping tức thì khi mở app
             _connectionStatus = "Đang kiểm tra kết nối máy chủ...";
-            bool isOnline = await PingServerAsync();
+            bool isOnline = await PingServerAsync(ServerBaseUrl);
+
+            // Tự động kiểm tra fallback thông minh: nếu URL hiện tại fail (ví dụ chưa bật Tunnel) nhưng Localhost đang chạy
+            if (!isOnline && ServerBaseUrl != LocalhostUrl)
+            {
+                bool isLocalAlive = await PingServerAsync(LocalhostUrl);
+                if (isLocalAlive)
+                {
+                    ServerBaseUrl = LocalhostUrl;
+                    _connectionStatus = "Đã tự động kết nối Backend Localhost (Port 5018)";
+                    return;
+                }
+            }
 
             if (isOnline)
             {
@@ -109,11 +125,23 @@ public class ServerConfigService : IServerConfigService
                     return;
                 }
 
-                isOnline = await PingServerAsync();
+                isOnline = await PingServerAsync(ServerBaseUrl);
                 if (isOnline)
                 {
                     _connectionStatus = "Đã kết nối Live Backend API";
                     return;
+                }
+
+                // Kiểm tra lại Localhost trong lúc retry
+                if (ServerBaseUrl != LocalhostUrl)
+                {
+                    bool isLocalAlive = await PingServerAsync(LocalhostUrl);
+                    if (isLocalAlive)
+                    {
+                        ServerBaseUrl = LocalhostUrl;
+                        _connectionStatus = "Đã tự động kết nối Backend Localhost (Port 5018)";
+                        return;
+                    }
                 }
             }
 

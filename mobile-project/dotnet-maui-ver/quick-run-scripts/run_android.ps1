@@ -1,3 +1,7 @@
+param(
+    [switch]$ForceRebuild
+)
+
 # ==============================================================================
 # EXPENSE TRACKER - ANDROID BUILD & RUN SCRIPT
 # ==============================================================================
@@ -6,7 +10,7 @@
 # ==============================================================================
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host " 🚀 BIEN DICH VA KHOI CHAY ANDROID (NET 10.0-ANDROID)     " -ForegroundColor Cyan
+Write-Host "    BIEN DICH VA KHOI CHAY ANDROID (NET 10.0-ANDROID)     " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 # 1. Tu dong tim thu muc goc du an (thu muc chua ExpenseTracker.slnx) va gan o dia ao X:
@@ -222,23 +226,60 @@ if ($adbPath) {
         }
     }
 
-    # 5. Bien dich, Deploy va Khoi chay len thiet bi
+    # 5. Kiem tra xem app da duoc cai dat tren thiet bi & ma nguon FE co thay doi hay khong
     if ($devices) {
         Write-Host "`n[5/5] Phat hien thiet bi Android dang ket noi: $devices" -ForegroundColor Green
-        Write-Host "    Dang dong goi APK va cai dat len thiet bi..." -ForegroundColor Yellow
         
-        # Giai phong cac tien trinh build cu neu co tranh khoa tep (File Lock)
-        dotnet build-server shutdown 2>$null | Out-Null
-        
-        dotnet build X:\frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj -f net10.0-android -t:Run -nr:false
-        
-        if ($LASTEXITCODE -eq 0) {
-            # Dam bao Activity mo len tren man hinh
-            & $adbPath shell monkey -p com.companyname.expensetracker.maui -c android.intent.category.LAUNCHER 1 2>$null | Out-Null
-            Write-Host "`n[V] UNG DUNG EXPENSE TRACKER DA KHOI CHAY THANH CONG TREN MAN HINH ANDROID!" -ForegroundColor Green
+        $packageName = "com.companyname.expensetracker.maui"
+        $installed = (& $adbPath shell pm list packages $packageName 2>$null) | Where-Object { $_ -like "*$packageName*" }
+
+        $apkDir = Join-Path $projectRoot "frontend\ExpenseTracker.Maui\bin\Debug\net10.0-android"
+        $signedApk = Join-Path $apkDir "$packageName-Signed.apk"
+        $hasApk = (Test-Path $signedApk)
+
+        $needsRebuild = $false
+        if ($ForceRebuild) {
+            $needsRebuild = $true
+            Write-Host "    [!] Co yeu cau ep buoc bien dich lai (-ForceRebuild)." -ForegroundColor Yellow
+        } elseif (-not $hasApk) {
+            $needsRebuild = $true
+            Write-Host "    [*] Chua co ban build APK truoc do. Tien hanh bien dich tu dau..." -ForegroundColor Cyan
         } else {
-            Write-Host "`n[X] Deploy Android that bai! Vui long kiem tra log phia tren." -ForegroundColor Red
+            # Kiem tra xem co file code .cs, .xaml, .csproj nao trong frontend moi hon file APK hay khong
+            $apkTime = (Get-Item $signedApk).LastWriteTime
+            $mauiSourceDir = Join-Path $projectRoot "frontend\ExpenseTracker.Maui"
+            $newerFiles = Get-ChildItem -Path $mauiSourceDir -Recurse -Include "*.cs", "*.xaml", "*.csproj" -ErrorAction SilentlyContinue |
+                Where-Object { $_.FullName -notlike "*\bin\*" -and $_.FullName -notlike "*\obj\*" -and $_.LastWriteTime -gt $apkTime }
+            
+            if ($newerFiles) {
+                $needsRebuild = $true
+                $changedCount = @($newerFiles).Count
+                Write-Host "    [*] Phat hien $changedCount tap tin FE vua duoc sua doi moi hon file APK. Tien hanh bien dich cap nhat..." -ForegroundColor Cyan
+            } else {
+                $needsRebuild = $false
+                if ($installed) {
+                    Write-Host "    [⚡ FAST-LAUNCH] Khong co bat ky thay doi FE nao & App da cai san tren thiet bi!" -ForegroundColor Green
+                    Write-Host "    --> Dang kich hoat truc tiep App len man hinh (0.5 giay, khong ton thoi gian bien dich)..." -ForegroundColor Green
+                } else {
+                    Write-Host "    [⚡ FAST-INSTALL] File APK da san sang va khong co code moi. Cai dat nhanh len thiet bi..." -ForegroundColor Green
+                    & $adbPath install -r "$signedApk" | Out-Null
+                }
+            }
         }
+
+        if ($needsRebuild) {
+            Write-Host "    Dang dong goi APK va cai dat len thiet bi..." -ForegroundColor Yellow
+            dotnet build-server shutdown 2>$null | Out-Null
+            dotnet build X:\frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj -f net10.0-android -t:Run -nr:false
+            
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "`n[X] Deploy Android that bai! Vui long kiem tra log phia tren." -ForegroundColor Red
+            }
+        }
+
+        # Kich hoat hien thi Activity tren man hinh
+        & $adbPath shell monkey -p $packageName -c android.intent.category.LAUNCHER 1 2>$null | Out-Null
+        Write-Host "`n[V] UNG DUNG EXPENSE TRACKER DA KHOI CHAY THANH CONG TREN MAN HINH ANDROID!" -ForegroundColor Green
     } else {
         Write-Host "`n[!] CHUA CO MAY AO HOAC DIEN THOAI ANDROID NAO DANG KET NOI." -ForegroundColor Yellow
         Write-Host "----------------------------------------------------------" -ForegroundColor DarkGray
