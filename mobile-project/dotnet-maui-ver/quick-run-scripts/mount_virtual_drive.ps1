@@ -15,8 +15,21 @@ Write-Host "==========================================================" -Foregro
 Write-Host " 🚀 KHOI TAO O DIA AO X: DE FIX LOI DUONG DAN DAI ANDROID " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
-# Lay chinh xac thu muc chua script nay (chinh la thu muc dotnet-maui-ver)
-$targetPath = $PSScriptRoot
+# Tu dong tim thu muc goc du an (thu muc chua ExpenseTracker.slnx, ho tro du nguoi dung giai nen vao bat ky dau)
+$currentDir = $PSScriptRoot
+$targetPath = $null
+while ($currentDir) {
+    if (Test-Path (Join-Path $currentDir "ExpenseTracker.slnx")) {
+        $targetPath = $currentDir
+        break
+    }
+    $parent = Split-Path $currentDir -Parent
+    if ($parent -eq $currentDir) { break }
+    $currentDir = $parent
+}
+if (-not $targetPath) {
+    $targetPath = Split-Path $PSScriptRoot -Parent
+}
 
 # 1. Kiem tra xem o X: da duoc mount chua, neu mount vao thu muc khac thi go ra gan lai
 $currentSubst = subst

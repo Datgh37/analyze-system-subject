@@ -230,23 +230,21 @@ flowchart TD
 - **Trạng thái:** `ĐANG TRIỂN KHAI (ĐÃ CHỐT HOÀN THÀNH CHẶNG 1)` (Căn cứ kế hoạch gốc [`PLAN-48`](../../project_context/plans/plans-mobile-app/2026-10-25_plan_48_giai_doan_11_tong_kiem_toan_bao_cao_va_on_tap_qa.md), [Quyết định 143 & 161](../../project_context/decisions_and_changes_log.md), [`PLAN-54`](../../project_context/plans/plans-mobile-app/2026-10-27_plan_54_giai_doan_11_chang_1_kiem_toan_va_nang_cap_bao_cao_docx.md), [Quyết định 180](../../project_context/decisions_and_changes_log.md))
 - **Điều chỉnh phạm vi (Họp Hội đồng theo chỉ đạo Người dùng):**
   - **Tạm thời BỎ QUA bước quay/dựng Video Demo thành phẩm**, tập trung tối đa nguồn lực vào việc trang bị kịch bản demo trực tiếp, bộ cẩm nang ôn tập vấn đáp cá nhân 1.5đ, tối ưu script 1-Click và đóng gói APK Android Release.
-- **Phân kỳ Lộ trình 5 Chặng Chuẩn mực của Giai đoạn 11:**
+- **Phân kỳ Lộ trình Tái Cấu Trúc của Giai đoạn 11 (Mô hình 4-3-Họp Backend-5-2):**
   1. **Chặng 1 — Báo cáo Cuối kỳ môn Di động [`BaoCao.docx`](../BaoCao.docx) (`HOÀN THÀNH 100% - ĐÃ CHỐT`):**
-     - Khớp 100% barem điểm môn Lập trình Mobile ([`yeucau-cuoiky.txt`](../yeucau-cuoiky.txt)):
-       * Đăng ký rõ ràng: Chọn **Phương án B3 – Kiến trúc MVVM (2.0đ)**, thực hiện thêm **Phương án B2 – SignalR Hub 2 chiều Full-Duplex (+1.0đ điểm cộng)** và hoàn thành trọn vẹn **Phần A – Push Notification (2.0đ Bắt buộc)**.
-       * Thuyết minh chi tiết **Native Android Notification Engine** (3 channels, Foreground Heads-Up, Background, Killed State AlarmManager 21:00, BootReceiver, Deep Linking PendingIntent, Bank Notification Listener bóc tách MoMo/ACB/VCB).
-       * Thuyết minh **Clean MVVM & Báo cáo Kiểm thử Toàn diện**: 82 bài Unit Tests Frontend MAUI + 281 bài Unit Tests Backend = **363/363 Tests Passed 100%**, kèm sơ đồ luồng dữ liệu 5 bước và mã nguồn test mẫu.
-       * Cập nhật **22 thực thể CSDL PostgreSQL 16 chuẩn 3NF**.
-       * Cập nhật hệ thống **Bottom Navigation Dock 4 tab**, nút trung tâm **Center Voice FAB Microphone**, Sidebar 5 nhóm và màn hình Lịch sử Thông báo.
-       * Nâng cấp **6 kịch bản kiểm thử trực quan trên máy ảo** cho Giảng viên.
-  2. **Chặng 2 — Kịch bản Demo & Hướng Dẫn Trình Diễn Tính Năng Ăn Điểm (User Story Journey) (`TIẾP THEO`):**
-     - Biên soạn tài liệu [`KICH_BAN_DEMO_THUC_TE_CUOI_KY.md`](KICH_BAN_DEMO_THUC_TE_CUOI_KY.md) hướng dẫn trình diễn trực tiếp 5 phân cảnh đắt giá: Nền tảng $\rightarrow$ AI Multimodal OCR hóa đơn đối soát $\le 1000$đ $\rightarrow$ Bắt thông báo ngân hàng ngoại tuyến 1-chạm & Đồng bộ Realtime SignalR giữa 2 thiết bị song song $\rightarrow$ Cú hích Thaler Nudge, Khoảng trễ 24h & Push Notification 3 trạng thái (Foreground, Background, Killed State AlarmManager 21:00) $\rightarrow$ Minh chứng kiểm thử 363 Unit Tests xanh 100%.
-  3. **Chặng 3 — Cẩm Nang Ôn Tập - Bộ Câu Hỏi Q&A Thông Hiểu Mã Nguồn & Công Nghệ (Ăn Trọn 1,5đ Vấn Đáp Cá Nhân):**
-     - Biên soạn [`BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md`](BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md) gồm 12+ câu hỏi sát sườn thường bị Giảng viên chất vấn nhất, chia theo 5 nhóm chuyên đề (Clean MVVM, SignalR 2 chiều, Push Notifications / AlarmManager Killed State, PostgreSQL ACID Pessimistic Locking, và Gemini AI Multimodal / Jev Protocol).
-  4. **Chặng 4 — Chuẩn Hóa Bộ Script 1-Click Khởi Chạy Tự Động & Kiểm Thử E2E:**
-     - Tối ưu hóa file PowerShell [`quick-run-scripts/run_android.ps1`](../quick-run-scripts/run_android.ps1) và bộ kiểm thử API [`quick-run-scripts/test_api_suite.ps1`](../quick-run-scripts/test_api_suite.ps1) để Giảng viên chỉ cần gõ 1 lệnh duy nhất là hệ thống tự khởi động Docker PostgreSQL, Backend WebApi, Android Emulator và deploy app MAUI hoàn tất.
-  5. **Chặng 5 — Đóng Gói Bản Cài Đặt APK Android Release (`net10.0-android`):**
-     - Cấu hình Keystore, chạy lệnh xuất bản `dotnet publish -f net10.0-android -c Release`, đóng gói file `ExpenseTracker.apk` độc lập kèm tài liệu hướng dẫn cài đặt [`HUONG_DAN_CAI_DAT_APK.md`](HUONG_DAN_CAI_DAT_APK.md).
+     - Khớp 100% barem điểm môn Lập trình Mobile ([`yeucau-cuoiky.txt`](../yeucau-cuoiky.txt)): Đăng ký B3 (MVVM) + B2 (SignalR +1.0đ) + Phần A (Push Notification); 22 bảng CSDL 3NF; Thuyết minh Native Android Notification Engine (Killed State AlarmManager 21:00); Minh chứng 363 Tests; Bottom Nav & Voice FAB; 6 Kịch bản kiểm thử trên máy ảo.
+  2. **Chặng 2 Mới (Cũ là 4) — Chuẩn Hóa Bộ Script 1-Click Khởi Chạy Tự Động & Kiểm Thử Toàn Diện E2E (`HOÀN THÀNH 100% - ĐÃ CHỐT`):**
+     - Chuẩn hóa bộ script PowerShell [`quick-run-scripts/run_android.ps1`](../quick-run-scripts/run_android.ps1), [`quick-run-scripts/run_windows.ps1`](../quick-run-scripts/run_windows.ps1) và [`quick-run-scripts/test_api_suite.ps1`](../quick-run-scripts/test_api_suite.ps1) để Giảng viên và nhóm chỉ cần 1 click là tự động hóa toàn trình: Docker PostgreSQL $\rightarrow$ WebApi Backend $\rightarrow$ Android Emulator $\rightarrow$ Deploy .NET MAUI App $\rightarrow$ E2E Validation. Trang bị 3 shortcut `.bat` ở thư mục gốc (`RUN_ANDROID.bat`, `RUN_WINDOWS.bat`, `TEST_API.bat`).
+  3. **Chặng 3 Mới (Cũ là 3) — Cẩm Nang Ôn Tập - Bộ Câu Hỏi Q&A Thông Hiểu Mã Nguồn & Công Nghệ (`HOÀN THÀNH 100% - ĐÃ CHỐT`):**
+     - Biên soạn hoàn tất [`BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md`](BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md) gồm 6 chuyên đề lớn & 15 câu hỏi sát sườn thường bị Giảng viên chất vấn nhất (Clean MVVM 3 tầng, Zero Code-Behind, Unit Tests độc lập, SignalR 2 chiều, Push Notifications / AlarmManager Killed State, PostgreSQL ACID Pessimistic Locking, và Gemini AI Multimodal / Jev Protocol), kèm bảng phân công thuyết minh chi tiết cho 2 thành viên ăn trọn 1.5đ vấn đáp cá nhân.
+  4. **Chặng 3.5 (MỚI) — Phiên Họp Hội Đồng Xử Lý Hạ Tầng Backend Cho Bản Phát Hành APK (`TIẾP THEO`):**
+     - Họp Hội đồng Kiến trúc sư giải quyết bài toán: Backend local không mở 24/7, máy ngoài mạng LAN không kết nối được khi cài APK độc lập.
+     - Phân tích và lựa chọn phương án tối ưu: Cloudflare Tunnel / Ngrok, Triển khai Cloud PaaS (Render/Fly.io/VPS), hoặc cơ chế cấu hình BaseUrl động / Offline Mock fallback trong ứng dụng MAUI trước khi đóng gói release.
+  5. **Chặng 4 Mới (Cũ là 5) — Đóng Gói Bản Cài Đặt APK Android Release (`net10.0-android`):**
+     - Cấu hình Keystore, chạy lệnh xuất bản `dotnet publish -f net10.0-android -c Release`, đóng gói file `ExpenseTracker.apk` độc lập theo phương án hạ tầng đã chốt kèm tài liệu hướng dẫn cài đặt [`HUONG_DAN_CAI_DAT_APK.md`](HUONG_DAN_CAI_DAT_APK.md).
+  6. **Chặng 5 Mới (Cũ là 2) — Kịch Bản Demo & Hướng Dẫn Trình Diễn Tính Năng Thực Tế Cuối Kỳ (User Story Journey):**
+     - Thực hiện sau cùng khi bạn cùng nhóm đã hoàn thiện 100% giao diện Frontend Immersive/Styling.
+     - Biên soạn [`KICH_BAN_DEMO_THUC_TE_CUOI_KY.md`](KICH_BAN_DEMO_THUC_TE_CUOI_KY.md) hướng dẫn trình diễn trực tiếp 5 phân cảnh đắt giá dựa trên đúng giao diện thực tế hoàn thiện trước Giảng viên.
 
 ---
 

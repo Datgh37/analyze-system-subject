@@ -4282,6 +4282,36 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - Cập nhật [`MASTER_PROJECT_ROADMAP.md`](mobile-project/dotnet-maui-ver/implement-docs/MASTER_PROJECT_ROADMAP.md): Ghi nhận bỏ bước video demo, đánh dấu **CHỐT HOÀN THÀNH CHẶNG 1 CỦA GIAI ĐOẠN 11**.
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED. CHÍNH THỨC CHỐT CHẶNG 1 GIAI ĐOẠN 11.
 
+---
+
+## [2026-10-27 11:00] - Quyết Định 181: Điều Chỉnh Timeline Phân Kỳ Giai Đoạn 11 (Mô Hình 4-3-Họp Backend-5-2) Do Chưa Xong Frontend & Khởi Động Chặng 2 Mới (Chuẩn Hóa Bộ Script 1-Click Run & E2E Test Suite)
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Dan Abramov, Martin Kleppmann, Kent Beck, Orchestrator).
+- **Căn cứ chỉ đạo:** Chỉ đạo trực tiếp của Người dùng: Đảo thứ tự phân kỳ các chặng còn lại của Giai đoạn 11 sang mô hình `4 -> 3 -> Phiên họp Hạ tầng Backend -> 5 -> 2` vì thành viên nhóm phụ trách Frontend chưa hoàn tất giao diện; đồng thời yêu cầu bổ sung 1 phiên họp chuyên sâu giải quyết bài toán hạ tầng Backend khi xuất APK trước khi đóng gói phát hành.
+- **Nội dung điều chỉnh & Thống nhất lộ trình mới:**
+  1. **Chặng 1 (Đã hoàn thành 100%):** Báo cáo Cuối kỳ môn Di động [`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx) chuẩn barem điểm 10.
+  2. **Chặng 2 Mới (Cũ là 4 - BẮT ĐẦU NGAY):** Chuẩn Hóa Bộ Script 1-Click Khởi Chạy Tự Động & Kiểm Thử Toàn Diện E2E ([`run_android.ps1`](mobile-project/dotnet-maui-ver/quick-run-scripts/run_android.ps1), [`run_windows.ps1`](mobile-project/dotnet-maui-ver/quick-run-scripts/run_windows.ps1), [`test_api_suite.ps1`](mobile-project/dotnet-maui-ver/quick-run-scripts/test_api_suite.ps1)). Tự động hóa toàn trình: Docker PostgreSQL $\rightarrow$ WebApi Backend $\rightarrow$ Emulator $\rightarrow$ MAUI App $\rightarrow$ E2E Tests.
+  3. **Chặng 3 Mới (Cũ là 3):** Cẩm Nang Ôn Tập - Bộ Câu Hỏi Q&A Thông Hiểu Dự Án & Bảo Vệ Mã Nguồn ([`BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md`](mobile-project/dotnet-maui-ver/implement-docs/BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md)) gồm 12+ câu hỏi sát sườn giúp 2 thành viên ăn trọn 1.5đ vấn đáp cá nhân.
+  4. **Chặng 3.5 (MỚI):** Phiên Họp Hội Đồng Xử Lý Hạ Tầng Backend Cho Bản Phát Hành APK (Phân tích các phương án: Cloudflare Tunnel, Render/Fly.io Cloud PaaS, hoặc cấu hình BaseUrl động / Offline Mock Fallback trong MAUI).
+  5. **Chặng 4 Mới (Cũ là 5):** Đóng Gói Bản Cài Đặt APK Android Release ([`HUONG_DAN_CAI_DAT_APK.md`](mobile-project/dotnet-maui-ver/implement-docs/HUONG_DAN_CAI_DAT_APK.md)).
+  6. **Chặng 5 Mới (Cũ là 2):** Kịch Bản Demo & Hướng Dẫn Trình Diễn Tính Năng Thực Tế Cuối Kỳ ([`KICH_BAN_DEMO_THUC_TE_CUOI_KY.md`](mobile-project/dotnet-maui-ver/implement-docs/KICH_BAN_DEMO_THUC_TE_CUOI_KY.md)) - Viết sau cùng khi bạn cùng nhóm đã hoàn thiện 100% giao diện Frontend.
+- **Trạng thái:** ACCEPTED, LOGGED & ACTIVE. CHÍNH THỨC BƯỚC VÀO CHẶNG 2 MỚI.
+
+---
+
+## [2026-10-27 12:00] - Quyết Định 182: Hoàn Thành & Nghiệm Thu Toàn Diện Chặng 3 Mới (Giai Đoạn 11): Xuất Bản Cẩm Nang Ôn Tập Vấn Đáp Q&A Cuối Kỳ & Thuyết Minh Sâu Sắc Tác Động Kiến Trúc Clean MVVM
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Dan Abramov, Brad Frost, Werner Vogels, Martin Kleppmann, Bruce Schneier, Kent Beck, Orchestrator).
+- **Căn cứ yêu cầu:** Yêu cầu trực tiếp của Người dùng: Giải đáp toàn bộ lý thuyết, cách bố trí, và tác động của kiến trúc MVVM trong project, đồng thời trang bị cẩm nang vấn đáp ăn trọn 1.5đ cá nhân.
+- **Nội dung thực thi & Sản phẩm nghiệm thu:**
+  1. Biên soạn hoàn chỉnh tài liệu chuyên khảo [`BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md`](mobile-project/dotnet-maui-ver/implement-docs/BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md) dài hơn 500 dòng phân tách 6 chuyên đề lớn:
+     - **Chuyên đề 1:** Bản chất MVVM, so sánh với MVC/MVP, bố trí thư mục `Views/`, `ViewModels/`, `Models/`, `Repositories/`, cơ chế Data Binding 2 chiều, Source Generators `[ObservableProperty]` & `[RelayCommand]`, triệt tiêu 100% Code-Behind, giải trình khả năng kiểm thử độc lập 82 bài Unit Tests (899ms), và cơ chế hoán đổi 1-chạm giữa API thật và Mock Offline 0ms tại `MauiProgram.cs`.
+     - **Chuyên đề 2:** Native Android Notification Engine (3 Channels, Foreground Heads-Up, Background, KILLED STATE qua `AlarmManager` + `DailyReminderReceiver` 21:00, `BootReceiver` tự phục hồi khi reboot, Deep Linking `PendingIntent` & `IQueryAttributable`, bóc tách tin nhắn MoMo/ACB ngoại tuyến qua `BankNotificationListenerService`).
+     - **Chuyên đề 3:** SignalR Hub 2 chiều Full-Duplex (Handshake WebSockets, JWT Query Token, Server Push `ReceiveBalanceUpdate`/`ReceiveBudgetAlert`, Client Invoke `RequestLiveBalanceAsync`/`BroadcastWalletRefreshAsync`, cô lập dữ liệu theo group `user_{userId}`, đồng bộ 0ms giữa 2 thiết bị).
+     - **Chuyên đề 4:** Backend Clean Architecture, Khóa bi quan `SELECT FOR UPDATE` chống chi tiêu đúp (Double Spending / Race Condition), 22 thực thể CSDL 3NF.
+     - **Chuyên đề 5:** Trí tuệ nhân tạo Gemini 2.5 Flash Vision OCR, Hậu kiểm toán số học $\Delta \le 1.000$đ, và Giao thức hành động tự hành theo xác suất Jev.
+     - **Chuyên đề 6:** Bộ 15 câu hỏi thực chiến Giảng viên hay chất vấn nhất kèm mẹo trả lời mẫu ngắn gọn, súc tích và Bảng phân công thuyết minh chi tiết cho 2 thành viên.
+  2. Đồng bộ trạng thái: Đánh dấu **CHỐT HOÀN THÀNH CHẶNG 3 MỚI** trên lộ trình tổng thể [`MASTER_PROJECT_ROADMAP.md`](mobile-project/dotnet-maui-ver/implement-docs/MASTER_PROJECT_ROADMAP.md).
+- **Trạng thái:** COMPLETED, AUDITED & LOCKED. CHÍNH THỨC CHỐT CHẶNG 3 MỚI. SẴN SÀNG CHO CHẶNG 3.5 (HỌP HỘI ĐỒNG HẠ TẦNG BACKEND CHO APK).
+
 
 
 

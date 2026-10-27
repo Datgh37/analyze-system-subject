@@ -9,27 +9,92 @@ Write-Host "==========================================================" -Foregro
 Write-Host " 🚀 BIEN DICH VA KHOI CHAY ANDROID (NET 10.0-ANDROID)     " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
-# 1. Kiem tra o dia ao X:
-$targetPath = $PSScriptRoot
+# 1. Tu dong tim thu muc goc du an (thu muc chua ExpenseTracker.slnx) va gan o dia ao X:
+$currentDir = $PSScriptRoot
+$projectRoot = $null
+while ($currentDir) {
+    if (Test-Path (Join-Path $currentDir "ExpenseTracker.slnx")) {
+        $projectRoot = $currentDir
+        break
+    }
+    $parent = Split-Path $currentDir -Parent
+    if ($parent -eq $currentDir) { break }
+    $currentDir = $parent
+}
+if (-not $projectRoot) {
+    $projectRoot = Split-Path $PSScriptRoot -Parent
+}
+$targetPath = $projectRoot
+
 $currentSubst = subst
 $xMount = $currentSubst | Where-Object { $_ -like "X:\:*" }
 
 if ($xMount) {
     if ($xMount -like "*$targetPath*") {
-        Write-Host "[1/3] O dia ao X: da gan dung thu muc du an." -ForegroundColor Green
+        Write-Host "[1/5] O dia ao X: da gan dung thu muc du an." -ForegroundColor Green
     } else {
-        Write-Host "[1/3] O dia X: dang gan vao thu muc khac, dang gan lai..." -ForegroundColor Yellow
+        Write-Host "[1/5] O dia X: dang gan vao thu muc khac, dang gan lai..." -ForegroundColor Yellow
         subst X: /D
         subst X: $targetPath
-        Write-Host "[1/3] Da gan lai thanh cong o dia ao X: tro vao: $targetPath" -ForegroundColor Green
+        Write-Host "[1/5] Da gan lai thanh cong o dia ao X: tro vao: $targetPath" -ForegroundColor Green
     }
 } else {
-    Write-Host "[1/3] O dia X: chua gan. Dang tu dong gan o dia ao X:..." -ForegroundColor Yellow
+    Write-Host "[1/5] O dia X: chua gan. Dang tu dong gan o dia ao X:..." -ForegroundColor Yellow
     subst X: $targetPath
-    Write-Host "[1/3] Da gan thanh cong o dia ao X: tro vao: $targetPath" -ForegroundColor Green
+    Write-Host "[1/5] Da gan thanh cong o dia ao X: tro vao: $targetPath" -ForegroundColor Green
 }
 
-# 2. Tu dong do tim cong cu Android SDK, ADB va May ao tren moi may tinh
+# 2. Kiem tra va Khoi dong Ha tang Backend (Docker PostgreSQL & ASP.NET Core WebApi)
+Write-Host "`n[2/5] Kiem tra Ha tang Backend (CSDL PostgreSQL & WebApi)..." -ForegroundColor Yellow
+$dockerRunning = $false
+try {
+    $dockerCheck = docker version --format '{{.Server.Version}}' 2>$null
+    if ($dockerCheck) { $dockerRunning = $true }
+} catch {}
+
+if ($dockerRunning) {
+    $pgContainer = docker ps --filter "name=expensetracker-postgres" --format "{{.Status}}" 2>$null
+    if (-not $pgContainer) {
+        Write-Host "    Container PostgreSQL chua bat. Dang tu dong chay 'docker compose up -d'..." -ForegroundColor Yellow
+        docker compose -f "$projectRoot\backend\docker-compose.yml" up -d 2>$null | Out-Null
+        Start-Sleep -Seconds 2
+    }
+    Write-Host "    [V] CSDL PostgreSQL tren Docker da san sang." -ForegroundColor Green
+} else {
+    Write-Host "    [!] Docker Desktop chua bat hoac khong co san. Bo qua khoi dong container..." -ForegroundColor Gray
+}
+
+# Kiem tra Backend WebApi (Port 5018)
+$backendRunning = $false
+try {
+    $tcpTest = Test-NetConnection -ComputerName "localhost" -Port 5018 -WarningAction SilentlyContinue
+    if ($tcpTest.TcpTestSucceeded) { $backendRunning = $true }
+} catch {}
+
+if (-not $backendRunning) {
+    Write-Host "    Backend WebApi (Port 5018) chua chay. Dang tu dong khoi dong Backend trong cua so moi..." -ForegroundColor Yellow
+    Start-Process powershell -ArgumentList "-NoExit -Command Write-Host '=== EXPENSE TRACKER BACKEND WEBAPI (PORT 5018) ===' -ForegroundColor Cyan; cd '$projectRoot\backend\ExpenseTracker.WebApi'; dotnet run"
+    Write-Host "    Dang cho Backend WebApi khoi dong..." -ForegroundColor Yellow
+    $retry = 0
+    while (-not $backendRunning -and $retry -lt 15) {
+        Start-Sleep -Seconds 2
+        try {
+            $tcpTest = Test-NetConnection -ComputerName "localhost" -Port 5018 -WarningAction SilentlyContinue
+            if ($tcpTest.TcpTestSucceeded) { $backendRunning = $true }
+        } catch {}
+        $retry++
+    }
+    if ($backendRunning) {
+        Write-Host "    [V] Backend WebApi da ket noi thanh cong tai http://localhost:5018!" -ForegroundColor Green
+    } else {
+        Write-Host "    [!] Backend WebApi dang tiep tuc khoi dong..." -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "    [V] Backend WebApi dang hoat dong tai http://localhost:5018." -ForegroundColor Green
+}
+
+# 3. Tu dong do tim cong cu Android SDK, ADB va May ao tren he thong
+Write-Host "`n[3/5] Tu dong do tim Android SDK, ADB va May ao (AVD)..." -ForegroundColor Yellow
 $driveRoots = Get-PSDrive -PSProvider FileSystem | Select-Object -ExpandProperty Root
 
 # 2.1. Tu dong do tim cong cu adb.exe tren he thong
@@ -123,7 +188,7 @@ if ($detectedJdk) {
     $env:PATH = (Join-Path $detectedJdk.FullName "bin") + ";" + $env:PATH
 }
 
-# 3. Kiem tra va Tu dong Khoi dong May ao Android
+# 4. Kiem tra va Tu dong Khoi dong May ao Android
 if ($adbPath) {
     $devices = & $adbPath devices | Where-Object { $_ -and -not $_.StartsWith("List") -and $_.Contains("device") }
 
@@ -133,7 +198,7 @@ if ($adbPath) {
         $avdList = @($rawAvdList | Where-Object { $_ -and -not $_.StartsWith("=") -and -not $_.Contains(" ") } | ForEach-Object { $_.Trim() })
         if ($avdList.Count -gt 0) {
             $targetAvd = $avdList[0]
-            Write-Host "`n[2/3] Phat hien May ao Android: '$targetAvd'. Dang tu dong bat len..." -ForegroundColor Yellow
+            Write-Host "`n[4/5] Phat hien May ao Android: '$targetAvd'. Dang tu dong bat len..." -ForegroundColor Yellow
             Start-Process $emulatorPath -ArgumentList "-avd $targetAvd"
             
             Write-Host "    Dang cho may ao ket noi ADB..." -ForegroundColor Yellow
@@ -157,9 +222,9 @@ if ($adbPath) {
         }
     }
 
-    # 4. Bien dich, Deploy va Khoi chay len thiet bi
+    # 5. Bien dich, Deploy va Khoi chay len thiet bi
     if ($devices) {
-        Write-Host "`n[3/3] Phat hien thiet bi Android dang ket noi: $devices" -ForegroundColor Green
+        Write-Host "`n[5/5] Phat hien thiet bi Android dang ket noi: $devices" -ForegroundColor Green
         Write-Host "    Dang dong goi APK va cai dat len thiet bi..." -ForegroundColor Yellow
         
         # Giai phong cac tien trinh build cu neu co tranh khoa tep (File Lock)

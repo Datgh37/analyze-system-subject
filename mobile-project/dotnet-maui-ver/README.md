@@ -17,37 +17,57 @@ Dự án là nền tảng quản trị tài chính cá nhân thế hệ mới, g
 
 ---
 
-## 2. Kiến Trúc Thư Mục & Giải Pháp
+---
 
-```text
-dotnet-maui-ver/ (Root)
-├── ExpenseTracker.slnx                     # Solution Full-Stack tổng thể (Bao gồm cả Backend & Frontend MAUI)
-│
-├── backend/                                # Phân hệ Backend ASP.NET Core 10 (Clean Architecture)
-│   ├── ExpenseTracker.slnx                 # Solution riêng cho Backend Web API & Test Suites
-│   ├── Directory.Build.props               # Cấu hình C# 14, .NET 10, Nullable toàn cục
-│   ├── docker-compose.yml                  # Container PostgreSQL 16 Alpine
-│   ├── ExpenseTracker.Domain/              # Core Domain: Entities, Value Objects, Domain Events
-│   ├── ExpenseTracker.Application/         # Use Case Services, DTOs, Business Validators
-│   ├── ExpenseTracker.Infrastructure/      # EF Core, PostgreSQL Context, Security, AI Gemini Client
-│   ├── ExpenseTracker.WebApi/              # Web API Controllers, SignalR Hub, Swagger UI
-│   └── tests/
-│       ├── ExpenseTracker.Domain.UnitTests/       # 83 bài Unit Tests nghiệp vụ lõi (100% Passed)
-│       └── ExpenseTracker.Application.UnitTests/  # 171 bài Unit Tests Service Layer (100% Passed)
-│
-└── frontend/                               # Phân hệ Ứng dụng Di động & Desktop .NET MAUI 10
-    ├── ExpenseTracker.Maui.slnx            # Solution riêng cho Frontend MAUI & Tests
-    ├── ExpenseTracker.Maui/                # Dự án Clean MVVM .NET MAUI 10 (ExpenseTracker.Maui.csproj)
-    │   ├── Views/                          # 20 Màn hình XAML (Wireframe / Data Anchors)
-    │   ├── ViewModels/                     # ObservableObject & RelayCommands (CommunityToolkit.Mvvm)
-    │   ├── Models/                         # Client DTOs & SQLite Local Models
-    │   ├── Services/                       # Refit Declarative API Clients, SignalR Hub, SecureStorage
-    │   ├── Repositories/                   # Tầng MVVM Repositories (Chuyển đổi 1-chạm giữa Mock & Api)
-    │   ├── Resources/                      # Bảng màu, Fonts, Styles dùng chung
-    │   └── Platforms/                      # Native Code (Android Service lắng nghe thông báo, Windows)
-    └── tests/
-        └── ExpenseTracker.Maui.UnitTests/  # 42 bài Unit Tests ViewModels (100% Passed)
-```
+## 2. ⚡ Khởi Chạy Nhanh 1-Click (Quick Start Cho Giảng Viên & Người Đánh Giá)
+
+> 💡 **Khuyên Dùng:** Toàn bộ quy trình thiết lập môi trường phức tạp (kiểm tra Docker CSDL, biên dịch Backend Web API, kích hoạt ổ ảo chống lỗi đường dẫn dài, dò tìm Android SDK / Emulator, giải phóng khóa file DLL Windows) đã được tự động hóa 100% qua **3 file Batch (`.bat`)** ngay tại thư mục gốc `dotnet-maui-ver/`. Bạn chỉ cần **click đúp chuột** mà không cần gõ lệnh dòng lệnh!
+
+### 2.1. Bảng Điều Khiển Khởi Chạy 1-Click
+
+| Tệp Khởi Chạy | Nền Tảng Mục Tiêu | Thao Tác | Quy Trình Tự Động Hóa Thực Thi (Behind the Scenes) |
+| :--- | :--- | :--- | :--- |
+| **`RUN_WINDOWS.bat`**<br>*(Khuyên dùng số 1)* | **Windows Desktop (WinUI 3)** | **Click đúp chuột** | 1. Tự động kiểm tra Docker Desktop & khởi động CSDL PostgreSQL 16 (có fallback In-Memory).<br>2. Tự động khởi chạy Backend Web API tại `http://localhost:5018` trong tiến trình ngầm độc lập.<br>3. Tự động dọn dẹp tiến trình cũ, giải phóng File Lock DLL và hủy đăng ký AppX cũ.<br>4. Biên dịch mã nguồn WinUI 3 sạch sẽ và kích hoạt ứng dụng hiện lên màn hình máy tính! |
+| **`RUN_ANDROID.bat`** | **Máy Ảo Android (Emulator)** | **Click đúp chuột** | 1. Tự động kiểm tra & khởi động PostgreSQL 16 và Backend Web API.<br>2. Tự động gán ổ ảo `X:` trỏ vào dự án (triệt tiêu 100% lỗi giới hạn 260 ký tự `MAX_PATH` của Android AAPT2).<br>3. Tự động dò tìm Android SDK, ADB, JDK 21 và khởi động máy ảo Android (AVD) nếu chưa bật.<br>4. Biên dịch gói `net10.0-android`, cài đặt APK và mở app lên màn hình điện thoại! |
+| **`TEST_API.bat`** | **REST API & CSDL** | **Click đúp chuột** | Tự động chạy toàn bộ suite kiểm thử tự động API Backend (9 phân hệ E2E, Happy Path, Negative Case, ACID Pessimistic Locking) và tự động nạp dữ liệu mẫu Demo (Database Seeding). |
+
+---
+
+### 2.2. Hướng Dẫn Chi Tiết Cách Chạy Bằng File `.bat`
+
+#### 🔹 Cách Chạy Trên Windows Desktop (Nhanh & Tiện Nhất)
+1. Mở thư mục dự án `dotnet-maui-ver/`.
+2. **Click đúp chuột vào file `RUN_WINDOWS.bat`**.
+3. Cửa sổ dòng lệnh sẽ tự động kiểm tra CSDL, Backend và mở ứng dụng Windows Desktop lên màn hình.
+   *(Lưu ý: Đảm bảo máy tính Windows 10/11 đã bật **Developer Mode** tại Windows Settings > For developers).*
+
+#### 🔹 Cách Chạy Trên Máy Ảo Android
+1. Mở thư mục dự án `dotnet-maui-ver/`.
+2. **Click đúp chuột vào file `RUN_ANDROID.bat`**.
+3. Hệ thống sẽ tự động gán ổ đĩa ảo `X:`, mở máy ảo Android (nếu chưa mở), biên dịch và đẩy ứng dụng lên máy ảo.
+   *(Lưu ý: Yêu cầu máy đã cài Visual Studio kèm Workload MAUI Android và ít nhất 1 máy ảo Android AVD).*
+
+#### 🔹 Cách Kiểm Thử Tự Động Toàn Bộ API
+1. Mở thư mục dự án `dotnet-maui-ver/`.
+2. **Click đúp chuột vào file `TEST_API.bat`**.
+3. Toàn bộ kịch bản test tích hợp sẽ chạy và hiển thị bảng kết quả kiểm thử trực quan trên màn hình.
+
+---
+
+### 2.3. Các Câu Hỏi Thường Gặp Khi Chạy File `.bat` (Troubleshooting & FAQs)
+
+- **❓ Windows hiện thông báo xanh *"Windows protected your PC"* (SmartScreen)?**  
+  👉 Đây là cơ chế bảo vệ mặc định của Windows khi chạy file `.bat` mới tải từ GitHub về. Bạn chỉ cần nhấn vào **"More info" (Xem thêm)** > chọn **"Run anyway" (Vẫn chạy)**.
+- **❓ Có cần cấu hình quyền thực thi PowerShell ExecutionPolicy không?**  
+  👉 **Không cần.** Các file `.bat` đã tích hợp sẵn tham số `-ExecutionPolicy Bypass -NoProfile` nên luôn thực thi trơn tru mà không bị Windows chặn script.
+- **❓ Nếu không cài Docker Desktop thì có chạy được không?**  
+  👉 **Hoàn toàn được.** Nếu Docker chưa cài hoặc chưa bật, Backend Web API tự động kích hoạt chế độ **In-Memory Storage Fallback**, cho phép ứng dụng khởi chạy bình thường để chấm điểm và trải nghiệm tính năng mà không bị crash.
+- **❓ Ứng dụng MAUI có cần Backend để hiển thị giao diện không?**  
+  👉 **Không bắt buộc.** Ứng dụng đã được tích hợp sẵn tầng **Mock Repositories 0ms** cho toàn bộ 20 màn hình, nên ngay cả khi không có kết nối mạng hay Backend, ứng dụng vẫn hiển thị đầy đủ dữ liệu tài chính mẫu đẹp mắt!
+
+---
+
+## 3. Kiến Trúc Thư Mục & Phân Hệ Dự Án
 
 ---
 
@@ -151,11 +171,12 @@ File cấu hình: `frontend/ExpenseTracker.Maui/MauiProgram.cs` (từ dòng 125 
 ### 4.3. Cách 1: Chạy Ứng Dụng Windows Desktop (WinUI 3)
 
 #### Phương Án A: Khởi chạy 1-Click Tự Động (Khuyên Dùng - Tránh Triệt Để Lỗi Khóa File DLL)
-Chỉ cần chạy script tiện ích đã xử lý sẵn mọi xung đột tiến trình và hủy đăng ký cũ:
+- **Cách 1 (Nhanh nhất):** Click đúp vào file **`RUN_WINDOWS.bat`** tại thư mục gốc.
+- **Cách 2 (Qua PowerShell):** Chạy script tiện ích đã xử lý sẵn mọi xung đột tiến trình và hủy đăng ký cũ:
 ```powershell
-.\run_windows.ps1
+.\quick-run-scripts\run_windows.ps1
 ```
-*(Script sẽ tự động dọn dẹp tiến trình ngầm, giải phóng File Lock, biên dịch sạch và mở ứng dụng WinUI 3 lên màn hình).*
+*(Script sẽ tự động kiểm tra PostgreSQL, khởi động Backend WebApi, dọn dẹp tiến trình ngầm, giải phóng File Lock, biên dịch sạch và mở ứng dụng WinUI 3 lên màn hình).*
 
 #### Phương Án B: Khởi chạy bằng Visual Studio
 1. Mở file solution tổng thể **`ExpenseTracker.slnx`** ngay tại thư mục gốc `dotnet-maui-ver/`.
@@ -171,7 +192,7 @@ Chỉ cần chạy script tiện ích đã xử lý sẵn mọi xung đột ti�
 
 #### Bước 1: Kích hoạt ổ đĩa ảo `subst X:`
 ```powershell
-.\mount_virtual_drive.ps1
+.\quick-run-scripts\mount_virtual_drive.ps1
 ```
 
 #### Bước 2: Khởi chạy bằng Visual Studio (Khuyên Dùng)
@@ -180,11 +201,13 @@ Chỉ cần chạy script tiện ích đã xử lý sẵn mọi xung đột ti�
 3. Tại mục Device, chọn máy ảo Android của bạn (nếu chưa có máy ảo, vào **Tools > Android > Android Device Manager** để tạo mới một máy ảo Pixel 7 chạy Android 14+ / API 34+).
 4. Nhấn **F5** (Debug) hoặc **Ctrl+F5** (Run).
 
-#### Bước 3: Khởi chạy bằng Terminal / Script
+#### Bước 3: Khởi chạy Nhanh 1-Click Bằng File Batch hoặc Script
+- **Cách 1 (Nhanh nhất):** Click đúp vào file **`RUN_ANDROID.bat`** ngay tại thư mục gốc `dotnet-maui-ver/`.
+- **Cách 2 (Qua PowerShell):**
 ```powershell
-.\run_android.ps1
+.\quick-run-scripts\run_android.ps1
 ```
-*(Script sẽ tự kiểm tra ổ ảo X:, biên dịch net10.0-android và tự động deploy lên máy ảo Android đang bật).*
+*(Script sẽ tự kiểm tra Docker PostgreSQL, bật Backend WebApi, kiểm tra ổ ảo X:, dò tìm SDK/AVD, khởi động máy ảo, biên dịch net10.0-android và tự động deploy lên màn hình Android).*
 
 > 💡 **Lưu ý cấu hình mạng Android:** 
 > - Ứng dụng đã được cấu hình sẵn thuộc tính `android:usesCleartextTraffic="true"` trong `AndroidManifest.xml` để cho phép kết nối HTTP.
@@ -200,13 +223,21 @@ Chỉ cần chạy script tiện ích đã xử lý sẵn mọi xung đột ti�
 
 ---
 
-### 4.6. Chạy Kiểm Thử Tự Động Cho Frontend (42 ViewModel Tests)
-Dự án có sẵn bộ 42 Unit Tests kiểm tra tính toàn vẹn của ViewModel và logic xử lý dữ liệu:
-```powershell
-cd frontend/tests/ExpenseTracker.Maui.UnitTests
-dotnet test
-```
-*Kết quả:* **`42/42 Tests Passed 100%`**.
+### 4.6. Chạy Kiểm Thử Tự Động Cho Toàn Hệ Thống (363 Unit Tests Passed 100%)
+Dự án sở hữu bộ kiểm thử tự động toàn diện đạt tỷ lệ vượt qua **100% (363 / 363 Tests Passed)**:
+- **Frontend MAUI Unit Tests (82 bài tests):**
+  ```powershell
+  cd frontend/tests/ExpenseTracker.Maui.UnitTests
+  dotnet test
+  ```
+  *(82/82 Tests Passed 100% trong ~899ms, kiểm thử toàn bộ ViewModel logic, Regex bóc tách ngân hàng, OTP, DSA)*.
+- **Backend Unit Tests (281 bài tests):**
+  ```powershell
+  cd backend
+  dotnet test
+  ```
+  *(89 tests Domain + 192 tests Application đạt tỷ lệ 100% Passed)*.
+- **Kiểm thử tự động API Suite:** Click đúp vào **`TEST_API.bat`** (hoặc chạy `.\quick-run-scripts\test_api_suite.ps1`).
 
 ---
 
@@ -231,8 +262,14 @@ dotnet build frontend/ExpenseTracker.Maui/ExpenseTracker.Maui.csproj -f net10.0-
 # Bước 3: Đăng ký gói AppX Layout vào hệ thống Windows
 Add-AppxPackage -Register "frontend\ExpenseTracker.Maui\bin\Debug\net10.0-windows10.0.19041.0\win-x64\AppxManifest.xml"
 
-# Bước 4: Khởi chạy ứng dụng qua Windows AppModel
-Start-Process "shell:AppsFolder\com.companyname.expensetracker.maui_9zz4h110yvjzm!App"
+# Bước 4: Khởi chạy ứng dụng qua Windows AppModel (Lấy PackageFamilyName động)
+$pkg = Get-AppxPackage *expensetracker*
+if ($pkg) {
+    Start-Process "shell:AppsFolder\$($pkg.PackageFamilyName)!App"
+} else {
+    # Hoặc khởi chạy trực tiếp file .exe
+    Start-Process "frontend\ExpenseTracker.Maui\bin\Debug\net10.0-windows10.0.19041.0\win-x64\ExpenseTracker.Maui.exe"
+}
 ```
 
 ##### 3. Quy trình thu thập Log khi ứng dụng Windows gặp lỗi (Crash / Exception):
@@ -289,8 +326,10 @@ adb shell am start -n com.companyname.expensetracker.maui/crc647f035efecdfd55fa.
 
 ## 5. Tài Liệu Kỹ Thuật Liên Quan
 
-- 📘 **Cẩm nang kiểm thử toàn bộ API (9 Phân hệ E2E, HTTP PATCH & Realtime Hub):** [`API_TESTING_PLAYBOOK.md`](API_TESTING_PLAYBOOK.md)
-- 📋 **Bản ghi nguồn sự thật sản phẩm (Durable Product Truth):** [`PRODUCT.md`](PRODUCT.md)
-- 📱 **Bản hướng dẫn ghép nối Frontend MAUI chi tiết 20 màn hình:** [`HUONG_DAN_FE.md`](HUONG_DAN_FE.md)
-- 🏗️ **Đặc tả kiến trúc kỹ thuật toàn diện:** [`TECHNICAL_ARCHITECTURE_SPEC.md`](TECHNICAL_ARCHITECTURE_SPEC.md)
-- 🗺️ **Lộ trình tổng thể dự án:** [`MASTER_PROJECT_ROADMAP.md`](MASTER_PROJECT_ROADMAP.md)
+- 🎓 **Cẩm nang ôn tập vấn đáp & bảo vệ mã nguồn cuối kỳ:** [`implement-docs/BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md`](implement-docs/BO_CAU_HOI_ON_TAP_VAN_DAP_CUOI_KY.md)
+- 📘 **Cẩm nang kiểm thử toàn bộ API (9 Phân hệ E2E, HTTP PATCH & Realtime Hub):** [`implement-docs/API_TESTING_PLAYBOOK.md`](implement-docs/API_TESTING_PLAYBOOK.md)
+- 📋 **Bản ghi nguồn sự thật sản phẩm (Durable Product Truth):** [`implement-docs/PRODUCT.md`](implement-docs/PRODUCT.md)
+- 📱 **Bản hướng dẫn ghép nối Frontend MAUI chi tiết 20 màn hình:** [`implement-docs/HUONG_DAN_FE.md`](implement-docs/HUONG_DAN_FE.md)
+- 🎨 **Hướng dẫn triển khai giao diện chuyên sâu (Immersive UI & Design Tokens):** [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md)
+- 🏗️ **Đặc tả kiến trúc kỹ thuật toàn diện:** [`implement-docs/TECHNICAL_ARCHITECTURE_SPEC.md`](implement-docs/TECHNICAL_ARCHITECTURE_SPEC.md)
+- 🗺️ **Lộ trình tổng thể dự án:** [`implement-docs/MASTER_PROJECT_ROADMAP.md`](implement-docs/MASTER_PROJECT_ROADMAP.md)
