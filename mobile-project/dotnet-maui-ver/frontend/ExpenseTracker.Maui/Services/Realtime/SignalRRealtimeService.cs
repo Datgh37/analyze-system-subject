@@ -11,8 +11,9 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
 {
     private readonly ITokenStorageService _tokenStorage;
     private readonly ILogger<SignalRRealtimeService> _logger;
+    private readonly ExpenseTracker.Maui.Services.Config.IServerConfigService? _serverConfig;
     private HubConnection? _hubConnection;
-    private readonly string _hubUrl;
+    private string _hubUrl;
 
     public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
     public string ConnectionStatusText { get; private set; } = "Chưa kết nối";
@@ -20,16 +21,18 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
 
     public SignalRRealtimeService(
         ITokenStorageService tokenStorage,
-        ILogger<SignalRRealtimeService> logger)
+        ILogger<SignalRRealtimeService> logger,
+        ExpenseTracker.Maui.Services.Config.IServerConfigService? serverConfig = null)
     {
         _tokenStorage = tokenStorage;
         _logger = logger;
+        _serverConfig = serverConfig;
 
-        var baseApiUrl = DeviceInfo.Platform == DevicePlatform.Android 
-            ? "http://10.0.2.2:5018" 
-            : "http://localhost:5018";
+        var baseApiUrl = _serverConfig != null 
+            ? _serverConfig.ServerBaseUrl 
+            : (DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5018" : "http://localhost:5018");
 
-        _hubUrl = $"{baseApiUrl}/hubs/financial";
+        _hubUrl = $"{baseApiUrl.TrimEnd('/')}/hubs/financial";
     }
 
     public async Task ConnectAsync()
@@ -41,6 +44,11 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
 
         try
         {
+            if (_serverConfig != null && !string.IsNullOrWhiteSpace(_serverConfig.ServerBaseUrl))
+            {
+                _hubUrl = $"{_serverConfig.ServerBaseUrl.TrimEnd('/')}/hubs/financial";
+            }
+
             UpdateStatus(false, "Đang kết nối Realtime...", "#F59E0B");
 
             _hubConnection = new HubConnectionBuilder()

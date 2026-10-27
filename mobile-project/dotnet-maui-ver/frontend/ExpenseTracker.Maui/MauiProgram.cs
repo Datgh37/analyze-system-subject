@@ -1,6 +1,7 @@
 using ExpenseTracker.Maui.Repositories;
 using ExpenseTracker.Maui.Services.Api;
 using ExpenseTracker.Maui.Services.Auth;
+using ExpenseTracker.Maui.Services.Config;
 using ExpenseTracker.Maui.Services.Notifications;
 using ExpenseTracker.Maui.Services.Realtime;
 using ExpenseTracker.Maui.Services.Security;
@@ -33,141 +34,247 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // Dynamic base URL: Android Emulator uses 10.0.2.2 to reach host machine; Windows uses localhost
-        var baseApiUrl = DeviceInfo.Platform == DevicePlatform.Android 
-            ? "http://10.0.2.2:5018" 
-            : "http://localhost:5018";
-
-        // Register token storage and HTTP delegating handlers
-        builder.Services.AddSingleton<ITokenStorageService, SecureStorageTokenService>();
+        // Cấu hình Dịch vụ Quản lý Máy chủ & Chuyển mạch Dynamic BaseAddress (Kiềng 3 Chân Demo)
+        builder.Services.AddSingleton<IServerConfigService, ServerConfigService>();
+        builder.Services.AddTransient<DynamicBaseAddressHandler>();
         builder.Services.AddTransient<AuthHeaderHandler>();
+        builder.Services.AddSingleton<ITokenStorageService, SecureStorageTokenService>();
 
-        // Register declarative Refit API clients
+        var baseApiUrl = ServerConfigService.GetDefaultServerUrl();
+
+        // Register declarative Refit API clients kèm DynamicBaseAddressHandler & AuthHeaderHandler
         builder.Services.AddRefitClient<IAuthApi>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl));
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>();
 
         builder.Services.AddRefitClient<IUserApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IWalletApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<ICategoryApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<ITransactionApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IRecurringIncomeApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IPayslipApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IAutoRuleApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IReceiptApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<ISmartUtilityApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IBudgetApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<ISavingsGoalApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<INotificationsApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IAnalyticsReportApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IForecastingApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<INudgeApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<ICoolingOffApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IVoiceAgentApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IDataImportApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IAutonomousActionsApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseApiUrl))
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         // =========================================================================
-        // CHẾ ĐỘ 1: DÙNG MOCK DATA OFFLINE (ĐANG BẬT ĐỂ TEST GIAO DIỆN & VIEWMODELS)
-        // Không cần khởi động Docker hay Backend WebAPI, hệ thống vẫn có đầy đủ dữ liệu sống động.
+        // ĐĂNG KÝ TOÀN BỘ INSTANCES (MOCK & API IMPLEMENTATIONS)
         // =========================================================================
-        builder.Services.AddScoped<IWalletRepository, MockWalletRepository>();
-        builder.Services.AddScoped<ITransactionRepository, MockTransactionRepository>();
-        builder.Services.AddScoped<IBudgetRepository, MockBudgetRepository>();
-        builder.Services.AddScoped<ICategoryRepository, MockCategoryRepository>();
-        builder.Services.AddScoped<ISavingsGoalRepository, MockSavingsGoalRepository>();
-        builder.Services.AddScoped<IAutoRuleRepository, MockAutoRuleRepository>();
-        builder.Services.AddScoped<IRecurringIncomeRepository, MockRecurringIncomeRepository>();
-        builder.Services.AddScoped<ISmartUtilityRepository, MockSmartUtilityRepository>();
-        builder.Services.AddScoped<IReceiptRepository, MockReceiptRepository>();
-        builder.Services.AddScoped<IPayslipRepository, MockPayslipRepository>();
-        builder.Services.AddSingleton<INotificationRepository, MockNotificationRepository>();
-        builder.Services.AddScoped<IAnalyticsReportRepository, MockAnalyticsReportRepository>();
-        builder.Services.AddScoped<IForecastingRepository, MockForecastingRepository>();
-        builder.Services.AddScoped<INudgeRepository, MockNudgeRepository>();
-        builder.Services.AddScoped<ICoolingOffRepository, MockCoolingOffRepository>();
-        builder.Services.AddScoped<IVoiceAgentRepository, MockVoiceAgentRepository>();
-        builder.Services.AddScoped<IDataImportRepository, MockDataImportRepository>();
-        builder.Services.AddScoped<IAutonomousActionRepository, MockAutonomousActionRepository>();
+        builder.Services.AddScoped<MockWalletRepository>();
+        builder.Services.AddScoped<ApiWalletRepository>();
+        builder.Services.AddScoped<MockTransactionRepository>();
+        builder.Services.AddScoped<ApiTransactionRepository>();
+        builder.Services.AddScoped<MockBudgetRepository>();
+        builder.Services.AddScoped<ApiBudgetRepository>();
+        builder.Services.AddScoped<MockCategoryRepository>();
+        builder.Services.AddScoped<ApiCategoryRepository>();
+        builder.Services.AddScoped<MockSavingsGoalRepository>();
+        builder.Services.AddScoped<ApiSavingsGoalRepository>();
+        builder.Services.AddScoped<MockAutoRuleRepository>();
+        builder.Services.AddScoped<ApiAutoRuleRepository>();
+        builder.Services.AddScoped<MockRecurringIncomeRepository>();
+        builder.Services.AddScoped<ApiRecurringIncomeRepository>();
+        builder.Services.AddScoped<MockSmartUtilityRepository>();
+        builder.Services.AddScoped<ApiSmartUtilityRepository>();
+        builder.Services.AddScoped<MockReceiptRepository>();
+        builder.Services.AddScoped<ApiReceiptRepository>();
+        builder.Services.AddScoped<MockPayslipRepository>();
+        builder.Services.AddScoped<ApiPayslipRepository>();
+        builder.Services.AddSingleton<MockNotificationRepository>();
+        builder.Services.AddScoped<ApiNotificationRepository>();
+        builder.Services.AddScoped<MockAnalyticsReportRepository>();
+        builder.Services.AddScoped<ApiAnalyticsReportRepository>();
+        builder.Services.AddScoped<MockForecastingRepository>();
+        builder.Services.AddScoped<ApiForecastingRepository>();
+        builder.Services.AddScoped<MockNudgeRepository>();
+        builder.Services.AddScoped<ApiNudgeRepository>();
+        builder.Services.AddScoped<MockCoolingOffRepository>();
+        builder.Services.AddScoped<ApiCoolingOffRepository>();
+        builder.Services.AddScoped<MockVoiceAgentRepository>();
+        builder.Services.AddScoped<ApiVoiceAgentRepository>();
+        builder.Services.AddScoped<MockDataImportRepository>();
+        builder.Services.AddScoped<ApiDataImportRepository>();
+        builder.Services.AddScoped<MockAutonomousActionRepository>();
+        builder.Services.AddScoped<ApiAutonomousActionRepository>();
 
         // =========================================================================
-        // CHẾ ĐỘ 2: DÙNG API THẬT KẾT NỐI BACKEND ASP.NET CORE (ĐÃ ĐÓNG NOTE)
-        // Khi cần kết nối Backend thật và Docker PostgreSQL, hãy mở ghi chú (uncomment) các dòng dưới đây
-        // và đóng ghi chú (comment) các dòng Mock ở trên:
+        // DYNAMIC REPOSITORY FACTORY: TỰ ĐỘNG CHUYỂN ĐỔI GIỮA ONLINE VÀ OFFLINE MOCK
+        // Khi IsLiveApiMode = true -> Dùng ApiRepository; khi false -> Dùng MockRepository 0ms
         // =========================================================================
-        // builder.Services.AddScoped<IWalletRepository, ApiWalletRepository>();
-        // builder.Services.AddScoped<ITransactionRepository, ApiTransactionRepository>();
-        // builder.Services.AddScoped<IBudgetRepository, ApiBudgetRepository>();
-        // builder.Services.AddScoped<ICategoryRepository, ApiCategoryRepository>();
-        // builder.Services.AddScoped<ISavingsGoalRepository, ApiSavingsGoalRepository>();
-        // builder.Services.AddScoped<IAutoRuleRepository, ApiAutoRuleRepository>();
-        // builder.Services.AddScoped<IRecurringIncomeRepository, ApiRecurringIncomeRepository>();
-        // builder.Services.AddScoped<ISmartUtilityRepository, ApiSmartUtilityRepository>();
-        // builder.Services.AddScoped<IReceiptRepository, ApiReceiptRepository>();
-        // builder.Services.AddScoped<IPayslipRepository, ApiPayslipRepository>();
-        // builder.Services.AddScoped<INotificationRepository, ApiNotificationRepository>();
-        // builder.Services.AddScoped<IAnalyticsReportRepository, ApiAnalyticsReportRepository>();
-        // builder.Services.AddScoped<IForecastingRepository, ApiForecastingRepository>();
-        // builder.Services.AddScoped<INudgeRepository, ApiNudgeRepository>();
-        // builder.Services.AddScoped<ICoolingOffRepository, ApiCoolingOffRepository>();
-        // builder.Services.AddScoped<IVoiceAgentRepository, ApiVoiceAgentRepository>();
-        // builder.Services.AddScoped<IDataImportRepository, ApiDataImportRepository>();
-        // builder.Services.AddScoped<IAutonomousActionRepository, ApiAutonomousActionRepository>();
+        builder.Services.AddScoped<IWalletRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiWalletRepository>() 
+                : sp.GetRequiredService<MockWalletRepository>());
+
+        builder.Services.AddScoped<ITransactionRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiTransactionRepository>() 
+                : sp.GetRequiredService<MockTransactionRepository>());
+
+        builder.Services.AddScoped<IBudgetRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiBudgetRepository>() 
+                : sp.GetRequiredService<MockBudgetRepository>());
+
+        builder.Services.AddScoped<ICategoryRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiCategoryRepository>() 
+                : sp.GetRequiredService<MockCategoryRepository>());
+
+        builder.Services.AddScoped<ISavingsGoalRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiSavingsGoalRepository>() 
+                : sp.GetRequiredService<MockSavingsGoalRepository>());
+
+        builder.Services.AddScoped<IAutoRuleRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiAutoRuleRepository>() 
+                : sp.GetRequiredService<MockAutoRuleRepository>());
+
+        builder.Services.AddScoped<IRecurringIncomeRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiRecurringIncomeRepository>() 
+                : sp.GetRequiredService<MockRecurringIncomeRepository>());
+
+        builder.Services.AddScoped<ISmartUtilityRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiSmartUtilityRepository>() 
+                : sp.GetRequiredService<MockSmartUtilityRepository>());
+
+        builder.Services.AddScoped<IReceiptRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiReceiptRepository>() 
+                : sp.GetRequiredService<MockReceiptRepository>());
+
+        builder.Services.AddScoped<IPayslipRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiPayslipRepository>() 
+                : sp.GetRequiredService<MockPayslipRepository>());
+
+        builder.Services.AddSingleton<INotificationRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiNotificationRepository>() 
+                : sp.GetRequiredService<MockNotificationRepository>());
+
+        builder.Services.AddScoped<IAnalyticsReportRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiAnalyticsReportRepository>() 
+                : sp.GetRequiredService<MockAnalyticsReportRepository>());
+
+        builder.Services.AddScoped<IForecastingRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiForecastingRepository>() 
+                : sp.GetRequiredService<MockForecastingRepository>());
+
+        builder.Services.AddScoped<INudgeRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiNudgeRepository>() 
+                : sp.GetRequiredService<MockNudgeRepository>());
+
+        builder.Services.AddScoped<ICoolingOffRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiCoolingOffRepository>() 
+                : sp.GetRequiredService<MockCoolingOffRepository>());
+
+        builder.Services.AddScoped<IVoiceAgentRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiVoiceAgentRepository>() 
+                : sp.GetRequiredService<MockVoiceAgentRepository>());
+
+        builder.Services.AddScoped<IDataImportRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiDataImportRepository>() 
+                : sp.GetRequiredService<MockDataImportRepository>());
+
+        builder.Services.AddScoped<IAutonomousActionRepository>(sp =>
+            sp.GetRequiredService<IServerConfigService>().IsLiveApiMode 
+                ? sp.GetRequiredService<ApiAutonomousActionRepository>() 
+                : sp.GetRequiredService<MockAutonomousActionRepository>());
 
         // Register Realtime SignalR, Local & Native Notifications Services
         builder.Services.AddSingleton<ISignalRRealtimeService, SignalRRealtimeService>();
@@ -206,6 +313,7 @@ public static class MauiProgram
         builder.Services.AddTransient<VoiceFloatingMicViewModel>();
         builder.Services.AddTransient<ImportPreviewViewModel>();
         builder.Services.AddTransient<ActionInboxViewModel>();
+        builder.Services.AddTransient<SettingsViewModel>();
 
         // Register UI Views
         builder.Services.AddTransient<LoginPage>();
@@ -231,6 +339,7 @@ public static class MauiProgram
         builder.Services.AddTransient<CoolingOffHubPage>();
         builder.Services.AddTransient<VoiceMicModalPage>();
         builder.Services.AddTransient<ImportPreviewPage>();
+        builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

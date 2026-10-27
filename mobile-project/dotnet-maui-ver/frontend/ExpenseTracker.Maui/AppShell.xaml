@@ -146,6 +146,10 @@
         <ShellContent ContentTemplate="{DataTemplate views:NotificationHistoryPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="⚙️  Cài Đặt Máy Chủ &amp; Demo" Route="SettingsPage">
+        <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
+    </FlyoutItem>
+
     <FlyoutItem Title="👤  Tài Khoản &amp; Đăng Nhập" Route="LoginPage">
         <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
     </FlyoutItem>

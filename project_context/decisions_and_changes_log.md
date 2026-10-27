@@ -4312,6 +4312,59 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
   2. Đồng bộ trạng thái: Đánh dấu **CHỐT HOÀN THÀNH CHẶNG 3 MỚI** trên lộ trình tổng thể [`MASTER_PROJECT_ROADMAP.md`](mobile-project/dotnet-maui-ver/implement-docs/MASTER_PROJECT_ROADMAP.md).
 - **Trạng thái:** COMPLETED, AUDITED & LOCKED. CHÍNH THỨC CHỐT CHẶNG 3 MỚI. SẴN SÀNG CHO CHẶNG 3.5 (HỌP HỘI ĐỒNG HẠ TẦNG BACKEND CHO APK).
 
+---
 
+## [2026-10-27 15:00] - Quyết Định 183: Triệu Tập Phiên Họp Hội Đồng Đa Tác Tử (Chặng 3.5 - Giai Đoạn 11): Giải Quyết Toàn Diện Bài Toán Hạ Tầng Backend Cho Bản Phát Hành APK Android
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Werner Vogels, Dan Abramov, Bruce Schneier, Eric Evans, Martin Kleppmann, Alistair Cockburn, Orchestrator).
+- **Căn cứ chỉ đạo:** Chỉ đạo trực tiếp của Người dùng: Mở phiên họp phân tích cách xử lý hạ tầng Backend khi xuất file APK cài lên điện thoại, giải quyết tình huống Backend đang ở trạng thái local không bật liên tục 24/7 và rào cản mạng khi Giảng viên cài đặt độc lập.
+- **Nội dung tham luận & Thống nhất các phương án:**
+  1. **Nhận diện Rủi ro cốt tử (The Deployment Paradox):**
+     - Khi cài file APK lên điện thoại thật ngoài mạng LAN, `localhost` và `10.0.2.2` trở nên vô nghĩa; mạng Wi-Fi trường học thường kích hoạt AP Isolation chặn thiết bị thông nhau.
+     - Máy tính cá nhân sinh viên không thể bật 24/7. Nếu APK bắt buộc kết nối Backend mà máy tắt, app sẽ crash/văng màn hình trắng, làm hỏng bài chấm điểm.
+     - Nhưng nếu chỉ có Mock Data, Giảng viên có thể nghi ngờ chưa có Web API thật.
+  2. **Thống nhất Mô hình "Kiềng 3 Chân Toàn Diện" (Phương án 4):**
+     - **Chân 1 (Bảo hiểm điểm số - Resilience First):** Bản APK phát hành mặc định nạp Mock Repositories 0ms phong phú. Giảng viên mở app ở bất kỳ đâu cũng xem được trọn vẹn 20 màn hình sống động, không bao giờ bị gián đoạn vì lỗi mạng.
+     - **Chân 2 (Chuyển mạch linh hoạt - Dynamic Server Switcher):** Cho phép người dùng chuyển đổi nguồn dữ liệu giữa "Chế độ Ngoại tuyến (Mock)" và "Chế độ Trực tuyến (Live API)" kèm ô nhập URL máy chủ linh hoạt ngay trong ứng dụng (tại màn hình Đăng nhập hoặc Cài đặt).
+     - **Chân 3 (Hạ tầng demo trực tuyến 1-Click - Cloudflare Tunnel):** Trang bị tiện ích `RUN_TUNNEL.bat` (hoặc hướng dẫn deploy Cloud PaaS miễn phí) để khi Giảng viên yêu cầu kiểm tra dữ liệu thật, sinh viên chỉ cần bấm 1 click là có ngay URL HTTPS toàn cầu kết nối về máy tính đang chạy.
+  3. **Biên bản chi tiết:** Lưu trữ tại [`project_context/plans/plans-mobile-app/2026-10-27_plan_56_bien_ban_phien_hop_ha_tang_backend_cho_apk.md`](plans/plans-mobile-app/2026-10-27_plan_56_bien_ban_phien_hop_ha_tang_backend_cho_apk.md).
+- **Trạng thái:** ACCEPTED & RESOLVED. CHUYỂN TIẾP SANG QUYẾT ĐỊNH 184.
 
+---
+
+## [2026-10-27 15:15] - Quyết Định 184: Chủ Tọa Phê Duyệt Phương Án 1 (Kiềng 3 Chân Hạ Tầng Demo) & Khóa Kế Hoạch Triển Khai PLAN-57
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Orchestrator, Werner Vogels, Dan Abramov, Bruce Schneier, Eric Evans, Alistair Cockburn).
+- **Căn cứ chỉ đạo:** Người dùng chính thức lựa chọn Phương án 1 (Mô hình Kiềng 3 Chân: APK mặc định Offline Mock an toàn 100% + Chuyển mạch Dynamic Server Switcher trong Cài đặt + 1-Click Cloudflare Tunnel `RUN_TUNNEL.bat`).
+- **Lưu ý đặc biệt từ Người dùng:** Đây là hạng mục kỹ thuật nội bộ bổ trợ phục vụ riêng cho công tác biểu diễn thực chiến (Demo Live) trước Giảng viên, **không đưa vào Báo cáo Kỹ thuật Cuối kỳ ([`BaoCao.docx`](mobile-project/dotnet-maui-ver/BaoCao.docx))** để giữ nguyên vẹn cấu trúc điểm chuẩn đã được nghiệm thu.
+- **Nội dung phê duyệt kế hoạch triển khai (PLAN-57 Rev.2):**
+  1. *Chiến lược Online First:* Ứng dụng mặc định ưu tiên kết nối Backend Web API thật. Nếu ping ban đầu thất bại, hệ thống tự động Retry 3 lần (mỗi lần cách nhau 15s). Nếu sau 3 lần vẫn không kết nối được máy chủ, app tự động chuyển sang Offline Mock Mode để bảo vệ UX (hoặc người dùng chủ động gạt sang Offline bất cứ lúc nào).
+  2. *Cloudflare Named Tunnel:* Sử dụng tài khoản Cloudflare của người dùng để cấp URL cố định, điền sẵn vào cấu hình app.
+  3. *Kiểm chứng Killed State gián tiếp qua Bank Notification Detection:* Rà soát và cung cấp kịch bản kiểm thử `BankNotificationListenerService` (lắng nghe biến động số dư MoMo/ACB/VCB khi app bị tắt hoàn toàn để tự động nảy Heads-Up notification và deep-link vào form chi tiêu).
+  4. *Bộ công cụ & Cẩm nang:* Cung cấp `RUN_TUNNEL.bat` và cẩm nang demo nội bộ [`HUONG_DAN_KET_NOI_LIVE_DEMO_TUNNEL.md`](mobile-project/dotnet-maui-ver/implement-docs/HUONG_DAN_KET_NOI_LIVE_DEMO_TUNNEL.md).
+- **Trạng thái:** ACCEPTED, LOCKED & COMPLETED. CHUYỂN TIẾP SANG QUYẾT ĐỊNH 185.
+
+---
+
+## [2026-10-27 15:40] - Quyết Định 185: Hoàn Tất Triển Khai & Nghiệm Thu Phương Án 1 (Kiềng 3 Chân Demo): Tích Hợp Dynamic Server Switcher, Online-First Retry 3x15s, Nút Giả Lập Bank Notification & Kịch Bản 1-Click Cloudflare Tunnel
+- **Người chủ trì:** Chủ tọa đề tài & Hội đồng Đa tác tử (Dan Abramov, Werner Vogels, Bruce Schneier, Eric Evans, Kent Beck, Orchestrator).
+- **Căn cứ kế hoạch:** Thực thi trọn vẹn Kế hoạch [`PLAN-57 (Rev.2)`](plans/plans-mobile-app/2026-10-27_plan_57_ke_hoach_trien_khai_phuong_an_1_kieng_3_chan_demo_apk.md) và Quyết định 184.
+- **Nội dung hoàn thành & Nghiệm thu:**
+  1. **Tầng Dịch Vụ Cấu Hình & Dynamic BaseAddress:**
+     - Tạo [`IServerConfigService.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Config/IServerConfigService.cs) & [`ServerConfigService.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Config/ServerConfigService.cs): Quản lý lưu trữ `Preferences`, kiểm tra `/api/health` với Timeout 3s, chu kỳ Retry 3 lần x 15 giây ngầm; nếu thất bại tự động kích hoạt callback Toast: *"Server offline, đang chuyển sang chế độ offline"* và set `IsLiveApiMode = false`.
+     - Tạo [`DynamicBaseAddressHandler.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Config/DynamicBaseAddressHandler.cs): Tự động nạp vào mọi Refit HttpClient để định tuyến URL động theo `ServerConfigService.ServerBaseUrl` trong runtime.
+     - Nâng cấp [`SignalRRealtimeService.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Services/Realtime/SignalRRealtimeService.cs): Kết nối Hub SignalR linh hoạt theo URL của server config.
+     - Nâng cấp [`App.xaml.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/App.xaml.cs): Kích hoạt `StartConnectionCheckWithRetryAsync` ngầm khi mở app, hiển thị Alert khi fallback.
+  2. **Tầng Chuyển Mạch Dynamic Repository Factory ([`MauiProgram.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/MauiProgram.cs)):**
+     - Đăng ký đồng thời 18 cặp instances `Mock*` và `Api*`.
+     - Toàn bộ 18 Repository Interfaces được cấu hình Factory động: khi `IsLiveApiMode == true` gọi `Api*Repository`, khi `false` gọi `Mock*Repository` 0ms.
+  3. **Giao Diện Điều Khiển & Giả Lập ([`SettingsPage.xaml`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/Views/SettingsPage.xaml) & [`SettingsViewModel.cs`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/SettingsViewModel.cs)):**
+     - Cung cấp thẻ Cài Đặt Máy Chủ: Switch chuyển Live/Mock, ô nhập Server URL, nút Ping kiểm tra kết nối, nút khôi phục mặc định.
+     - Cung cấp nút **"⚡ Giả Lập Biến Động MoMo (-75.000đ)"**: Thao diễn tức thì pipeline bóc tách Regex và bắn Native Heads-up Notification (Deep Link vào `ExpensesPage`) phục vụ thuyết minh Killed State trước Giảng viên mà không cần chuyển khoản thật.
+     - Tích hợp `SettingsPage` vào menu Flyout của [`AppShell.xaml`](../mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/AppShell.xaml).
+  4. **Bộ Công Cụ 1-Click Cloudflare Tunnel & Cẩm Nang Demo Nội Bộ:**
+     - Tạo [`RUN_TUNNEL.bat`](../mobile-project/dotnet-maui-ver/RUN_TUNNEL.bat) và script [`quick-run-scripts/run_tunnel.ps1`](../mobile-project/dotnet-maui-ver/quick-run-scripts/run_tunnel.ps1) hỗ trợ cả Named Tunnel Token cố định lẫn Quick Tunnel tự động.
+     - Xuất bản cẩm nang bí kíp biểu diễn nội bộ [`HUONG_DAN_KET_NOI_LIVE_DEMO_TUNNEL.md`](../mobile-project/dotnet-maui-ver/implement-docs/HUONG_DAN_KET_NOI_LIVE_DEMO_TUNNEL.md).
+  5. **Chất Lượng Kiểm Thử & Biên Dịch:**
+     - Toàn bộ solution biên dịch đạt **0 Warning, 0 Error**.
+     - Đạt tỷ lệ vượt qua **363 / 363 Tests Passed 100%** (82 Frontend MAUI + 192 Application + 89 Domain).
+- **Trạng thái:** COMPLETED, TESTED & AUDITED 100%. SẴN SÀNG CHUYỂN SANG CHẶNG 4 MỚI: ĐÓNG GÓI BẢN CÀI ĐẶT APK ANDROID RELEASE.
 
