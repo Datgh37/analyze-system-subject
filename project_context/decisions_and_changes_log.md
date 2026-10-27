@@ -2,6 +2,34 @@
 
 Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tinh chỉnh phạm vi (De-scoping), và các quyết định kiến trúc quan trọng từ lúc bắt đầu dự án đến nay.
 
+## [2026-10-27] - Quyết Định 105: Kích Hoạt Kế Hoạch Tác Chiến Khẩn Cấp (Plan-58) Hoàn Thiện Immersive UI & Hồ Sơ Đồ Án Trước Sáng 28/10
+- **Bối cảnh & Tình thế:**
+  - Thành viên phụ trách giao diện (Frontend Specialist) không thể liên lạc trong ngày chót, dẫn đến các hạng mục thẩm mỹ UI chưa được trau chuốt, chưa đóng gói APK Release chính thức, báo cáo và video demo chưa hoàn tất trước thời hạn sáng 28/10/2026.
+  - Phía Backend và MVVM Core đã hoàn thiện 100% (254 Unit Tests Backend, 82 Unit Tests MAUI Passed, SignalR WebSockets, Dynamic Repository Factory).
+- **Quyết định Chiến lược:**
+  1. Kích hoạt **Plan-58** với 4 chặng tác chiến thần tốc xuyên đêm:
+     - **Chặng 1 (21h30 - 23h30):** Sprint nâng cấp thẩm mỹ UI chuẩn Immersive Modern Fintech cho 7 cụm màn hình cốt lõi (Bảo toàn 100% Data Bindings và MVVM commands).
+     - **Chặng 2 (23h30 - 00h30):** Đóng gói bản phát hành chính thức `ExpenseTracker.apk` có ký số Keystore + Script cài đặt 1-chạm.
+     - **Chặng 3 (00h30 - 01h30):** Chụp ảnh minh họa màn hình mới nạp vào tài liệu Báo cáo cuối kỳ `BaoCao.docx`.
+     - **Chặng 4 (01h30 - 02h30):** Soạn Kịch bản phân cảnh Video Demo 5-8 phút chuẩn barem `yeucau-cuoiky.txt` và bộ Golden Talking Points.
+- **Trạng thái:** `ACCEPTED & LOCKED (Kế hoạch hành động khẩn cấp)`.
+
+---
+
+## [2026-10-27] - Quyết Định 104: Giải Pháp Kiểm Thử Thông Báo Native Khi App Bị Đóng Hoàn Toàn (Offline Killed State)
+- **Bối cảnh & Yêu cầu:**
+  - Kiểm thử khả năng hiển thị thông báo hệ thống (Native Android Notification) khi ứng dụng đã bị đóng hoàn toàn (Killed / Cold State - PID rỗng, không chạy ngầm, không mở kết nối socket server), mà không cần bấm nút trên giao diện app hay phụ thuộc server push.
+- **Giải pháp & Triển khai Kỹ thuật:**
+  1. **Nâng cấp `DailyReminderReceiver.cs`:**
+     - Đặt `Exported = true` và bổ sung Intent Filter: `com.expensetracker.action.DAILY_REMINDER`.
+     - Cho phép hệ điều hành Android và công cụ ADB đánh thức tiến trình ứng dụng đã chết thông qua broadcast của OS.
+  2. **Xây dựng Script Tự Động Hóa Kiểm Thử:**
+     - Tạo [`quick-run-scripts/test_offline_notification.ps1`](quick-run-scripts/test_offline_notification.ps1) và shortcut [`TEST_OFFLINE_NOTIFICATION.bat`](TEST_OFFLINE_NOTIFICATION.bat).
+     - Quy trình: Ép buộc `am force-stop` ứng dụng (xác nhận PID biến mất) $\rightarrow$ Bắn Intent đánh thức từ Android System $\rightarrow$ Kiểm chứng Notification xuất hiện trên thanh trạng thái $\rightarrow$ Chạm vào Notification để kiểm tra khả năng Khởi động lạnh (Cold-launch) mở thẳng vào `ExpensesPage`.
+- **Trạng thái:** `ACCEPTED & VERIFIED (0 Warnings, 0 Errors)`.
+
+---
+
 ## [2026-10-27] - Quyết Định 103: Tự Động Kích Hoạt SignalR Realtime & Cơ Chế Chuyển Đổi Dynamic Repository Factory
 - **Vấn đề phát hiện:**
   1. Trên giao diện Mobile MAUI, nhãn trạng thái Realtime ở màn hình Ví (`WalletsPage`) luôn dừng ở mức *"Chờ kết nối Realtime..."* mà không đổi màu hoặc phản ứng kết nối.

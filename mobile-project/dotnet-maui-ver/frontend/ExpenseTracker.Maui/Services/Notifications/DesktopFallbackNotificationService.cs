@@ -50,6 +50,12 @@ public class DesktopFallbackNotificationService : INativeNotificationService
         return Task.CompletedTask;
     }
 
+    public Task ScheduleTestReminderAsync(int delaySeconds = 10)
+    {
+        _logger.LogInformation("[DesktopFallback] Test reminder scheduled in {Delay}s", delaySeconds);
+        return Task.CompletedTask;
+    }
+
     public Task CancelDailyReminderAsync()
     {
         Preferences.Default.Set("daily_expense_reminder_enabled", false);

@@ -185,6 +185,44 @@ public class AndroidNativeNotificationService : INativeNotificationService
         return Task.CompletedTask;
     }
 
+    public Task ScheduleTestReminderAsync(int delaySeconds = 10)
+    {
+        try
+        {
+            var context = global::Android.App.Application.Context;
+            var triggerAtMillis = Java.Lang.JavaSystem.CurrentTimeMillis() + (delaySeconds * 1000);
+
+            var alarmManager = (AlarmManager?)context.GetSystemService(Context.AlarmService);
+            var reminderIntent = new Intent(context, typeof(DailyReminderReceiver));
+            reminderIntent.SetAction("com.expensetracker.action.DAILY_REMINDER");
+            var pendingIntent = PendingIntent.GetBroadcast(
+                context,
+                DailyReminderPendingIntentId,
+                reminderIntent,
+                SafeImmutableFlags);
+
+            if (alarmManager != null && pendingIntent != null)
+            {
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                {
+                    alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
+                }
+                else
+                {
+                    alarmManager.SetExact(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
+                }
+
+                _logger.LogInformation("[AndroidNativeNotificationService] Test Alarm scheduled in {Delay}s for Killed-state verification", delaySeconds);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "[AndroidNativeNotificationService] Failed to schedule test reminder");
+        }
+
+        return Task.CompletedTask;
+    }
+
     public Task CancelDailyReminderAsync()
     {
         try

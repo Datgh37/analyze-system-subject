@@ -173,4 +173,18 @@ public partial class SettingsViewModel : BaseViewModel
             SimulationStatus = $"Lỗi giả lập: {ex.Message}";
         }
     }
+
+    [RelayCommand]
+    private async Task ScheduleTestReminderAsync()
+    {
+        await _nativeNotification.ScheduleTestReminderAsync(10);
+
+        if (Shell.Current?.CurrentPage != null)
+        {
+            await Shell.Current.CurrentPage.DisplayAlertAsync(
+                "⏰ ĐÃ HẸN GIỜ BÁO THỨC SAU 10 GIÂY!",
+                "1. Bạn hãy VUỐT TẮT ỨNG DỤNG HOÀN TOÀN khỏi danh sách đa nhiệm (Killed State) ngay bây giờ.\n2. Đưa điện thoại cho Thầy cầm hoặc đặt lên bàn.\n\nSau đúng 10 giây, Android OS sẽ tự động đánh thức và rung chuông phát thông báo lên màn hình!",
+                "Tôi đã hiểu, vuốt tắt ngay");
+        }
+    }
 }

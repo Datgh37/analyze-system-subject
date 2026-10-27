@@ -175,6 +175,32 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- CARD 4: KIỂM CHỨNG BÁO THỨC ĐÁNH THỨC KHI APP BỊ ĐÓNG HOÀN TOÀN (KILLED STATE) -->
+            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="20">
+                <VerticalStackLayout Spacing="14">
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="⏰" FontSize="20" VerticalOptions="Center" />
+                        <Label Text="4. Kiểm Thử Thông Báo Khi Đã Tắt App (Killed State)" FontSize="15" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="Kịch bản Demo trực tiếp không cần máy tính: Bấm nút bên dưới để hẹn giờ qua Android AlarmManager, sau đó bạn vuốt tắt app hoàn toàn khỏi đa nhiệm. Sau đúng 10 giây, Android OS sẽ tự động rung chuông và đẩy thông báo nhắc nhở 21:00 lên màn hình!"
+                           FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+
+                    <Button Text="⏱️ Hẹn Giờ 10s &amp; Vuốt Tắt App Ngay"
+                            Command="{Binding ScheduleTestReminderCommand}"
+                            BackgroundColor="#F59E0B"
+                            TextColor="#FFFFFF"
+                            CornerRadius="10"
+                            HeightRequest="46"
+                            FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -5,6 +5,7 @@ public interface INativeNotificationService
     Task InitializeChannelsAsync();
     Task ShowNotificationAsync(string title, string message, string channelId, int notificationId = 0, string? targetRoute = null);
     Task ScheduleDailyReminderAsync(int targetHour = 21, int targetMinute = 0);
+    Task ScheduleTestReminderAsync(int delaySeconds = 10);
     Task CancelDailyReminderAsync();
     Task<bool> RequestPermissionAsync();
 }

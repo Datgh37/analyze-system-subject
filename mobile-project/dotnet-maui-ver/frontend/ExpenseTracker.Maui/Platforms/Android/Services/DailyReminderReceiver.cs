@@ -9,7 +9,8 @@ using ExpenseTracker.Maui.Services.Notifications;
 
 namespace ExpenseTracker.Maui.Platforms.Android.Services;
 
-[BroadcastReceiver(Enabled = true, Exported = false)]
+[BroadcastReceiver(Enabled = true, Exported = true)]
+[IntentFilter(new[] { "com.expensetracker.action.DAILY_REMINDER" })]
 public class DailyReminderReceiver : BroadcastReceiver
 {
     public const int DailyReminderNotificationId = 9999;
