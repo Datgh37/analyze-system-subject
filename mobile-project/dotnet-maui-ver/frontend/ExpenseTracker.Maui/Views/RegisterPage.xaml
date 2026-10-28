@@ -52,7 +52,7 @@
                             Padding="12"
                             IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                         <HorizontalStackLayout Spacing="8">
-                            <Label Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
                             <Label Text="{Binding ErrorMessage}" 
                                    TextColor="#B91C1C" 
                                    FontSize="12"

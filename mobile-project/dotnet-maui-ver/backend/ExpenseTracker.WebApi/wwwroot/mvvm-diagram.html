@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sơ Đồ Kiến Trúc MVVM - .NET MAUI Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0F172A;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: #334155;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      
+      --view-color: #38BDF8;
+      --view-bg: rgba(56, 189, 248, 0.08);
+      --view-border: rgba(56, 189, 248, 0.35);
+
+      --vm-color: #818CF8;
+      --vm-bg: rgba(129, 140, 248, 0.08);
+      --vm-border: rgba(129, 140, 248, 0.35);
+
+      --model-color: #34D399;
+      --model-bg: rgba(52, 211, 153, 0.08);
+      --model-border: rgba(52, 211, 153, 0.35);
+
+      --flow-cmd: #F59E0B;
+      --flow-binding: #38BDF8;
+      --flow-data: #10B981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1E293B 0%, #0F172A 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1380px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid #1E293B;
+      border-radius: 24px;
+      padding: 32px 36px 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(129, 140, 248, 0.4);
+      color: #A5B4FC;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .badge-top span.dot {
+      width: 8px;
+      height: 8px;
+      background: #818CF8;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #818CF8;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #FFFFFF 30%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 820px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Diagram Grid */
+    .diagram-board {
+      display: grid;
+      grid-template-columns: 1fr 140px 1.15fr 140px 1fr;
+      gap: 0;
+      align-items: center;
+      position: relative;
+      margin-bottom: 36px;
+    }
+
+    /* Column Cards */
+    .pillar-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Pillar Specific Themes */
+    .pillar-view {
+      border-color: var(--view-border);
+      background: linear-gradient(180deg, var(--view-bg) 0%, rgba(30, 41, 59, 0.9) 100%);
+    }
+    .pillar-view .pillar-header h2 { color: var(--view-color); }
+
+    .pillar-vm {
+      border-color: var(--vm-border);
+      background: linear-gradient(180deg, var(--vm-bg) 0%, rgba(30, 41, 59, 0.9) 100%);
+      box-shadow: 0 15px 40px rgba(99, 102, 241, 0.15);
+    }
+    .pillar-vm .pillar-header h2 { color: var(--vm-color); }
+
+    .pillar-model {
+      border-color: var(--model-border);
+      background: linear-gradient(180deg, var(--model-bg) 0%, rgba(30, 41, 59, 0.9) 100%);
+    }
+    .pillar-model .pillar-header h2 { color: var(--model-color); }
+
+    .pillar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pillar-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .pillar-view .pillar-icon { background: rgba(56, 189, 248, 0.15); color: var(--view-color); }
+    .pillar-vm .pillar-icon { background: rgba(129, 140, 248, 0.15); color: var(--vm-color); }
+    .pillar-model .pillar-icon { background: rgba(52, 211, 153, 0.15); color: var(--model-color); }
+
+    .pillar-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .pillar-header .tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .content-box {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .info-snippet {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .snippet-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #CBD5E1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #E2E8F0;
+      background: #020617;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border-left: 3px solid;
+      overflow-x: auto;
+    }
+
+    .pillar-view .code-block { border-left-color: var(--view-color); }
+    .pillar-vm .code-block { border-left-color: var(--vm-color); }
+    .pillar-model .code-block { border-left-color: var(--model-color); }
+
+    .code-kw { color: #F472B6; font-weight: 600; }
+    .code-fn { color: #60A5FA; }
+    .code-prop { color: #FBBF24; }
+    .code-str { color: #34D399; }
+    .code-attr { color: #A78BFA; }
+
+    /* Flow Connectors */
+    .flow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 0 4px;
+      z-index: 1;
+    }
+
+    .flow-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      text-align: center;
+    }
+
+    .flow-label {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .flow-arrow {
+      position: relative;
+      width: 100%;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-arrow svg {
+      width: 100%;
+      height: 20px;
+    }
+
+    /* Specific Flows */
+    .flow-command .flow-label {
+      background: rgba(245, 158, 11, 0.18);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .flow-binding .flow-label {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38BDF8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .flow-repo-req .flow-label {
+      background: rgba(129, 140, 248, 0.18);
+      color: #A5B4FC;
+      border: 1px solid rgba(129, 140, 248, 0.4);
+    }
+
+    .flow-repo-res .flow-label {
+      background: rgba(52, 211, 153, 0.18);
+      color: #34D399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+    }
+
+    /* Bottom Features Ribbon */
+    .features-ribbon {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+    }
+
+    .feature-pill {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .pill-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .pill-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #F1F5F9;
+      margin-bottom: 3px;
+    }
+
+    .pill-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Print & Capture Controls */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #4F46E5;
+      color: #FFFFFF;
+    }
+    .btn-primary:hover {
+      background: #4338CA;
+    }
+
+    .btn-secondary {
+      background: #1E293B;
+      color: #E2E8F0;
+      border: 1px solid #475569;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    @media print {
+      body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        padding: 0;
+      }
+      .container {
+        border: none;
+        box-shadow: none;
+        background: #FFFFFF;
+        max-width: 100%;
+      }
+      .controls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="capture-target">
+    <!-- Header -->
+    <div class="header">
+      <div class="badge-top">
+        <span class="dot"></span>
+        KIẾN TRÚC CLIENT NATIVE .NET MAUI — COMMUNITYTOOLKIT.MVVM
+      </div>
+      <h1>Mô Hình MVVM & Cơ Chế Data-Binding 2 Chiều</h1>
+      <p class="subtitle">Đề tài: Quản lý Chi tiêu và Hoạch định Tài chính Thông minh — Tách biệt 100% tầng Giao diện (View), Tầng Điều phối (ViewModel) và Tầng Dữ liệu (Model).</p>
+    </div>
+
+    <!-- Diagram Board -->
+    <div class="diagram-board">
+      
+      <!-- 1. VIEW PILLAR -->
+      <div class="pillar-card pillar-view">
+        <div class="pillar-header">
+          <div class="pillar-icon">🖥️</div>
+          <div>
+            <h2>VIEW</h2>
+            <span class="tag">XAML & Zero Code-Behind</span>
+          </div>
+        </div>
+        <div class="content-box">
+          <div class="info-snippet">
+            <div class="snippet-title">📁 WalletsPage.xaml</div>
+            <div class="code-block">
+&lt;<span class="code-kw">Entry</span> <span class="code-prop">Text</span>=<span class="code-str">"{Binding Amount}"</span> /&gt;
+
+&lt;<span class="code-kw">Button</span> 
+  <span class="code-prop">Text</span>=<span class="code-str">"Lưu Giao Dịch"</span>
+  <span class="code-prop">Command</span>=<span class="code-str">"{Binding SaveCommand}"</span> /&gt;
+
+&lt;<span class="code-kw">CollectionView</span> 
+  <span class="code-prop">ItemsSource</span>=<span class="code-str">"{Binding Wallets}"</span> /&gt;
+            </div>
+          </div>
+          <div class="info-snippet">
+            <div class="snippet-title">🛡️ Nguyên Tắc Thiết Kế</div>
+            <p style="font-size: 12px; color: #94A3B8; line-height: 1.5;">
+              • Chỉ định nghĩa Visual Layout thuần túy.<br>
+              • File <span style="color:#38BDF8">WalletsPage.xaml.cs</span> giữ nguyên 1 dòng <span style="color:#E2E8F0">InitializeComponent()</span>.<br>
+              • Tuyệt đối không chứa logic nghiệp vụ.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW <-> VIEWMODEL CONNECTOR -->
+      <div class="flow-connector">
+        <!-- Command Flow -->
+        <div class="flow-item flow-command">
+          <span class="flow-label">User Tap / Click</span>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 10 H88 M80 3 L92 10 L80 17" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-size: 10px; color: #FBBF24; font-weight: 600;">RelayCommand</span>
+        </div>
+
+        <!-- Binding Flow -->
+        <div class="flow-item flow-binding">
+          <span class="flow-label">NotifyPropertyChanged</span>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 10 H12 M20 3 L8 10 L20 17" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-size: 10px; color: #38BDF8; font-weight: 600;">Two-Way Binding</span>
+        </div>
+      </div>
+
+      <!-- 2. VIEWMODEL PILLAR -->
+      <div class="pillar-card pillar-vm">
+        <div class="pillar-header">
+          <div class="pillar-icon">⚙️</div>
+          <div>
+            <h2>VIEWMODEL</h2>
+            <span class="tag">CommunityToolkit.Mvvm</span>
+          </div>
+        </div>
+        <div class="content-box">
+          <div class="info-snippet">
+            <div class="snippet-title">📁 WalletsViewModel.cs</div>
+            <div class="code-block">
+<span class="code-kw">public partial class</span> <span class="code-fn">WalletsViewModel</span> : <span class="code-fn">ObservableObject</span>
+{
+  <span class="code-attr">[ObservableProperty]</span>
+  <span class="code-kw">private decimal</span> _amount;
+
+  <span class="code-attr">[ObservableProperty]</span>
+  <span class="code-kw">private ObservableCollection</span>&lt;<span class="code-fn">WalletModel</span>&gt; _wallets;
+
+  <span class="code-attr">[RelayCommand]</span>
+  <span class="code-kw">private async Task</span> <span class="code-fn">SaveAsync</span>()
+  {
+    <span class="code-kw">await</span> _walletRepo.<span class="code-fn">AddWalletAsync</span>(newModel);
+  }
+}
+            </div>
+          </div>
+          <div class="info-snippet">
+            <div class="snippet-title">⚡ Điểm Sáng Kỹ Thuật</div>
+            <p style="font-size: 12px; color: #94A3B8; line-height: 1.5;">
+              • Tự sinh <span style="color:#818CF8">INotifyPropertyChanged</span> qua Roslyn Source Gen.<br>
+              • <span style="color:#FBBF24">RelayCommand</span> hỗ trợ Async, chống double-click.<br>
+              • Dễ dàng kiểm thử tự động với <span style="color:#34D399">xUnit Test</span> (82 tests xanh).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEWMODEL <-> MODEL CONNECTOR -->
+      <div class="flow-connector">
+        <!-- Request Flow -->
+        <div class="flow-item flow-repo-req">
+          <span class="flow-label">Call Repository</span>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 10 H88 M80 3 L92 10 L80 17" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-size: 10px; color: #A5B4FC; font-weight: 600;">Fetch / Insert / Sync</span>
+        </div>
+
+        <!-- Response Flow -->
+        <div class="flow-item flow-repo-res">
+          <span class="flow-label">Return DTO / Data</span>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 10 H12 M20 3 L8 10 L20 17" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-size: 10px; color: #34D399; font-weight: 600;">Entities / Result</span>
+        </div>
+      </div>
+
+      <!-- 3. MODEL PILLAR -->
+      <div class="pillar-card pillar-model">
+        <div class="pillar-header">
+          <div class="pillar-icon">📦</div>
+          <div>
+            <h2>MODEL</h2>
+            <span class="tag">Entities & Data Providers</span>
+          </div>
+        </div>
+        <div class="content-box">
+          <div class="info-snippet">
+            <div class="snippet-title">📁 WalletModel.cs & Services</div>
+            <div class="code-block">
+<span class="code-kw">public class</span> <span class="code-fn">WalletModel</span>
+{
+  <span class="code-kw">public Guid</span> <span class="code-prop">Id</span> { <span class="code-kw">get; set;</span> }
+  <span class="code-kw">public string</span> <span class="code-prop">Name</span> { <span class="code-kw">get; set;</span> }
+  <span class="code-kw">public decimal</span> <span class="code-prop">Balance</span> { <span class="code-kw">get; set;</span> }
+}
+
+<span class="code-kw">public interface</span> <span class="code-fn">IWalletRepository</span>
+{
+  <span class="code-kw">Task</span>&lt;<span class="code-kw">List</span>&lt;<span class="code-fn">WalletModel</span>&gt;&gt; <span class="code-fn">GetAllAsync</span>();
+}
+            </div>
+          </div>
+          <div class="info-snippet">
+            <div class="snippet-title">💾 Đa Tầng Lưu Trữ (Polyglot)</div>
+            <p style="font-size: 12px; color: #94A3B8; line-height: 1.5;">
+              • <span style="color:#34D399">SQLite Local DB:</span> Lưu trữ offline khi mất mạng.<br>
+              • <span style="color:#60A5FA">ASP.NET Core REST API:</span> Đồng bộ backend.<br>
+              • <span style="color:#FBBF24">SignalR FinanceHub:</span> Cập nhật tức thời 2 chiều.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Features Ribbon -->
+    <div class="features-ribbon">
+      <div class="feature-pill">
+        <div class="pill-icon">🔄</div>
+        <div>
+          <div class="pill-title">Data-Binding 2 Chiều</div>
+          <div class="pill-desc">Giao diện và ViewModel tự đồng bộ 0ms không cần reload trang.</div>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <div class="pill-icon">⚡</div>
+        <div>
+          <div class="pill-title">RelayCommand Tối Ưu</div>
+          <div class="pill-desc">Tự động khóa nút khi đang xử lý async, ngăn chặn spam thao tác.</div>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <div class="pill-icon">🧪</div>
+        <div>
+          <div class="pill-title">Dễ Dàng Viết Unit Test</div>
+          <div class="pill-desc">ViewModel không dính dáng UI, test độc lập đạt 82/82 tests pass 100%.</div>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <div class="pill-icon">📶</div>
+        <div>
+          <div class="pill-title">Offline-First & Realtime</div>
+          <div class="pill-desc">Chuyển đổi linh hoạt Mock/Local SQLite và Backend Live qua Refit.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Buttons -->
+  <div class="controls">
+    <button class="btn btn-primary" onclick="window.print()">🖨️ In / Lưu PDF hoặc Chụp Màn Hình</button>
+    <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(window.location.href); alert('Đã sao chép link!');">🔗 Copy Link</button>
+  </div>
+
+</body>
+</html>

@@ -26,8 +26,16 @@ public class AdaptiveDsaService : IAdaptiveDsaService
             .OrderByDescending(b => b.CreatedAt)
             .FirstOrDefaultAsync(ct);
 
+        // Fallback: If no Active budget, look for the most recent budget
+        activeBudget ??= await _context.Budgets
+            .Include(b => b.Allocations)
+            .ThenInclude(a => a.Category)
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
         if (activeBudget == null)
-            return Result<DsaStatusDto>.Failure("Không tìm thấy kế hoạch ngân sách đang hoạt động.");
+            return Result<DsaStatusDto>.Failure("Không tìm thấy kế hoạch ngân sách.", 404);
 
         var today = DateTime.UtcNow.Date;
         var totalDays = Math.Max(1, (activeBudget.EndDate.Date - activeBudget.StartDate.Date).Days + 1);
@@ -91,8 +99,15 @@ public class AdaptiveDsaService : IAdaptiveDsaService
             .OrderByDescending(b => b.CreatedAt)
             .FirstOrDefaultAsync(ct);
 
+        // Fallback: If no Active budget, look for the most recent budget
+        activeBudget ??= await _context.Budgets
+            .Include(b => b.Allocations)
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
         if (activeBudget == null)
-            return Result<VelocityStatusDto>.Failure("Không tìm thấy kế hoạch ngân sách đang hoạt động.");
+            return Result<VelocityStatusDto>.Failure("Không tìm thấy kế hoạch ngân sách.", 404);
 
         var today = DateTime.UtcNow.Date;
         var totalDays = Math.Max(1, (activeBudget.EndDate.Date - activeBudget.StartDate.Date).Days + 1);
@@ -170,8 +185,16 @@ public class AdaptiveDsaService : IAdaptiveDsaService
             .OrderByDescending(b => b.CreatedAt)
             .FirstOrDefaultAsync(ct);
 
+        // Fallback: If no Active budget, look for the most recent budget
+        activeBudget ??= await _context.Budgets
+            .Include(b => b.Allocations)
+            .ThenInclude(a => a.Category)
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
         if (activeBudget == null)
-            return Result<BudgetProgressDto>.Failure("Không tìm thấy kế hoạch ngân sách đang hoạt động.");
+            return Result<BudgetProgressDto>.Failure("Không tìm thấy kế hoạch ngân sách.", 404);
 
         var dsaResult = await GetCurrentDsaStatusAsync(userId, ct);
         var velocityResult = await GetSpendingVelocityAsync(userId, ct);

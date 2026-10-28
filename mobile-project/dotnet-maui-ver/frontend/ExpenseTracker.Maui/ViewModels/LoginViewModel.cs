@@ -20,6 +20,18 @@ public partial class LoginViewModel : BaseViewModel
     private string _password = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PasswordToggleIcon))]
+    private bool _isPasswordHidden = true;
+
+    public string PasswordToggleIcon => IsPasswordHidden ? "ic_eye.png" : "ic_eye_off.png";
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordHidden = !IsPasswordHidden;
+    }
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ModeTitle))]
     [NotifyPropertyChangedFor(nameof(ModeBadgeText))]
     [NotifyPropertyChangedFor(nameof(ModeBadgeColor))]

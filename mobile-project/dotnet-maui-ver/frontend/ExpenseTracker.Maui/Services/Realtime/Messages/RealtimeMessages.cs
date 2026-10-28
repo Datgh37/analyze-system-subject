@@ -3,6 +3,11 @@ using ExpenseTracker.Maui.Models.Notifications;
 
 namespace ExpenseTracker.Maui.Services.Realtime.Messages;
 
+public class ServerModeChangedMessage : ValueChangedMessage<bool>
+{
+    public ServerModeChangedMessage(bool isLiveApiMode) : base(isLiveApiMode) { }
+}
+
 public class RealtimeConnectionChangedMessage : ValueChangedMessage<RealtimeConnectionInfo>
 {
     public RealtimeConnectionChangedMessage(RealtimeConnectionInfo value) : base(value) { }

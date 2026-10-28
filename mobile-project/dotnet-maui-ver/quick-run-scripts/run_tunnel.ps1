@@ -15,7 +15,7 @@ param (
     [int]$BackendPort = 5018
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 Write-Host "`n====================================================================" -ForegroundColor Cyan
 Write-Host "   CLOUDFLARE TUNNEL HTTPS GATEWAY - EXPENSE TRACKER BACKEND" -ForegroundColor Cyan
@@ -107,7 +107,9 @@ if (-not $backendAlive) {
     $dockerCmd = Get-Command "docker" -ErrorAction SilentlyContinue
     if ($dockerCmd) {
         Write-Host " [*] Kiem tra PostgreSQL Docker..." -ForegroundColor Cyan
-        & docker compose -f (Join-Path $currentDir "backend\docker-compose.yml") up -d 2>$null
+        try {
+            cmd /c "docker compose -f `"$currentDir\backend\docker-compose.yml`" up -d postgres 2>nul" | Out-Null
+        } catch {}
     }
 
     # Bật Backend trong tiến trình ngầm

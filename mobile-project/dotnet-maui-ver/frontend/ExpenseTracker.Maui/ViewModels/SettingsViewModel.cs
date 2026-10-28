@@ -54,6 +54,15 @@ public partial class SettingsViewModel : BaseViewModel
         ConnectionStatusText = _serverConfig.ConnectionStatus;
     }
 
+    partial void OnIsLiveApiModeChanged(bool value)
+    {
+        if (_serverConfig != null && _serverConfig.IsLiveApiMode != value)
+        {
+            _serverConfig.IsLiveApiMode = value;
+            ConnectionStatusText = _serverConfig.ConnectionStatus;
+        }
+    }
+
     [RelayCommand]
     private void ToggleMode(bool isLive)
     {
@@ -177,6 +186,7 @@ public partial class SettingsViewModel : BaseViewModel
     [RelayCommand]
     private async Task ScheduleTestReminderAsync()
     {
+        await _nativeNotification.RequestPermissionAsync();
         await _nativeNotification.ScheduleTestReminderAsync(10);
 
         if (Shell.Current?.CurrentPage != null)

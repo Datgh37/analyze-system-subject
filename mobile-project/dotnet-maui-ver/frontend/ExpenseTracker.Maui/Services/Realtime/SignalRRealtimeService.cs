@@ -33,6 +33,20 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
             : (DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5018" : "http://localhost:5018");
 
         _hubUrl = $"{baseApiUrl.TrimEnd('/')}/hubs/financial";
+
+        // Automatically connect or disconnect when server mode changes
+        WeakReferenceMessenger.Default.Register<ServerModeChangedMessage>(this, async (r, m) =>
+        {
+            if (!m.Value)
+            {
+                await DisconnectAsync();
+                UpdateStatus(false, "Chế độ Ngoại Tuyến (Offline Mock)", "#9CA3AF");
+            }
+            else
+            {
+                await ConnectAsync();
+            }
+        });
     }
 
     public async Task ConnectAsync()
@@ -47,7 +61,7 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
         if (string.IsNullOrWhiteSpace(token))
         {
             _logger.LogInformation("SignalR: Chế độ khách hoặc chưa có Access Token. Bỏ qua kết nối Hub.");
-            UpdateStatus(false, "Chế độ Khách (Chưa đăng nhập)", "#6B7280");
+            UpdateStatus(false, "Vui lòng đăng nhập để đồng bộ Realtime", "#6B7280");
             return;
         }
 
@@ -75,6 +89,8 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(_hubUrl, options =>
                 {
+                    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets |
+                                         Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
                     options.AccessTokenProvider = async () =>
                     {
                         return await _tokenStorage.GetAccessTokenAsync();

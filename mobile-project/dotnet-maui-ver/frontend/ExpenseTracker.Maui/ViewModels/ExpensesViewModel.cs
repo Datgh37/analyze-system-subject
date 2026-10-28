@@ -92,6 +92,15 @@ public partial class ExpensesViewModel : BaseViewModel, IQueryAttributable
                 }
             }
         });
+
+        // Listen for server mode changes (Live API <-> Offline Mock)
+        WeakReferenceMessenger.Default.Register<ServerModeChangedMessage>(this, (r, m) =>
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await LoadDataAsync();
+            });
+        });
     }
 
 

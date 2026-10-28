@@ -25,7 +25,27 @@ public class DailyReminderReceiver : BroadcastReceiver
         bool isEnabled = Preferences.Default.Get("daily_expense_reminder_enabled", true);
         if (!isEnabled) return;
 
-        // 2. Xây dựng Intent mở thẳng màn hình Ghi Chép Chi Tiêu khi người dùng bấm vào Notification
+        // 2. Bảo đảm Notification Channel đã được tạo sẵn kể cả khi tiến trình app vừa bị kill
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+        {
+            var nm = (NotificationManager?)context.GetSystemService(Context.NotificationService);
+            if (nm != null && nm.GetNotificationChannel(NotificationChannelIds.DailyReminder) == null)
+            {
+                var channel = new NotificationChannel(
+                    NotificationChannelIds.DailyReminder,
+                    "⏰ Nhắc Nhở Tài Chính 21:00",
+                    NotificationImportance.High)
+                {
+                    Description = "Nhắc nhở kiểm tra và ghi lại chi tiêu cuối ngày để bảo vệ kỷ luật ngân sách"
+                };
+                channel.EnableVibration(true);
+                channel.SetVibrationPattern(new long[] { 0, 300, 200, 300 });
+                channel.LockscreenVisibility = NotificationVisibility.Public;
+                nm.CreateNotificationChannel(channel);
+            }
+        }
+
+        // 3. Xây dựng Intent mở thẳng màn hình Ghi Chép Chi Tiêu khi người dùng bấm vào Notification
         var launchIntent = new Intent(context, typeof(MainActivity));
         launchIntent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.SingleTop | ActivityFlags.NewTask);
         launchIntent.PutExtra("target_route", "///ExpensesPage");
@@ -37,8 +57,8 @@ public class DailyReminderReceiver : BroadcastReceiver
             SafeImmutableFlags);
 
         int smallIcon = context.ApplicationInfo?.Icon != 0
-            ? (context.ApplicationInfo?.Icon ?? global::Android.Resource.Drawable.IcDialogInfo)
-            : global::Android.Resource.Drawable.IcDialogInfo;
+            ? context.ApplicationInfo.Icon
+            : global::Android.Resource.Drawable.SymDefAppIcon;
 
         const string title = "⏰ Nhắc Nhở Tài Chính 21:00";
         const string message = "Đã 21:00 rồi! Đừng quên ghi lại các khoản chi hôm nay để bảo vệ hạn mức an toàn DSA nhé 💎";
@@ -50,6 +70,8 @@ public class DailyReminderReceiver : BroadcastReceiver
             .SetStyle(new NotificationCompat.BigTextStyle().BigText(message))
             .SetAutoCancel(true)
             .SetPriority(NotificationCompat.PriorityHigh)
+            .SetCategory(NotificationCompat.CategoryAlarm)
+            .SetVisibility(NotificationCompat.VisibilityPublic)
             .SetDefaults((int)(NotificationDefaults.Sound | NotificationDefaults.Vibrate))
             .SetContentIntent(pendingIntent);
 
@@ -86,7 +108,17 @@ public class DailyReminderReceiver : BroadcastReceiver
 
         if (pendingIntent != null)
         {
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+            {
+                var showIntent = PendingIntent.GetActivity(
+                    context,
+                    1004,
+                    new Intent(context, typeof(MainActivity)),
+                    SafeImmutableFlags);
+                var alarmClockInfo = new AlarmManager.AlarmClockInfo(triggerAtMillis, showIntent);
+                alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
+            }
+            else if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
             {
                 alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
             }

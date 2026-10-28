@@ -11,6 +11,16 @@ public static class NotificationPermissionHelper
         if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
         {
             var activity = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+            if (activity == null)
+            {
+                // Đợi ngắn trong trường hợp khởi chạy ứng dụng lần đầu khi Activity đang được khởi tạo
+                for (int i = 0; i < 5 && activity == null; i++)
+                {
+                    await Task.Delay(200);
+                    activity = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+                }
+            }
+
             var context = activity ?? Android.App.Application.Context;
 
             var permissionStatus = AndroidX.Core.Content.ContextCompat.CheckSelfPermission(
@@ -30,7 +40,7 @@ public static class NotificationPermissionHelper
                     1001);
             }
 
-            // Return current state after request prompt
+            // Kiểm tra trạng thái hiện tại
             return AndroidX.Core.Content.ContextCompat.CheckSelfPermission(
                 context, 
                 PostNotificationPermission) == Android.Content.PM.Permission.Granted;

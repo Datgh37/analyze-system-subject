@@ -18,9 +18,19 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
 
+        bool isPostgresAvailable = CheckPostgreSqlAvailability(connectionString);
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(connectionString);
+            if (isPostgresAvailable)
+            {
+                options.UseNpgsql(connectionString);
+            }
+            else
+            {
+                var dbPath = Path.Combine(AppContext.BaseDirectory, "expensetracker.db");
+                options.UseSqlite($"Data Source={dbPath}");
+            }
             options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         });
 
@@ -48,5 +58,29 @@ public static class DependencyInjection
         services.AddScoped<IPushNotificationSender, FirebasePushNotificationSender>();
 
         return services;
+    }
+
+    private static bool CheckPostgreSqlAvailability(string connectionString)
+    {
+        try
+        {
+            var builder = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
+            var host = string.IsNullOrWhiteSpace(builder.Host) ? "localhost" : builder.Host;
+            var port = builder.Port > 0 ? builder.Port : 5432;
+
+            using var client = new System.Net.Sockets.TcpClient();
+            var result = client.BeginConnect(host, port, null, null);
+            var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(500));
+            if (!success)
+            {
+                return false;
+            }
+            client.EndConnect(result);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

@@ -28,7 +28,7 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="⚡" FontSize="18" VerticalOptions="Center" />
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#60A5FA" VerticalOptions="Center" />
                             <Label Text="FINTECH SMART UTILITIES"
                                    FontSize="11"
                                    FontAttributes="Bold"
@@ -41,7 +41,7 @@
                                 Padding="8,4"
                                 StrokeShape="RoundRectangle 8"
                                 Stroke="Transparent">
-                            <Label Text="AI ASSISTANT"
+                            <Label Text="TIỆN ÍCH"
                                    FontSize="10"
                                    FontAttributes="Bold"
                                    TextColor="#EFF6FF" />
@@ -53,7 +53,7 @@
                            FontAttributes="Bold"
                            TextColor="#FFFFFF" />
 
-                    <Label Text="Phát hiện rò rỉ bẫy thuê bao lặp lại (Zombie Subscriptions) theo kinh tế học hành vi Richard Thaler &amp; Tạo mã chuyển tiền VietQR chuẩn Napas 247."
+                    <Label Text="Tối ưu chi phí định kỳ và tạo mã chuyển khoản VietQR Napas 247 tức thì."
                            FontSize="12"
                            TextColor="#BFDBFE"
                            LineHeight="1.3" />
@@ -80,7 +80,7 @@
                     Padding="12,10"
                     IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
                     <Label Text="{Binding StatusMessage}"
                            TextColor="#065F46"
                            FontAttributes="Bold"
@@ -95,7 +95,7 @@
                     Padding="12,10"
                     IsVisible="{Binding HasError}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"
@@ -113,11 +113,11 @@
                 <VerticalStackLayout Spacing="14">
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                         <VerticalStackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="🚨 Bẫy Thuê Bao Định Kỳ"
+                            <Label Text="Gói Dịch Vụ &amp; Thuê Bao Định Kỳ"
                                    FontAttributes="Bold"
                                    FontSize="15"
                                    TextColor="#B91C1C" />
-                            <Label Text="Phân tích chu kỳ lặp lại (Netflix, Spotify...). Cảnh báo rò rỉ âm thầm."
+                            <Label Text="Phân tích chu kỳ lặp lại (Netflix, Spotify...). Quản lý chi phí định kỳ."
                                    FontSize="11"
                                    TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
                         </VerticalStackLayout>
@@ -127,11 +127,11 @@
                                 StrokeShape="RoundRectangle 6"
                                 Stroke="Transparent"
                                 VerticalOptions="Center">
-                            <Label Text="THALER NUDGE" FontSize="10" FontAttributes="Bold" TextColor="#B91C1C" />
+                            <Label Text="ĐỊNH KỲ" FontSize="10" FontAttributes="Bold" TextColor="#B91C1C" />
                         </Border>
                     </Grid>
 
-                    <Button Text="Rà Soát Bẫy Thuê Bao Ngay"
+                    <Button Text="Rà Soát Thuê Bao Định Kỳ"
                             Command="{Binding AuditSubscriptionsCommand}"
                             BackgroundColor="#DC2626"
                             TextColor="White"
@@ -222,7 +222,7 @@
                 <VerticalStackLayout Spacing="14">
                     <Grid ColumnDefinitions="*,Auto">
                         <VerticalStackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="⚡ Tạo Mã Chuyển Khoản VietQR"
+                            <Label Text="Tạo Mã Chuyển Khoản VietQR"
                                    FontAttributes="Bold"
                                    FontSize="16"
                                    TextColor="#1D4ED8" />
@@ -316,7 +316,7 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <Button Text="Sinh Mã VietQR Ngay"
+                    <Button Text="Tạo Mã Thanh Toán VietQR"
                             Command="{Binding GenerateVietQrCommand}"
                             BackgroundColor="#2563EB"
                             TextColor="White"

@@ -13,9 +13,24 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U expensetracker_user -d expensetracker_db"]
-      interval: 10s
-      timeout: 5s
+      interval: 5s
+      timeout: 3s
       retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: expensetracker-backend
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=expensetracker_db;Username=expensetracker_user;Password=expensetracker_password"
+    ports:
+      - "5018:5018"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:

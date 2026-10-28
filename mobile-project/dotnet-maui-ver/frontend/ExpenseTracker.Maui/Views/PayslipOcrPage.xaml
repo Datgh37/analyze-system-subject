@@ -130,7 +130,7 @@
                     Padding="12,10"
                     IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#059669" VerticalOptions="Center" />
                     <Label Text="{Binding StatusMessage}"
                            TextColor="#065F46"
                            FontAttributes="Bold"
@@ -152,7 +152,7 @@
                 <VerticalStackLayout Spacing="6">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Text="⚠️" FontSize="16" VerticalOptions="Center" />
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#D97706" VerticalOptions="Center" />
                             <Label Text="CẢNH BÁO SAI LỆCH SỐ HỌC"
                                    FontAttributes="Bold"
                                    TextColor="#B45309"
@@ -182,7 +182,7 @@
                     Padding="12,10"
                     IsVisible="{Binding HasError}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"

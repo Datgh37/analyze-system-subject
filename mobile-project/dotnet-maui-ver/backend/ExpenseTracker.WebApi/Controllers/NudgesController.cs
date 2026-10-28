@@ -22,6 +22,7 @@ public class NudgesController : BaseApiController
     }
 
     // UC-09.01: Get active behavioral nudges
+    [HttpGet]
     [HttpGet("active")]
     [ProducesResponseType(typeof(List<FinancialNudgeDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetActiveNudges(CancellationToken ct = default)
@@ -32,6 +33,7 @@ public class NudgesController : BaseApiController
 
     // UC-09.02: Explainable AI (XAI) transparent rationale
     [HttpGet("{id:guid}/rationale")]
+    [HttpGet("{id:guid}/xai")]
     [ProducesResponseType(typeof(XaiRationaleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetNudgeRationale(Guid id, CancellationToken ct = default)
@@ -42,9 +44,10 @@ public class NudgesController : BaseApiController
 
     // UC-09.03: Propose Dynamic Budget Rebalance
     [HttpGet("rebalance-proposal")]
+    [HttpGet("rebalance/{deficitCategoryId:guid?}")]
     [ProducesResponseType(typeof(DynamicRebalanceProposalDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetRebalanceProposal([FromQuery] Guid? deficitCategoryId = null, CancellationToken ct = default)
+    public async Task<IActionResult> GetRebalanceProposal([FromRoute] Guid? deficitCategoryId = null, CancellationToken ct = default)
     {
         var result = await _nudgeService.GenerateRebalanceProposalAsync(CurrentUserId, deficitCategoryId, ct);
         return HandleResult(result);

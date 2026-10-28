@@ -75,6 +75,15 @@ public partial class BudgetsViewModel : BaseViewModel
                 }
             }
         });
+
+        // Listen for server mode changes (Live API <-> Offline Mock)
+        WeakReferenceMessenger.Default.Register<ServerModeChangedMessage>(this, (r, m) =>
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await LoadActiveBudgetProgressAsync();
+            });
+        });
     }
 
     [RelayCommand]
@@ -104,7 +113,7 @@ public partial class BudgetsViewModel : BaseViewModel
                 Allocations.Add(alloc);
             }
         }
-        catch (Refit.ApiException apiEx) when (apiEx.StatusCode == System.Net.HttpStatusCode.NotFound)
+        catch (Refit.ApiException apiEx) when (apiEx.StatusCode == System.Net.HttpStatusCode.NotFound || apiEx.StatusCode == System.Net.HttpStatusCode.BadRequest)
         {
             HasActiveBudget = false;
             ActiveBudget = null;

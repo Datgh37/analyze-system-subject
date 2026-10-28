@@ -32,8 +32,30 @@ public class ForecastingService : IForecastingService
             .OrderByDescending(b => b.CreatedAt)
             .FirstOrDefaultAsync(ct);
 
+        // Fallback: If no Active budget, look for the most recent budget
+        activeBudget ??= await _context.Budgets
+            .Include(b => b.Allocations)
+            .ThenInclude(a => a.Category)
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
         if (activeBudget == null)
-            return Result<ExpenseForecastDto>.Failure("Không tìm thấy kế hoạch ngân sách đang hoạt động để chạy mô hình dự báo.");
+        {
+            return Result<ExpenseForecastDto>.Success(new ExpenseForecastDto
+            {
+                BudgetId = Guid.Empty,
+                BudgetName = "Chưa thiết lập ngân sách",
+                TotalBudget = 0m,
+                CurrentSpent = 0m,
+                DaysPassed = 0,
+                TotalDaysInCycle = 30,
+                RemainingDays = 0,
+                InsufficientData = true,
+                RiskLevel = "Safe",
+                AdvisoryMessage = "Bạn chưa có kế hoạch ngân sách nào. Vui lòng thiết lập ngân sách tại trang Quản lý Ngân sách để kích hoạt mô hình dự báo chi tiêu."
+            });
+        }
 
         var today = DateTime.UtcNow.Date;
         var startDate = activeBudget.StartDate.Date;
@@ -372,6 +394,14 @@ public class ForecastingService : IForecastingService
             .Include(b => b.Allocations)
             .ThenInclude(a => a.Category)
             .Where(b => b.UserId == userId && b.Status == BudgetStatus.Active)
+            .OrderByDescending(b => b.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
+        // Fallback: If no Active budget, look for the most recent budget
+        activeBudget ??= await _context.Budgets
+            .Include(b => b.Allocations)
+            .ThenInclude(a => a.Category)
+            .Where(b => b.UserId == userId)
             .OrderByDescending(b => b.CreatedAt)
             .FirstOrDefaultAsync(ct);
 

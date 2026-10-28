@@ -8,6 +8,7 @@ namespace ExpenseTracker.WebApi.Controllers;
 
 [Authorize]
 [ApiController]
+[Route("api/notifications")]
 [Route("api/v1/notifications")]
 public class NotificationsController : ControllerBase
 {

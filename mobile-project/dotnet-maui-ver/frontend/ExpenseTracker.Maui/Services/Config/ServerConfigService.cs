@@ -1,3 +1,6 @@
+using CommunityToolkit.Mvvm.Messaging;
+using ExpenseTracker.Maui.Services.Realtime.Messages;
+
 namespace ExpenseTracker.Maui.Services.Config;
 
 public class ServerConfigService : IServerConfigService
@@ -18,8 +21,7 @@ public class ServerConfigService : IServerConfigService
 
     public static string GetDefaultServerUrl()
     {
-        // Mặc định: Ưu tiên LocalhostUrl nếu đang phát triển trên máy tính, hoặc Tunnel cho bản release
-        return ProductionTunnelUrl;
+        return LocalhostUrl;
     }
 
     public bool IsLiveApiMode
@@ -30,6 +32,7 @@ public class ServerConfigService : IServerConfigService
             Preferences.Default.Set(PrefKeyIsLiveApiMode, value);
             _connectionStatus = value ? "Chế độ: Live Backend API" : "Chế độ: Demo Ngoại Tuyến (Offline Mock)";
             OnConfigChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new ServerModeChangedMessage(value));
         }
     }
 

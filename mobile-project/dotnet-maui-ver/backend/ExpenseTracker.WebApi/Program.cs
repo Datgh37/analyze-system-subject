@@ -39,7 +39,11 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 // Register API controllers and documentation with JWT Bearer authorization in Swagger
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -180,6 +184,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
@@ -210,15 +217,24 @@ using (var scope = app.Services.CreateScope())
         var context = scope.ServiceProvider.GetRequiredService<ExpenseTracker.Infrastructure.Persistence.ApplicationDbContext>();
         var passwordHasher = scope.ServiceProvider.GetRequiredService<ExpenseTracker.Application.Interfaces.IPasswordHasher>();
 
-        // Tự động áp dụng toàn bộ Migrations mới nhất khi phát hiện kết nối PostgreSQL
-        await Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.MigrateAsync(context.Database);
-
-        await ExpenseTracker.Infrastructure.Persistence.DatabaseSeeder.SeedDefaultCategoriesAsync(context, logger);
-        await ExpenseTracker.Infrastructure.Persistence.DatabaseSeeder.SeedAdminUserAsync(context, passwordHasher, logger);
+        if (Microsoft.EntityFrameworkCore.SqliteDatabaseFacadeExtensions.IsSqlite(context.Database))
+        {
+            logger.LogInformation("[Database Engine] Đang chạy trên CSDL SQLite cục bộ (expensetracker.db) tự động, không phụ thuộc Docker.");
+            await context.Database.EnsureCreatedAsync();
+            await ExpenseTracker.Infrastructure.Persistence.DatabaseSeeder.SeedDefaultCategoriesAsync(context, logger);
+            await ExpenseTracker.Infrastructure.Persistence.DatabaseSeeder.SeedAdminUserAsync(context, passwordHasher, logger);
+        }
+        else
+        {
+            logger.LogInformation("[Database Engine] Đang kết nối CSDL PostgreSQL tại cổng 5432...");
+            await Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.MigrateAsync(context.Database);
+            await ExpenseTracker.Infrastructure.Persistence.DatabaseSeeder.SeedDefaultCategoriesAsync(context, logger);
+            await ExpenseTracker.Infrastructure.Persistence.DatabaseSeeder.SeedAdminUserAsync(context, passwordHasher, logger);
+        }
     }
     catch (Exception ex)
     {
-        logger.LogWarning("⚠️ [PostgreSQL Warning] Không thể kết nối tới CSDL tại cổng 5432 ({Message}). Hãy bật Docker Desktop ('docker compose up -d') khi cần lưu dữ liệu vào CSDL.", ex.Message);
+        logger.LogWarning("⚠️ [Database Warning] Lỗi khởi tạo CSDL: {Message}", ex.Message);
     }
 }
 

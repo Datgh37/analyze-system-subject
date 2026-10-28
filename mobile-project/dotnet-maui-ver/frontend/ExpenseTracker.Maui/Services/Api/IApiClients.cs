@@ -375,46 +375,46 @@ public interface IForecastingApi
         [Body] ExpenseTracker.Maui.Models.Forecasting.WhatIfSimulationRequestModel request);
 }
 
-// Refit declarative HTTP client contract for Behavioral Nudges & Thaler Choice Architecture (UC-09.01 -> UC-09.04)
+// Refit declarative HTTP client contract for Behavioral Nudges &amp; Thaler Choice Architecture (UC-09.01 -> UC-09.04)
 public interface INudgeApi
 {
-    [Get("/api/v1/nudges")]
+    [Get("/api/nudges")]
     Task<List<ExpenseTracker.Maui.Models.Behavioral.FinancialNudgeModel>> GetActiveNudgesAsync();
 
-    [Get("/api/v1/nudges/{id}/xai")]
+    [Get("/api/nudges/{id}/xai")]
     Task<ExpenseTracker.Maui.Models.Behavioral.XaiRationaleModel> GetXaiRationaleAsync(Guid id);
 
-    [Get("/api/v1/nudges/rebalance/{deficitCategoryId}")]
+    [Get("/api/nudges/rebalance/{deficitCategoryId}")]
     Task<ExpenseTracker.Maui.Models.Behavioral.DynamicRebalanceProposalModel> GenerateRebalanceProposalAsync(Guid deficitCategoryId);
 
-    [Post("/api/v1/nudges/{id}/approve")]
+    [Post("/api/nudges/{id}/approve")]
     Task<bool> ApproveNudgeAsync(Guid id);
 
-    [Post("/api/v1/nudges/{id}/dismiss")]
+    [Post("/api/nudges/{id}/dismiss")]
     Task<bool> DismissNudgeAsync(Guid id);
 }
 
 // Refit declarative HTTP client contract for 24h Positive Friction Cooling-Off Mechanism (UC-09.05)
 public interface ICoolingOffApi
 {
-    [Post("/api/v1/cooling-off/evaluate")]
+    [Post("/api/cooling-off/evaluate")]
     Task<ExpenseTracker.Maui.Models.Behavioral.CoolingOffEvaluationResultModel> EvaluateExpenseAsync(
         [Body] ExpenseTracker.Maui.Models.Behavioral.CoolingOffEvaluationRequestModel request);
 
-    [Post("/api/v1/cooling-off")]
+    [Post("/api/cooling-off")]
     Task<ExpenseTracker.Maui.Models.Behavioral.CoolingOffTransactionModel> CreateCoolingOffAsync(
         [Body] ExpenseTracker.Maui.Models.Behavioral.CreateCoolingOffRequestModel request);
 
-    [Get("/api/v1/cooling-off/pending")]
+    [Get("/api/cooling-off/pending")]
     Task<List<ExpenseTracker.Maui.Models.Behavioral.CoolingOffTransactionModel>> GetPendingCoolingOffAsync();
 
-    [Post("/api/v1/cooling-off/{id}/confirm")]
+    [Post("/api/cooling-off/{id}/confirm")]
     Task<bool> ConfirmPurchaseAsync(Guid id);
 
-    [Post("/api/v1/cooling-off/{id}/cancel")]
+    [Post("/api/cooling-off/{id}/cancel")]
     Task<bool> CancelPurchaseAsync(Guid id);
 
-    [Post("/api/v1/cooling-off/{id}/bypass")]
+    [Post("/api/cooling-off/{id}/bypass")]
     Task<bool> BypassCoolingOffAsync(
         Guid id,
         [Body] ExpenseTracker.Maui.Models.Behavioral.BypassCoolingOffRequestModel request);

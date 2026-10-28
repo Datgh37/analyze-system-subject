@@ -14,14 +14,14 @@
         <!-- Section Header -->
         <Grid ColumnDefinitions="*,Auto" Padding="2,0">
             <Label Grid.Column="0"
-                   Text="{Binding ActionCount, StringFormat='⚡ Việc Cần Xử Lý ({0})'}"
+                   Text="{Binding ActionCount, StringFormat='Việc Cần Xử Lý ({0})'}"
                    FontAttributes="Bold"
                    FontSize="14"
                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
                    VerticalOptions="Center" />
 
             <Button Grid.Column="1"
-                    Text="🔄 Làm mới"
+                    Text="Làm Mới"
                     FontSize="11"
                     FontAttributes="Bold"
                     HeightRequest="30"

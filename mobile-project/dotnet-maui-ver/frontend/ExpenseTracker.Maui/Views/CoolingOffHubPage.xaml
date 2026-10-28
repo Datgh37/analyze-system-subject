@@ -27,11 +27,11 @@
 
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
                         <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
-                            <Label Text="Khoảng Trễ Tâm Lý 24h (Cooling-Off)"
+                            <Label Text="Khoảng Trễ Mua Sắm 24 Giờ"
                                    FontSize="18"
                                    FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            <Label Text="Ma sát tích cực, quy đổi giờ lao động &amp; chống mua sắm bốc đồng"
+                            <Label Text="Tránh chi tiêu cảm xúc &amp; cân nhắc trước khi thanh toán"
                                    FontSize="11"
                                    TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
                                    LineBreakMode="TailTruncation" />
@@ -63,7 +63,7 @@
                         Padding="14"
                         IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <Label Grid.Column="0" Text="✅" FontSize="14" VerticalOptions="Center" />
+                        <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
                         <Label Grid.Column="1" Text="{Binding StatusMessage}"
                                TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
                                FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
@@ -78,7 +78,7 @@
                         Padding="14"
                         IsVisible="{Binding HasError}">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <Label Grid.Column="0" Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                        <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                         <Label Grid.Column="1" Text="{Binding ErrorMessage}"
                                TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
                                FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
@@ -105,18 +105,18 @@
 
                     <VerticalStackLayout Spacing="14">
                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                            <Label Grid.Column="0" Text="⚡ Thử Nghiệm Ma Sát Khoản Chi"
+                            <Label Grid.Column="0" Text="Thử Nghiệm Tác Động Khoản Chi Lớn"
                                    FontSize="16" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
                             <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 8"
                                     BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
                                     Padding="8,3">
-                                <Label Text="Sandbox" FontSize="11" FontAttributes="Bold"
+                                <Label Text="Thử nghiệm" FontSize="11" FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
                             </Border>
                         </Grid>
 
-                        <Label Text="Nhập số tiền bạn đang muốn mua để hệ thống đo lường số giờ lao động thực tế và mức độ ảnh hưởng đến hạn mức sinh hoạt ngày (DSA)."
+                        <Label Text="Nhập số tiền bạn đang muốn mua để hệ thống đo lường số giờ lao động thực tế và mức độ ảnh hưởng đến hạn mức sinh hoạt mỗi ngày."
                                FontSize="12"
                                TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
                                LineBreakMode="WordWrap" />
@@ -172,7 +172,7 @@
                                 BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
                                 Padding="32" Margin="0,8">
                             <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                                <Label Text="🛡️" FontSize="44" HorizontalOptions="Center" />
+                                <Image Source="ic_check.png" WidthRequest="36" HeightRequest="36" HorizontalOptions="Center" />
                                 <Label Text="Hiện không có giao dịch nào bị phong tỏa."
                                        FontSize="15" FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
@@ -240,7 +240,7 @@
 
                                             <VerticalStackLayout Grid.Column="1" Spacing="2">
                                                 <Label Text="Giờ làm việc tương đương:" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                                <Label Text="{Binding EquivalentWorkHours, StringFormat='⏳ {0:N1} giờ công'}"
+                                                <Label Text="{Binding EquivalentWorkHours, StringFormat='{0:N1} giờ công'}"
                                                        FontSize="15" FontAttributes="Bold"
                                                        TextColor="{AppThemeBinding Light=#D97706, Dark=#FCD34D}" />
                                             </VerticalStackLayout>
@@ -252,7 +252,7 @@
                                             StrokeShape="RoundRectangle 10"
                                             BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#4C0519}"
                                             Padding="10,6">
-                                        <Label Text="{Binding ProjectedDsaReduction, StringFormat='⚠️ Nếu mua, hạn mức chi tiêu mỗi ngày còn lại sẽ giảm {0:N0} đ/ngày'}"
+                                        <Label Text="{Binding ProjectedDsaReduction, StringFormat='Nếu mua, hạn mức chi tiêu mỗi ngày còn lại sẽ giảm {0:N0} đ/ngày'}"
                                                FontSize="11" FontAttributes="Bold"
                                                TextColor="{AppThemeBinding Light=#BE123C, Dark=#FDA4AF}" />
                                     </Border>

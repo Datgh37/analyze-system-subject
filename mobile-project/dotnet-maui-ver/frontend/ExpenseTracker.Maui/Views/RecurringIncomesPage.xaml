@@ -81,7 +81,7 @@
                     Padding="14"
                     IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Label Grid.Column="0" Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#059669" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding StatusMessage}"
                            TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
                            FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
@@ -96,7 +96,7 @@
                     Padding="14"
                     IsVisible="{Binding HasError}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Label Grid.Column="0" Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding ErrorMessage}"
                            TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
                            FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />

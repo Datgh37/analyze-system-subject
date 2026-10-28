@@ -69,7 +69,7 @@
                     Padding="14"
                     IsVisible="{Binding HasError}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Label Grid.Column="0" Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                    <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding ErrorMessage}"
                            TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
                            FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
@@ -82,7 +82,7 @@
                                Color="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}"
                                HorizontalOptions="Center" />
 
-            <!-- Auto-fill Notification Banner from Bank Listener (Chặng 3 Killer Feature) -->
+            <!-- Auto-fill Notification Banner from Bank Listener -->
             <Border Stroke="#60A5FA"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 14"
@@ -90,49 +90,11 @@
                     Padding="14,12"
                     IsVisible="{Binding AutoFillBannerMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Label Grid.Column="0" Text="💳" FontSize="18" VerticalOptions="Center" />
+                    <Image Grid.Column="0" Source="ic_wallet_card.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding AutoFillBannerMessage}"
                            TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
                            FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
                 </Grid>
-            </Border>
-
-            <!-- Quick Bank Simulation Triggers for Presentation Defense -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#111827}"
-                    Padding="14,12">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="⚡ Giả Lập Biến Động Ngân Hàng Ngoại Tuyến (Demo Bảo Vệ Đồ Án):"
-                           FontSize="11" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
-                        <HorizontalStackLayout Spacing="8">
-                            <Button Text="Ví MoMo (-85k)"
-                                    Command="{Binding SimulateBankDeductionCommand}"
-                                    CommandParameter="momo"
-                                    BackgroundColor="{AppThemeBinding Light=#FCE7F3, Dark=#831843}"
-                                    TextColor="{AppThemeBinding Light=#BE185D, Dark=#F472B6}"
-                                    FontAttributes="Bold"
-                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
-                            <Button Text="ACB ONE (-350k)"
-                                    Command="{Binding SimulateBankDeductionCommand}"
-                                    CommandParameter="acb"
-                                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
-                                    TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
-                                    FontAttributes="Bold"
-                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
-                            <Button Text="Vietcombank (-500k)"
-                                    Command="{Binding SimulateBankDeductionCommand}"
-                                    CommandParameter="vcb"
-                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                    TextColor="{AppThemeBinding Light=#047857, Dark=#6EE7B7}"
-                                    FontAttributes="Bold"
-                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
-                        </HorizontalStackLayout>
-                    </ScrollView>
-                </VerticalStackLayout>
             </Border>
 
             <!-- 4. Add Expense Interactive Card (UC-03.01) -->
@@ -158,7 +120,7 @@
                                 StrokeShape="RoundRectangle 12"
                                 BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#881337}"
                                 Padding="10,4">
-                            <Label Text="ACID Sync"
+                            <Label Text="Tức thì"
                                    FontSize="11"
                                    FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#E11D48, Dark=#FECDD3}" />
@@ -200,7 +162,7 @@
 
                     <!-- Note Entry with Live Keyword Gợi ý -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Ghi chú chi tiêu (Kích hoạt gợi ý từ khóa thông minh):" FontSize="12" FontAttributes="Bold"
+                        <Label Text="Ghi chú chi tiêu:" FontSize="12" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
                         <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
                                 StrokeShape="RoundRectangle 12"
@@ -218,7 +180,7 @@
                                 BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
                                 Padding="10,6"
                                 IsVisible="{Binding AutoMatchedHint, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                            <Label Text="{Binding AutoMatchedHint, StringFormat='✨ {0}'}"
+                            <Label Text="{Binding AutoMatchedHint}"
                                    TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}"
                                    FontAttributes="Bold"
                                    FontSize="12" />
@@ -259,14 +221,14 @@
                         <CheckBox Grid.Column="0" IsChecked="{Binding IsEssential}"
                                   VerticalOptions="Center"
                                   Color="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}" />
-                        <Label Grid.Column="1" Text="Khoản chi thiết yếu (Nhóm Needs 50%)"
+                        <Label Grid.Column="1" Text="Khoản chi thiết yếu (Quy tắc 50/30/20)"
                                VerticalOptions="Center"
                                FontSize="13" LineBreakMode="WordWrap"
                                TextColor="{AppThemeBinding Light=#334155, Dark=#CBD5E1}" />
                     </Grid>
 
                     <!-- Submit Button -->
-                    <Button Text="- Khấu Trừ &amp; Lưu Khoản Chi"
+                    <Button Text="Lưu Khoản Chi Tiêu"
                             BackgroundColor="#E11D48"
                             TextColor="#FFFFFF"
                             FontAttributes="Bold"
@@ -275,6 +237,45 @@
                             HeightRequest="48"
                             Margin="0,8,0,0"
                             Command="{Binding CreateExpenseCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Quick Bank Simulation Triggers for Presentation Defense -->
+            <Border Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#334155}"
+                    StrokeDashArray="4,4"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#111827}"
+                    Padding="14,12">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Công Cụ Trải Nghiệm Demo (Dành Cho Giám Khảo):"
+                           FontSize="11" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Spacing="8">
+                            <Button Text="Ví MoMo (-85k)"
+                                    Command="{Binding SimulateBankDeductionCommand}"
+                                    CommandParameter="momo"
+                                    BackgroundColor="{AppThemeBinding Light=#FCE7F3, Dark=#831843}"
+                                    TextColor="{AppThemeBinding Light=#BE185D, Dark=#F472B6}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
+                            <Button Text="ACB ONE (-350k)"
+                                    Command="{Binding SimulateBankDeductionCommand}"
+                                    CommandParameter="acb"
+                                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+                                    TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
+                            <Button Text="Vietcombank (-500k)"
+                                    Command="{Binding SimulateBankDeductionCommand}"
+                                    CommandParameter="vcb"
+                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                    TextColor="{AppThemeBinding Light=#047857, Dark=#6EE7B7}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
+                        </HorizontalStackLayout>
+                    </ScrollView>
                 </VerticalStackLayout>
             </Border>
 

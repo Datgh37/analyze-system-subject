@@ -165,7 +165,17 @@ public class AndroidNativeNotificationService : INativeNotificationService
 
             if (alarmManager != null && pendingIntent != null)
             {
-                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                {
+                    var showIntent = PendingIntent.GetActivity(
+                        context,
+                        1004,
+                        new Intent(context, typeof(MainActivity)),
+                        SafeImmutableFlags);
+                    var alarmClockInfo = new AlarmManager.AlarmClockInfo(triggerAtMillis, showIntent);
+                    alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
+                }
+                else if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
                 {
                     alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
                 }
@@ -189,6 +199,7 @@ public class AndroidNativeNotificationService : INativeNotificationService
     {
         try
         {
+            Preferences.Default.Set("daily_expense_reminder_enabled", true);
             var context = global::Android.App.Application.Context;
             var triggerAtMillis = Java.Lang.JavaSystem.CurrentTimeMillis() + (delaySeconds * 1000);
 
@@ -203,7 +214,18 @@ public class AndroidNativeNotificationService : INativeNotificationService
 
             if (alarmManager != null && pendingIntent != null)
             {
-                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                // Sử dụng SetAlarmClock để bảo đảm hệ điều hành Android đánh thức máy chính xác đến từng giây kể cả khi tắt app (Killed state) và Doze mode
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                {
+                    var showIntent = PendingIntent.GetActivity(
+                        context,
+                        1004,
+                        new Intent(context, typeof(MainActivity)),
+                        SafeImmutableFlags);
+                    var alarmClockInfo = new AlarmManager.AlarmClockInfo(triggerAtMillis, showIntent);
+                    alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
+                }
+                else if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
                 {
                     alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
                 }
@@ -212,7 +234,7 @@ public class AndroidNativeNotificationService : INativeNotificationService
                     alarmManager.SetExact(AlarmType.RtcWakeup, triggerAtMillis, pendingIntent);
                 }
 
-                _logger.LogInformation("[AndroidNativeNotificationService] Test Alarm scheduled in {Delay}s for Killed-state verification", delaySeconds);
+                _logger.LogInformation("[AndroidNativeNotificationService] Test Alarm Clock scheduled in {Delay}s for Killed-state verification", delaySeconds);
             }
         }
         catch (Exception ex)

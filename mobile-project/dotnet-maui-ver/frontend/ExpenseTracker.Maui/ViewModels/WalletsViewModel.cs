@@ -46,6 +46,9 @@ public partial class WalletsViewModel : BaseViewModel
     [ObservableProperty]
     private string? _statusMessage;
 
+    [ObservableProperty]
+    private bool _isRefreshing;
+
     public WalletsViewModel(
         IWalletRepository walletRepository, 
         ActionInboxViewModel? actionInbox = null,
@@ -91,6 +94,16 @@ public partial class WalletsViewModel : BaseViewModel
                 StatusMessage = $"[Realtime] {existing.Name}: {m.Value.NewBalance:N0} VND";
             }
         });
+
+        // Listen for server mode changes (Live API <-> Offline Mock)
+        WeakReferenceMessenger.Default.Register<ServerModeChangedMessage>(this, (r, m) =>
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                SyncRealtimeConnection();
+                await LoadWalletsAsync();
+            });
+        });
     }
 
     // Fetches active wallets from repository and calculates total net worth
@@ -104,7 +117,22 @@ public partial class WalletsViewModel : BaseViewModel
 
         try
         {
+            if (_serverConfig != null && _serverConfig.IsLiveApiMode && _tokenStorage != null)
+            {
+                var token = await _tokenStorage.GetAccessTokenAsync();
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    ErrorMessage = "Chưa đăng nhập Backend. Vào menu 'Tài Khoản & Đăng Nhập' để kết nối dữ liệu thật.";
+                    IsBusy = false;
+                    return;
+                }
+            }
+
             await InternalLoadWalletsAsync();
+        }
+        catch (Refit.ApiException apiEx) when (apiEx.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            ErrorMessage = "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.";
         }
         catch (Exception ex)
         {
@@ -113,6 +141,7 @@ public partial class WalletsViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            IsRefreshing = false;
         }
     }
 

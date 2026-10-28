@@ -28,8 +28,8 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="🗂️" FontSize="18" VerticalOptions="Center" />
-                            <Label Text="HIERARCHICAL TAXONOMY"
+                            <Image Source="ic_category.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                            <Label Text="CƠ CẤU DANH MỤC"
                                    FontSize="11"
                                    FontAttributes="Bold"
                                    TextColor="#A5B4FC"
@@ -67,7 +67,7 @@
                     StrokeShape="RoundRectangle 8"
                     Padding="12,10">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"
@@ -192,7 +192,7 @@
                                 <!-- Root Category Level 1 -->
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                     <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                        <Label Text="{Binding Name, StringFormat='📁 {0}'}"
+                                        <Label Text="{Binding Name}"
                                                FontAttributes="Bold"
                                                FontSize="15"
                                                TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
@@ -204,7 +204,7 @@
                                                     Padding="6,2"
                                                     StrokeShape="RoundRectangle 6"
                                                     HorizontalOptions="Start">
-                                                <Label Text="🔒 Mặc định hệ thống"
+                                                <Label Text="Mặc định hệ thống"
                                                        FontSize="10"
                                                        FontAttributes="Bold"
                                                        TextColor="{AppThemeBinding Light='#4338CA', Dark='#A5B4FC'}" />
@@ -216,7 +216,7 @@
                                                     Padding="6,2"
                                                     StrokeShape="RoundRectangle 6"
                                                     HorizontalOptions="Start">
-                                                <Label Text="👤 Tùy chỉnh cá nhân"
+                                                <Label Text="Tùy chỉnh cá nhân"
                                                        FontSize="10"
                                                        FontAttributes="Bold"
                                                        TextColor="{AppThemeBinding Light='#15803D', Dark='#86EFAC'}" />

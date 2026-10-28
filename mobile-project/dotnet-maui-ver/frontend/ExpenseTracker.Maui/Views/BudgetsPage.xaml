@@ -20,7 +20,7 @@
                     Padding="12,10"
                     IsVisible="{Binding HasError}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"
@@ -36,7 +36,7 @@
                     Padding="12,10"
                     IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
                     <Label Text="{Binding StatusMessage}"
                            TextColor="#065F46"
                            FontAttributes="Bold"
@@ -99,7 +99,7 @@
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}"
                            HorizontalTextAlignment="Center" />
-                    <Label Text="Thiết lập kế hoạch theo 50/30/20, Zero-Based Budgeting (ZBB) hoặc Kakeibo để kích hoạt động cơ hạn mức chi tiêu mỗi ngày Adaptive DSA và cảnh báo tốc độ tiêu tiền Spending Velocity."
+                    <Label Text="Thiết lập kế hoạch theo quy tắc 50/30/20, phương pháp số dư bằng không hoặc Kakeibo để kích hoạt tính toán hạn mức chi tiêu mỗi ngày và cảnh báo sớm tốc độ chi tiêu."
                            FontSize="12"
                            TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
                            HorizontalTextAlignment="Center"
@@ -205,8 +205,8 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <HorizontalStackLayout Spacing="6">
-                                    <Label Text="⚡" FontSize="14" VerticalOptions="Center" />
-                                    <Label Text="HẠN MỨC HÔM NAY (DSA)"
+                                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding DsaStatus.DsaColor}" VerticalOptions="Center" />
+                                    <Label Text="HẠN MỨC CHI TIÊU HÔM NAY"
                                            FontSize="11"
                                            FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
@@ -269,8 +269,8 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <HorizontalStackLayout Spacing="6">
-                                    <Label Text="⏱" FontSize="14" VerticalOptions="Center" />
-                                    <Label Text="TỐC ĐỘ TIÊU TIỀN (SPENDING VELOCITY)"
+                                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding VelocityStatus.VelocityColor}" VerticalOptions="Center" />
+                                    <Label Text="TỐC ĐỘ CHI TIÊU BÌNH QUÂN"
                                            FontSize="11"
                                            FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
@@ -318,7 +318,7 @@
                                 Padding="12"
                                 StrokeShape="RoundRectangle 8">
                             <VerticalStackLayout Spacing="4">
-                                <Label Text="🚨 CẢNH BÁO NGUY CƠ CHÁY TÚI SỚM!"
+                                <Label Text="CẢNH BÁO NGUY CƠ VƯỢT HẠN MỨC SỚM"
                                        FontSize="12"
                                        FontAttributes="Bold"
                                        TextColor="#991B1B" />
@@ -342,7 +342,7 @@
                                TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
                         <Border Grid.Column="1"
                                 Style="{StaticResource PillBadge}">
-                            <Label Text="3-BAND PROGRESS" FontSize="10" FontAttributes="Bold" TextColor="#4F46E5" />
+                            <Label Text="Theo dõi tự động" FontSize="10" FontAttributes="Bold" TextColor="#4F46E5" />
                         </Border>
                     </Grid>
 
@@ -372,7 +372,7 @@
                                                     Padding="6,2"
                                                     StrokeShape="RoundRectangle 4"
                                                     Stroke="Transparent">
-                                                <Label Text="⚠️ Cảnh báo &gt;=80%"
+                                                <Label Text="Cảnh báo &gt;=80%"
                                                        FontSize="10"
                                                        FontAttributes="Bold"
                                                        TextColor="#DC2626" />

@@ -44,7 +44,7 @@
                     <Shadow Brush="#38BDF8" Offset="0,0" Radius="28" Opacity="0.4" />
                 </Border.Shadow>
 
-                <Label Text="🎙️" FontSize="52" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Image Source="ic_mic.png" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center" VerticalOptions="Center" />
             </Border>
 
             <!-- Dynamic Feedback / Assistant Prompt -->
@@ -76,7 +76,7 @@
 
         <!-- 4. Microphone Action Controls -->
         <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="16" Margin="0,0,0,20">
-            <Button Grid.Column="0" Text="🎙️ NÓI"
+            <Button Grid.Column="0" Text="BẮT ĐẦU NÓI"
                     Command="{Binding StartListeningCommand}"
                     BackgroundColor="#0284C7"
                     TextColor="#FFFFFF"
@@ -89,7 +89,7 @@
                 </Button.Shadow>
             </Button>
 
-            <Button Grid.Column="1" Text="⏹️ DỪNG"
+            <Button Grid.Column="1" Text="DỪNG LẠI"
                     Command="{Binding StopListeningCommand}"
                     BackgroundColor="#E11D48"
                     TextColor="#FFFFFF"
@@ -109,14 +109,14 @@
                 BackgroundColor="#1E293B">
             <VerticalStackLayout Spacing="10">
                 <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                    <Label Text="⚡" FontSize="13" TextColor="#F59E0B" VerticalOptions="Center" />
+                    <BoxView WidthRequest="6" HeightRequest="6" CornerRadius="3" Color="#F59E0B" VerticalOptions="Center" />
                     <Label Text="CÂU LỆNH GIỌNG NÓI MẪU (BẤM ĐỂ THỬ NGHIỆM)" FontSize="11" FontAttributes="Bold" TextColor="#38BDF8" VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
                 <FlexLayout Wrap="Wrap" JustifyContent="Start" AlignItems="Center">
-                    <Button Text="☕ Chi 50k ăn trưa Highland"
+                    <Button Text="Chi 50k ăn trưa Highlands"
                             Command="{Binding ProcessTranscriptCommand}"
-                            CommandParameter="Chi 50k ăn trưa Highland"
+                            CommandParameter="Chi 50k ăn trưa Highlands"
                             BackgroundColor="#0F172A"
                             TextColor="#F8FAFC"
                             BorderColor="#38BDF8"
@@ -128,7 +128,7 @@
                             Padding="12,0"
                             Margin="0,0,8,8" />
 
-                    <Button Text="🧋 Uống trà sữa Phúc Long 65k"
+                    <Button Text="Uống trà sữa Phúc Long 65k"
                             Command="{Binding ProcessTranscriptCommand}"
                             CommandParameter="Uống trà sữa Phúc Long 65k"
                             BackgroundColor="#0F172A"
@@ -142,7 +142,7 @@
                             Padding="12,0"
                             Margin="0,0,8,8" />
 
-                    <Button Text="📊 Xem báo cáo tài chính"
+                    <Button Text="Xem báo cáo tài chính"
                             Command="{Binding ProcessTranscriptCommand}"
                             CommandParameter="Xem báo cáo tài chính"
                             BackgroundColor="#0F172A"
@@ -156,7 +156,7 @@
                             Padding="12,0"
                             Margin="0,0,8,8" />
 
-                    <Button Text="🎯 Thiết lập ngân sách"
+                    <Button Text="Thiết lập hạn mức ngân sách"
                             Command="{Binding ProcessTranscriptCommand}"
                             CommandParameter="Thiết lập ngân sách"
                             BackgroundColor="#0F172A"

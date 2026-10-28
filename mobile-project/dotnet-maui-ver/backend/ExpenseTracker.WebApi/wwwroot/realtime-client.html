@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenseTracker - SignalR Realtime Companion & 2-Device Demo</title>
+    <!-- Microsoft SignalR Official JavaScript Client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-tertiary: #334155;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent-green: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
+            --accent-blue: #3B82F6;
+            --accent-indigo: #6366F1;
+            --border-color: #334155;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-b2 {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818CF8;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-secondary);
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #9CA3AF;
+            transition: all 0.3s ease;
+        }
+
+        .status-dot.connected {
+            background-color: var(--accent-green);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+        }
+
+        .status-dot.reconnecting {
+            background-color: var(--accent-amber);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+        }
+
+        .status-dot.disconnected {
+            background-color: var(--accent-red);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent-indigo);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--accent-indigo);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #4F46E5;
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: #FFFFFF;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        /* Wallets list */
+        .wallet-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+        }
+
+        .wallet-card.pulse-updated {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+            transform: scale(1.02);
+        }
+
+        .wallet-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .wallet-type {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .wallet-balance {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-green);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Terminal Logs */
+        .terminal {
+            background: #090D16;
+            border: 1px solid #1E293B;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            height: 280px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin-bottom: 6px;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .log-time {
+            color: #64748B;
+        }
+
+        .log-event {
+            color: #38BDF8;
+            font-weight: 600;
+        }
+
+        .log-data {
+            color: #E2E8F0;
+        }
+
+        .log-success {
+            color: #4ADE80;
+        }
+
+        .log-warning {
+            color: #FBBF24;
+        }
+
+        .log-danger {
+            color: #F87171;
+        }
+
+        .instruction-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .instruction-box ol {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <h1>⚡ ExpenseTracker SignalR Hub</h1>
+                <span class="badge badge-b2">Phương Án B2 - 2 Thiết Bị Đồng Thời</span>
+            </div>
+            <div class="connection-status">
+                <span id="statusDot" class="status-dot disconnected"></span>
+                <span id="statusText">Chưa kết nối</span>
+            </div>
+        </header>
+
+        <!-- Instruction for 2-Device Testing -->
+        <div class="instruction-box">
+            <strong>📋 Kịch bản Minh họa Realtime 2 Thiết bị Song Song (Theo đúng chuẩn Báo cáo & Đánh giá):</strong>
+            <ol>
+                <li><strong>Thiết bị 1 (Web trên Laptop):</strong> Đăng nhập tại màn hình này (đã điền sẵn tài khoản <code>admin@expensetracker.com</code>). Đèn trạng thái chuyển sang 🟢 <strong>Đã kết nối Realtime</strong>.</li>
+                <li><strong>Thiết bị 2 (Điện thoại thật):</strong> Mở app Android (kết nối máy chủ thật), đăng nhập cùng tài khoản <code>admin@expensetracker.com</code> / <code>Admin@123</code>. Đèn trạng thái trên app cũng báo 🟢 <strong>Đã kết nối Realtime</strong>.</li>
+                <li><strong>Kiểm thử 2 chiều:</strong>
+                    <ul>
+                        <li>Trên Điện thoại: Nhập 1 khoản chi tiêu hoặc chuyển tiền giữa 2 ví ➡️ <strong>Ngay lập tức (0ms)</strong> thẻ ví và dòng lịch sử trên màn hình Web Laptop này tự động nhảy số mà không cần tải lại trang!</li>
+                        <li>Trên Web Laptop: Bấm nút <em>"Tạo Chi Tiêu Test 50.000đ"</em> hoặc <em>"Yêu cầu đồng bộ tất cả thiết bị"</em> ➡️ <strong>Ngay lập tức</strong> điện thoại của bạn nhận được dữ liệu và cập nhật số dư!</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="grid-2" style="margin-top: 20px;">
+            <!-- Authentication & Connection Control -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">1. Kết Nối SignalR Client (@microsoft/signalr)</span>
+                </div>
+                <div class="form-group">
+                    <label>Server Base URL</label>
+                    <input type="text" id="serverUrl" value="">
+                </div>
+                <div class="form-group">
+                    <label>Email Đăng Nhập</label>
+                    <input type="email" id="email" value="admin@expensetracker.com">
+                </div>
+                <div class="form-group">
+                    <label>Mật Khẩu</label>
+                    <input type="password" id="password" value="Admin@123">
+                </div>
+                <div class="btn-group">
+                    <button class="btn-primary" id="btnConnect" onclick="connectSignalR()">
+                        <span>🔌 Đăng Nhập & Kết Nối SignalR</span>
+                    </button>
+                    <button class="btn-danger" id="btnDisconnect" onclick="disconnectSignalR()" disabled>
+                        <span>🛑 Dừng Kết Nối</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Two-way RPC invocations -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">2. Phương Thức Hai Chiều (Bi-directional RPC)</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">
+                    Client gọi <code>hubConnection.invoke()</code> lên Server; Server gửi broadcast về các thiết bị trong Group <code>user_{userId}</code>.
+                </p>
+                <div class="btn-group" style="flex-direction: column; gap: 10px; margin-top: 0;">
+                    <button class="btn-secondary" onclick="invokeBroadcastRefresh()">
+                        <span>📢 BroadcastWalletRefreshAsync() (Yêu cầu tất cả thiết bị làm mới)</span>
+                    </button>
+                    <button class="btn-secondary" onclick="invokeRequestLiveBalance()">
+                        <span>🔍 RequestLiveBalanceAsync() (Truy vấn số dư ví thời gian thực)</span>
+                    </button>
+                    <button class="btn-success" onclick="createSampleTransaction()">
+                        <span>💸 Tạo Chi Tiêu Test 50.000đ (Bắn sự kiện sang Điện thoại)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Wallets Live View (Updated 0ms) -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">3. Danh Sách Ví (Cập nhật 0ms Realtime)</span>
+                    <button class="btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="loadWallets()">Tải lại danh sách</button>
+                </div>
+                <div id="walletsContainer">
+                    <div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">
+                        Vui lòng kết nối SignalR để xem dữ liệu ví...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Event Terminal Stream -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">4. Nhật Ký Sự Kiện Realtime (Terminal Log)</span>
+                    <button class="btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="clearLogs()">Xóa log</button>
+                </div>
+                <div class="terminal" id="terminalLog">
+                    <div class="log-entry">
+                        <span class="log-time">[Hệ thống]</span> <span class="log-data">Sẵn sàng kết nối tới SignalR Hub `/hubs/financial`...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let connection = null;
+        let jwtToken = null;
+        let currentUserId = null;
+        let wallets = [];
+
+        // Set default server URL from current origin, fallback to http://localhost:5018 if opened via file://
+        if (!window.location.origin || window.location.origin === 'null' || window.location.protocol === 'file:') {
+            document.getElementById('serverUrl').value = 'http://localhost:5018';
+        } else {
+            document.getElementById('serverUrl').value = window.location.origin;
+        }
+
+        function log(message, type = 'data', eventName = null) {
+            const terminal = document.getElementById('terminalLog');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            let html = `<span class="log-time">[${time}]</span> `;
+            if (eventName) {
+                html += `<span class="log-event">[${eventName}]</span> `;
+            }
+            html += `<span class="log-${type}">${message}</span>`;
+            entry.innerHTML = html;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('terminalLog').innerHTML = '';
+        }
+
+        function updateStatus(state, text) {
+            const dot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            dot.className = 'status-dot ' + state;
+            statusText.innerText = text;
+        }
+
+        async function connectSignalR() {
+            const serverUrl = document.getElementById('serverUrl').value.replace(/\/$/, "");
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            log(`Đang xác thực tài khoản ${email}...`, 'data');
+
+            try {
+                // 1. Authenticate via Web API to obtain JWT
+                const loginResp = await fetch(`${serverUrl}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!loginResp.ok) {
+                    throw new Error(`Đăng nhập thất bại (HTTP ${loginResp.status})`);
+                }
+
+                const loginData = await loginResp.json();
+                jwtToken = loginData.accessToken;
+                currentUserId = loginData.user?.id;
+                log(`Đăng nhập thành công! User: ${loginData.user?.fullName || email}`, 'success');
+
+                // 2. Build SignalR Connection with @microsoft/signalr
+                const hubUrl = `${serverUrl}/hubs/financial`;
+                log(`Khởi tạo HubConnection tới: ${hubUrl}`, 'data');
+
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl(hubUrl, {
+                        accessTokenFactory: () => jwtToken,
+                        skipNegotiation: false
+                    })
+                    .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
+                    .configureLogging(signalR.LogLevel.Information)
+                    .build();
+
+                // 3. Register lifecycle hooks
+                connection.onreconnecting(error => {
+                    updateStatus('reconnecting', 'Đang kết nối lại...');
+                    log(`Mất kết nối tạm thời. Đang thử kết nối lại... ${error || ''}`, 'warning');
+                });
+
+                connection.onreconnected(connectionId => {
+                    updateStatus('connected', 'Đã kết nối Realtime');
+                    log(`Đã kết nối lại thành công! ConnectionId: ${connectionId}`, 'success');
+                });
+
+                connection.onclose(error => {
+                    updateStatus('disconnected', 'Đã ngắt kết nối');
+                    document.getElementById('btnConnect').disabled = false;
+                    document.getElementById('btnDisconnect').disabled = true;
+                    log(`Đã dừng kết nối SignalR: ${error || 'Bình thường'}`, 'danger');
+                });
+
+                // 4. Register Event Handlers from Server (Clients.*)
+                connection.on("ReceiveBalanceUpdate", info => {
+                    log(`Cập nhật số dư ví ${info.walletId}: ${Number(info.newBalance).toLocaleString()} VND (${info.reason})`, 'success', 'ReceiveBalanceUpdate');
+                    updateWalletBalanceOnUI(info.walletId, info.newBalance);
+                });
+
+                connection.on("ReceiveTransactionCreated", info => {
+                    log(`Giao dịch mới: ${info.transactionType === 2 ? '-' : '+'}${Number(info.amount).toLocaleString()}đ [${info.categoryName}] tại ví "${info.walletName}"`, 'success', 'ReceiveTransactionCreated');
+                });
+
+                connection.on("ReceiveBudgetAlert", info => {
+                    log(`CẢNH BÁO NGÂN SÁCH: Danh mục ${info.categoryName} đã dùng ${info.percentUsed}% (${info.message})`, 'warning', 'ReceiveBudgetAlert');
+                });
+
+                connection.on("ReceiveNotification", notif => {
+                    log(`Thông báo In-App: "${notif.title}" - ${notif.body}`, 'data', 'ReceiveNotification');
+                });
+
+                connection.on("ReceiveWalletRefreshNeeded", () => {
+                    log(`Thiết bị khác vừa yêu cầu đồng bộ. Đang tự động làm mới danh sách ví...`, 'data', 'ReceiveWalletRefreshNeeded');
+                    loadWallets();
+                });
+
+                // 5. Start Connection
+                await connection.start();
+                updateStatus('connected', 'Đã kết nối Realtime');
+                document.getElementById('btnConnect').disabled = true;
+                document.getElementById('btnDisconnect').disabled = false;
+                log(`ĐÃ KẾT NỐI REALTIME THÀNH CÔNG! Sẵn sàng đồng bộ đa thiết bị.`, 'success');
+
+                // Load initial wallets
+                await loadWallets();
+
+            } catch (err) {
+                updateStatus('disconnected', 'Lỗi kết nối');
+                log(`Lỗi: ${err.message}`, 'danger');
+            }
+        }
+
+        async function disconnectSignalR() {
+            if (connection) {
+                await connection.stop();
+                connection = null;
+            }
+        }
+
+        async function loadWallets() {
+            const serverUrl = document.getElementById('serverUrl').value.replace(/\/$/, "");
+            if (!jwtToken) return;
+
+            try {
+                const res = await fetch(`${serverUrl}/api/wallets`, {
+                    headers: { 'Authorization': `Bearer ${jwtToken}` }
+                });
+                if (res.ok) {
+                    wallets = await res.json();
+                    renderWallets();
+                }
+            } catch (e) {
+                log(`Lỗi tải danh mục ví: ${e.message}`, 'danger');
+            }
+        }
+
+        function renderWallets() {
+            const container = document.getElementById('walletsContainer');
+            if (!wallets || wallets.length === 0) {
+                container.innerHTML = `<div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">Chưa có ví nào. Hãy tạo ví từ điện thoại!</div>`;
+                return;
+            }
+
+            container.innerHTML = wallets.map(w => `
+                <div class="wallet-card" id="wallet-${w.id}">
+                    <div>
+                        <div class="wallet-name">${w.name}</div>
+                        <div class="wallet-type">Loại ví: ${w.walletType || 'Tiền mặt'}</div>
+                    </div>
+                    <div class="wallet-balance">${Number(w.balance).toLocaleString()} VND</div>
+                </div>
+            `).join('');
+        }
+
+        function updateWalletBalanceOnUI(walletId, newBalance) {
+            const card = document.getElementById(`wallet-${walletId}`);
+            if (card) {
+                const balEl = card.querySelector('.wallet-balance');
+                if (balEl) {
+                    balEl.innerText = `${Number(newBalance).toLocaleString()} VND`;
+                }
+                card.classList.add('pulse-updated');
+                setTimeout(() => card.classList.remove('pulse-updated'), 1500);
+            } else {
+                loadWallets();
+            }
+        }
+
+        // Two-way Invocations
+        async function invokeBroadcastRefresh() {
+            if (!connection) {
+                alert('Vui lòng kết nối SignalR trước!');
+                return;
+            }
+            try {
+                log(`Gọi invoke("BroadcastWalletRefreshAsync")...`, 'data');
+                await connection.invoke("BroadcastWalletRefreshAsync");
+                log(`Đã gửi BroadcastWalletRefreshAsync thành công! Các thiết bị khác sẽ tự động reload ví.`, 'success');
+            } catch (err) {
+                log(`Lỗi invoke: ${err.message}`, 'danger');
+            }
+        }
+
+        async function invokeRequestLiveBalance() {
+            if (!connection || wallets.length === 0) {
+                alert('Vui lòng kết nối SignalR và đảm bảo có ít nhất 1 ví!');
+                return;
+            }
+            const firstWallet = wallets[0];
+            try {
+                log(`Gọi invoke("RequestLiveBalanceAsync", "${firstWallet.id}")...`, 'data');
+                await connection.invoke("RequestLiveBalanceAsync", firstWallet.id);
+            } catch (err) {
+                log(`Lỗi invoke: ${err.message}`, 'danger');
+            }
+        }
+
+        async function createSampleTransaction() {
+            if (!jwtToken || wallets.length === 0) {
+                alert('Vui lòng kết nối và đảm bảo có ví để tạo giao dịch!');
+                return;
+            }
+            const serverUrl = document.getElementById('serverUrl').value.replace(/\/$/, "");
+            const firstWallet = wallets[0];
+
+            try {
+                log(`Đang gửi yêu cầu tạo giao dịch chi tiêu 50.000đ lên Backend...`, 'data');
+                const res = await fetch(`${serverUrl}/api/transactions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        walletId: firstWallet.id,
+                        categoryId: "00000000-0000-0000-0000-000000000000",
+                        amount: 50000,
+                        transactionType: 2, // Expense
+                        transactionDate: new Date().toISOString(),
+                        note: "Test SignalR 2 thiết bị song song"
+                    })
+                });
+
+                if (res.ok) {
+                    log(`Tạo giao dịch thành công! Server sẽ bắn sự kiện ReceiveBalanceUpdate về tất cả thiết bị.`, 'success');
+                } else {
+                    log(`Lỗi tạo giao dịch: HTTP ${res.status}`, 'danger');
+                }
+            } catch (err) {
+                log(`Lỗi: ${err.message}`, 'danger');
+            }
+        }
+    </script>
+</body>
+</html>

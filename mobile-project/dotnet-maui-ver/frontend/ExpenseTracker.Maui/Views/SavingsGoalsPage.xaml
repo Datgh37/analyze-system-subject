@@ -18,7 +18,7 @@
                     StrokeShape="RoundRectangle 8"
                     Padding="12,10">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"
@@ -34,7 +34,7 @@
                     StrokeShape="RoundRectangle 8"
                     Padding="12,10">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
                     <Label Text="{Binding StatusMessage}"
                            TextColor="#065F46"
                            FontAttributes="Bold"
@@ -103,7 +103,7 @@
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Text="🐷" FontSize="16" VerticalOptions="Center" />
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#A5B4FC" VerticalOptions="Center" />
                             <Label Text="TỔNG TÀI SẢN TÍCH LŨY"
                                    FontSize="11"
                                    FontAttributes="Bold"
@@ -205,7 +205,7 @@
             <!-- 3. SAVINGS GOALS LIST SECTION              -->
             <!-- ========================================== -->
             <VerticalStackLayout Spacing="10">
-                <Label Text="🎯 Danh Sách Mục Tiêu Tích Lũy"
+                <Label Text="Danh Sách Mục Tiêu Tích Lũy"
                        FontSize="16"
                        FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />

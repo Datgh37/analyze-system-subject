@@ -119,20 +119,20 @@
                 </Border>
             </Grid>
 
-            <!-- Voice Quick Input Entry (UC-03.11) -->
+            <!-- Voice Quick Input Entry -->
             <Border Style="{StaticResource ModernCard}" Padding="16">
                 <VerticalStackLayout Spacing="8">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Text="🎙️" FontSize="14" VerticalOptions="Center" />
-                            <Label Text="Nhập Nhanh Khẩu Lệnh / Prompt Chi Tiêu"
+                            <Image Source="ic_mic.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                            <Label Text="Nhập Nhanh Bằng Giọng Nói"
                                    FontSize="12"
                                    FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light='#1E293B', Dark='#F1F5F9'}"
                                    VerticalOptions="Center" />
                         </HorizontalStackLayout>
                         <Label Grid.Column="1"
-                               Text="VOICE NLP"
+                               Text="GIỌNG NÓI AI"
                                FontSize="10"
                                FontAttributes="Bold"
                                TextColor="#7C3AED" />
@@ -159,7 +159,7 @@
                     Padding="12,8"
                     IsVisible="{Binding SelectedFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="📄" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="6" HeightRequest="6" CornerRadius="3" Color="#1D4ED8" VerticalOptions="Center" />
                     <Label Text="{Binding SelectedFileName, StringFormat='Tệp đã chọn: {0}'}"
                            FontSize="12"
                            FontAttributes="Bold"
@@ -189,7 +189,7 @@
                     Padding="12,10"
                     IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#059669" VerticalOptions="Center" />
                     <Label Text="{Binding StatusMessage}"
                            TextColor="#065F46"
                            FontAttributes="Bold"
@@ -211,7 +211,7 @@
                 <VerticalStackLayout Spacing="6">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Text="⚠️" FontSize="16" VerticalOptions="Center" />
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#D97706" VerticalOptions="Center" />
                             <Label Text="CẢNH BÁO SAI LỆCH SỐ HỌC"
                                    FontAttributes="Bold"
                                    TextColor="#B45309"
@@ -246,7 +246,7 @@
                     Padding="12,10"
                     IsVisible="{Binding HasError}">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"

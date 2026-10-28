@@ -108,8 +108,16 @@ public class BudgetService : IBudgetService
             .OrderByDescending(b => b.CreatedAt)
             .FirstOrDefaultAsync(ct);
 
+        // Fallback: If no Active budget, look for the most recent budget
+        budget ??= await _context.Budgets
+            .Include(b => b.Allocations)
+            .ThenInclude(a => a.Category)
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
         if (budget == null)
-            return Result<BudgetDto>.Failure("Hiện chưa có kế hoạch ngân sách nào đang hoạt động.");
+            return Result<BudgetDto>.Failure("Hiện chưa có kế hoạch ngân sách nào.", 404);
 
         return Result<BudgetDto>.Success(MapToDto(budget));
     }

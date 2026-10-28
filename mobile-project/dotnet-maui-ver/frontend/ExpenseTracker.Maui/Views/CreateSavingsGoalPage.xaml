@@ -27,8 +27,8 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="🎯" FontSize="18" VerticalOptions="Center" />
-                            <Label Text="FINANCIAL GOAL &amp; KAKEIBO"
+                            <Image Source="ic_savings.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                            <Label Text="MỤC TIÊU TÀI CHÍNH"
                                    FontSize="11"
                                    FontAttributes="Bold"
                                    TextColor="#A5B4FC"
@@ -66,7 +66,7 @@
                     StrokeShape="RoundRectangle 8"
                     Padding="12,10">
                 <HorizontalStackLayout Spacing="8">
-                    <Label Text="❌" FontSize="14" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"

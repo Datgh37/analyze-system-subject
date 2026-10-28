@@ -59,32 +59,61 @@ public partial class ForecastingViewModel : BaseViewModel
         try
         {
             // 1. Load Expenditure Forecast (UC-08.01)
-            Forecast = await _repository.GetExpenditureForecastAsync();
-            TrajectoryPoints.Clear();
-            if (Forecast?.Trajectory != null)
+            try
             {
-                foreach (var point in Forecast.Trajectory)
+                Forecast = await _repository.GetExpenditureForecastAsync();
+                TrajectoryPoints.Clear();
+                if (Forecast?.Trajectory != null)
                 {
-                    TrajectoryPoints.Add(point);
+                    foreach (var point in Forecast.Trajectory)
+                    {
+                        TrajectoryPoints.Add(point);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Không thể tải dữ liệu dự báo: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"[Forecasting] Expenditure forecast error: {ex.Message}");
             }
 
             // 2. Load Liquidity Depletion Radar (UC-08.02)
-            Liquidity = await _repository.GetLiquidityDepletionAsync();
+            try
+            {
+                Liquidity = await _repository.GetLiquidityDepletionAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Forecasting] Liquidity depletion error: {ex.Message}");
+            }
 
             // 3. Load Category Deficit Risks (UC-08.03)
-            var risks = await _repository.GetCategoryRisksAsync();
-            CategoryRisks.Clear();
-            if (risks != null)
+            try
             {
-                foreach (var risk in risks)
+                var risks = await _repository.GetCategoryRisksAsync();
+                CategoryRisks.Clear();
+                if (risks != null)
                 {
-                    CategoryRisks.Add(risk);
+                    foreach (var risk in risks)
+                    {
+                        CategoryRisks.Add(risk);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Forecasting] Category risks error: {ex.Message}");
             }
 
             // 4. Run baseline What-If Simulation (UC-08.04)
-            await RunWhatIfSimulationAsync();
+            try
+            {
+                await RunWhatIfSimulationAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Forecasting] What-If simulation error: {ex.Message}");
+            }
 
             StatusMessage = "Đã cập nhật dự báo tài chính và radar rủi ro thời gian thực.";
         }

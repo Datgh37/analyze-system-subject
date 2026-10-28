@@ -83,7 +83,7 @@
                     Padding="14"
                     IsVisible="{Binding HasError}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Label Grid.Column="0" Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                    <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding ErrorMessage}"
                            TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
                            FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
@@ -143,7 +143,7 @@
                             FontSize="12"
                             Padding="14,0" />
 
-                    <Button Text="Đột Biến Z-Score"
+                    <Button Text="Khoản Chi Bất Thường"
                             Command="{Binding SelectTabCommand}"
                             CommandParameter="Outliers"
                             BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
@@ -413,6 +413,19 @@
                            FontSize="16" FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
 
+                    <!-- Multi-Segment Distribution Meter (Needs 50% / Wants 30% / Savings 20%) -->
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 8"
+                            HeightRequest="12"
+                            BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            Margin="0,2,0,4">
+                        <Grid ColumnDefinitions="5*,3*,2*" ColumnSpacing="2">
+                            <BoxView Grid.Column="0" Color="#3B82F6" CornerRadius="4,0,0,4" />
+                            <BoxView Grid.Column="1" Color="#F59E0B" />
+                            <BoxView Grid.Column="2" Color="#10B981" CornerRadius="0,4,4,0" />
+                        </Grid>
+                    </Border>
+
                     <!-- Nhóm 50/30/20 Cards -->
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
                         <!-- Needs -->
@@ -510,7 +523,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 9. SECTION 5: CẢNH BÁO ĐỘT BIẾN Z-SCORE (UC-07.05) -->
+            <!-- 9. SECTION 5: CẢNH BÁO ĐỘT BIẾN (UC-07.05) -->
             <Border Stroke="{AppThemeBinding Light=#FECACA, Dark=#7F1D1D}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 20"
@@ -518,7 +531,7 @@
                     Padding="20">
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="🚨 Cảnh Báo Đột Biến Z-Score (Outliers)"
+                        <Label Grid.Column="0" Text="Phát Hiện Khoản Chi Bất Thường"
                                FontSize="16" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#BE123C, Dark=#FCA5A5}" />
                         <Border Grid.Column="1"
@@ -535,7 +548,7 @@
                     <CollectionView ItemsSource="{Binding Outliers}">
                         <CollectionView.EmptyView>
                             <Border StrokeThickness="0" BackgroundColor="Transparent" Padding="12,8">
-                                <Label Text="Không phát hiện khoản chi tiêu đột biến bất thường nào trong 30 ngày qua (Z-Score &lt; 2.0)."
+                                <Label Text="Không phát hiện khoản chi tiêu cao bất thường nào trong 30 ngày qua."
                                        TextColor="{AppThemeBinding Light=#9F1239, Dark=#FECDD3}"
                                        FontSize="12" FontAttributes="Italic"
                                        HorizontalOptions="Center" />
@@ -568,7 +581,7 @@
                                                 BackgroundColor="{AppThemeBinding Light=#FFE4E6, Dark=#7F1D1D}"
                                                 Padding="8,3"
                                                 VerticalOptions="Center">
-                                            <Label Text="{Binding ZScore, StringFormat='Z={0:F1}'}"
+                                            <Label Text="{Binding ZScore, StringFormat='Đột biến: +{0:F1}σ'}"
                                                    FontSize="11" FontAttributes="Bold"
                                                    TextColor="{AppThemeBinding Light=#BE123C, Dark=#FCA5A5}" />
                                         </Border>

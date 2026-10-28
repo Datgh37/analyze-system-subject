@@ -61,7 +61,7 @@
                     Padding="14"
                     IsVisible="{Binding HasError}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Label Grid.Column="0" Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                    <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding ErrorMessage}"
                            TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
                            FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
@@ -166,12 +166,12 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Windfall Flag (Richard Thaler Mental Accounting) -->
+                    <!-- Windfall Flag -->
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
                         <CheckBox Grid.Column="0" IsChecked="{Binding IsWindfall}"
                                   VerticalOptions="Center"
                                   Color="{AppThemeBinding Light=#059669, Dark=#10B981}" />
-                        <Label Grid.Column="1" Text="Khoản thu đột xuất / Thưởng bất thường (Windfall)"
+                        <Label Grid.Column="1" Text="Khoản thu đột xuất / Thưởng đặc biệt"
                                VerticalOptions="Center"
                                FontSize="13" LineBreakMode="WordWrap"
                                TextColor="{AppThemeBinding Light=#334155, Dark=#CBD5E1}" />
@@ -193,7 +193,7 @@
                     </VerticalStackLayout>
 
                     <!-- Submit Button -->
-                    <Button Text="+ Ghi Nhận Thu Nhập"
+                    <Button Text="Lưu Khoản Thu Nhập"
                             BackgroundColor="#059669"
                             TextColor="#FFFFFF"
                             FontAttributes="Bold"
@@ -212,7 +212,7 @@
                            FontSize="18"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                    <Label Text="Dòng tiền vào đã đối soát qua sổ cái ACID"
+                    <Label Text="Dòng tiền vào đã được đối soát tự động"
                            FontSize="12"
                            TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
                 </VerticalStackLayout>
