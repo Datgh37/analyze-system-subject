@@ -1,6 +1,7 @@
 using ExpenseTracker.Maui.Services.Auth;
 using ExpenseTracker.Maui.Services.Config;
 using ExpenseTracker.Maui.Services.Notifications;
+using ExpenseTracker.Maui.Services.Security;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ExpenseTracker.Maui;
@@ -10,16 +11,19 @@ public partial class App : Application
     private readonly IClientAuthService _authService;
     private readonly IServerConfigService _serverConfigService;
     private readonly INativeNotificationService _nativeNotificationService;
+    private readonly ITokenStorageService _tokenStorage;
 
     public App(
         IClientAuthService authService, 
         IServerConfigService serverConfigService,
-        INativeNotificationService nativeNotificationService)
+        INativeNotificationService nativeNotificationService,
+        ITokenStorageService tokenStorage)
     {
         InitializeComponent();
         _authService = authService;
         _serverConfigService = serverConfigService;
         _nativeNotificationService = nativeNotificationService;
+        _tokenStorage = tokenStorage;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -63,16 +67,34 @@ public partial class App : Application
     {
         try
         {
-            var isAuthenticated = await _authService.InitializeAsync();
-            if (!isAuthenticated)
+            var hasActiveSession = await _tokenStorage.HasActiveSessionAsync();
+            var isQuickLoginEnabled = await _tokenStorage.IsQuickLoginEnabledAsync();
+
+            // NGUYÊN TẮC BẤT DI BẤT DỊCH:
+            // Nếu người dùng đã chủ động bấm Đăng xuất (hasActiveSession == false),
+            // TUYỆT ĐỐI KHÔNG HIỆN Quick Login, bắt buộc vào thẳng LoginPage!
+            if (!hasActiveSession)
             {
-                // Direct unauthenticated user to Login screen
                 await shell.GoToAsync("//LoginPage");
+                return;
+            }
+
+            // Nếu phiên còn hoạt động VÀ người dùng BẬT tính năng Đăng nhập nhanh
+            if (isQuickLoginEnabled)
+            {
+                await shell.GoToAsync("//QuickLoginPage");
+                return;
+            }
+
+            // Nếu người dùng TẮT Quick Login nhưng phiên vẫn còn hiệu lực
+            var isAuthenticated = await _authService.InitializeAsync();
+            if (isAuthenticated)
+            {
+                await shell.GoToAsync("//WalletsPage");
             }
             else
             {
-                // Direct authenticated user to primary Wallets dashboard
-                await shell.GoToAsync("//WalletsPage");
+                await shell.GoToAsync("//LoginPage");
             }
         }
         catch

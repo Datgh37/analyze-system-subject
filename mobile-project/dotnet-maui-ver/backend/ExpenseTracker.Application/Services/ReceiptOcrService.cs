@@ -305,11 +305,21 @@ public class ReceiptOcrService : IReceiptOcrService
         }
 
         decimal calculatedTotal = sumItems - discountAmount + taxAmount;
+        string? auditWarning = null;
+
+        // Exception Flow E1: If receipt total is torn, blurred, or missing, propose calculated sum of items
+        if (totalAmount <= 0m && calculatedTotal > 0m)
+        {
+            totalAmount = calculatedTotal;
+            auditWarning = "⚠️ Hóa đơn bị rách hoặc mờ trường tổng tiền. Hệ thống tự động đề xuất tổng tiền từ các món hàng và thuế/chiết khấu để bạn xác nhận (UC-03.08 E1).";
+        }
+
         decimal discrepancy = Math.Abs(totalAmount - calculatedTotal);
         bool isMathDiscrepancy = discrepancy > 1_000m;
-        string? auditWarning = isMathDiscrepancy
-            ? $"Phát hiện sai lệch số học: Tổng tiền trên hóa đơn ({totalAmount:N0} VND) chênh lệch {discrepancy:N0} VND so với tổng chi tiết từng món tính toán ({calculatedTotal:N0} VND)."
-            : null;
+        if (isMathDiscrepancy && string.IsNullOrEmpty(auditWarning))
+        {
+            auditWarning = $"Phát hiện sai lệch số học: Tổng tiền trên hóa đơn ({totalAmount:N0} VND) chênh lệch {discrepancy:N0} VND so với tổng chi tiết từng món tính toán ({calculatedTotal:N0} VND).";
+        }
 
         var resultDto = new ReceiptParsedDataDto(
             MerchantName: merchantName,

@@ -194,11 +194,11 @@ public class NudgeEngineService : INudgeEngineService
                 {
                     var source = await _context.BudgetAllocations
                         .Include(a => a.Budget)
-                        .FirstOrDefaultAsync(a => a.CategoryId == proposal.SourceCategoryId && a.Budget.UserId == userId && a.Budget.Status == BudgetStatus.Active, ct);
+                        .FirstOrDefaultAsync(a => a.CategoryId == proposal.SourceCategoryId && a.Budget != null && a.Budget.UserId == userId && a.Budget.Status == BudgetStatus.Active, ct);
 
                     var target = await _context.BudgetAllocations
                         .Include(a => a.Budget)
-                        .FirstOrDefaultAsync(a => a.CategoryId == proposal.TargetCategoryId && a.Budget.UserId == userId && a.Budget.Status == BudgetStatus.Active, ct);
+                        .FirstOrDefaultAsync(a => a.CategoryId == proposal.TargetCategoryId && a.Budget != null && a.Budget.UserId == userId && a.Budget.Status == BudgetStatus.Active, ct);
 
                     if (source != null && target != null)
                     {
@@ -249,7 +249,7 @@ public class NudgeEngineService : INudgeEngineService
             var today = DateTime.UtcNow.Date;
             var dsa = await _context.DailySpendingAllowances
                 .Include(d => d.Budget)
-                .Where(d => d.Budget.UserId == userId && d.Date == today)
+                .Where(d => d.Budget != null && d.Budget.UserId == userId && d.Date == today)
                 .FirstOrDefaultAsync(ct);
 
             if (dsa != null && dsa.DailyAllowanceAmount > 0)

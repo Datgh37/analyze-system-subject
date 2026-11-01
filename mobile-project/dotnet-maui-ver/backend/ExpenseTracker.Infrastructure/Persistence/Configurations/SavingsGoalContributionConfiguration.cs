@@ -43,6 +43,7 @@ public class SavingsGoalContributionConfiguration : IEntityTypeConfiguration<Sav
         builder.HasOne(c => c.Wallet)
             .WithMany()
             .HasForeignKey(c => c.WalletId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(c => c.Transaction)

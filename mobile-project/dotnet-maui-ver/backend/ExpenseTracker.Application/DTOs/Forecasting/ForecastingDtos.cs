@@ -72,7 +72,8 @@ public enum WhatIfScenarioType
 {
     LumpSumExpense = 1,
     InstallmentLoan = 2,
-    IncomeReduction = 3
+    IncomeReduction = 3,
+    EmergencyShock = 4
 }
 
 public class WhatIfSimulationRequestDto
@@ -82,6 +83,8 @@ public class WhatIfSimulationRequestDto
     public decimal MonthlyInstallmentAmount { get; set; }
     public int InstallmentMonths { get; set; } = 12;
     public decimal IncomeReductionPercentage { get; set; } = 20m;
+    public decimal EmergencyExpenseAmount { get; set; }
+    public decimal EmergencyIncomeDropPercentage { get; set; } = 0m;
 }
 
 public class WhatIfSimulationResultDto
@@ -108,6 +111,32 @@ public class WhatIfSimulationResultDto
     public decimal DtiBefore { get; set; }
     public decimal DtiAfter { get; set; }
     
+    // Impact on Emergency Fund & Survival Runway (UC-08.04 Emergency Shock)
+    public decimal EmergencyFundRemainingBefore { get; set; }
+    public decimal EmergencyFundRemainingAfter { get; set; }
+    public decimal RunwayMonthsBefore { get; set; }
+    public decimal RunwayMonthsAfter { get; set; }
+    
     public bool IsHighRiskDecision { get; set; }
+    public bool IsLiquidDeficitRisk { get; set; } // Exception E1: Lump sum exceeds liquid wallets
     public string ImpactSummaryMessage { get; set; } = string.Empty;
+}
+
+// UC-08.04: Alternate Flow A1 - Convert simulated purchase into a savings goal
+public class ConvertToSavingsGoalRequestDto
+{
+    public string GoalName { get; set; } = string.Empty;
+    public decimal TargetAmount { get; set; }
+    public DateTime TargetDate { get; set; }
+    public string? Notes { get; set; }
+}
+
+public class ConvertToSavingsGoalResultDto
+{
+    public Guid GoalId { get; set; }
+    public string GoalName { get; set; } = string.Empty;
+    public decimal TargetAmount { get; set; }
+    public DateTime TargetDate { get; set; }
+    public decimal MonthlyCommitment { get; set; }
+    public string Message { get; set; } = string.Empty;
 }

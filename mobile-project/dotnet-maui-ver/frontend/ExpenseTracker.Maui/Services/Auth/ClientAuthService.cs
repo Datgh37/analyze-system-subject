@@ -55,6 +55,8 @@ public class ClientAuthService : IClientAuthService
         {
             var profile = await _userApi.GetProfileAsync();
             CurrentUser = new UserInfo(profile.Id, profile.FullName, profile.Email, profile.BaseCurrency, true);
+            await _tokenStorage.SaveUserSessionAsync(profile.Email, profile.FullName, null);
+            await _tokenStorage.SetActiveSessionFlagAsync(true);
             IsAuthenticated = true;
             return true;
         }
@@ -76,6 +78,7 @@ public class ClientAuthService : IClientAuthService
             var response = await _authApi.LoginAsync(request);
 
             await _tokenStorage.SaveTokensAsync(response.AccessToken, response.RefreshToken);
+            await _tokenStorage.SaveUserSessionAsync(response.User.Email, response.User.FullName, null);
             CurrentUser = response.User;
             IsAuthenticated = true;
 
@@ -99,6 +102,7 @@ public class ClientAuthService : IClientAuthService
             var response = await _authApi.RegisterAsync(request);
 
             await _tokenStorage.SaveTokensAsync(response.AccessToken, response.RefreshToken);
+            await _tokenStorage.SaveUserSessionAsync(response.User.Email, response.User.FullName, null);
             CurrentUser = response.User;
             IsAuthenticated = true;
 
@@ -122,6 +126,7 @@ public class ClientAuthService : IClientAuthService
             var response = await _authApi.VerifyOtpAsync(request);
 
             await _tokenStorage.SaveTokensAsync(response.AccessToken, response.RefreshToken);
+            await _tokenStorage.SaveUserSessionAsync(response.User.Email, response.User.FullName, null);
             CurrentUser = response.User;
             IsAuthenticated = true;
 
@@ -199,6 +204,7 @@ public class ClientAuthService : IClientAuthService
             var response = await _authApi.GoogleLoginAsync(request);
 
             await _tokenStorage.SaveTokensAsync(response.AccessToken, response.RefreshToken);
+            await _tokenStorage.SaveUserSessionAsync(response.User.Email, response.User.FullName, null);
             CurrentUser = response.User;
             IsAuthenticated = true;
 
@@ -230,7 +236,7 @@ public class ClientAuthService : IClientAuthService
         }
         finally
         {
-            await _tokenStorage.ClearTokensAsync();
+            await _tokenStorage.PurgeSessionOnLogoutAsync();
             IsAuthenticated = false;
             CurrentUser = null;
         }

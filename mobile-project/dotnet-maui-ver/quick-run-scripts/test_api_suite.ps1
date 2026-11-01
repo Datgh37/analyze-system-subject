@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Script Kiem Thu Tu Dong Toan Bo API va Kenh Bat Loi Dinh San (API Master Test Runner).
 .DESCRIPTION
@@ -1082,6 +1082,181 @@ Assert-Result -TestName "12.6 GET /api/analytics/reports/outliers (Phat hien bat
 # 12.7 GET /api/analytics/reports/export-excel (Xuat bao cao Excel thuan khong AI)
 $resExportExcel = Invoke-Api -Method "GET" -Endpoint "/api/analytics/reports/export-excel?year=$curYear&month=$curMonth&smart=false"
 Assert-Result -TestName "12.7 GET /api/analytics/reports/export-excel (Xuat file bang tinh Excel giao dich)" -Response $resExportExcel -ExpectedStatus @(200)
+
+# ------------------------------------------------------------------------------
+# 16. PHAN HE 16: QUAN LY DANH MUC NO & HACH TOAN TRA NO (DEBTS & REPAYMENT ACID)
+# ------------------------------------------------------------------------------
+Write-Section "16. PHAN HE 16: QUAN LY DANH MUC NO & HACH TOAN TRA NO (DEBTS & REPAYMENT ACID)"
+
+$script:debtTestId = ""
+$debtCreateBody = @{
+    name = "The Tin Dung VCB Visa Platinum"
+    creditorName = "Vietcombank"
+    debtType = 1
+    principalAmount = 15000000
+    interestRateAnnual = 22.5
+    minimumPayment = 750000
+    dueDateMonthly = 25
+    startDate = (Get-Date).AddMonths(-2).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+    expectedPayoffDate = (Get-Date).AddMonths(12).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+    walletId = $script:walletVcbId
+    notes = "Khoan no the tin dung thu nghiem"
+}
+
+# 16.1 POST /api/debts (Tao khoan no moi)
+$resCreateDebt = Invoke-Api -Method "POST" -Endpoint "/api/debts" -Body $debtCreateBody
+Assert-Result -TestName "16.1 POST /api/debts (Tao moi khoan no the tin dung)" -Response $resCreateDebt -ExpectedStatus @(200, 201)
+if ($resCreateDebt.Body -and $resCreateDebt.Body.id) {
+    $script:debtTestId = $resCreateDebt.Body.id
+}
+
+# 16.2 GET /api/debts (Danh sach khoan no ca nhan)
+$resGetDebts = Invoke-Api -Method "GET" -Endpoint "/api/debts"
+Assert-Result -TestName "16.2 GET /api/debts (Lay danh sach cac khoan no ca nhan)" -Response $resGetDebts -ExpectedStatus @(200)
+
+# 16.3 GET /api/debts/summary (Tong hop du no toan he thong)
+$resDebtSum = Invoke-Api -Method "GET" -Endpoint "/api/debts/summary"
+Assert-Result -TestName "16.3 GET /api/debts/summary (Tong quan chi so du no & tien lai hang thang)" -Response $resDebtSum -ExpectedStatus @(200)
+
+# 16.4 POST /api/debts/{id}/payments (Hach toan tra no tu dong tru vi nguon)
+if (-not [string]::IsNullOrEmpty($script:debtTestId) -and -not [string]::IsNullOrEmpty($script:walletVcbId)) {
+    $payDebtBody = @{
+        walletId = $script:walletVcbId
+        amount = 500000
+        paymentDate = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+        note = "Thanh toan no the tin dung dot 1"
+    }
+    $resPayDebt = Invoke-Api -Method "POST" -Endpoint "/api/debts/$script:debtTestId/payments" -Body $payDebtBody
+    Assert-Result -TestName "16.4 POST /api/debts/{id}/payments (Giao tac tra no ACID tru vi & giam du no)" -Response $resPayDebt -ExpectedStatus @(200)
+}
+
+# 16.5 GET /api/debts/optimization/guide (Cam nang huong dan tra no va trac nghiem tam ly)
+$resDebtGuide = Invoke-Api -Method "GET" -Endpoint "/api/debts/optimization/guide"
+Assert-Result -TestName "16.5 GET /api/debts/optimization/guide (Huong dan binh dan hoc vu & trac nghiem)" -Response $resDebtGuide -ExpectedStatus @(200)
+
+# 16.6 GET /api/debts/optimization/safe-budget (Uoc luong ngan sach tra them an toan)
+$resSafeBudget = Invoke-Api -Method "GET" -Endpoint "/api/debts/optimization/safe-budget"
+Assert-Result -TestName "16.6 GET /api/debts/optimization/safe-budget (Uoc luong ngan sach tra no an toan 3 cap)" -Response $resSafeBudget -ExpectedStatus @(200)
+
+# 16.7 POST /api/debts/optimization/compare (So sanh chien luoc Snowball vs Avalanche)
+$compareBody = @{
+    extraMonthlyBudget = 1000000
+}
+$resCompare = Invoke-Api -Method "POST" -Endpoint "/api/debts/optimization/compare" -Body $compareBody
+Assert-Result -TestName "16.7 POST /api/debts/optimization/compare (So sanh Snowball vs Avalanche DAG)" -Response $resCompare -ExpectedStatus @(200)
+
+# ------------------------------------------------------------------------------
+# 17. PHAN HE 17: QUAN LY QUY KHAN CAP & TAI SAN RONG (EMERGENCY FUND & NET WORTH)
+# ------------------------------------------------------------------------------
+Write-Section "17. PHAN HE 17: QUAN LY QUY KHAN CAP & TAI SAN RONG (EMERGENCY FUND & NET WORTH)"
+
+# 17.1 GET /api/emergency-funds/recommendation (Du toan quy mo quy khan cap)
+$resEfRec = Invoke-Api -Method "GET" -Endpoint "/api/emergency-funds/recommendation"
+Assert-Result -TestName "17.1 GET /api/emergency-funds/recommendation (De xuat quy mo quy 3-6-12 thang Needs)" -Response $resEfRec -ExpectedStatus @(200)
+
+# 17.2 GET /api/emergency-funds/status (Trang thai tien do quy khan cap)
+$resEfStatus = Invoke-Api -Method "GET" -Endpoint "/api/emergency-funds/status"
+Assert-Result -TestName "17.2 GET /api/emergency-funds/status (Tien do tich luy & thang sinh ton Survival Runway)" -Response $resEfStatus -ExpectedStatus @(200)
+
+# 17.3 POST /api/emergency-funds/setup (Khoi tao thiet lap quy khan cap)
+$efSetupBody = @{
+    targetMonths = 6
+    targetAmount = 30000000
+    targetDate = (Get-Date).AddMonths(12).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+}
+$resEfSetup = Invoke-Api -Method "POST" -Endpoint "/api/emergency-funds/setup" -Body $efSetupBody
+Assert-Result -TestName "17.3 POST /api/emergency-funds/setup (Khoi tao muc tieu Quy Khan Cap)" -Response $resEfSetup -ExpectedStatus @(200)
+
+# 17.4 GET /api/net-worth/current (Gia tri tai san rong thoi gian thuc)
+$resNetWorthCur = Invoke-Api -Method "GET" -Endpoint "/api/net-worth/current"
+Assert-Result -TestName "17.4 GET /api/net-worth/current (Tong hop Tai san - No & Chi so Debt-to-Asset)" -Response $resNetWorthCur -ExpectedStatus @(200)
+
+# 17.5 POST /api/net-worth/snapshot (Chot snapshot lich su tai san rong)
+$nwSnapBody = @{
+    notes = "Snapshot kiem thu tu dong Master Suite"
+}
+$resNwSnap = Invoke-Api -Method "POST" -Endpoint "/api/net-worth/snapshot" -Body $nwSnapBody
+Assert-Result -TestName "17.5 POST /api/net-worth/snapshot (Ghi nhan Snapshot Net Worth)" -Response $resNwSnap -ExpectedStatus @(200)
+
+# ------------------------------------------------------------------------------
+# 18. PHAN HE 18: QUET & CANH BAO BAY DANG KY DINH KY (SUBSCRIPTION TRAPS)
+# ------------------------------------------------------------------------------
+Write-Section "18. PHAN HE 18: QUET & CANH BAO BAY DANG KY DINH KY (SUBSCRIPTION TRAPS)"
+
+$script:subId = ""
+$subCreateBody = @{
+    name = "Netflix Premium 4K"
+    amount = 260000
+    billingCycle = 2 # Monthly
+    nextBillingDate = (Get-Date).AddDays(10).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+    categoryId = $script:categoryId
+    walletId = $script:walletVcbId
+    remindDaysBefore = 3
+    notes = "Goi thue bao giai tri thu nghiem"
+}
+
+# 18.1 POST /api/subscriptions (Tao goi dang ky dinh ky)
+$resCreateSub = Invoke-Api -Method "POST" -Endpoint "/api/subscriptions" -Body $subCreateBody
+Assert-Result -TestName "18.1 POST /api/subscriptions (Dang ky theo doi dich vu so dinh ky)" -Response $resCreateSub -ExpectedStatus @(200, 201)
+if ($resCreateSub.Body -and $resCreateSub.Body.id) {
+    $script:subId = $resCreateSub.Body.id
+}
+
+# 18.2 GET /api/subscriptions (Danh sach thue bao kem AnnualCost)
+$resGetSubs = Invoke-Api -Method "GET" -Endpoint "/api/subscriptions"
+Assert-Result -TestName "18.2 GET /api/subscriptions (Danh sach thue bao kem chi phi hao ton hang nam)" -Response $resGetSubs -ExpectedStatus @(200)
+
+# 18.3 GET /api/subscriptions/audit (Dong co kiem toan bay dang ky da tang)
+$resAuditSub = Invoke-Api -Method "GET" -Endpoint "/api/subscriptions/audit"
+Assert-Result -TestName "18.3 GET /api/subscriptions/audit (Kiem toan bay gia han ngam & dung thu mien phi)" -Response $resAuditSub -ExpectedStatus @(200)
+
+# 18.4 GET /api/subscriptions/upcoming (Lich gia han sap toi)
+$resUpcomingSub = Invoke-Api -Method "GET" -Endpoint "/api/subscriptions/upcoming?daysAhead=15"
+Assert-Result -TestName "18.4 GET /api/subscriptions/upcoming (Lich cac goi dich vu sap gia han)" -Response $resUpcomingSub -ExpectedStatus @(200)
+
+# ------------------------------------------------------------------------------
+# 19. PHAN HE 19: MO PHONG KICH BAN WHAT-IF & BIEN DONG SO DU (SCENARIO & ACTIONS)
+# ------------------------------------------------------------------------------
+Write-Section "19. PHAN HE 19: MO PHONG KICH BAN WHAT-IF & BIEN DONG SO DU (SCENARIO & ACTIONS)"
+
+# 19.1 POST /api/forecasting/what-if (Mo phong kich ban bien co tai chinh)
+$whatIfBody = @{
+    scenarioType = 1 # LumpSumExpense
+    amount = 15000000
+    monthlyIncomeChange = 0
+    durationMonths = 6
+    description = "Mua laptop moi phuc vu hoc tap"
+}
+$resWhatIfSim = Invoke-Api -Method "POST" -Endpoint "/api/forecasting/what-if" -Body $whatIfBody
+Assert-Result -TestName "19.1 POST /api/forecasting/what-if (Sandbox khao sat bien co khong lam ban CSDL)" -Response $resWhatIfSim -ExpectedStatus @(200)
+
+# 19.2 POST /api/forecasting/what-if/convert-to-goal (Cu hich chuyen doi sang muc tieu tich luy)
+$convertGoalBody = @{
+    title = "Quy Mua Laptop Do An"
+    targetAmount = 15000000
+    targetMonths = 6
+    monthlyCommitment = 2500000
+    targetDate = (Get-Date).AddMonths(6).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+    colorHex = "#6366F1"
+    iconKey = "laptop"
+}
+$resConvertGoal = Invoke-Api -Method "POST" -Endpoint "/api/forecasting/what-if/convert-to-goal" -Body $convertGoalBody
+Assert-Result -TestName "19.2 POST /api/forecasting/what-if/convert-to-goal (Chuyen doi chi tieu sang tich luy)" -Response $resConvertGoal -ExpectedStatus @(200, 201)
+
+# 19.3 POST /api/actions/from-notification (Xu ly thong bao bien dong so du ngan hang)
+$rawNotificationBody = @{
+    packageName = "com.techcombank.mobile"
+    title = "Techcombank Thong bao bien dong so du"
+    message = "GD: -120,000VND luc 14:15 tai Highlands Coffee. So du: 5,400,000VND"
+    detectedAmount = 120000
+    notificationTime = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+}
+$resRawAction = Invoke-Api -Method "POST" -Endpoint "/api/actions/from-notification" -Body $rawNotificationBody
+Assert-Result -TestName "19.3 POST /api/actions/from-notification (NLP boc tach bien dong 9 ngan hang)" -Response $resRawAction -ExpectedStatus @(200)
+
+# 19.4 GET /api/actions/inbox (Lay hom thu hanh dong thong minh Jev)
+$resActionInbox = Invoke-Api -Method "GET" -Endpoint "/api/actions/inbox"
+Assert-Result -TestName "19.4 GET /api/actions/inbox (Danh sach Smart Action Cards cho nguoi dung duyet)" -Response $resActionInbox -ExpectedStatus @(200)
 
 # ------------------------------------------------------------------------------
 # 13. PHAN HE XOA TAI NGUYEN (CLEANUP DELETE ENDPOINTS)

@@ -87,6 +87,20 @@ public partial class IncomesViewModel : BaseViewModel
             }
         });
 
+        // Listen for realtime transaction archived/deleted events (Instant 0ms removal)
+        WeakReferenceMessenger.Default.Register<TransactionArchivedMessage>(this, (r, m) =>
+        {
+            if (m.Value.TransactionType == 1) // Income
+            {
+                var existing = Incomes.FirstOrDefault(e => e.Id == m.Value.TransactionId);
+                if (existing != null)
+                {
+                    Incomes.Remove(existing);
+                    MonthlyTotalIncome = Math.Max(0, MonthlyTotalIncome - m.Value.RevertedAmount);
+                }
+            }
+        });
+
         // Listen for server mode changes (Live API <-> Offline Mock)
         WeakReferenceMessenger.Default.Register<ServerModeChangedMessage>(this, (r, m) =>
         {

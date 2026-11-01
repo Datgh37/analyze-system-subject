@@ -69,5 +69,23 @@ public class FinancialRealtimeNotifier : IFinancialRealtimeNotifier
 
         await _hubContext.Clients.Group(groupName).SendAsync("ReceiveNudgeAlert", dto, cancellationToken);
     }
+
+    public async Task NotifyTransactionArchivedAsync(Guid userId, TransactionArchivedNotificationDto dto, CancellationToken cancellationToken = default)
+    {
+        var groupName = $"user_{userId}";
+        _logger.LogInformation("Broadcasting ReceiveTransactionArchived to group {Group}: Transaction {TransactionId}, Wallet {WalletId}, Reverted {Amount}đ",
+            groupName, dto.TransactionId, dto.WalletId, dto.RevertedAmount);
+
+        await _hubContext.Clients.Group(groupName).SendAsync("ReceiveTransactionArchived", dto, cancellationToken);
+    }
+
+    public async Task NotifyEntityArchivedAsync(Guid userId, EntityArchivedNotificationDto dto, CancellationToken cancellationToken = default)
+    {
+        var groupName = $"user_{userId}";
+        _logger.LogInformation("Broadcasting ReceiveEntityArchived to group {Group}: {EntityType} {EntityId} ({Name})",
+            groupName, dto.EntityType, dto.EntityId, dto.Name);
+
+        await _hubContext.Clients.Group(groupName).SendAsync("ReceiveEntityArchived", dto, cancellationToken);
+    }
 }
 

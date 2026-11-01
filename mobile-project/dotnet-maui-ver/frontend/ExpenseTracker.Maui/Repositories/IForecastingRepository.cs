@@ -9,4 +9,5 @@ public interface IForecastingRepository
     Task<LiquidityDepletionModel> GetLiquidityDepletionAsync();
     Task<List<CategoryDeficitRiskModel>> GetCategoryRisksAsync();
     Task<WhatIfSimulationResultModel> SimulateWhatIfAsync(WhatIfSimulationRequestModel request);
+    Task<ConvertToSavingsGoalResultModel> ConvertWhatIfToGoalAsync(ConvertToSavingsGoalRequestModel request);
 }

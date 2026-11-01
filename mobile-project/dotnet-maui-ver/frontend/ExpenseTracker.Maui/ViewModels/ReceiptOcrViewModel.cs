@@ -7,7 +7,6 @@ using ExpenseTracker.Maui.Models.Receipts;
 using ExpenseTracker.Maui.Models.SmartUtilities;
 using ExpenseTracker.Maui.Models.Wallets;
 using ExpenseTracker.Maui.Repositories;
-using ExpenseTracker.Maui.Services.Api;
 using ExpenseTracker.Maui.Services.Realtime.Messages;
 using Refit;
 
@@ -25,9 +24,15 @@ public partial class ReceiptOcrViewModel : BaseViewModel
     public ObservableCollection<CategoryModel> ExpenseCategories { get; } = new();
     public ObservableCollection<ParsedReceiptItemModel> Items { get; } = new();
 
-    // Picked File info
+    // Picked / Captured Image info
     [ObservableProperty]
     private string? _selectedFileName;
+
+    [ObservableProperty]
+    private ImageSource? _capturedImagePreview;
+
+    [ObservableProperty]
+    private bool _hasCapturedImage;
 
     [ObservableProperty]
     private bool _hasParsedData;
@@ -148,6 +153,65 @@ public partial class ReceiptOcrViewModel : BaseViewModel
         }
     }
 
+    // Capture receipt image directly from native phone camera (UC-03.07)
+    [RelayCommand]
+    public async Task CaptureReceiptWithCameraAsync()
+    {
+        ErrorMessage = null;
+        StatusMessage = null;
+
+        try
+        {
+            if (!MediaPicker.Default.IsCaptureSupported)
+            {
+                ErrorMessage = "Thiết bị hiện tại không hỗ trợ chức năng mở máy ảnh trực tiếp.";
+                return;
+            }
+
+            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+            if (status != PermissionStatus.Granted)
+            {
+                status = await Permissions.RequestAsync<Permissions.Camera>();
+            }
+
+            if (status != PermissionStatus.Granted)
+            {
+                ErrorMessage = "Ứng dụng cần được cấp quyền Camera để chụp ảnh hóa đơn.";
+                return;
+            }
+
+            var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
+            {
+                Title = "Chụp ảnh hóa đơn mua sắm"
+            });
+
+            if (photo == null) return;
+
+            SelectedFileName = photo.FileName;
+            IsBusy = true;
+
+            await using var stream = await photo.OpenReadAsync();
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            var bytes = memoryStream.ToArray();
+
+            CapturedImagePreview = ImageSource.FromStream(() => new MemoryStream(bytes));
+            HasCapturedImage = true;
+
+            var streamPart = new StreamPart(new MemoryStream(bytes), photo.FileName, "image/jpeg");
+            await ParseReceiptStreamAsync(streamPart);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Lỗi mở máy ảnh: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    // Pick receipt image/PDF from storage gallery (UC-03.07)
     [RelayCommand]
     public async Task PickAndParseReceiptAsync()
     {
@@ -177,39 +241,26 @@ public partial class ReceiptOcrViewModel : BaseViewModel
             IsBusy = true;
 
             await using var stream = await result.OpenReadAsync();
-            var streamPart = new StreamPart(stream, result.FileName, "application/octet-stream");
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            var bytes = memoryStream.ToArray();
 
-            var parsed = await _receiptRepo.ParseReceiptAsync(streamPart);
-
-            MerchantName = parsed.MerchantName;
-            InvoiceDate = parsed.InvoiceDate;
-            SubTotal = parsed.SubTotal;
-            TaxAmount = parsed.TaxAmount;
-            DiscountAmount = parsed.DiscountAmount;
-            TotalAmount = parsed.TotalAmount;
-            CalculatedTotal = parsed.CalculatedTotal;
-            DiscrepancyAmount = parsed.DiscrepancyAmount;
-            IsMathDiscrepancy = parsed.IsMathDiscrepancy;
-            AuditWarningMessage = parsed.AuditWarningMessage;
-            ConfidenceScore = parsed.ConfidenceScore;
-
-            Items.Clear();
-            foreach (var item in parsed.Items)
+            // Set image preview if not PDF
+            var ext = Path.GetExtension(result.FileName).ToLowerInvariant();
+            if (ext != ".pdf")
             {
-                Items.Add(item);
-            }
-
-            Note = $"Bóc tách hóa đơn tự động từ {MerchantName}";
-            HasParsedData = true;
-
-            if (IsMathDiscrepancy)
-            {
-                StatusMessage = $"⚠️ Cảnh báo kiểm toán số học: Phát hiện chênh lệch {DiscrepancyAmount:N0} đ. Vui lòng kiểm tra lại bảng món hàng.";
+                CapturedImagePreview = ImageSource.FromStream(() => new MemoryStream(bytes));
+                HasCapturedImage = true;
             }
             else
             {
-                StatusMessage = $"✅ Kiểm toán số học hoàn hảo (Δ ≤ 1,000 đ). Độ tin cậy AI: {ConfidenceScore * 100:N0}%.";
+                HasCapturedImage = false;
             }
+
+            var mimeType = ext == ".pdf" ? "application/pdf" : "image/jpeg";
+            var streamPart = new StreamPart(new MemoryStream(bytes), result.FileName, mimeType);
+
+            await ParseReceiptStreamAsync(streamPart);
         }
         catch (ApiException apiEx)
         {
@@ -222,6 +273,97 @@ public partial class ReceiptOcrViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    public async Task ParseReceiptStreamAsync(StreamPart streamPart)
+    {
+        var parsed = await _receiptRepo.ParseReceiptAsync(streamPart);
+
+        MerchantName = parsed.MerchantName;
+        InvoiceDate = parsed.InvoiceDate;
+        SubTotal = parsed.SubTotal;
+        TaxAmount = parsed.TaxAmount;
+        DiscountAmount = parsed.DiscountAmount;
+        TotalAmount = parsed.TotalAmount;
+        CalculatedTotal = parsed.CalculatedTotal;
+        DiscrepancyAmount = parsed.DiscrepancyAmount;
+        IsMathDiscrepancy = parsed.IsMathDiscrepancy;
+        AuditWarningMessage = parsed.AuditWarningMessage;
+        ConfidenceScore = parsed.ConfidenceScore;
+
+        Items.Clear();
+        foreach (var item in parsed.Items)
+        {
+            Items.Add(item);
+        }
+
+        Note = $"Bóc tách hóa đơn tự động từ {MerchantName}";
+        HasParsedData = true;
+
+        if (IsMathDiscrepancy)
+        {
+            StatusMessage = $"⚠️ Cảnh báo kiểm toán số học: Phát hiện chênh lệch {DiscrepancyAmount:N0} đ. Bạn có thể chỉnh sửa lại từng món hàng bên dưới (UC-03.08 A1).";
+        }
+        else
+        {
+            StatusMessage = $"✅ Kiểm toán số học hoàn hảo (Δ ≤ 1,000 đ). Độ tin cậy AI: {ConfidenceScore * 100:N0}%.";
+        }
+    }
+
+    // In-place interactive item editing & math re-audit (UC-03.08 A1)
+    public void RecalculateTotalsAndAudit()
+    {
+        SubTotal = Items.Sum(i => i.TotalPrice);
+        CalculatedTotal = SubTotal + TaxAmount - DiscountAmount;
+        DiscrepancyAmount = Math.Abs(TotalAmount - CalculatedTotal);
+        IsMathDiscrepancy = DiscrepancyAmount > 1000m;
+
+        if (IsMathDiscrepancy)
+        {
+            AuditWarningMessage = $"Phát hiện sai lệch số học: Tổng hóa đơn ({TotalAmount:N0} đ) lệch {DiscrepancyAmount:N0} đ so với tổng các món tính toán ({CalculatedTotal:N0} đ).";
+            StatusMessage = $"⚠️ Cảnh báo chênh lệch số học: {DiscrepancyAmount:N0} đ. Vui lòng đối soát lại các dòng sản phẩm.";
+        }
+        else
+        {
+            AuditWarningMessage = null;
+            StatusMessage = "✅ Kiểm toán số học hoàn hảo: Dữ liệu đã khớp 100% (Δ ≤ 1.000 đ)!";
+        }
+    }
+
+    [RelayCommand]
+    public void RemoveItem(ParsedReceiptItemModel item)
+    {
+        if (item != null && Items.Contains(item))
+        {
+            Items.Remove(item);
+            RecalculateTotalsAndAudit();
+        }
+    }
+
+    [RelayCommand]
+    public void AddNewItem()
+    {
+        Items.Add(new ParsedReceiptItemModel
+        {
+            ItemName = "Món hàng bổ sung",
+            Quantity = 1,
+            UnitPrice = 0,
+            TotalPrice = 0,
+            SuggestedCategoryId = SelectedCategory?.Id,
+            SuggestedCategoryName = SelectedCategory?.Name,
+            Confidence = 1.0
+        });
+        RecalculateTotalsAndAudit();
+    }
+
+    [RelayCommand]
+    public void UpdateItem(ParsedReceiptItemModel item)
+    {
+        if (item != null)
+        {
+            item.RecalculateTotalPrice();
+            RecalculateTotalsAndAudit();
         }
     }
 
@@ -324,6 +466,8 @@ public partial class ReceiptOcrViewModel : BaseViewModel
             HasParsedData = false;
             Items.Clear();
             SelectedFileName = null;
+            CapturedImagePreview = null;
+            HasCapturedImage = false;
             MerchantName = string.Empty;
             TotalAmount = 0;
         }

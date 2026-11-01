@@ -65,6 +65,7 @@ public class CategoriesController : BaseApiController
     }
 
     [HttpDelete("{id:guid}")]
+    [HttpPost("{id:guid}/archive")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

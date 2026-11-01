@@ -297,6 +297,10 @@ public class AutonomousActionEngineService : IAutonomousActionEngineService
         if (packageName.Contains("zalopay", StringComparison.OrdinalIgnoreCase)) return "ZaloPay";
         if (packageName.Contains("vcb", StringComparison.OrdinalIgnoreCase)) return "Vietcombank";
         if (packageName.Contains("mbmobile", StringComparison.OrdinalIgnoreCase)) return "MBBank";
+        if (packageName.Contains("techcombank", StringComparison.OrdinalIgnoreCase)) return "Techcombank";
+        if (packageName.Contains("bidv", StringComparison.OrdinalIgnoreCase)) return "BIDV";
+        if (packageName.Contains("vpbank", StringComparison.OrdinalIgnoreCase)) return "VPBank";
+        if (packageName.Contains("tpb", StringComparison.OrdinalIgnoreCase) || packageName.Contains("tpbank", StringComparison.OrdinalIgnoreCase)) return "TPBank";
 
         if (!string.IsNullOrWhiteSpace(title))
         {
@@ -305,6 +309,10 @@ public class AutonomousActionEngineService : IAutonomousActionEngineService
             if (title.Contains("ZaloPay", StringComparison.OrdinalIgnoreCase)) return "ZaloPay";
             if (title.Contains("Vietcombank", StringComparison.OrdinalIgnoreCase)) return "Vietcombank";
             if (title.Contains("MB", StringComparison.OrdinalIgnoreCase)) return "MBBank";
+            if (title.Contains("Techcombank", StringComparison.OrdinalIgnoreCase)) return "Techcombank";
+            if (title.Contains("BIDV", StringComparison.OrdinalIgnoreCase)) return "BIDV";
+            if (title.Contains("VPBank", StringComparison.OrdinalIgnoreCase)) return "VPBank";
+            if (title.Contains("TPBank", StringComparison.OrdinalIgnoreCase)) return "TPBank";
         }
 
         return "Ngân hàng";
@@ -342,6 +350,8 @@ public class AutonomousActionEngineService : IAutonomousActionEngineService
         if (text.Contains("Co.opmart", StringComparison.OrdinalIgnoreCase)) return $"Co.opmart: {amount:N0} đ";
         if (text.Contains("Circle K", StringComparison.OrdinalIgnoreCase)) return $"Circle K: {amount:N0} đ";
         if (text.Contains("Highlands", StringComparison.OrdinalIgnoreCase)) return $"Highlands Coffee: {amount:N0} đ";
+        if (text.Contains("Phuc Long", StringComparison.OrdinalIgnoreCase) || text.Contains("Phúc Long", StringComparison.OrdinalIgnoreCase)) return $"Phúc Long: {amount:N0} đ";
+        if (text.Contains("CGV", StringComparison.OrdinalIgnoreCase)) return $"CGV Cinemas: {amount:N0} đ";
         if (text.Contains("Netflix", StringComparison.OrdinalIgnoreCase)) return $"Netflix: {amount:N0} đ";
         if (text.Contains("Spotify", StringComparison.OrdinalIgnoreCase)) return $"Spotify: {amount:N0} đ";
         if (text.Contains("iCloud", StringComparison.OrdinalIgnoreCase)) return $"iCloud: {amount:N0} đ";
@@ -358,9 +368,13 @@ public class AutonomousActionEngineService : IAutonomousActionEngineService
             return ("Mua sắm", 0.92, "#F59E0B", null);
 
         if (text.Contains("grabfood") || text.Contains("shopeefood") || text.Contains("baemin") ||
-            text.Contains("highlands") || text.Contains("starbucks") || text.Contains("phở") || text.Contains("cơm") ||
+            text.Contains("highlands") || text.Contains("starbucks") || text.Contains("phuc long") || text.Contains("phúc long") ||
+            text.Contains("phở") || text.Contains("cơm") ||
             text.Contains("trà sữa") || text.Contains("cà phê") || text.Contains("cafe"))
             return ("Ăn uống", 0.95, "#10B981", null);
+
+        if (text.Contains("cgv") || text.Contains("bhd") || text.Contains("lotte cinema") || text.Contains("galaxy cinema") || text.Contains("cinema") || text.Contains("rạp chiếu phim"))
+            return ("Giải trí", 0.90, "#8B5CF6", null);
 
         if (text.Contains("winmart") || text.Contains("co.opmart") || text.Contains("bách hóa xanh") || text.Contains("siêu thị"))
             return ("Đi chợ / Thực phẩm", 0.94, "#059669", null);

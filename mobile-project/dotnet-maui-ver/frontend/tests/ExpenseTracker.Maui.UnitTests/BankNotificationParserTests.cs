@@ -11,6 +11,12 @@ public class BankNotificationParserTests
     [InlineData("vn.com.vng.zalopay", true)]
     [InlineData("com.VCB", true)]
     [InlineData("com.mbmobile", true)]
+    [InlineData("com.techcombank.mobile", true)]
+    [InlineData("nhan.techcombank.mobile", true)]
+    [InlineData("vn.com.techcombank.bb.app", true)]
+    [InlineData("com.vnpay.bidv", true)]
+    [InlineData("com.vpb.vpbankneo", true)]
+    [InlineData("com.tpb.mb.gprsandroid", true)]
     [InlineData("com.facebook.katana", false)]
     [InlineData("com.google.android.youtube", false)]
     public void IsSupportedPackage_ShouldIdentifyTargetFinancialPackages(string packageName, bool expected)
@@ -107,6 +113,78 @@ public class BankNotificationParserTests
         result.Amount.Should().Be(45000m);
         result.BankName.Should().Be("Ví ZaloPay");
         result.ExtractedNote.Should().Contain("GrabFood");
+    }
+
+    [Fact]
+    public void Parse_WithTechcombankNotification_ShouldExtractAmountAndMerchant()
+    {
+        // Arrange
+        string pkg = "com.techcombank.mobile";
+        string title = "Techcombank Thông báo";
+        string text = "GD: -120,000VND luc 14:15 tai Highlands Coffee. So du: 5,400,000VND";
+
+        // Act
+        var result = BankNotificationParser.Parse(pkg, title, text);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Amount.Should().Be(120000m);
+        result.BankName.Should().Be("Techcombank");
+        result.ExtractedNote.Should().Contain("Highlands");
+    }
+
+    [Fact]
+    public void Parse_WithBidvNotification_ShouldExtractAmountAndMerchant()
+    {
+        // Arrange
+        string pkg = "com.vnpay.bidv";
+        string title = "BIDV Thông báo";
+        string text = "TK 123456: -450,000 VND luc 17:00 tai Sieu thi Co.opmart";
+
+        // Act
+        var result = BankNotificationParser.Parse(pkg, title, text);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Amount.Should().Be(450000m);
+        result.BankName.Should().Be("BIDV");
+        result.ExtractedNote.Should().Contain("Co.opmart");
+    }
+
+    [Fact]
+    public void Parse_WithVpBankNotification_ShouldExtractAmount()
+    {
+        // Arrange
+        string pkg = "com.vpb.vpbankneo";
+        string title = "VPBank NEO";
+        string text = "So tien: -250,000 VND vao 19:30 tai Rap chieu phim CGV";
+
+        // Act
+        var result = BankNotificationParser.Parse(pkg, title, text);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Amount.Should().Be(250000m);
+        result.BankName.Should().Be("VPBank");
+        result.ExtractedNote.Should().Contain("CGV");
+    }
+
+    [Fact]
+    public void Parse_WithTpBankNotification_ShouldExtractAmount()
+    {
+        // Arrange
+        string pkg = "com.tpb.mb.gprsandroid";
+        string title = "TPBank";
+        string text = "GD: -80,000 VND tai Phuc Long Coffee";
+
+        // Act
+        var result = BankNotificationParser.Parse(pkg, title, text);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Amount.Should().Be(80000m);
+        result.BankName.Should().Be("TPBank");
+        result.ExtractedNote.Should().Contain("Phuc Long");
     }
 
     [Theory]

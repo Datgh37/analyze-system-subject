@@ -58,6 +58,7 @@ public class WalletsController : BaseApiController
 
     // Soft-deletes a wallet account
     [HttpDelete("{id:guid}")]
+    [HttpPost("{id:guid}/archive")]
     public async Task<IActionResult> DeleteWallet(Guid id, CancellationToken ct)
     {
         var result = await _walletService.DeleteWalletAsync(CurrentUserId, id, ct);

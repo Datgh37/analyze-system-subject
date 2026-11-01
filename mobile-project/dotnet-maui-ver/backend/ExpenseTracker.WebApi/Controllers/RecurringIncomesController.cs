@@ -64,6 +64,7 @@ public class RecurringIncomesController : BaseApiController
     }
 
     [HttpDelete("{id:guid}")]
+    [HttpPost("{id:guid}/archive")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteRecurringIncome(Guid id, CancellationToken ct)

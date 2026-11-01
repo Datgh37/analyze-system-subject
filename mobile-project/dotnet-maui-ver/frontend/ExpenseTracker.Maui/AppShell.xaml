@@ -158,4 +158,9 @@
         <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
     </FlyoutItem>
 
+    <!-- TRANG ĐĂNG NHẬP NHANH (ẨN KHỎI MENU) -->
+    <FlyoutItem Title="Đăng Nhập Nhanh" FlyoutItemIsVisible="False" Route="QuickLoginPage">
+        <ShellContent ContentTemplate="{DataTemplate views:QuickLoginPage}" />
+    </FlyoutItem>
+
 </Shell>

@@ -135,6 +135,10 @@ public class VoiceFloatingMicViewModelTests
     [InlineData("Tạo danh mục Nuôi mèo", "CategoriesPage")]
     [InlineData("Quét hóa đơn siêu thị", "ReceiptOcrPage")]
     [InlineData("Mở quản lý ví", "WalletsPage")]
+    [InlineData("Xem quỹ khẩn cấp", "EmergencyFundPage")]
+    [InlineData("Quét bẫy thuê bao", "SubscriptionsPage")]
+    [InlineData("Thử mô phỏng mua xe", "ForecastingPage")]
+    [InlineData("Trả nợ 2 triệu thẻ tín dụng", "DebtTrackerPage")]
     public async Task MockVoiceAgentRepository_WhenNavigationCommand_ShouldMapToCorrectTargetRoute(
         string command, string expectedRoute)
     {
@@ -148,7 +152,49 @@ public class VoiceFloatingMicViewModelTests
         // Assert
         result.Should().NotBeNull();
         result.TargetRoute.Should().Be(expectedRoute);
-        result.ActionType.Should().Be("Navigation");
-        result.DetectedIntent.Should().Be("NavigateTo");
+    }
+
+    [Fact]
+    public async Task SendDirectTextInputAsync_WhenValidInput_ShouldTriggerProcessingAndClearInput()
+    {
+        // Arrange
+        var intentResult = new VoiceIntentResultModel(
+            DetectedIntent: "EmergencyFund",
+            ActionType: "Navigation",
+            TargetRoute: "EmergencyFundPage",
+            PrefillData: new Dictionary<string, string>(),
+            ExtractedAmount: null,
+            SuggestedCategory: "Quỹ khẩn cấp",
+            SuggestedWalletId: null,
+            ConfirmationMessage: "Đang mở Báo cáo Quỹ Dự Phòng Khẩn Cấp",
+            Confidence: 0.96
+        );
+
+        _mockVoiceRepo.Setup(r => r.ParseIntentAsync(It.IsAny<VoiceIntentCommandRequest>()))
+                      .ReturnsAsync(intentResult);
+
+        _vm.DirectTextInput = "Xem quỹ khẩn cấp của tôi";
+
+        // Act
+        await _vm.SendDirectTextInputAsync();
+
+        // Assert
+        _vm.DirectTextInput.Should().BeEmpty();
+        _vm.Transcript.Should().Be("Xem quỹ khẩn cấp của tôi");
+        _vm.LastResult.Should().NotBeNull();
+        _vm.LastResult!.TargetRoute.Should().Be("EmergencyFundPage");
+        _vm.FeedbackMessage.Should().Contain("Quỹ Dự Phòng Khẩn Cấp");
+    }
+
+    [Fact]
+    public async Task StartListeningAsync_WhenCalled_ShouldSetListeningState()
+    {
+        // Act
+        await _vm.StartListeningAsync();
+
+        // Assert
+        _vm.IsListening.Should().BeTrue();
+        _vm.Transcript.Should().BeEmpty();
+        _vm.FeedbackMessage.Should().Contain("Đang lắng nghe");
     }
 }

@@ -331,4 +331,80 @@ public class AutonomousActionEngineServiceTests
         inboxResult.Value.Should().NotBeNull();
         inboxResult.Value.Actions.Should().NotContain(a => a.ActionId == actionId);
     }
+
+    [Fact]
+    public async Task ProcessRawBankNotification_WhenTechcombankHighlands_ShouldRecognizeTechcombankAndDining()
+    {
+        // Arrange
+        var request = new RawBankNotificationRequest(
+            PackageName: "com.techcombank.mobile",
+            Title: "Techcombank Thông báo",
+            Message: "GD: -120,000VND luc 14:15 tai Highlands Coffee. So du: 5,400,000VND",
+            NotificationTime: DateTime.UtcNow
+        );
+
+        // Act
+        var result = await _service.ProcessRawBankNotificationAsync(_userId, request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        var action = result.Value!;
+        action.ActionType.Should().Be(AutonomousActionTypes.QuickTransactionConfirm);
+        action.ConfidenceScore.Should().BeGreaterThanOrEqualTo(0.85);
+        action.Display.Amount.Should().Be(120000m);
+        action.Display.BadgeText.Should().Be("Ăn uống");
+        action.Display.Subtitle.Should().Contain("Techcombank");
+        action.PrimaryAction.Should().NotBeNull();
+        action.PrimaryAction!.Payload!["walletName"].Should().Be("Techcombank");
+    }
+
+    [Fact]
+    public async Task ProcessRawBankNotification_WhenBidvCoopmart_ShouldRecognizeBidvAndGroceries()
+    {
+        // Arrange
+        var request = new RawBankNotificationRequest(
+            PackageName: "com.vnpay.bidv",
+            Title: "BIDV",
+            Message: "TK 123456: -450,000 VND luc 17:00 tai Sieu thi Co.opmart",
+            NotificationTime: DateTime.UtcNow
+        );
+
+        // Act
+        var result = await _service.ProcessRawBankNotificationAsync(_userId, request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        var action = result.Value!;
+        action.ConfidenceScore.Should().BeGreaterThanOrEqualTo(0.85);
+        action.Display.Amount.Should().Be(450000m);
+        action.Display.BadgeText.Should().Be("Đi chợ / Thực phẩm");
+        action.Display.Subtitle.Should().Contain("BIDV");
+        action.PrimaryAction!.Payload!["walletName"].Should().Be("BIDV");
+    }
+
+    [Theory]
+    [InlineData("com.vpb.vpbankneo", "VPBank NEO", "VPBank: -250,000 VND tai CGV", "VPBank")]
+    [InlineData("com.tpb.mb.gprsandroid", "TPBank", "GD -80,000 VND tai Phuc Long Coffee", "TPBank")]
+    public async Task ProcessRawBankNotification_WhenVpBankAndTpBank_ShouldIdentifyBankName(
+        string packageName, string title, string message, string expectedBankName)
+    {
+        // Arrange
+        var request = new RawBankNotificationRequest(
+            PackageName: packageName,
+            Title: title,
+            Message: message,
+            NotificationTime: DateTime.UtcNow
+        );
+
+        // Act
+        var result = await _service.ProcessRawBankNotificationAsync(_userId, request);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value!.Display.Subtitle.Should().Contain(expectedBankName);
+        result.Value.PrimaryAction!.Payload!["walletName"].Should().Be(expectedBankName);
+    }
 }

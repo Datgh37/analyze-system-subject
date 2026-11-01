@@ -208,6 +208,62 @@
                 </VerticalStackLayout>
             </Border>
 
+                    <!-- CARD 5: BẢO MẬT & ĐĂNG NHẬP NHANH (BIOMETRICS) -->
+            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Image Source="ic_security.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                        <Label Text="5. Bảo Mật Sinh Trắc Học (Vân Tay / FaceID)" FontSize="15" FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Đăng Nhập Nhanh 1-Chạm" FontSize="14" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                            <Label Text="Bật để vào app 0.1s bằng vân tay khi mở lại app" FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" 
+                                IsToggled="{Binding IsBiometricQuickLoginEnabled}"
+                                IsEnabled="{Binding IsBiometricSupported}"
+                                OnColor="#4F46E5" ThumbColor="#FFFFFF" />
+                    </Grid>
+
+                    <Label Text="{Binding BiometricHardwareStatusText}"
+                           FontSize="12" FontAttributes="Italic"
+                           TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}" />
+
+                    <Label Text="* Lưu ý: Tính năng này chỉ kích hoạt khi bạn thoát/tắt app. Nếu bạn chủ động bấm nút Đăng xuất bên dưới, tính năng sẽ tự động khóa an toàn và bắt buộc nhập Mật khẩu ở lần mở tiếp theo."
+                           FontSize="11" FontAttributes="Italic" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- CARD 6: KHU VỰC ĐĂNG XUẤT AN TOÀN (DANGER ZONE) -->
+            <Border BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                    Stroke="#EF4444"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Khu Vực Tài Khoản" FontSize="15" FontAttributes="Bold" TextColor="#EF4444" />
+                    <Label Text="Đăng xuất khỏi thiết bị này sẽ xóa sạch phiên làm việc trên máy và vô hiệu hóa chế độ Đăng nhập nhanh."
+                           FontSize="12" TextColor="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}" />
+
+                    <Button Text="Đăng Xuất Khỏi Tài Khoản"
+                            Command="{Binding LogoutCommand}"
+                            BackgroundColor="#EF4444"
+                            TextColor="#FFFFFF"
+                            CornerRadius="10"
+                            HeightRequest="46"
+                            FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -75,6 +75,7 @@ public class BudgetsController : BaseApiController
     }
 
     [HttpDelete("{id:guid}")]
+    [HttpPost("{id:guid}/archive")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CloseBudget(Guid id, CancellationToken ct)

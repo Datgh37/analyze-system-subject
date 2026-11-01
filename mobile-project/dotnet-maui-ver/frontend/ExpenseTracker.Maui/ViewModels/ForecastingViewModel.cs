@@ -36,6 +36,21 @@ public partial class ForecastingViewModel : BaseViewModel
     private decimal _incomeReductionPercentage = 20m;
 
     [ObservableProperty]
+    private decimal _emergencyExpenseAmount = 15000000m;
+
+    [ObservableProperty]
+    private decimal _emergencyIncomeDropPercentage = 0m;
+
+    [ObservableProperty]
+    private string _convertGoalName = "Mục tiêu mua sắm What-If";
+
+    [ObservableProperty]
+    private bool _isConvertingToGoal;
+
+    [ObservableProperty]
+    private string? _conversionFeedbackMessage;
+
+    [ObservableProperty]
     private string? _statusMessage;
 
     public ObservableCollection<CategoryDeficitRiskModel> CategoryRisks { get; } = new();
@@ -138,7 +153,9 @@ public partial class ForecastingViewModel : BaseViewModel
                 LumpSumAmount = LumpSumAmount,
                 MonthlyInstallmentAmount = MonthlyInstallment,
                 InstallmentMonths = InstallmentMonths,
-                IncomeReductionPercentage = IncomeReductionPercentage
+                IncomeReductionPercentage = IncomeReductionPercentage,
+                EmergencyExpenseAmount = EmergencyExpenseAmount,
+                EmergencyIncomeDropPercentage = EmergencyIncomeDropPercentage
             };
 
             WhatIfResult = await _repository.SimulateWhatIfAsync(req);
@@ -163,8 +180,52 @@ public partial class ForecastingViewModel : BaseViewModel
             case "IncomeReduction":
                 SelectedScenarioType = WhatIfScenarioType.IncomeReduction;
                 break;
+            case "EmergencyShock":
+                SelectedScenarioType = WhatIfScenarioType.EmergencyShock;
+                break;
         }
 
         await RunWhatIfSimulationAsync();
+    }
+
+    // UC-08.04 Alternate Flow A1: Convert simulated purchase into a savings goal
+    [RelayCommand]
+    public async Task ConvertToSavingsGoalAsync()
+    {
+        if (IsConvertingToGoal) return;
+
+        IsConvertingToGoal = true;
+        ConversionFeedbackMessage = null;
+
+        try
+        {
+            decimal targetAmount = SelectedScenarioType switch
+            {
+                WhatIfScenarioType.LumpSumExpense => LumpSumAmount,
+                WhatIfScenarioType.InstallmentLoan => MonthlyInstallment * InstallmentMonths,
+                WhatIfScenarioType.EmergencyShock => EmergencyExpenseAmount,
+                _ => 10000000m
+            };
+
+            var req = new ConvertToSavingsGoalRequestModel
+            {
+                GoalName = string.IsNullOrWhiteSpace(ConvertGoalName) ? "Mục tiêu mua sắm What-If" : ConvertGoalName.Trim(),
+                TargetAmount = targetAmount,
+                TargetDate = DateTime.UtcNow.Date.AddMonths(SelectedScenarioType == WhatIfScenarioType.InstallmentLoan ? InstallmentMonths : 6),
+                Notes = $"Khởi tạo từ Kịch bản mô phỏng What-If ({SelectedScenarioType})"
+            };
+
+            var res = await _repository.ConvertWhatIfToGoalAsync(req);
+            ConversionFeedbackMessage = res.Message;
+            StatusMessage = $"Đã tạo mục tiêu '{res.GoalName}' thành công!";
+        }
+        catch (Exception ex)
+        {
+            ConversionFeedbackMessage = $"Lỗi chuyển đổi mục tiêu: {ex.Message}";
+        }
+        finally
+        {
+            IsConvertingToGoal = false;
+        }
     }
 }

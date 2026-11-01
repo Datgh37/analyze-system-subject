@@ -170,4 +170,64 @@ public class ForecastingViewModelTests
         _viewModel.HasError.Should().BeTrue();
         _viewModel.ErrorMessage.Should().Contain("Connection refused");
     }
+
+    [Fact]
+    public async Task SelectScenario_EmergencyShock_ShouldSwitchScenarioTypeAndRecalculate()
+    {
+        // Arrange
+        var whatIfShock = new WhatIfSimulationResultModel
+        {
+            ScenarioType = WhatIfScenarioType.EmergencyShock,
+            ScenarioDescription = "Cú sốc khẩn cấp",
+            EmergencyFundRemainingBefore = 30000000m,
+            EmergencyFundRemainingAfter = 15000000m,
+            RunwayMonthsBefore = 3.5m,
+            RunwayMonthsAfter = 1.8m,
+            IsHighRiskDecision = true,
+            ImpactSummaryMessage = "Quỹ dự phòng dưới ngưỡng an toàn"
+        };
+
+        _mockRepository.Setup(r => r.SimulateWhatIfAsync(It.Is<WhatIfSimulationRequestModel>(q => q.ScenarioType == WhatIfScenarioType.EmergencyShock)))
+            .ReturnsAsync(whatIfShock);
+
+        // Act
+        await _viewModel.SelectScenarioAsync("EmergencyShock");
+
+        // Assert
+        _viewModel.SelectedScenarioType.Should().Be(WhatIfScenarioType.EmergencyShock);
+        _viewModel.WhatIfResult.Should().NotBeNull();
+        _viewModel.WhatIfResult!.RunwayMonthsAfter.Should().Be(1.8m);
+        _viewModel.WhatIfResult.IsHighRiskDecision.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ConvertToSavingsGoal_ShouldCallRepositoryAndSetSuccessMessage()
+    {
+        // Arrange
+        var expectedResult = new ConvertToSavingsGoalResultModel
+        {
+            GoalId = Guid.NewGuid(),
+            GoalName = "Laptop mới",
+            TargetAmount = 25000000m,
+            TargetDate = DateTime.UtcNow.Date.AddMonths(6),
+            MonthlyCommitment = 4166667m,
+            Message = "Đã thiết lập thành công mục tiêu tích lũy 'Laptop mới'!"
+        };
+
+        _mockRepository.Setup(r => r.ConvertWhatIfToGoalAsync(It.IsAny<ConvertToSavingsGoalRequestModel>()))
+            .ReturnsAsync(expectedResult);
+
+        _viewModel.SelectedScenarioType = WhatIfScenarioType.LumpSumExpense;
+        _viewModel.LumpSumAmount = 25000000m;
+        _viewModel.ConvertGoalName = "Laptop mới";
+
+        // Act
+        await _viewModel.ConvertToSavingsGoalAsync();
+
+        // Assert
+        _viewModel.IsConvertingToGoal.Should().BeFalse();
+        _viewModel.ConversionFeedbackMessage.Should().Contain("Laptop mới");
+        _viewModel.StatusMessage.Should().Contain("Laptop mới");
+        _mockRepository.Verify(r => r.ConvertWhatIfToGoalAsync(It.Is<ConvertToSavingsGoalRequestModel>(m => m.TargetAmount == 25000000m)), Times.Once);
+    }
 }

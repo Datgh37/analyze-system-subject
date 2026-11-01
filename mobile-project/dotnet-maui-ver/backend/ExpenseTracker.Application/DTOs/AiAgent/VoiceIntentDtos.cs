@@ -25,4 +25,10 @@ public static class VoiceIntents
     public const string AddTransaction = "AddTransaction";
     public const string NavigateTo = "NavigateTo";
     public const string QueryStatus = "QueryStatus";
+    public const string DebtPayment = "DebtPayment";
+    public const string EmergencyFund = "EmergencyFund";
+    public const string SubscriptionAudit = "SubscriptionAudit";
+    public const string WhatIfSimulation = "WhatIfSimulation";
+    public const string ReceiptOcr = "ReceiptOcr";
+    public const string AskAssistant = "AskAssistant";
 }

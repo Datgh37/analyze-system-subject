@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" android:usesCleartextTraffic="true"></application>
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" android:usesCleartextTraffic="true">
+		<!-- Android Native Notification Listener Service for Bank Push/SMS (UC-03.10) -->
+		<service android:name=".Platforms.Android.Services.BankNotificationListenerService"
+				 android:label="ExpenseTracker Bank Notification Listener"
+				 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+				 android:exported="true">
+			<intent-filter>
+				<action android:name="android.service.notification.NotificationListenerService" />
+			</intent-filter>
+		</service>
+	</application>
+
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
+	
+	<!-- Native Camera & Media Permissions for Receipt AI Vision OCR (UC-03.07) -->
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
+	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+	<!-- Native Microphone & Audio Recording Permissions for AI Voice Assistant (UC-03.11) -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+	<uses-feature android:name="android.hardware.microphone" android:required="false" />
 	
 	<!-- Android 13+ Notification Runtime Permission (API 33+) -->
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -13,4 +34,4 @@
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.VIBRATE" />
-</manifest>
+</manifest>

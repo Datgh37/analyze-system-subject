@@ -185,16 +185,21 @@ public class MockForecastingRepository : IForecastingRepository
         decimal dsaBefore = 450000m;
         decimal netWorthBefore = 45000000m;
         decimal dtiBefore = 12.5m;
+        decimal emergencyFundBefore = 30000000m;
+        decimal runwayMonthsBefore = 3.5m;
         var outOfMoneyBefore = today.AddDays(22);
 
         decimal dsaAfter = dsaBefore;
         decimal netWorthAfter = netWorthBefore;
         decimal dtiAfter = dtiBefore;
+        decimal emergencyFundAfter = emergencyFundBefore;
+        decimal runwayMonthsAfter = runwayMonthsBefore;
         var outOfMoneyAfter = outOfMoneyBefore;
         int daysShifted = 0;
         string desc = string.Empty;
         string impact = string.Empty;
         bool isHighRisk = false;
+        bool isLiquidDeficitRisk = false;
 
         switch (request.ScenarioType)
         {
@@ -205,8 +210,11 @@ public class MockForecastingRepository : IForecastingRepository
                 netWorthAfter = netWorthBefore - lump;
                 daysShifted = Math.Min(15, (int)(lump / 300000m));
                 outOfMoneyAfter = today.AddDays(Math.Max(1, 22 - daysShifted));
-                isHighRisk = lump > 10000000m || dsaAfter < dsaBefore * 0.6m;
-                impact = $"Nếu chi {lump:N0} đ ngay lúc này: Hạn mức tiêu mỗi ngày (DSA) sẽ bị siết giảm từ {dsaBefore:N0} đ xuống còn {dsaAfter:N0} đ. Ngày cạn sạch tiền bị kéo sớm {daysShifted} ngày (rơi vào ngày {outOfMoneyAfter:dd/MM/yyyy}).";
+                isLiquidDeficitRisk = lump > 25000000m; // Mock wallet liquid threshold
+                isHighRisk = isLiquidDeficitRisk || lump > 10000000m || dsaAfter < dsaBefore * 0.6m;
+                impact = isLiquidDeficitRisk
+                    ? $"🚨 CẢNH BÁO NGUY HIỂM: Khoản chi {lump:N0} đ vượt quá tổng tiền mặt khả dụng (25,000,000 đ) trong ví! Ví của bạn sẽ bị âm ngay lập tức nếu thực hiện giao dịch này."
+                    : $"Nếu chi {lump:N0} đ ngay lúc này: Hạn mức tiêu mỗi ngày (DSA) sẽ bị siết giảm từ {dsaBefore:N0} đ xuống còn {dsaAfter:N0} đ. Ngày cạn sạch tiền bị kéo sớm {daysShifted} ngày (rơi vào ngày {outOfMoneyAfter:dd/MM/yyyy}).";
                 break;
 
             case WhatIfScenarioType.InstallmentLoan:
@@ -225,6 +233,24 @@ public class MockForecastingRepository : IForecastingRepository
                 dtiAfter = Math.Round(dtiBefore / Math.Max(0.1m, (1m - redPct / 100m)), 1);
                 isHighRisk = redPct >= 20m;
                 impact = $"Nếu thu nhập bị sụt giảm {redPct}%: Hạn mức tiêu mỗi ngày của bạn phải giảm còn {dsaAfter:N0} đ để không bị thâm hụt tài chính.";
+                break;
+
+            case WhatIfScenarioType.EmergencyShock:
+                var emergencyExpense = Math.Max(0m, request.EmergencyExpenseAmount);
+                var incomeDropPct = Math.Clamp(request.EmergencyIncomeDropPercentage, 0m, 100m);
+                desc = $"Cú sốc biến cố khẩn cấp: Chi phí đột xuất {emergencyExpense:N0} đ, thu nhập giảm {incomeDropPct}%";
+
+                emergencyFundAfter = Math.Max(0m, emergencyFundBefore - emergencyExpense);
+                decimal essentialMonthly = 8500000m;
+                runwayMonthsAfter = Math.Round(emergencyFundAfter / essentialMonthly, 1);
+                netWorthAfter = netWorthBefore - emergencyExpense;
+
+                isLiquidDeficitRisk = emergencyExpense > (emergencyFundBefore + 15000000m);
+                isHighRisk = runwayMonthsAfter < 3.0m || isLiquidDeficitRisk;
+
+                impact = isLiquidDeficitRisk
+                    ? $"🚨 BÁO ĐỘNG ĐỎ BIẾN CỐ: Chi phí khẩn cấp {emergencyExpense:N0} đ vượt quá toàn bộ Quỹ dự phòng và tiền mặt! Nguy cơ vỡ nợ hoặc buộc phải vay nóng."
+                    : $"Sau biến cố khẩn cấp: Quỹ dự phòng còn lại {emergencyFundAfter:N0} đ. Số tháng sinh tồn (Runway) giảm từ {runwayMonthsBefore} tháng xuống còn {runwayMonthsAfter} tháng. {(runwayMonthsAfter < 3.0m ? "⚠️ Cảnh báo: Quỹ dự phòng dưới ngưỡng an toàn tối thiểu (3 tháng)!" : "Quỹ dự phòng vẫn ở mức an toàn.")}";
                 break;
         }
 
@@ -245,10 +271,35 @@ public class MockForecastingRepository : IForecastingRepository
             NetWorthChangeAmount = netWorthAfter - netWorthBefore,
             DtiBefore = dtiBefore,
             DtiAfter = dtiAfter,
+            EmergencyFundRemainingBefore = emergencyFundBefore,
+            EmergencyFundRemainingAfter = emergencyFundAfter,
+            RunwayMonthsBefore = runwayMonthsBefore,
+            RunwayMonthsAfter = runwayMonthsAfter,
             IsHighRiskDecision = isHighRisk,
+            IsLiquidDeficitRisk = isLiquidDeficitRisk,
             ImpactSummaryMessage = impact
         };
 
         return Task.FromResult(result);
+    }
+
+    public Task<ConvertToSavingsGoalResultModel> ConvertWhatIfToGoalAsync(ConvertToSavingsGoalRequestModel request)
+    {
+        var targetDate = request.TargetDate > DateTime.UtcNow.Date ? request.TargetDate : DateTime.UtcNow.Date.AddMonths(6);
+        int days = Math.Max(30, (targetDate - DateTime.UtcNow.Date).Days);
+        decimal months = Math.Max(1.0m, Math.Round(days / 30.0m, 1));
+        decimal monthly = Math.Round(request.TargetAmount / months, 0);
+
+        var res = new ConvertToSavingsGoalResultModel
+        {
+            GoalId = Guid.NewGuid(),
+            GoalName = string.IsNullOrWhiteSpace(request.GoalName) ? "Mục tiêu mua sắm What-If" : request.GoalName,
+            TargetAmount = request.TargetAmount,
+            TargetDate = targetDate,
+            MonthlyCommitment = monthly,
+            Message = $"Đã thiết lập thành công mục tiêu tích lũy '{request.GoalName}'. Bạn cần tiết kiệm khoảng {monthly:N0} đ/tháng trong {months} tháng để hoàn thành mục tiêu này thay vì mua bốc đồng!"
+        };
+
+        return Task.FromResult(res);
     }
 }

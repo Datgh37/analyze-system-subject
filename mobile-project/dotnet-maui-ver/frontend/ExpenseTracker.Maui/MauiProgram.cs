@@ -5,6 +5,7 @@ using ExpenseTracker.Maui.Services.Config;
 using ExpenseTracker.Maui.Services.Notifications;
 using ExpenseTracker.Maui.Services.Realtime;
 using ExpenseTracker.Maui.Services.Security;
+using ExpenseTracker.Maui.Services.Biometrics;
 using ExpenseTracker.Maui.ViewModels;
 using ExpenseTracker.Maui.ViewModels.AiAgent;
 using ExpenseTracker.Maui.ViewModels.Autonomous;
@@ -39,6 +40,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DynamicBaseAddressHandler>();
         builder.Services.AddTransient<AuthHeaderHandler>();
         builder.Services.AddSingleton<ITokenStorageService, SecureStorageTokenService>();
+        builder.Services.AddSingleton<IBiometricAuthService, BiometricAuthService>();
 
         var baseApiUrl = ServerConfigService.GetDefaultServerUrl();
         Action<HttpClient> configureClient = c =>
@@ -149,9 +151,37 @@ public static class MauiProgram
             .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
+        builder.Services.AddRefitClient<IDebtsApi>(refitSettings)
+            .ConfigureHttpClient(configureClient)
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        builder.Services.AddRefitClient<IEmergencyFundApi>(refitSettings)
+            .ConfigureHttpClient(configureClient)
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        builder.Services.AddRefitClient<INetWorthApi>(refitSettings)
+            .ConfigureHttpClient(configureClient)
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        builder.Services.AddRefitClient<ISubscriptionApi>(refitSettings)
+            .ConfigureHttpClient(configureClient)
+            .AddHttpMessageHandler<DynamicBaseAddressHandler>()
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
         // =========================================================================
         // ĐĂNG KÝ INSTANCES THẬT & MOCK (SINGLETON CHO MOCK ĐỂ GIỮ STATE BỘ NHỚ RAM)
         // =========================================================================
+        builder.Services.AddSingleton<MockDebtRepository>();
+        builder.Services.AddScoped<ApiDebtRepository>();
+        builder.Services.AddSingleton<MockEmergencyFundRepository>();
+        builder.Services.AddScoped<ApiEmergencyFundRepository>();
+        builder.Services.AddSingleton<MockNetWorthRepository>();
+        builder.Services.AddScoped<ApiNetWorthRepository>();
+        builder.Services.AddSingleton<MockSubscriptionRepository>();
+        builder.Services.AddScoped<ApiSubscriptionRepository>();
         builder.Services.AddSingleton<MockWalletRepository>();
         builder.Services.AddScoped<ApiWalletRepository>();
         builder.Services.AddSingleton<MockTransactionRepository>();
@@ -193,6 +223,18 @@ public static class MauiProgram
         // DYNAMIC DISPATCH PROXY: ĐIỀU HƯỚNG RUNTIME THỜI GIAN THỰC 0MS
         // Tự động phân nhánh ngay lập tức khi người dùng gạt toggle sang Offline Mode
         // =========================================================================
+        builder.Services.AddSingleton<IDebtRepository>(sp =>
+            DynamicRepositoryProxy<IDebtRepository>.Create(sp, typeof(ApiDebtRepository), typeof(MockDebtRepository)));
+
+        builder.Services.AddSingleton<IEmergencyFundRepository>(sp =>
+            DynamicRepositoryProxy<IEmergencyFundRepository>.Create(sp, typeof(ApiEmergencyFundRepository), typeof(MockEmergencyFundRepository)));
+
+        builder.Services.AddSingleton<INetWorthRepository>(sp =>
+            DynamicRepositoryProxy<INetWorthRepository>.Create(sp, typeof(ApiNetWorthRepository), typeof(MockNetWorthRepository)));
+
+        builder.Services.AddSingleton<ISubscriptionRepository>(sp =>
+            DynamicRepositoryProxy<ISubscriptionRepository>.Create(sp, typeof(ApiSubscriptionRepository), typeof(MockSubscriptionRepository)));
+
         builder.Services.AddSingleton<IWalletRepository>(sp =>
             DynamicRepositoryProxy<IWalletRepository>.Create(sp, typeof(ApiWalletRepository), typeof(MockWalletRepository)));
 
@@ -260,6 +302,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IClientAuthService, ClientAuthService>();
 
         // Register MVVM ViewModels
+        builder.Services.AddTransient<QuickLoginViewModel>();
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<VerifyOtpViewModel>();
@@ -285,8 +328,13 @@ public static class MauiProgram
         builder.Services.AddTransient<ImportPreviewViewModel>();
         builder.Services.AddTransient<ActionInboxViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<DebtOptimizerViewModel>();
+        builder.Services.AddTransient<EmergencyFundViewModel>();
+        builder.Services.AddTransient<NetWorthViewModel>();
+        builder.Services.AddTransient<SubscriptionsViewModel>();
 
         // Register UI Views
+        builder.Services.AddTransient<QuickLoginPage>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<VerifyOtpPage>();

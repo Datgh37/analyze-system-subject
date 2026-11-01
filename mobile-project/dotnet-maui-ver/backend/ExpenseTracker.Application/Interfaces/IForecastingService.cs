@@ -21,4 +21,7 @@ public interface IForecastingService
 
     // UC-08.04: Interactive What-If simulation sandbox (In-memory, zero DB mutation)
     Task<Result<WhatIfSimulationResultDto>> SimulateWhatIfScenarioAsync(Guid userId, WhatIfSimulationRequestDto request, CancellationToken ct = default);
+
+    // UC-08.04: Alternate Flow A1 - Convert simulated purchase into a savings goal
+    Task<Result<ConvertToSavingsGoalResultDto>> ConvertWhatIfToSavingsGoalAsync(Guid userId, ConvertToSavingsGoalRequestDto request, CancellationToken ct = default);
 }

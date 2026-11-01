@@ -53,6 +53,7 @@ public class TransactionsController : BaseApiController
     }
 
     [HttpDelete("incomes/{id:guid}")]
+    [HttpPost("incomes/{id:guid}/archive")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -96,6 +97,7 @@ public class TransactionsController : BaseApiController
     }
 
     [HttpDelete("expenses/{id:guid}")]
+    [HttpPost("expenses/{id:guid}/archive")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

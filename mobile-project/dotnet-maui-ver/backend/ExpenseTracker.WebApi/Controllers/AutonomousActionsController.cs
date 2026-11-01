@@ -29,6 +29,7 @@ public class AutonomousActionsController : BaseApiController
 
     // Process raw bank/e-wallet notification captured by Android Native Service
     [HttpPost("from-notification")]
+    [HttpPost("process-raw")]
     [ProducesResponseType(typeof(AutonomousActionDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ProcessNotification([FromBody] RawBankNotificationRequest request, CancellationToken ct = default)

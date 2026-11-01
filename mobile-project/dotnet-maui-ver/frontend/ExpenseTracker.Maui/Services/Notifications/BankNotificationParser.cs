@@ -25,7 +25,13 @@ public static class BankNotificationParser
         "com.mservice.momotransfer",   // Ví MoMo
         "vn.com.vng.zalopay",          // Ví ZaloPay
         "com.VCB",                     // Vietcombank VCB Digibank
-        "com.mbmobile"                 // MBBank
+        "com.mbmobile",                // MBBank
+        "nhan.techcombank.mobile",     // Techcombank Mobile
+        "com.techcombank.mobile",      // Techcombank Mobile Alternative
+        "vn.com.techcombank.bb.app",   // Techcombank Business/New
+        "com.vnpay.bidv",              // BIDV SmartBanking
+        "com.vpb.vpbankneo",           // VPBank NEO
+        "com.tpb.mb.gprsandroid"       // TPBank Mobile
     };
 
     public static bool IsSupportedPackage(string packageName)
@@ -42,6 +48,10 @@ public static class BankNotificationParser
             "vn.com.vng.zalopay" => "Ví ZaloPay",
             "com.VCB" => "Vietcombank",
             "com.mbmobile" => "MBBank",
+            "nhan.techcombank.mobile" or "com.techcombank.mobile" or "vn.com.techcombank.bb.app" => "Techcombank",
+            "com.vnpay.bidv" => "BIDV",
+            "com.vpb.vpbankneo" => "VPBank",
+            "com.tpb.mb.gprsandroid" => "TPBank",
             _ => "Tài khoản Ngân hàng"
         };
     }
@@ -85,11 +95,11 @@ public static class BankNotificationParser
 
         // 3. Bóc tách nội dung ghi chú (Merchant hoặc nội dung chuyển khoản)
         string extractedNote = string.Empty;
-        var noteRegex = new Regex(@"(?:ND:|nội dung:|cho|tại|tai)\s*([^.,;\n\r]+)", RegexOptions.IgnoreCase);
+        var noteRegex = new Regex(@"(?:ND:|nội dung:|cho|tại|tai)\s*([^;\n\r]+)", RegexOptions.IgnoreCase);
         var noteMatch = noteRegex.Match(fullContent);
         if (noteMatch.Success)
         {
-            extractedNote = noteMatch.Groups[1].Value.Trim();
+            extractedNote = noteMatch.Groups[1].Value.Trim().TrimEnd('.');
         }
 
         if (string.IsNullOrWhiteSpace(extractedNote))

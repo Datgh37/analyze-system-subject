@@ -35,6 +35,7 @@ public class BudgetAllocationConfiguration : IEntityTypeConfiguration<BudgetAllo
         builder.HasOne(ba => ba.Category)
             .WithMany()
             .HasForeignKey(ba => ba.CategoryId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(ba => new { ba.BudgetId, ba.CategoryId })

@@ -93,6 +93,20 @@ public partial class ExpensesViewModel : BaseViewModel, IQueryAttributable
             }
         });
 
+        // Listen for realtime transaction archived/deleted events (Instant 0ms removal)
+        WeakReferenceMessenger.Default.Register<TransactionArchivedMessage>(this, (r, m) =>
+        {
+            if (m.Value.TransactionType == 2) // Expense
+            {
+                var existing = Expenses.FirstOrDefault(e => e.Id == m.Value.TransactionId);
+                if (existing != null)
+                {
+                    Expenses.Remove(existing);
+                    MonthlyTotalExpense = Math.Max(0, MonthlyTotalExpense - m.Value.RevertedAmount);
+                }
+            }
+        });
+
         // Listen for server mode changes (Live API <-> Offline Mock)
         WeakReferenceMessenger.Default.Register<ServerModeChangedMessage>(this, (r, m) =>
         {

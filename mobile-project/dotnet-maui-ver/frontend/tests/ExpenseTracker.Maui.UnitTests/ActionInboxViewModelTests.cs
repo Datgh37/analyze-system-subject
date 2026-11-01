@@ -120,4 +120,69 @@ public class ActionInboxViewModelTests
         _viewModel.ActionStatusMessage.Should().Contain("Ăn uống");
         _mockRepo.Verify(r => r.QuickCommitAsync(It.Is<QuickCommitActionRequestModel>(req => req.CategoryName == "Ăn uống")), Times.Once);
     }
+
+    [Fact]
+    public async Task SimulateBankNotificationAsync_WithValidBankCode_ShouldCallRepositoryAndInsertPendingAction()
+    {
+        // Arrange
+        var simulatedAction = new AutonomousActionModel(
+            ActionId: "act_sim_tcb",
+            ActionType: AutonomousActionTypeConstants.QuickTransactionConfirm,
+            ConfidenceScore: 0.95,
+            Display: new ActionDisplayModel("Highlands Coffee: 120k", "Techcombank • Vừa xong", "Ăn uống", "#10B981", 120000m),
+            PrimaryAction: new ActionCommandModel("Lưu nhanh", ActionKindConstants.QuickCommit)
+        );
+
+        _mockRepo.Setup(r => r.ProcessNotificationAsync(It.Is<RawBankNotificationRequestModel>(req => req.PackageName == "com.techcombank.mobile")))
+            .ReturnsAsync(simulatedAction);
+
+        // Act
+        await _viewModel.SimulateBankNotificationAsync("TCB");
+
+        // Assert
+        _viewModel.PendingActions.Should().HaveCount(1);
+        _viewModel.PendingActions.First().Should().Be(simulatedAction);
+        _viewModel.ActionCount.Should().Be(1);
+        _viewModel.HasPendingActions.Should().BeTrue();
+        _viewModel.ActionStatusMessage.Should().Contain("TCB");
+        _viewModel.ActionStatusMessage.Should().Contain(simulatedAction.Display.Amount.ToString("N0"));
+    }
+
+    [Fact]
+    public async Task SimulateBankNotificationAsync_WithEmptyBankCode_ShouldDoNothing()
+    {
+        // Act
+        await _viewModel.SimulateBankNotificationAsync(null);
+        await _viewModel.SimulateBankNotificationAsync("   ");
+
+        // Assert
+        _viewModel.PendingActions.Should().BeEmpty();
+        _mockRepo.Verify(r => r.ProcessNotificationAsync(It.IsAny<RawBankNotificationRequestModel>()), Times.Never);
+    }
+
+    [Theory]
+    [InlineData("ACB", "mobile.acb.com.vn", 350000)]
+    [InlineData("MOMO", "com.mservice.momotransfer", 85000)]
+    [InlineData("VCB", "com.VCB", 500000)]
+    [InlineData("MB", "com.mbmobile", 200000)]
+    public async Task SimulateBankNotificationAsync_WithVariousBanks_ShouldMapPackageAndAmount(string bankCode, string expectedPkg, decimal expectedAmount)
+    {
+        // Arrange
+        var simulatedAction = new AutonomousActionModel(
+            ActionId: $"act_sim_{bankCode}",
+            ActionType: AutonomousActionTypeConstants.QuickTransactionConfirm,
+            ConfidenceScore: 0.90,
+            Display: new ActionDisplayModel($"{bankCode} Test", bankCode, "Chi tiêu", "#10B981", expectedAmount)
+        );
+
+        _mockRepo.Setup(r => r.ProcessNotificationAsync(It.Is<RawBankNotificationRequestModel>(req => req.PackageName == expectedPkg && req.DetectedAmount == expectedAmount)))
+            .ReturnsAsync(simulatedAction);
+
+        // Act
+        await _viewModel.SimulateBankNotificationAsync(bankCode);
+
+        // Assert
+        _viewModel.PendingActions.Should().Contain(simulatedAction);
+        _mockRepo.Verify(r => r.ProcessNotificationAsync(It.Is<RawBankNotificationRequestModel>(req => req.PackageName == expectedPkg && req.DetectedAmount == expectedAmount)), Times.Once);
+    }
 }

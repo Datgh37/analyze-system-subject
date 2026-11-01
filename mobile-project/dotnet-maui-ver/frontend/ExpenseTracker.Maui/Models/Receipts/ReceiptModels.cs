@@ -1,20 +1,46 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace ExpenseTracker.Maui.Models.Receipts;
 
 // Item line parsed by AI Vision OCR from retail/supermarket receipts (UC-03.07/03.08)
-public class ParsedReceiptItemModel
+public partial class ParsedReceiptItemModel : ObservableObject
 {
-    public string ItemName { get; set; } = string.Empty;
-    public decimal Quantity { get; set; } = 1m;
-    public decimal UnitPrice { get; set; }
-    public decimal TotalPrice { get; set; }
-    public Guid? SuggestedCategoryId { get; set; }
-    public string? SuggestedCategoryName { get; set; }
-    public double Confidence { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayQuantityPrice))]
+    private string _itemName = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayQuantityPrice))]
+    private decimal _quantity = 1m;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayQuantityPrice))]
+    private decimal _unitPrice;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayQuantityPrice))]
+    private decimal _totalPrice;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasCategory))]
+    private Guid? _suggestedCategoryId;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CategoryBadge))]
+    private string? _suggestedCategoryName;
+
+    [ObservableProperty]
+    private double _confidence = 0.95;
 
     // UI Helper properties
     public string DisplayQuantityPrice => $"{Quantity:N0} x {UnitPrice:N0} đ = {TotalPrice:N0} đ";
     public string CategoryBadge => string.IsNullOrEmpty(SuggestedCategoryName) ? "Chưa phân loại" : SuggestedCategoryName;
     public bool HasCategory => SuggestedCategoryId.HasValue;
+
+    public void RecalculateTotalPrice()
+    {
+        TotalPrice = Quantity * UnitPrice;
+    }
 }
 
 // Item payload to persist when confirming receipt

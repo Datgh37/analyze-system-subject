@@ -11,6 +11,7 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
+        Routing.RegisterRoute("QuickLoginPage", typeof(QuickLoginPage));
         Routing.RegisterRoute("RegisterPage", typeof(RegisterPage));
         Routing.RegisterRoute("VerifyOtpPage", typeof(VerifyOtpPage));
         Routing.RegisterRoute("WalletsPage", typeof(WalletsPage));

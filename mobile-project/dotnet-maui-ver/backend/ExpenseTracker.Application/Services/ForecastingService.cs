@@ -523,14 +523,34 @@ public class ForecastingService : IForecastingService
 
         var goals = await _context.SavingsGoals
             .AsNoTracking()
-            .Where(g => g.UserId == userId && g.Status == SavingsGoalStatus.Active)
+            .Where(g => g.UserId == userId && (g.Status == SavingsGoalStatus.Active || g.Status == SavingsGoalStatus.Completed))
             .ToListAsync(ct);
 
+        // Actual Emergency Fund Baseline (UC-08.04 & Phase 05)
+        var emergencyGoals = goals.Where(g => g.IsEmergencyFund).ToList();
+        decimal emergencyFundBefore = emergencyGoals.Sum(g => g.CurrentAmount);
+        decimal emergencyFundAfter = emergencyFundBefore;
+
+        // Actual Debts Baseline (Phase 03 & 04)
+        var activeDebts = await _context.Debts
+            .AsNoTracking()
+            .Where(d => d.UserId == userId && d.Status == DebtStatus.Active)
+            .ToListAsync(ct);
+
+        decimal totalDebtBalance = activeDebts.Sum(d => d.CurrentBalance);
+        decimal actualMonthlyDebt = activeDebts.Sum(d => d.MinimumPayment);
+
         decimal totalAssets = wallets.Sum(w => w.Balance) + goals.Sum(g => g.CurrentAmount);
-        decimal totalLiabilities = wallets.Where(w => w.WalletType == WalletType.CreditCard).Sum(w => Math.Abs(w.Balance));
+        decimal totalLiabilities = wallets.Where(w => w.WalletType == WalletType.CreditCard).Sum(w => Math.Abs(w.Balance)) + totalDebtBalance;
         decimal netWorthBefore = totalAssets - totalLiabilities;
 
-        // Baseline velocity
+        // Fallback for debt payment: If no specific Debts but credit card balance exists, assume 5% minimum
+        if (actualMonthlyDebt <= 0m && totalLiabilities > 0m)
+        {
+            actualMonthlyDebt = totalLiabilities * 0.05m;
+        }
+
+        // Baseline velocity & runway
         var sevenDaysAgoUtc = DateTime.SpecifyKind(today.AddDays(-7), DateTimeKind.Utc);
         var recentExpensesSum = await _context.Transactions
             .AsNoTracking()
@@ -541,6 +561,12 @@ public class ForecastingService : IForecastingService
         int daysUntilDepletionBefore = velocity > 0 ? (int)Math.Floor(liquidFunds / velocity) : 999;
         DateTime outOfMoneyBefore = today.AddDays(daysUntilDepletionBefore);
 
+        decimal essentialMonthlySpending = velocity > 0m ? velocity * 30m : 10_000_000m;
+        decimal runwayMonthsBefore = essentialMonthlySpending > 0m
+            ? Math.Round(emergencyFundBefore / essentialMonthlySpending, 1)
+            : 0m;
+        decimal runwayMonthsAfter = runwayMonthsBefore;
+
         // Baseline monthly income & DTI
         var incomeSum = await _context.RecurringIncomes
             .AsNoTracking()
@@ -548,9 +574,7 @@ public class ForecastingService : IForecastingService
             .SumAsync(r => (decimal?)r.ExpectedAmount, ct) ?? 0m;
 
         decimal monthlyIncome = incomeSum > 0m ? incomeSum : 15_000_000m;
-
-        decimal currentMonthlyDebt = totalLiabilities * 0.05m; // 5% minimum payment
-        decimal dtiBefore = monthlyIncome > 0 ? Math.Round((currentMonthlyDebt / monthlyIncome) * 100m, 1) : 0m;
+        decimal dtiBefore = monthlyIncome > 0 ? Math.Round((actualMonthlyDebt / monthlyIncome) * 100m, 1) : 0m;
 
         // 2. Compute Simulation Impact (Pure in-memory)
         decimal dsaAfter = dsaBefore;
@@ -561,6 +585,7 @@ public class ForecastingService : IForecastingService
         string scenarioDesc = string.Empty;
         string impactMessage = string.Empty;
         bool isHighRisk = false;
+        bool isLiquidDeficitRisk = false;
 
         switch (request.ScenarioType)
         {
@@ -577,8 +602,12 @@ public class ForecastingService : IForecastingService
                 outOfMoneyAfter = today.AddDays(daysAfter);
                 daysShifted = Math.Max(0, daysUntilDepletionBefore - daysAfter);
 
-                isHighRisk = lumpSum > liquidFunds || dsaAfter < dsaBefore * 0.5m;
-                impactMessage = $"Nếu chi {lumpSum:N0} đ ngay lúc này: Hạn mức ngày DSA sẽ bị siết giảm từ {dsaBefore:N0} đ xuống còn {dsaAfter:N0} đ ({Math.Round(((dsaBefore - dsaAfter) / (dsaBefore > 0 ? dsaBefore : 1)) * 100m, 1)}%). Ngày cạn sạch tiền bị kéo sớm {daysShifted} ngày (rơi vào ngày {outOfMoneyAfter:dd/MM/yyyy}).";
+                isLiquidDeficitRisk = lumpSum > liquidFunds;
+                isHighRisk = isLiquidDeficitRisk || (dsaBefore > 0m && dsaAfter < dsaBefore * 0.5m);
+
+                impactMessage = isLiquidDeficitRisk
+                    ? $"🚨 CẢNH BÁO NGUY HIỂM: Khoản chi {lumpSum:N0} đ vượt quá tổng tiền mặt khả dụng ({liquidFunds:N0} đ) trong ví! Ví của bạn sẽ bị âm ngay lập tức nếu thực hiện giao dịch này."
+                    : $"Nếu chi {lumpSum:N0} đ ngay lúc này: Hạn mức ngày DSA sẽ bị siết giảm từ {dsaBefore:N0} đ xuống còn {dsaAfter:N0} đ ({Math.Round(((dsaBefore - dsaAfter) / (dsaBefore > 0 ? dsaBefore : 1)) * 100m, 1)}%). Ngày cạn sạch tiền bị kéo sớm {daysShifted} ngày (rơi vào ngày {outOfMoneyAfter:dd/MM/yyyy}).";
                 break;
 
             case WhatIfScenarioType.InstallmentLoan:
@@ -587,8 +616,9 @@ public class ForecastingService : IForecastingService
                 scenarioDesc = $"Vay mua trả góp: {monthlyPayment:N0} đ/tháng trong {months} tháng";
 
                 dsaAfter = Math.Max(0m, Math.Round((currentFlexible - monthlyPayment) / remainingDays, 0));
-                decimal newMonthlyDebt = currentMonthlyDebt + monthlyPayment;
+                decimal newMonthlyDebt = actualMonthlyDebt + monthlyPayment;
                 dtiAfter = monthlyIncome > 0 ? Math.Round((newMonthlyDebt / monthlyIncome) * 100m, 1) : 0m;
+                netWorthAfter = netWorthBefore;
 
                 isHighRisk = dtiAfter > 40m; // DTI danger threshold
                 impactMessage = $"Nếu vay trả góp {monthlyPayment:N0} đ/tháng: Tỷ số nợ trên thu nhập (DTI) sẽ tăng từ {dtiBefore}% lên {dtiAfter}%. {(dtiAfter > 40m ? "⚠️ Cảnh báo: Tỷ số nợ vượt ngưỡng an toàn 40%!" : "DTI vẫn nằm trong ngưỡng an toàn.")}";
@@ -599,12 +629,35 @@ public class ForecastingService : IForecastingService
                 scenarioDesc = $"Giả định thu nhập bị sụt giảm: {reductionPct}%";
 
                 decimal reducedIncome = monthlyIncome * (1m - (reductionPct / 100m));
-                dtiAfter = reducedIncome > 0 ? Math.Round((currentMonthlyDebt / reducedIncome) * 100m, 1) : 100m;
+                dtiAfter = reducedIncome > 0 ? Math.Round((actualMonthlyDebt / reducedIncome) * 100m, 1) : 100m;
                 decimal reducedFlexible = Math.Max(0m, currentFlexible * (1m - (reductionPct / 100m)));
                 dsaAfter = Math.Round(reducedFlexible / remainingDays, 0);
 
-                isHighRisk = reductionPct >= 20m;
-                impactMessage = $"Nếu thu nhập giảm {reductionPct}%: Hạn mức tiêu mỗi ngày của bạn phải giảm còn {dsaAfter:N0} đ để không bị thâm hụt.";
+                isHighRisk = reductionPct >= 20m || dtiAfter > 40m;
+                impactMessage = $"Nếu thu nhập giảm {reductionPct}%: Hạn mức tiêu mỗi ngày DSA của bạn phải siết giảm còn {dsaAfter:N0} đ để không bị thâm hụt. Tỷ số nợ DTI tăng lên {dtiAfter}%.";
+                break;
+
+            case WhatIfScenarioType.EmergencyShock:
+                var emergencyExpense = Math.Max(0m, request.EmergencyExpenseAmount);
+                var incomeDropPct = Math.Clamp(request.EmergencyIncomeDropPercentage, 0m, 100m);
+                scenarioDesc = $"Cú sốc biến cố khẩn cấp: Chi phí đột xuất {emergencyExpense:N0} đ, thu nhập giảm {incomeDropPct}%";
+
+                emergencyFundAfter = Math.Max(0m, emergencyFundBefore - emergencyExpense);
+                runwayMonthsAfter = essentialMonthlySpending > 0m
+                    ? Math.Round(emergencyFundAfter / essentialMonthlySpending, 1)
+                    : 0m;
+
+                decimal shockedIncome = monthlyIncome * (1m - (incomeDropPct / 100m));
+                dtiAfter = shockedIncome > 0 ? Math.Round((actualMonthlyDebt / shockedIncome) * 100m, 1) : 100m;
+                netWorthAfter = netWorthBefore - emergencyExpense;
+
+                var totalLiquidAvailable = liquidFunds + emergencyFundBefore;
+                isLiquidDeficitRisk = emergencyExpense > totalLiquidAvailable;
+                isHighRisk = runwayMonthsAfter < 3.0m || isLiquidDeficitRisk || dtiAfter > 40m;
+
+                impactMessage = isLiquidDeficitRisk
+                    ? $"🚨 BÁO ĐỘNG ĐỎ BIẾN CỐ: Chi phí khẩn cấp {emergencyExpense:N0} đ vượt quá toàn bộ Quỹ dự phòng và tiền mặt ({totalLiquidAvailable:N0} đ)! Nguy cơ vỡ nợ hoặc buộc phải vay nóng."
+                    : $"Sau biến cố khẩn cấp: Quỹ dự phòng còn lại {emergencyFundAfter:N0} đ. Số tháng sinh tồn (Runway) giảm từ {runwayMonthsBefore} tháng xuống còn {runwayMonthsAfter} tháng. {(runwayMonthsAfter < 3.0m ? "⚠️ Cảnh báo: Quỹ dự phòng dưới ngưỡng an toàn tối thiểu (3 tháng)!" : "Quỹ dự phòng vẫn ở mức an toàn.")}";
                 break;
         }
 
@@ -625,8 +678,62 @@ public class ForecastingService : IForecastingService
             NetWorthChangeAmount = netWorthAfter - netWorthBefore,
             DtiBefore = dtiBefore,
             DtiAfter = dtiAfter,
+            EmergencyFundRemainingBefore = emergencyFundBefore,
+            EmergencyFundRemainingAfter = emergencyFundAfter,
+            RunwayMonthsBefore = runwayMonthsBefore,
+            RunwayMonthsAfter = runwayMonthsAfter,
             IsHighRiskDecision = isHighRisk,
+            IsLiquidDeficitRisk = isLiquidDeficitRisk,
             ImpactSummaryMessage = impactMessage
+        });
+    }
+
+    // UC-08.04: Alternate Flow A1 - Convert simulated purchase into a savings goal
+    public async Task<Result<ConvertToSavingsGoalResultDto>> ConvertWhatIfToSavingsGoalAsync(
+        Guid userId,
+        ConvertToSavingsGoalRequestDto request,
+        CancellationToken ct = default)
+    {
+        if (request == null)
+            return Result<ConvertToSavingsGoalResultDto>.Failure("Yêu cầu không hợp lệ.");
+
+        if (request.TargetAmount <= 0m)
+            return Result<ConvertToSavingsGoalResultDto>.Failure("Số tiền mục tiêu phải lớn hơn 0.");
+
+        var today = DateTime.UtcNow.Date;
+        var targetDate = request.TargetDate.Date;
+        if (targetDate <= today)
+        {
+            targetDate = today.AddMonths(6); // Default 6 months in future if invalid
+        }
+
+        int daysRemaining = Math.Max(30, (targetDate - today).Days);
+        decimal monthsRemaining = Math.Max(1.0m, Math.Round(daysRemaining / 30.0m, 1));
+        decimal monthlyCommitment = Math.Round(request.TargetAmount / monthsRemaining, 0);
+
+        var goal = new SavingsGoal(
+            userId: userId,
+            name: string.IsNullOrWhiteSpace(request.GoalName) ? "Mục tiêu mua sắm What-If" : request.GoalName.Trim(),
+            targetAmount: request.TargetAmount,
+            startDate: DateTime.SpecifyKind(today, DateTimeKind.Utc),
+            targetDate: DateTime.SpecifyKind(targetDate, DateTimeKind.Utc),
+            type: SavingsGoalType.MajorPurchase,
+            priority: SavingsGoalPriority.Medium,
+            initialAmount: 0m,
+            description: request.Notes ?? "Được khởi tạo từ Kịch bản mô phỏng tài chính What-If (Luồng A1)"
+        );
+
+        _context.SavingsGoals.Add(goal);
+        await _context.SaveChangesAsync(ct);
+
+        return Result<ConvertToSavingsGoalResultDto>.Success(new ConvertToSavingsGoalResultDto
+        {
+            GoalId = goal.Id,
+            GoalName = goal.Name,
+            TargetAmount = goal.TargetAmount,
+            TargetDate = targetDate,
+            MonthlyCommitment = monthlyCommitment,
+            Message = $"Đã thiết lập thành công mục tiêu tích lũy '{goal.Name}'. Bạn cần tiết kiệm khoảng {monthlyCommitment:N0} đ/tháng trong {monthsRemaining} tháng để hoàn thành mục tiêu này thay vì mua bốc đồng!"
         });
     }
 }

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.QuickLoginPage"
+             x:DataType="vm:QuickLoginViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="32" Padding="24,60,24,40" MaximumWidthRequest="460" VerticalOptions="Center">
+            
+            <!-- BRAND LOGO NHỎ -->
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Border StrokeThickness="0"
+                        StrokeShape="RoundRectangle 10"
+                        WidthRequest="32"
+                        HeightRequest="32"
+                        BackgroundColor="#4F46E5">
+                    <Image Source="ic_diamond.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+                <Label Text="DuoNoPro Finance" 
+                       FontSize="18" 
+                       FontAttributes="Bold" 
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+            </HorizontalStackLayout>
+
+            <!-- AVATAR & THÔNG TIN NGƯỜI DÙNG -->
+            <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                <!-- Avatar Bo Tròn Có Viền Phát Sáng -->
+                <Border Stroke="#4F46E5"
+                        StrokeThickness="2"
+                        StrokeShape="RoundRectangle 50"
+                        WidthRequest="96"
+                        HeightRequest="96"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                        Shadow="{Shadow Brush='#4F46E5', Offset='0,6', Radius=14, Opacity=0.25}">
+                    <Grid>
+                        <Label Text="👤"
+                               FontSize="42"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Lời chào & Tên tài khoản -->
+                <Label Text="{Binding GreetingText}" 
+                       FontSize="14" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+
+                <Label Text="{Binding UserFullName}" 
+                       FontSize="22" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+
+                <Label Text="{Binding UserEmail}" 
+                       FontSize="13" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+            </VerticalStackLayout>
+
+            <!-- KHỐI QUÉT SINH TRẮC HỌC (TOUCH AREA) -->
+            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 24"
+                    Padding="24,32"
+                    Shadow="{Shadow Brush='#000000', Offset='0,4', Radius=16, Opacity=0.08}">
+                <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
+
+                    <!-- Nút biểu tượng vân tay lớn 1-chạm -->
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 44"
+                            WidthRequest="88"
+                            HeightRequest="88"
+                            HorizontalOptions="Center"
+                            Shadow="{Shadow Brush='#6366F1', Offset='0,6', Radius=18, Opacity=0.3}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#4F46E5" Offset="0.0" />
+                                <GradientStop Color="#7C3AED" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ScanBiometricCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid>
+                            <Image Source="ic_security.png" 
+                                   WidthRequest="48" 
+                                   HeightRequest="48" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center" />
+                            <ActivityIndicator IsRunning="{Binding IsScanning}"
+                                               IsVisible="{Binding IsScanning}"
+                                               Color="#FFFFFF"
+                                               WidthRequest="40"
+                                               HeightRequest="40"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Dòng trạng thái -->
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="Xác Thực Vân Tay / FaceID" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        
+                        <Label Text="{Binding StatusMessage}" 
+                               FontSize="13" 
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#6366F1, Dark=#818CF8}"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+
+                    <!-- Nút quét lại nếu chưa quét được -->
+                    <Button Text="Chạm Để Quét Lại"
+                            Command="{Binding ScanBiometricCommand}"
+                            IsVisible="{Binding CanRetry}"
+                            BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
+                            TextColor="{AppThemeBinding Light=#4F46E5, Dark=#A5B4FC}"
+                            CornerRadius="12"
+                            FontAttributes="Bold"
+                            FontSize="13"
+                            HeightRequest="42"
+                            Padding="20,0"
+                            HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- CÁC LỰA CHỌN THAY THẾ (FALLBACK BUTTONS) -->
+            <VerticalStackLayout Spacing="12">
+                <!-- Nút chuyển sang nhập mật khẩu -->
+                <Button Text="Đăng Nhập Bằng Mật Khẩu" 
+                        Command="{Binding UsePasswordCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F172A}"
+                        FontAttributes="Bold"
+                        CornerRadius="14"
+                        HeightRequest="48" />
+
+                <!-- Nút chuyển tài khoản khác -->
+                <Button Text="Đổi Tài Khoản Khác" 
+                        Command="{Binding SwitchAccountCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        HeightRequest="40" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+

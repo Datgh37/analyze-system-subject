@@ -240,4 +240,78 @@ public class TransactionServiceTests
                 dto.ChangeAmount == 1_250_000m),
             It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task DeleteIncomeAsync_WhenRealtimeNotifierInjected_ShouldBroadcastArchivedAndBalanceUpdate()
+    {
+        // Arrange
+        var notifierMock = new Mock<IFinancialRealtimeNotifier>();
+        var service = new TransactionService(_dbContext, notifierMock.Object);
+
+        var request = new CreateIncomeTransactionRequest(_wallet.Id, _category.Id, 700_000m, DateTime.UtcNow);
+        var created = await service.CreateIncomeAsync(_userId, request);
+        created.IsSuccess.Should().BeTrue();
+
+        notifierMock.Invocations.Clear();
+
+        // Act
+        var deleteResult = await service.DeleteIncomeAsync(_userId, created.Value!.Id);
+
+        // Assert
+        deleteResult.IsSuccess.Should().BeTrue();
+
+        notifierMock.Verify(n => n.NotifyTransactionArchivedAsync(
+            _userId,
+            It.Is<TransactionArchivedNotificationDto>(dto =>
+                dto.TransactionId == created.Value!.Id &&
+                dto.TransactionType == (int)TransactionType.Income &&
+                dto.RevertedAmount == 700_000m),
+            It.IsAny<CancellationToken>()), Times.Once);
+
+        notifierMock.Verify(n => n.NotifyBalanceUpdateAsync(
+            _userId,
+            It.Is<BalanceUpdateNotificationDto>(dto =>
+                dto.WalletId == _wallet.Id &&
+                dto.ChangeAmount == -700_000m),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteExpenseAsync_WhenRealtimeNotifierInjected_ShouldBroadcastArchivedAndBalanceUpdate()
+    {
+        // Arrange
+        var expenseCategory = new Category("Ăn uống", TransactionType.Expense, isSystem: true);
+        await _dbContext.Categories.AddAsync(expenseCategory);
+        await _dbContext.SaveChangesAsync();
+
+        var notifierMock = new Mock<IFinancialRealtimeNotifier>();
+        var service = new TransactionService(_dbContext, notifierMock.Object);
+
+        var createReq = new CreateExpenseTransactionRequest(_wallet.Id, expenseCategory.Id, 250_000m, DateTime.UtcNow);
+        var created = await service.CreateExpenseAsync(_userId, createReq);
+        created.IsSuccess.Should().BeTrue();
+
+        notifierMock.Invocations.Clear();
+
+        // Act
+        var deleteResult = await service.DeleteExpenseAsync(_userId, created.Value!.Id);
+
+        // Assert
+        deleteResult.IsSuccess.Should().BeTrue();
+
+        notifierMock.Verify(n => n.NotifyTransactionArchivedAsync(
+            _userId,
+            It.Is<TransactionArchivedNotificationDto>(dto =>
+                dto.TransactionId == created.Value!.Id &&
+                dto.TransactionType == (int)TransactionType.Expense &&
+                dto.RevertedAmount == 250_000m),
+            It.IsAny<CancellationToken>()), Times.Once);
+
+        notifierMock.Verify(n => n.NotifyBalanceUpdateAsync(
+            _userId,
+            It.Is<BalanceUpdateNotificationDto>(dto =>
+                dto.WalletId == _wallet.Id &&
+                dto.ChangeAmount == 250_000m),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
 }

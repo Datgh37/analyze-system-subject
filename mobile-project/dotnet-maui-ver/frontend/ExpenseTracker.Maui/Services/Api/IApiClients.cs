@@ -309,19 +309,19 @@ public interface ISavingsGoalApi
 // Refit declarative HTTP client contract for notifications and push token management
 public interface INotificationsApi
 {
-    [Post("/api/v1/notifications/push-token")]
+    [Post("/api/notifications/push-token")]
     Task RegisterPushTokenAsync([Body] ExpenseTracker.Maui.Models.Notifications.RegisterPushTokenRequestModel request);
 
-    [Get("/api/v1/notifications")]
+    [Get("/api/notifications")]
     Task<List<ExpenseTracker.Maui.Models.Notifications.InAppNotificationModel>> GetNotificationsAsync([Query] bool? unreadOnly = null, [Query] int take = 50);
 
-    [Patch("/api/v1/notifications/{id}/read")]
+    [Patch("/api/notifications/{id}/read")]
     Task MarkAsReadAsync(Guid id);
 
-    [Patch("/api/v1/notifications/read-all")]
+    [Patch("/api/notifications/read-all")]
     Task MarkAllAsReadAsync();
 
-    [Post("/api/v1/notifications/test-push")]
+    [Post("/api/notifications/test-push")]
     Task<ExpenseTracker.Maui.Models.Notifications.InAppNotificationModel> SendTestNotificationAsync([Body] ExpenseTracker.Maui.Models.Notifications.SendTestNotificationRequestModel request);
 }
 
@@ -373,6 +373,10 @@ public interface IForecastingApi
     [Post("/api/forecasting/what-if")]
     Task<ExpenseTracker.Maui.Models.Forecasting.WhatIfSimulationResultModel> SimulateWhatIfAsync(
         [Body] ExpenseTracker.Maui.Models.Forecasting.WhatIfSimulationRequestModel request);
+
+    [Post("/api/forecasting/what-if/convert-to-goal")]
+    Task<ExpenseTracker.Maui.Models.Forecasting.ConvertToSavingsGoalResultModel> ConvertWhatIfToGoalAsync(
+        [Body] ExpenseTracker.Maui.Models.Forecasting.ConvertToSavingsGoalRequestModel request);
 }
 
 // Refit declarative HTTP client contract for Behavioral Nudges &amp; Thaler Choice Architecture (UC-09.01 -> UC-09.04)
@@ -462,6 +466,105 @@ public interface IAutonomousActionsApi
     [Post("/api/actions/{actionId}/dismiss")]
     Task<bool> DismissActionAsync(string actionId);
 }
+
+// Refit declarative HTTP client contract for debt management (UC-06.05 & UC-06.07 / PLAN-62)
+public interface IDebtsApi
+{
+    [Get("/api/debts")]
+    Task<List<ExpenseTracker.Maui.Models.Debts.DebtModel>> GetDebtsAsync();
+
+    [Get("/api/debts/summary")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtSummaryModel> GetDebtSummaryAsync();
+
+    [Get("/api/debts/{id}")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtDetailModel> GetDebtByIdAsync(Guid id);
+
+    [Post("/api/debts")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtModel> CreateDebtAsync([Body] ExpenseTracker.Maui.Models.Debts.CreateDebtRequest request);
+
+    [Put("/api/debts/{id}")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtModel> UpdateDebtAsync(Guid id, [Body] ExpenseTracker.Maui.Models.Debts.UpdateDebtRequest request);
+
+    [Post("/api/debts/{id}/payments")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtTransactionModel> RecordPaymentAsync(Guid id, [Body] ExpenseTracker.Maui.Models.Debts.RecordDebtPaymentRequest request);
+
+    [Post("/api/debts/{id}/archive")]
+    Task<object> ArchiveDebtAsync(Guid id);
+
+    [Get("/api/debts/optimization/guide")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtEducationalGuideModel> GetEducationalGuideAsync();
+
+    [Get("/api/debts/optimization/safe-budget")]
+    Task<ExpenseTracker.Maui.Models.Debts.SafeExtraBudgetRecommendationModel> GetSafeBudgetRecommendationAsync();
+
+    [Post("/api/debts/optimization/compare")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtPayoffComparisonModel> CompareStrategiesAsync([Body] ExpenseTracker.Maui.Models.Debts.DebtPayoffSimulationRequest request);
+
+    [Post("/api/debts/optimization/simulate")]
+    Task<ExpenseTracker.Maui.Models.Debts.DebtStrategySimulationResultModel> SimulateStrategyAsync([Query] string strategy, [Body] ExpenseTracker.Maui.Models.Debts.DebtPayoffSimulationRequest request);
+}
+
+// Refit declarative HTTP client contract for Emergency Fund management (UC-06.04)
+public interface IEmergencyFundApi
+{
+    [Get("/api/emergency-funds/recommendation")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.EmergencyFundRecommendationModel> GetRecommendationAsync();
+
+    [Get("/api/emergency-funds/status")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.EmergencyFundStatusModel> GetStatusAsync();
+
+    [Post("/api/emergency-funds/setup")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.EmergencyFundStatusModel> SetupFundAsync([Body] ExpenseTracker.Maui.Models.SavingsGoals.SetupEmergencyFundRequest request);
+
+    [Post("/api/emergency-funds/deposit")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.EmergencyFundStatusModel> DepositAsync([Body] ExpenseTracker.Maui.Models.SavingsGoals.DepositEmergencyFundRequest request);
+
+    [Post("/api/emergency-funds/withdraw")]
+    Task<ExpenseTracker.Maui.Models.SavingsGoals.EmergencyFundStatusModel> WithdrawAsync([Body] ExpenseTracker.Maui.Models.SavingsGoals.WithdrawEmergencyFundRequest request);
+}
+
+// Refit declarative HTTP client contract for Net Worth calculation and reporting (UC-07.02)
+public interface INetWorthApi
+{
+    [Get("/api/net-worth/current")]
+    Task<ExpenseTracker.Maui.Models.Reports.NetWorthBreakdownModel> GetCurrentNetWorthAsync();
+
+    [Get("/api/net-worth/history")]
+    Task<List<ExpenseTracker.Maui.Models.Reports.NetWorthHistoryItemModel>> GetNetWorthHistoryAsync([Query] int limit = 12);
+
+    [Post("/api/net-worth/snapshot")]
+    Task<ExpenseTracker.Maui.Models.Reports.NetWorthHistoryItemModel> RecordSnapshotAsync([Body] ExpenseTracker.Maui.Models.Reports.RecordNetWorthSnapshotRequest request);
+}
+
+// Refit declarative HTTP client contract for Subscription management and audit (UC-03.09)
+public interface ISubscriptionApi
+{
+    [Get("/api/subscriptions")]
+    Task<List<ExpenseTracker.Maui.Models.SmartUtilities.SubscriptionModel>> GetSubscriptionsAsync([Query] int? status = null);
+
+    [Get("/api/subscriptions/{id}")]
+    Task<ExpenseTracker.Maui.Models.SmartUtilities.SubscriptionModel> GetSubscriptionByIdAsync(Guid id);
+
+    [Post("/api/subscriptions")]
+    Task<ExpenseTracker.Maui.Models.SmartUtilities.SubscriptionModel> CreateSubscriptionAsync([Body] ExpenseTracker.Maui.Models.SmartUtilities.CreateSubscriptionRequest request);
+
+    [Put("/api/subscriptions/{id}")]
+    Task<ExpenseTracker.Maui.Models.SmartUtilities.SubscriptionModel> UpdateSubscriptionAsync(Guid id, [Body] ExpenseTracker.Maui.Models.SmartUtilities.UpdateSubscriptionRequest request);
+
+    [Post("/api/subscriptions/{id}/archive")]
+    Task<bool> ArchiveSubscriptionAsync(Guid id);
+
+    [Get("/api/subscriptions/audit")]
+    Task<ExpenseTracker.Maui.Models.SmartUtilities.SubscriptionAuditReportModel> AuditSubscriptionsAsync();
+
+    [Post("/api/subscriptions/convert")]
+    Task<ExpenseTracker.Maui.Models.SmartUtilities.SubscriptionModel> ConvertCandidateAsync([Body] ExpenseTracker.Maui.Models.SmartUtilities.CreateSubscriptionRequest request);
+
+    [Get("/api/subscriptions/upcoming")]
+    Task<List<ExpenseTracker.Maui.Models.SmartUtilities.UpcomingRenewalModel>> GetUpcomingRenewalsAsync([Query] int daysAhead = 7);
+}
+
+
 
 
 

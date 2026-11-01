@@ -295,4 +295,87 @@ public class ReceiptOcrServiceTests
             It.IsAny<string?>(),
             It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task ParseReceiptAsync_WithMissingOrZeroTotal_ExceptionFlowE1_ShouldAutoAssignCalculatedTotalAndWarning()
+    {
+        // Arrange: Receipt where totalAmount is 0 (torn / blurred), but has 2 items totaling 120,000 VND
+        var json = """
+        {
+            "merchantName": "Cửa Hàng Tiện Lợi Circle K",
+            "items": [
+                { "name": "Cà phê sữa đá", "quantity": 1, "unitPrice": 25000, "totalPrice": 25000 },
+                { "name": "Bánh bao trứng cút", "quantity": 1, "unitPrice": 20000, "totalPrice": 20000 }
+            ],
+            "discountAmount": 5000,
+            "taxAmount": 4000,
+            "totalAmount": 0
+        }
+        """;
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+
+        // Act
+        var result = await _receiptOcrService.ParseReceiptAsync(_userId, stream, "circle_k.jpg");
+
+        // Assert: Exception flow E1 recovers totalAmount = 25000 + 20000 - 5000 + 4000 = 44000
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value!.MerchantName.Should().Be("Cửa Hàng Tiện Lợi Circle K");
+        result.Value.SubTotal.Should().Be(45_000m);
+        result.Value.CalculatedTotal.Should().Be(44_000m);
+        result.Value.TotalAmount.Should().Be(44_000m);
+        result.Value.DiscrepancyAmount.Should().Be(0m);
+        result.Value.IsMathDiscrepancy.Should().BeFalse();
+        result.Value.AuditWarningMessage.Should().NotBeNull();
+        result.Value.AuditWarningMessage.Should().Contain("UC-03.08 E1");
+    }
+
+    [Fact]
+    public async Task ImagePreProcessingService_WithOversizedImage_ShouldThrowArgumentException()
+    {
+        // Arrange: Create a stream exceeding 10MB
+        var preProcessor = new ImagePreProcessingService();
+        var fakeOversizedStream = new Mock<Stream>();
+        fakeOversizedStream.Setup(s => s.Length).Returns(11 * 1024 * 1024); // 11MB
+        fakeOversizedStream.Setup(s => s.CanSeek).Returns(true);
+
+        // Act & Assert
+        var act = async () => await preProcessor.PreprocessReceiptImageAsync(fakeOversizedStream.Object, "large_invoice.jpg");
+        await act.Should().ThrowAsync<ArgumentException>()
+            .WithMessage("*Dung lượng tệp vượt quá giới hạn cho phép (tối đa 10MB)*");
+    }
+
+    [Fact]
+    public async Task ImagePreProcessingService_WithUnsupportedFormat_ShouldThrowNotSupportedException()
+    {
+        // Arrange: Create a stream with .exe or .txt format
+        var preProcessor = new ImagePreProcessingService();
+        using var stream = new MemoryStream(new byte[] { 1, 2, 3 });
+
+        // Act & Assert
+        var act = async () => await preProcessor.PreprocessReceiptImageAsync(stream, "script.bat");
+        await act.Should().ThrowAsync<NotSupportedException>()
+            .WithMessage("*Định dạng tệp '.bat' không được hỗ trợ*");
+    }
+
+    [Fact]
+    public async Task ImagePreProcessingService_WithValidImage_ShouldReturnSanitizedStream()
+    {
+        // Arrange: Valid JPEG image stream
+        var preProcessor = new ImagePreProcessingService();
+        var originalBytes = new byte[] { 0xFF, 0xD8, 0xFF, 0xE0, 0x12, 0x34 };
+        using var stream = new MemoryStream(originalBytes);
+
+        // Act
+        var resultStream = await preProcessor.PreprocessReceiptImageAsync(stream, "bill.png");
+
+        // Assert
+        resultStream.Should().NotBeNull();
+        resultStream.Length.Should().Be(originalBytes.Length);
+        resultStream.Position.Should().Be(0);
+
+        using var ms = new MemoryStream();
+        await resultStream.CopyToAsync(ms);
+        ms.ToArray().Should().BeEquivalentTo(originalBytes);
+    }
 }

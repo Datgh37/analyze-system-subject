@@ -13,10 +13,10 @@ namespace ExpenseTracker.Maui.Platforms.Android.Services;
 // Android Native Notification Listener Service (UC-03.12 Production Implementation)
 // Listens for balance variation notifications from target banking & e-wallet applications,
 // parses deducted amount, and raises a clickable actionable notification directly to ExpensesPage
-// [Service(Label = "BankNotificationListenerService",
-//     Permission = "android.permission.BIND_NOTIFICATION_LISTENER_SERVICE",
-//     Exported = true)]
-// [IntentFilter(new[] { "android.service.notification.NotificationListenerService" })]
+[Service(Label = "BankNotificationListenerService",
+    Permission = "android.permission.BIND_NOTIFICATION_LISTENER_SERVICE",
+    Exported = true)]
+[IntentFilter(new[] { "android.service.notification.NotificationListenerService" })]
 public class BankNotificationListenerService : NotificationListenerService
 {
     private const PendingIntentFlags SafeImmutableFlags = PendingIntentFlags.UpdateCurrent | (PendingIntentFlags)0x04000000;

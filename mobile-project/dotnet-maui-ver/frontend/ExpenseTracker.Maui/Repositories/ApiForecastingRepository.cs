@@ -32,4 +32,9 @@ public class ApiForecastingRepository : IForecastingRepository
     {
         return await _api.SimulateWhatIfAsync(request);
     }
+
+    public async Task<ConvertToSavingsGoalResultModel> ConvertWhatIfToGoalAsync(ConvertToSavingsGoalRequestModel request)
+    {
+        return await _api.ConvertWhatIfToGoalAsync(request);
+    }
 }

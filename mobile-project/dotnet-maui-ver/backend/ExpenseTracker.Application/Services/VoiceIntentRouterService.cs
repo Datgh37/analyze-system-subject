@@ -63,14 +63,14 @@ public partial class VoiceIntentRouterService : IVoiceIntentRouterService
 
         const string systemPrompt = """
         Bạn là trợ lý điều hướng giọng nói tài chính cá nhân thông minh (Voice Intent Router AI Agent).
-        Nhiệm vụ: Phân tích khẩu lệnh tiếng Việt tự nhiên của người dùng (có thể chứa tiếng lóng tiền tệ: '50k', '2 củ rưỡi', 'năm xị', 'hai trẹo', '1 lít', 'nửa lít', 'ba chục', 'đi chợ', 'trả tiền trọ', 'mở báo cáo', 'xem ngân sách', 'tạo quỹ tiết kiệm mua xe', 'tạo danh mục Nuôi Mèo'...).
+        Nhiệm vụ: Phân tích khẩu lệnh tiếng Việt tự nhiên của người dùng (có thể chứa tiếng lóng tiền tệ: '50k', '2 củ rưỡi', 'năm xị', 'hai trẹo', '1 lít', 'nửa lít', 'ba chục', 'đi chợ', 'trả tiền trọ', 'mở báo cáo', 'xem ngân sách', 'tạo quỹ tiết kiệm mua xe', 'tạo danh mục Nuôi Mèo', 'trả nợ thẻ tín dụng 2 triệu', 'quét bẫy thuê bao', 'quỹ khẩn cấp', 'mô phỏng mua xe máy'...).
         
         YÊU CẦU ĐỊNH DẠNG:
         Trả về DUY NHẤT một chuỗi JSON thuần túy (không kèm markdown code block, không có lời dẫn) theo schema:
         {
-          "detectedIntent": "AddTransaction" | "NavigateTo" | "QueryStatus",
+          "detectedIntent": "AddTransaction" | "NavigateTo" | "QueryStatus" | "DebtPayment" | "EmergencyFund" | "SubscriptionAudit" | "WhatIfSimulation" | "ReceiptOcr",
           "actionType": "Expense" | "Income" | "Navigation" | "Query",
-          "targetRoute": "AddTransactionPage" | "CreateCategoryPage" | "CreateGoalPage" | "AnalyticsReportPage" | "BudgetHubPage" | "DebtTrackerPage" | "NudgeFeedPage" | "CoolingOffHubPage" | "WalletsPage" | "ReceiptOcrPage",
+          "targetRoute": "AddTransactionPage" | "CreateCategoryPage" | "CreateGoalPage" | "AnalyticsReportPage" | "BudgetHubPage" | "DebtTrackerPage" | "NudgeFeedPage" | "CoolingOffHubPage" | "WalletsPage" | "ReceiptOcrPage" | "EmergencyFundPage" | "SubscriptionsPage" | "ForecastingPage",
           "extractedAmount": 0.0,
           "suggestedCategory": "Tên danh mục",
           "confirmationMessage": "Lời phản hồi thân thiện, xác nhận ngắn gọn",
@@ -209,7 +209,28 @@ public partial class VoiceIntentRouterService : IVoiceIntentRouterService
             ));
         }
 
-        if (lower.Contains("sổ nợ") || lower.Contains("khoản nợ") || lower.Contains("khoản vay") || lower.Contains("trả nợ") || lower.Contains("danh sách nợ"))
+        // Specific Debt Payment with amount
+        decimal? detectedAmount = ParseVietnameseSlangAmount(lower);
+        if ((lower.Contains("trả nợ") || lower.Contains("thanh toán nợ") || lower.Contains("trả góp") || lower.Contains("trả thẻ tín dụng")) && detectedAmount.HasValue)
+        {
+            return Result<VoiceIntentResultDto>.Success(new VoiceIntentResultDto(
+                DetectedIntent: VoiceIntents.DebtPayment,
+                ActionType: "Expense",
+                TargetRoute: "DebtTrackerPage",
+                PrefillData: new Dictionary<string, string>
+                {
+                    ["amount"] = detectedAmount.Value.ToString("G29"),
+                    ["note"] = transcript
+                },
+                ExtractedAmount: detectedAmount,
+                SuggestedCategory: "Trả nợ",
+                SuggestedWalletId: currentWalletId,
+                ConfirmationMessage: $"Nhận diện trả nợ {detectedAmount.Value:N0} VND. Đang mở Sổ Quản lý Nợ...",
+                Confidence: 0.96
+            ));
+        }
+
+        if (lower.Contains("sổ nợ") || lower.Contains("khoản nợ") || lower.Contains("khoản vay") || lower.Contains("trả nợ") || lower.Contains("danh sách nợ") || lower.Contains("quản lý nợ"))
         {
             return Result<VoiceIntentResultDto>.Success(new VoiceIntentResultDto(
                 DetectedIntent: VoiceIntents.NavigateTo,
@@ -221,6 +242,55 @@ public partial class VoiceIntentRouterService : IVoiceIntentRouterService
                 SuggestedWalletId: currentWalletId,
                 ConfirmationMessage: "Đang mở Sổ Quản lý Nợ & Kế hoạch Trả nợ",
                 Confidence: 0.95
+            ));
+        }
+
+        if (lower.Contains("quỹ khẩn cấp") || lower.Contains("quỹ dự phòng") || lower.Contains("tiền dự phòng") || lower.Contains("runway") || lower.Contains("dự phòng khẩn cấp"))
+        {
+            return Result<VoiceIntentResultDto>.Success(new VoiceIntentResultDto(
+                DetectedIntent: VoiceIntents.EmergencyFund,
+                ActionType: "Navigation",
+                TargetRoute: "EmergencyFundPage",
+                PrefillData: new Dictionary<string, string>(),
+                ExtractedAmount: detectedAmount,
+                SuggestedCategory: "Quỹ khẩn cấp",
+                SuggestedWalletId: currentWalletId,
+                ConfirmationMessage: "Đang mở Báo cáo Quỹ Dự Phòng Khẩn Cấp & Sức Khỏe Tài Chính",
+                Confidence: 0.96
+            ));
+        }
+
+        if (lower.Contains("bẫy thuê bao") || lower.Contains("thuê bao định kỳ") || lower.Contains("dịch vụ đăng ký") || lower.Contains("quét thuê bao") || lower.Contains("subscription") || lower.Contains("gói cước"))
+        {
+            return Result<VoiceIntentResultDto>.Success(new VoiceIntentResultDto(
+                DetectedIntent: VoiceIntents.SubscriptionAudit,
+                ActionType: "Navigation",
+                TargetRoute: "SubscriptionsPage",
+                PrefillData: new Dictionary<string, string>(),
+                ExtractedAmount: null,
+                SuggestedCategory: null,
+                SuggestedWalletId: currentWalletId,
+                ConfirmationMessage: "Đang mở Radar Kiểm Toán & Cảnh Báo Bẫy Thuê Bao Định Kỳ",
+                Confidence: 0.96
+            ));
+        }
+
+        if (lower.Contains("mô phỏng") || lower.Contains("kịch bản") || lower.Contains("what-if") || lower.Contains("thử mua") || lower.Contains("giảm lương") || lower.Contains("dự báo tài chính"))
+        {
+            return Result<VoiceIntentResultDto>.Success(new VoiceIntentResultDto(
+                DetectedIntent: VoiceIntents.WhatIfSimulation,
+                ActionType: "Navigation",
+                TargetRoute: "ForecastingPage",
+                PrefillData: new Dictionary<string, string>
+                {
+                    ["amount"] = (detectedAmount ?? 0m).ToString("G29"),
+                    ["note"] = transcript
+                },
+                ExtractedAmount: detectedAmount,
+                SuggestedCategory: null,
+                SuggestedWalletId: currentWalletId,
+                ConfirmationMessage: "Đang mở Phòng Thí Nghiệm Mô Phỏng Biến Cố Dòng Tiền What-If",
+                Confidence: 0.96
             ));
         }
 

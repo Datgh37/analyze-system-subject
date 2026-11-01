@@ -192,6 +192,16 @@ public class SignalRRealtimeService : ISignalRRealtimeService, IAsyncDisposable
                 });
             });
 
+            _hubConnection.On<TransactionArchivedRealtimeInfo>("ReceiveTransactionArchived", info =>
+            {
+                _logger.LogInformation("Realtime: Received transaction archived: ID {Id}, Wallet {WalletId}, Reverted {Amount}đ",
+                    info.TransactionId, info.WalletId, info.RevertedAmount);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeakReferenceMessenger.Default.Send(new TransactionArchivedMessage(info));
+                });
+            });
+
             await _hubConnection.StartAsync();
             UpdateStatus(true, "Đã kết nối Realtime", "#10B981");
             _logger.LogInformation("SignalR successfully connected to {HubUrl}", _hubUrl);

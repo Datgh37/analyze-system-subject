@@ -263,8 +263,8 @@ Toàn bộ hệ thống Backend cung cấp hơn 40 API Endpoints trên 22 Contro
    - **Xác suất $< 0.5$ (Low Confidence):** Giữ im lặng, tránh gây phiền hà.
 3. **Lưu nhanh 1-chạm:** `POST /api/autonomous-actions/{id}/quick-commit`
 4. **Cập nhật trạng thái đọc thông báo (HTTP PATCH):**
-   - Đánh dấu 1 thông báo đã đọc: `PATCH /api/v1/notifications/{id}/read`
-   - Đánh dấu tất cả thông báo đã đọc: `PATCH /api/v1/notifications/read-all`
+   - Đánh dấu 1 thông báo đã đọc: `PATCH /api/notifications/{id}/read`
+   - Đánh dấu tất cả thông báo đã đọc: `PATCH /api/notifications/read-all`
 
 ---
 

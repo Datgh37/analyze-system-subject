@@ -37,6 +37,11 @@ public static class DependencyInjection
         services.AddScoped<IHybridDataImportService, HybridDataImportService>();
         services.AddScoped<IReportExportService, ReportExportService>();
         services.AddScoped<IAutonomousActionEngineService, AutonomousActionEngineService>();
+        services.AddScoped<IDebtService, DebtService>();
+        services.AddScoped<IDebtOptimizerService, DebtOptimizerService>();
+        services.AddScoped<IEmergencyFundService, EmergencyFundService>();
+        services.AddScoped<INetWorthService, NetWorthService>();
+        services.AddScoped<ISubscriptionService, SubscriptionService>();
 
         return services;
     }

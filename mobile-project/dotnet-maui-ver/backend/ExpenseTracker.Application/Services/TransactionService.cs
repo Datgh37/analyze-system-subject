@@ -296,6 +296,27 @@ public class TransactionService : ITransactionService
             await _context.SaveChangesAsync(ct);
             await dbTransaction.CommitAsync(ct);
 
+            // Broadcast SignalR realtime event to mobile client (0ms reactive update)
+            if (_realtimeNotifier != null)
+            {
+                var archivedDto = new TransactionArchivedNotificationDto(
+                    transactionId,
+                    transaction.WalletId,
+                    transaction.Amount,
+                    transaction.Wallet.Balance,
+                    (int)TransactionType.Income,
+                    "Đã xóa thu nhập",
+                    DateTime.UtcNow);
+
+                _ = _realtimeNotifier.NotifyTransactionArchivedAsync(userId, archivedDto, ct);
+                _ = _realtimeNotifier.NotifyBalanceUpdateAsync(userId, new BalanceUpdateNotificationDto(
+                    transaction.WalletId,
+                    transaction.Wallet.Balance,
+                    -transaction.Amount,
+                    "Khấu trừ thu nhập bị xóa",
+                    DateTime.UtcNow), ct);
+            }
+
             return Result<bool>.Success(true);
         }
         catch (InvalidOperationException)
@@ -646,6 +667,27 @@ public class TransactionService : ITransactionService
 
             await _context.SaveChangesAsync(ct);
             await dbTransaction.CommitAsync(ct);
+
+            // Broadcast SignalR realtime event to mobile client (0ms reactive update)
+            if (_realtimeNotifier != null)
+            {
+                var archivedDto = new TransactionArchivedNotificationDto(
+                    transactionId,
+                    transaction.WalletId,
+                    transaction.Amount,
+                    transaction.Wallet.Balance,
+                    (int)TransactionType.Expense,
+                    "Đã xóa chi tiêu",
+                    DateTime.UtcNow);
+
+                _ = _realtimeNotifier.NotifyTransactionArchivedAsync(userId, archivedDto, ct);
+                _ = _realtimeNotifier.NotifyBalanceUpdateAsync(userId, new BalanceUpdateNotificationDto(
+                    transaction.WalletId,
+                    transaction.Wallet.Balance,
+                    transaction.Amount,
+                    "Hoàn tiền chi tiêu bị xóa",
+                    DateTime.UtcNow), ct);
+            }
 
             return Result<bool>.Success(true);
         }

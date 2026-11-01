@@ -64,3 +64,19 @@ public record NudgeAlertNotificationDto(
     string? TargetRoute,
     DateTime Timestamp);
 
+public record TransactionArchivedNotificationDto(
+    Guid TransactionId,
+    Guid WalletId,
+    decimal RevertedAmount,
+    decimal NewWalletBalance,
+    int TransactionType,
+    string Reason,
+    DateTime Timestamp);
+
+public record EntityArchivedNotificationDto(
+    string EntityType,
+    Guid EntityId,
+    string Name,
+    DateTime Timestamp);
+
+

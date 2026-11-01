@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
@@ -396,8 +396,8 @@
                         </Border>
                     </Grid>
 
-                    <!-- Scenario Selectors -->
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                    <!-- Scenario Selectors (4 Scenarios) -->
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
                         <Button Grid.Column="0"
                                 Text="Mua Sắm"
                                 Command="{Binding SelectScenarioCommand}"
@@ -407,11 +407,11 @@
                                 FontAttributes="Bold"
                                 HeightRequest="36"
                                 CornerRadius="10"
-                                FontSize="11"
-                                Padding="4,0" />
+                                FontSize="10"
+                                Padding="2,0" />
 
                         <Button Grid.Column="1"
-                                Text="Vay Trả Góp"
+                                Text="Trả Góp"
                                 Command="{Binding SelectScenarioCommand}"
                                 CommandParameter="Installment"
                                 BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
@@ -419,8 +419,8 @@
                                 FontAttributes="Bold"
                                 HeightRequest="36"
                                 CornerRadius="10"
-                                FontSize="11"
-                                Padding="4,0" />
+                                FontSize="10"
+                                Padding="2,0" />
 
                         <Button Grid.Column="2"
                                 Text="Giảm Thu"
@@ -431,8 +431,20 @@
                                 FontAttributes="Bold"
                                 HeightRequest="36"
                                 CornerRadius="10"
-                                FontSize="11"
-                                Padding="4,0" />
+                                FontSize="10"
+                                Padding="2,0" />
+
+                        <Button Grid.Column="3"
+                                Text="Biến Cố"
+                                Command="{Binding SelectScenarioCommand}"
+                                CommandParameter="EmergencyShock"
+                                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#7F1D1D}"
+                                TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
+                                FontAttributes="Bold"
+                                HeightRequest="36"
+                                CornerRadius="10"
+                                FontSize="10"
+                                Padding="2,0" />
                     </Grid>
 
                     <!-- Scenario Input Parameters -->
@@ -527,6 +539,31 @@
                                 <Label Text="{Binding WhatIfResult.ImpactSummaryMessage}"
                                        TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}"
                                        FontSize="11" LineBreakMode="WordWrap" />
+                            </Border>
+
+                            <!-- Alternate Flow A1: Convert to Savings Goal Action -->
+                            <Border Stroke="{AppThemeBinding Light=#A7F3D0, Dark=#065F46}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="💡 Cú hích Thaler: Đừng mua bốc đồng, hãy tích lũy!"
+                                           FontSize="11" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}" />
+                                    <Button Text="Chuyển Khoản Này Thành Mục Tiêu Tích Lũy"
+                                            Command="{Binding ConvertToSavingsGoalCommand}"
+                                            BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
+                                            TextColor="#FFFFFF"
+                                            FontAttributes="Bold"
+                                            CornerRadius="8"
+                                            HeightRequest="36"
+                                            FontSize="11" />
+                                    <Label Text="{Binding ConversionFeedbackMessage}"
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
+                                           LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
                             </Border>
                         </VerticalStackLayout>
                     </Border>

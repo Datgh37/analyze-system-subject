@@ -35,6 +35,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<FinancialNudge> FinancialNudges => Set<FinancialNudge>();
     public DbSet<CoolingOffTransaction> CoolingOffTransactions => Set<CoolingOffTransaction>();
     public DbSet<UserOtpCode> UserOtpCodes => Set<UserOtpCode>();
+    public DbSet<Debt> Debts => Set<Debt>();
+    public DbSet<DebtTransaction> DebtTransactions => Set<DebtTransaction>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {

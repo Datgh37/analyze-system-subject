@@ -162,4 +162,78 @@ public partial class ActionInboxViewModel : BaseViewModel
             // Route navigation fallback
         }
     }
+
+    [RelayCommand]
+    public async Task SimulateBankNotificationAsync(string? bankCode)
+    {
+        if (string.IsNullOrWhiteSpace(bankCode) || IsBusy) return;
+
+        IsBusy = true;
+        ErrorMessage = null;
+
+        try
+        {
+            RawBankNotificationRequestModel req = bankCode.ToUpperInvariant() switch
+            {
+                "ACB" => new RawBankNotificationRequestModel(
+                    PackageName: "mobile.acb.com.vn",
+                    Title: "ACB - Bien dong so du",
+                    Message: "TK 123456 -350,000VND luc 12:30. ND: Emart Go Vap",
+                    DetectedAmount: 350000m,
+                    NotificationTime: DateTime.UtcNow
+                ),
+                "MOMO" => new RawBankNotificationRequestModel(
+                    PackageName: "com.mservice.momotransfer",
+                    Title: "MoMo - Thanh toán thành công",
+                    Message: "Thanh toán thành công 85.000đ tại Circle K",
+                    DetectedAmount: 85000m,
+                    NotificationTime: DateTime.UtcNow
+                ),
+                "TCB" => new RawBankNotificationRequestModel(
+                    PackageName: "com.techcombank.mobile",
+                    Title: "Techcombank Thông báo",
+                    Message: "GD: -120,000VND luc 14:15 tai Highlands Coffee. So du: 5,400,000VND",
+                    DetectedAmount: 120000m,
+                    NotificationTime: DateTime.UtcNow
+                ),
+                "VCB" => new RawBankNotificationRequestModel(
+                    PackageName: "com.VCB",
+                    Title: "Vietcombank VCB Digibank",
+                    Message: "SD TK 0071... -500,000 VND luc 10:20. ND: SHOPEEPAY",
+                    DetectedAmount: 500000m,
+                    NotificationTime: DateTime.UtcNow
+                ),
+                "MB" => new RawBankNotificationRequestModel(
+                    PackageName: "com.mbmobile",
+                    Title: "MB Bank Thông báo",
+                    Message: "TK 9999 -200,000VND 18:00 ND: Mua xang Petrolimex",
+                    DetectedAmount: 200000m,
+                    NotificationTime: DateTime.UtcNow
+                ),
+                _ => new RawBankNotificationRequestModel(
+                    PackageName: "com.banking.generic",
+                    Title: "Ngân hàng",
+                    Message: "GD: -100,000 VND thanh toán dịch vụ",
+                    DetectedAmount: 100000m,
+                    NotificationTime: DateTime.UtcNow
+                )
+            };
+
+            var action = await _repository.ProcessNotificationAsync(req);
+            if (action != null)
+            {
+                PendingActions.Insert(0, action);
+                ActionCount = PendingActions.Count;
+                ActionStatusMessage = $"Đã nhận thông báo biến động {bankCode}: {action.Display?.Amount:N0} đ";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Lỗi giả lập biến động số dư: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 }

@@ -95,3 +95,18 @@ public class WalletRefreshNeededMessage : ValueChangedMessage<bool>
     public WalletRefreshNeededMessage(bool value = true) : base(value) { }
 }
 
+public class TransactionArchivedMessage : ValueChangedMessage<TransactionArchivedRealtimeInfo>
+{
+    public TransactionArchivedMessage(TransactionArchivedRealtimeInfo value) : base(value) { }
+}
+
+public record TransactionArchivedRealtimeInfo(
+    Guid TransactionId,
+    Guid WalletId,
+    decimal RevertedAmount,
+    decimal NewWalletBalance,
+    int TransactionType,
+    string Reason,
+    DateTime Timestamp);
+
+

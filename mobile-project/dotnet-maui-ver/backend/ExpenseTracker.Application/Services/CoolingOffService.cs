@@ -64,7 +64,7 @@ public class CoolingOffService : ICoolingOffService
 
         var todayDsa = await _context.DailySpendingAllowances
             .Include(d => d.Budget)
-            .Where(d => d.Budget.UserId == userId && d.Date == today)
+            .Where(d => d.Budget != null && d.Budget.UserId == userId && d.Date == today)
             .FirstOrDefaultAsync(ct);
 
         decimal currentDsa = todayDsa?.DailyAllowanceAmount ?? 250000m;
@@ -116,8 +116,8 @@ public class CoolingOffService : ICoolingOffService
             request.Amount,
             request.Description,
             coolingOffUntil,
-            eval.Value.EquivalentWorkHours,
-            eval.Value.ProjectedDsaReduction);
+            eval.Value!.EquivalentWorkHours,
+            eval.Value!.ProjectedDsaReduction);
 
         _context.CoolingOffTransactions.Add(entity);
         await _context.SaveChangesAsync(ct);

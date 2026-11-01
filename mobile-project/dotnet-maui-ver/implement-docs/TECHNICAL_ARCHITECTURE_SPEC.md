@@ -321,70 +321,70 @@ public async Task<Result> TransferFundsAsync(Guid fromWalletId, Guid toWalletId,
 ### 3.1. Phân Hệ 1: Identity, Auth & Profile Context (4 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/auth/register` | Đăng ký tài khoản mới (`RegisterRequest` $\rightarrow$ `UserDto`) | Không |
-| `POST` | `/api/v1/auth/login` | Đăng nhập (`LoginRequest` $\rightarrow$ `AccessToken`, `RefreshToken`) | Không |
-| `POST` | `/api/v1/auth/refresh-token` | Xoay vòng Refresh Token lấy Access Token mới (`RefreshTokenRequest`) | Không |
-| `GET/PUT`| `/api/v1/users/profile` | Xem và cập nhật cài đặt tài chính (`salaryDay`, `budgetCycle`, `riskTolerance`) | Bearer JWT |
+| `POST` | `/api/auth/register` | Đăng ký tài khoản mới (`RegisterRequest` $\rightarrow$ `UserDto`) | Không |
+| `POST` | `/api/auth/login` | Đăng nhập (`LoginRequest` $\rightarrow$ `AccessToken`, `RefreshToken`) | Không |
+| `POST` | `/api/auth/refresh-token` | Xoay vòng Refresh Token lấy Access Token mới (`RefreshTokenRequest`) | Không |
+| `GET/PUT`| `/api/users/profile` | Xem và cập nhật cài đặt tài chính (`salaryDay`, `budgetCycle`, `riskTolerance`) | Bearer JWT |
 
 ### 3.2. Phân Hệ 2: Account & Multi-Wallet Context (6 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/wallets` | Lấy danh sách ví, số dư và **Tổng tài sản ròng (Net Worth = Assets - Debts)** | Bearer JWT |
-| `POST` | `/api/v1/wallets` | Khởi tạo ví mới (`CASH`, `BANK`, `CREDIT_CARD`, `E_WALLET`) | Bearer JWT |
-| `PUT` | `/api/v1/wallets/{id}` | Cập nhật thông tin ví hoặc hạn mức tín dụng (`creditLimit`) | Bearer JWT |
-| `DELETE`| `/api/v1/wallets/{id}` | Đóng/Ẩn ví (Soft delete để bảo toàn vết kiểm toán sổ cái) | Bearer JWT |
-| `POST` | `/api/v1/wallets/transfer` | **Chuyển tiền nội bộ giữa 2 ví (Pessimistic Locking `SELECT FOR UPDATE`)** | Bearer JWT |
-| `POST` | `/api/v1/wallets/{id}/adjust` | Ghi nhận kiểm kê thực tế và cân đối số dư (`BalanceAdjustment`) | Bearer JWT |
+| `GET` | `/api/wallets` | Lấy danh sách ví, số dư và **Tổng tài sản ròng (Net Worth = Assets - Debts)** | Bearer JWT |
+| `POST` | `/api/wallets` | Khởi tạo ví mới (`CASH`, `BANK`, `CREDIT_CARD`, `E_WALLET`) | Bearer JWT |
+| `PUT` | `/api/wallets/{id}` | Cập nhật thông tin ví hoặc hạn mức tín dụng (`creditLimit`) | Bearer JWT |
+| `DELETE`| `/api/wallets/{id}` | Đóng/Ẩn ví (Soft delete để bảo toàn vết kiểm toán sổ cái) | Bearer JWT |
+| `POST` | `/api/wallets/transfer` | **Chuyển tiền nội bộ giữa 2 ví (Pessimistic Locking `SELECT FOR UPDATE`)** | Bearer JWT |
+| `POST` | `/api/wallets/{id}/adjust` | Ghi nhận kiểm kê thực tế và cân đối số dư (`BalanceAdjustment`) | Bearer JWT |
 
 ### 3.3. Phân Hệ 3: Transactions, Categories & AI Vision OCR (10 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/categories/tree` | Lấy cây danh mục phân cấp đệ quy cha-con (Ăn uống $\rightarrow$ Đi chợ, Cafe) | Bearer JWT |
-| `POST` | `/api/v1/categories` | Tạo danh mục tùy biến mới | Bearer JWT |
-| `GET` | `/api/v1/transactions` | Lấy sổ cái giao dịch phân trang, lọc theo khoảng ngày, ví, danh mục | Bearer JWT |
-| `GET` | `/api/v1/transactions/{id}` | Xem chi tiết giao dịch (kèm danh sách mặt hàng nếu từ hóa đơn) | Bearer JWT |
-| `POST` | `/api/v1/transactions` | Tạo giao dịch thu/chi thủ công | Bearer JWT |
-| `PUT` | `/api/v1/transactions/{id}` | Chỉnh sửa giao dịch (Tự động hoàn trả và cập nhật lại số dư ví) | Bearer JWT |
-| `DELETE`| `/api/v1/transactions/{id}` | Xóa giao dịch (Revert balance trên ví tương ứng) | Bearer JWT |
-| `POST` | `/api/v1/receipts/scan` | Tải ảnh hóa đơn lên để AI Vision OCR bóc tách (Multipart/form-data) | Bearer JWT |
-| `POST` | `/api/v1/receipts/{id}/audit`| **Hậu kiểm toán số học hóa đơn (`verifyMathematicalAudit`)** | Bearer JWT |
-| `POST` | `/api/v1/receipts/{id}/confirm`| Phê duyệt kết quả bóc tách và tạo giao dịch chi tiêu tương ứng | Bearer JWT |
+| `GET` | `/api/categories/tree` | Lấy cây danh mục phân cấp đệ quy cha-con (Ăn uống $\rightarrow$ Đi chợ, Cafe) | Bearer JWT |
+| `POST` | `/api/categories` | Tạo danh mục tùy biến mới | Bearer JWT |
+| `GET` | `/api/transactions` | Lấy sổ cái giao dịch phân trang, lọc theo khoảng ngày, ví, danh mục | Bearer JWT |
+| `GET` | `/api/transactions/{id}` | Xem chi tiết giao dịch (kèm danh sách mặt hàng nếu từ hóa đơn) | Bearer JWT |
+| `POST` | `/api/transactions` | Tạo giao dịch thu/chi thủ công | Bearer JWT |
+| `PUT` | `/api/transactions/{id}` | Chỉnh sửa giao dịch (Tự động hoàn trả và cập nhật lại số dư ví) | Bearer JWT |
+| `DELETE`| `/api/transactions/{id}` | Xóa giao dịch (Revert balance trên ví tương ứng) | Bearer JWT |
+| `POST` | `/api/receipts/scan` | Tải ảnh hóa đơn lên để AI Vision OCR bóc tách (Multipart/form-data) | Bearer JWT |
+| `POST` | `/api/receipts/{id}/audit`| **Hậu kiểm toán số học hóa đơn (`verifyMathematicalAudit`)** | Bearer JWT |
+| `POST` | `/api/receipts/{id}/confirm`| Phê duyệt kết quả bóc tách và tạo giao dịch chi tiêu tương ứng | Bearer JWT |
 
 ### 3.4. Phân Hệ 4: Budgeting, Adaptive DSA & Subscriptions (7 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/budgets/current` | Lấy kế hoạch ngân sách chu kỳ hiện tại và tiến độ chi tiêu thực tế | Bearer JWT |
-| `POST` | `/api/v1/budgets` | Thiết lập ngân sách mới (Chọn 50/30/20, Zero-Based hoặc Kakeibo) | Bearer JWT |
-| `PUT` | `/api/v1/budgets/allocations`| Điều chỉnh hạn mức từng nhóm danh mục trong tháng | Bearer JWT |
-| `GET` | `/api/v1/budgets/dsa/today` | **Lấy hạn mức chi tiêu hôm nay (DSA) & Hệ số tốc độ tiêu tiền (Spending Velocity)** | Bearer JWT |
-| `GET` | `/api/v1/subscriptions` | Lấy danh sách dịch vụ đăng ký gia hạn định kỳ (Netflix, Spotify, 4G...) | Bearer JWT |
-| `POST` | `/api/v1/subscriptions` | Thêm cam kết định kỳ kèm lịch nhắc trước 3 ngày | Bearer JWT |
-| `GET` | `/api/v1/subscriptions/audit`| Báo cáo kiểm toán chi phí ẩn và đề xuất hủy dịch vụ lãng phí | Bearer JWT |
+| `GET` | `/api/budgets/current` | Lấy kế hoạch ngân sách chu kỳ hiện tại và tiến độ chi tiêu thực tế | Bearer JWT |
+| `POST` | `/api/budgets` | Thiết lập ngân sách mới (Chọn 50/30/20, Zero-Based hoặc Kakeibo) | Bearer JWT |
+| `PUT` | `/api/budgets/allocations`| Điều chỉnh hạn mức từng nhóm danh mục trong tháng | Bearer JWT |
+| `GET` | `/api/budgets/dsa/today` | **Lấy hạn mức chi tiêu hôm nay (DSA) & Hệ số tốc độ tiêu tiền (Spending Velocity)** | Bearer JWT |
+| `GET` | `/api/subscriptions` | Lấy danh sách dịch vụ đăng ký gia hạn định kỳ (Netflix, Spotify, 4G...) | Bearer JWT |
+| `POST` | `/api/subscriptions` | Thêm cam kết định kỳ kèm lịch nhắc trước 3 ngày | Bearer JWT |
+| `GET` | `/api/subscriptions/audit`| Báo cáo kiểm toán chi phí ẩn và đề xuất hủy dịch vụ lãng phí | Bearer JWT |
 
 ### 3.5. Phân Hệ 5: Financial Goals & Debt Optimizer Context (6 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/goals` | Lấy danh sách mục tiêu tài chính & **Quỹ khẩn cấp (Emergency Fund)** | Bearer JWT |
-| `POST` | `/api/v1/goals` | Khởi tạo mục tiêu tích lũy mới | Bearer JWT |
-| `POST` | `/api/v1/goals/{id}/contribute`| Trích tiền từ ví sang mục tiêu tích lũy | Bearer JWT |
-| `GET` | `/api/v1/debts` | Lấy danh mục các khoản nợ cá nhân (Thẻ tín dụng, vay ngân hàng) | Bearer JWT |
-| `POST` | `/api/v1/debts` | Thêm khoản nợ mới (Số dư nợ, Lãi suất APR, Mức trả tối thiểu) | Bearer JWT |
-| `POST` | `/api/v1/debts/simulate` | **Mô phỏng đối sánh chiến lược trả nợ (Debt Snowball vs. Debt Avalanche Solver)** | Bearer JWT |
+| `GET` | `/api/goals` | Lấy danh sách mục tiêu tài chính & **Quỹ khẩn cấp (Emergency Fund)** | Bearer JWT |
+| `POST` | `/api/goals` | Khởi tạo mục tiêu tích lũy mới | Bearer JWT |
+| `POST` | `/api/goals/{id}/contribute`| Trích tiền từ ví sang mục tiêu tích lũy | Bearer JWT |
+| `GET` | `/api/debts` | Lấy danh mục các khoản nợ cá nhân (Thẻ tín dụng, vay ngân hàng) | Bearer JWT |
+| `POST` | `/api/debts` | Thêm khoản nợ mới (Số dư nợ, Lãi suất APR, Mức trả tối thiểu) | Bearer JWT |
+| `POST` | `/api/debts/simulate` | **Mô phỏng đối sánh chiến lược trả nợ (Debt Snowball vs. Debt Avalanche Solver)** | Bearer JWT |
 
 ### 3.6. Phân Hệ 6: Behavioral Nudges & Decision Support Thaler (5 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/nudges/active` | Lấy danh sách các cú hích đang chờ phản hồi (Kèm câu giải trình XAI) | Bearer JWT |
-| `POST` | `/api/v1/nudges/{id}/decision` | Người dùng xác nhận: Đồng ý làm theo cú hích hoặc Bỏ qua | Bearer JWT |
-| `POST` | `/api/v1/nudges/cooling-off` | **Kích hoạt Khoảng trễ tâm lý Cooling-off 24h-48h cho khoản mua sắm lớn bốc đồng** | Bearer JWT |
-| `GET` | `/api/v1/analytics/forecast` | Dự báo dòng tiền 30-90 ngày tới & **Ngày cạn kiệt tiền mặt (Out-of-Money Date)** | Bearer JWT |
-| `POST` | `/api/v1/payments/vietqr` | Sinh mã VietQR động để chuyển khoản thanh toán nhanh hóa đơn | Bearer JWT |
+| `GET` | `/api/nudges/active` | Lấy danh sách các cú hích đang chờ phản hồi (Kèm câu giải trình XAI) | Bearer JWT |
+| `POST` | `/api/nudges/{id}/decision` | Người dùng xác nhận: Đồng ý làm theo cú hích hoặc Bỏ qua | Bearer JWT |
+| `POST` | `/api/nudges/cooling-off` | **Kích hoạt Khoảng trễ tâm lý Cooling-off 24h-48h cho khoản mua sắm lớn bốc đồng** | Bearer JWT |
+| `GET` | `/api/analytics/forecast` | Dự báo dòng tiền 30-90 ngày tới & **Ngày cạn kiệt tiền mặt (Out-of-Money Date)** | Bearer JWT |
+| `POST` | `/api/payments/vietqr` | Sinh mã VietQR động để chuyển khoản thanh toán nhanh hóa đơn | Bearer JWT |
 
 ### 3.7. Phân Hệ 7: Two-Tier Offline-First Synchronization (2 Endpoints)
 | HTTP Method | Endpoint URI | Mục Đích Nghiệp Vụ & DTO Contracts | Yêu Cầu Auth |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/sync/push` | Mobile gửi mảng các giao dịch ngoại tuyến (`is_synced = 0`) lên Server | Bearer JWT |
-| `GET` | `/api/v1/sync/pull` | Mobile kéo các biến động mới phát sinh từ Server kể từ `lastSyncTimestamp` | Bearer JWT |
+| `POST` | `/api/sync/push` | Mobile gửi mảng các giao dịch ngoại tuyến (`is_synced = 0`) lên Server | Bearer JWT |
+| `GET` | `/api/sync/pull` | Mobile kéo các biến động mới phát sinh từ Server kể từ `lastSyncTimestamp` | Bearer JWT |
 
 ---
 
@@ -433,7 +433,7 @@ hubConnection.On<DsaAlertPayload>("ReceiveDsaAlert", payload =>
         │◄─ 4. Khi Token hết hạn: Trả về HTTP 401 Unauthorized ────────│
         │                                                              │
 [Refit DelegatingHandler bắt 401]                                      │
-        │── 5. Gọi /api/v1/auth/refresh-token kèm RefreshToken ───────►│
+        │── 5. Gọi /api/auth/refresh-token kèm RefreshToken ───────►│
         │◄─ 6. Trả về AccessToken mới + RefreshToken mới (Rotation) ───│
         │                                                              │
 [Cập nhật lại SecureStorage]                                           │

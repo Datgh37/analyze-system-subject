@@ -62,4 +62,18 @@ public class ForecastingController : BaseApiController
         var result = await _forecastingService.SimulateWhatIfScenarioAsync(CurrentUserId, request, ct);
         return HandleResult(result);
     }
+
+    // UC-08.04: Alternate Flow A1 - Convert simulated purchase into a savings goal
+    [HttpPost("what-if/convert-to-goal")]
+    [ProducesResponseType(typeof(ConvertToSavingsGoalResultDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ConvertWhatIfToGoal([FromBody] ConvertToSavingsGoalRequestDto request, CancellationToken ct = default)
+    {
+        var result = await _forecastingService.ConvertWhatIfToSavingsGoalAsync(CurrentUserId, request, ct);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new ProblemDetails { Detail = result.Error });
+        }
+        return StatusCode(StatusCodes.Status201Created, result.Value);
+    }
 }

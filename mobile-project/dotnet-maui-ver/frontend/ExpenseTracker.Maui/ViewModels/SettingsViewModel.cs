@@ -2,6 +2,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExpenseTracker.Maui.Services.Config;
 using ExpenseTracker.Maui.Services.Notifications;
+using ExpenseTracker.Maui.Services.Auth;
+using ExpenseTracker.Maui.Services.Biometrics;
+using ExpenseTracker.Maui.Services.Security;
 
 namespace ExpenseTracker.Maui.ViewModels;
 
@@ -9,6 +12,18 @@ public partial class SettingsViewModel : BaseViewModel
 {
     private readonly IServerConfigService _serverConfig;
     private readonly INativeNotificationService _nativeNotification;
+    private readonly ITokenStorageService _tokenStorage;
+    private readonly IBiometricAuthService _biometricAuth;
+    private readonly IClientAuthService _authService;
+
+    [ObservableProperty]
+    private bool _isBiometricQuickLoginEnabled = true;
+
+    [ObservableProperty]
+    private string _biometricHardwareStatusText = "Đang kiểm tra phần cứng...";
+
+    [ObservableProperty]
+    private bool _isBiometricSupported = true;
 
     [ObservableProperty]
     private bool _isLiveApiMode;
@@ -33,18 +48,60 @@ public partial class SettingsViewModel : BaseViewModel
 
     public SettingsViewModel(
         IServerConfigService serverConfig,
-        INativeNotificationService nativeNotification)
+        INativeNotificationService nativeNotification,
+        ITokenStorageService tokenStorage,
+        IBiometricAuthService biometricAuth,
+        IClientAuthService authService)
     {
         _serverConfig = serverConfig;
         _nativeNotification = nativeNotification;
-        Title = "Cài Đặt Máy Chủ & Demo";
+        _tokenStorage = tokenStorage;
+        _biometricAuth = biometricAuth;
+        _authService = authService;
+        Title = "Cài Đặt Hệ Thống & Bảo Mật";
 
         LoadConfig();
+        _ = LoadBiometricConfigAsync();
 
         _serverConfig.OnConfigChanged += (s, e) =>
         {
             MainThread.BeginInvokeOnMainThread(LoadConfig);
         };
+    }
+
+    private async Task LoadBiometricConfigAsync()
+    {
+        try
+        {
+            IsBiometricQuickLoginEnabled = await _tokenStorage.IsQuickLoginEnabledAsync();
+
+            var capability = await _biometricAuth.CheckCapabilityAsync();
+            switch (capability)
+            {
+                case BiometricCapabilityStatus.Available:
+                    BiometricHardwareStatusText = "🟢 Cảm biến vân tay / FaceID sẵn sàng hoạt động.";
+                    IsBiometricSupported = true;
+                    break;
+                case BiometricCapabilityStatus.NotEnrolled:
+                    BiometricHardwareStatusText = "🟡 Máy có cảm biến nhưng chưa cài đặt vân tay trong Android.";
+                    IsBiometricSupported = false;
+                    break;
+                case BiometricCapabilityStatus.Unsupported:
+                default:
+                    BiometricHardwareStatusText = "⚪ Thiết bị không hỗ trợ phần cứng sinh trắc học.";
+                    IsBiometricSupported = false;
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            BiometricHardwareStatusText = $"Lỗi kiểm tra: {ex.Message}";
+        }
+    }
+
+    partial void OnIsBiometricQuickLoginEnabledChanged(bool value)
+    {
+        _ = _tokenStorage.SetQuickLoginEnabledAsync(value);
     }
 
     private void LoadConfig()
@@ -195,6 +252,35 @@ public partial class SettingsViewModel : BaseViewModel
                 "⏰ ĐÃ HẸN GIỜ BÁO THỨC SAU 10 GIÂY!",
                 "1. Bạn hãy VUỐT TẮT ỨNG DỤNG HOÀN TOÀN khỏi danh sách đa nhiệm (Killed State) ngay bây giờ.\n2. Đưa điện thoại cho Thầy cầm hoặc đặt lên bàn.\n\nSau đúng 10 giây, Android OS sẽ tự động đánh thức và rung chuông phát thông báo lên màn hình!",
                 "Tôi đã hiểu, vuốt tắt ngay");
+        }
+    }
+
+    [RelayCommand]
+    private async Task LogoutAsync()
+    {
+        if (Shell.Current?.CurrentPage != null)
+        {
+            bool confirm = await Shell.Current.CurrentPage.DisplayAlertAsync(
+                "Xác Nhận Đăng Xuất",
+                "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản không?\n\n* Lưu ý: Khi đã đăng xuất, tính năng Đăng nhập nhanh bằng Sinh trắc học sẽ tự động khóa và bắt buộc đăng nhập bằng Mật khẩu ở lần mở app tiếp theo.",
+                "Đăng Xuất",
+                "Hủy");
+
+            if (!confirm) return;
+        }
+
+        try
+        {
+            await _authService.LogoutAsync();
+            await _tokenStorage.PurgeSessionOnLogoutAsync();
+            await Shell.Current.GoToAsync("//LoginPage");
+        }
+        catch (Exception ex)
+        {
+            if (Shell.Current?.CurrentPage != null)
+            {
+                await Shell.Current.CurrentPage.DisplayAlertAsync("Lỗi", $"Đăng xuất thất bại: {ex.Message}", "Đóng");
+            }
         }
     }
 }

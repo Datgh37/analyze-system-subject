@@ -29,6 +29,9 @@ public interface IApplicationDbContext
     DbSet<FinancialNudge> FinancialNudges { get; }
     DbSet<CoolingOffTransaction> CoolingOffTransactions { get; }
     DbSet<UserOtpCode> UserOtpCodes { get; }
+    DbSet<Debt> Debts { get; }
+    DbSet<DebtTransaction> DebtTransactions { get; }
+    DbSet<Subscription> Subscriptions { get; }
 
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

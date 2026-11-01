@@ -176,4 +176,87 @@ public class VoiceIntentRouterServiceTests
         result.Value.PrefillData.Should().ContainKey("amount");
         result.Value.PrefillData["amount"].Should().Be("1200000");
     }
+
+    [Fact]
+    public async Task RouteVoiceCommand_WhenDebtPaymentWithAmount_ShouldReturnDebtPaymentIntent()
+    {
+        // Arrange: User says command to pay debt with slang amount
+        var req = new VoiceIntentCommandRequest("Tôi vừa trả nợ 2 triệu thẻ tín dụng VIB");
+
+        // Act
+        var result = await _voiceRouter.RouteVoiceCommandAsync(_userId, req);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.DetectedIntent.Should().Be(VoiceIntents.DebtPayment);
+        result.Value.TargetRoute.Should().Be("DebtTrackerPage");
+        result.Value.ExtractedAmount.Should().Be(2_000_000m);
+        result.Value.PrefillData.Should().ContainKey("amount");
+        result.Value.PrefillData["amount"].Should().Be("2000000");
+        result.Value.ConfirmationMessage.Should().Contain("Nhận diện trả nợ");
+    }
+
+    [Fact]
+    public async Task RouteVoiceCommand_WhenEmergencyFundCommand_ShouldReturnEmergencyFundIntent()
+    {
+        // Arrange
+        var req = new VoiceIntentCommandRequest("Cho tôi xem quỹ khẩn cấp và chỉ số runway");
+
+        // Act
+        var result = await _voiceRouter.RouteVoiceCommandAsync(_userId, req);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.DetectedIntent.Should().Be(VoiceIntents.EmergencyFund);
+        result.Value.TargetRoute.Should().Be("EmergencyFundPage");
+        result.Value.ConfirmationMessage.Should().Contain("Quỹ Dự Phòng Khẩn Cấp");
+    }
+
+    [Fact]
+    public async Task RouteVoiceCommand_WhenSubscriptionAuditCommand_ShouldReturnSubscriptionAuditIntent()
+    {
+        // Arrange
+        var req = new VoiceIntentCommandRequest("Kiểm tra và quét bẫy thuê bao định kỳ");
+
+        // Act
+        var result = await _voiceRouter.RouteVoiceCommandAsync(_userId, req);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.DetectedIntent.Should().Be(VoiceIntents.SubscriptionAudit);
+        result.Value.TargetRoute.Should().Be("SubscriptionsPage");
+        result.Value.ConfirmationMessage.Should().Contain("Bẫy Thuê Bao");
+    }
+
+    [Fact]
+    public async Task RouteVoiceCommand_WhenWhatIfSimulationCommand_ShouldReturnWhatIfSimulationIntent()
+    {
+        // Arrange
+        var req = new VoiceIntentCommandRequest("Thử mô phỏng mua xe máy 30 triệu");
+
+        // Act
+        var result = await _voiceRouter.RouteVoiceCommandAsync(_userId, req);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.DetectedIntent.Should().Be(VoiceIntents.WhatIfSimulation);
+        result.Value.TargetRoute.Should().Be("ForecastingPage");
+        result.Value.ExtractedAmount.Should().Be(30_000_000m);
+        result.Value.ConfirmationMessage.Should().Contain("What-If");
+    }
+
+    [Fact]
+    public async Task RouteVoiceCommand_WhenReceiptOcrCommand_ShouldReturnReceiptOcrRoute()
+    {
+        // Arrange
+        var req = new VoiceIntentCommandRequest("Mở máy ảnh chụp hóa đơn siêu thị");
+
+        // Act
+        var result = await _voiceRouter.RouteVoiceCommandAsync(_userId, req);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.TargetRoute.Should().Be("ReceiptOcrPage");
+        result.Value.ConfirmationMessage.Should().Contain("hóa đơn");
+    }
 }
