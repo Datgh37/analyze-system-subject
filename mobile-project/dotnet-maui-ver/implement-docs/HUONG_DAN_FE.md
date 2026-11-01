@@ -1,348 +1,358 @@
-# TÀI LIỆU KỸ THUẬT GHÉP NỐI FRONTEND & BACKEND (MAUI MVVM INTEGRATION GUIDE)
-**Dự án:** Hệ Thống Quản Lý Chi Tiêu Và Hoạch Định Tài Chính Cá Nhân Thông Minh (Tích Hợp AI)  
-**Công nghệ:** .NET MAUI 10 (C# / XAML) — Kiến trúc Clean MVVM (CommunityToolkit.Mvvm)  
-**Mục đích tài liệu:** Hướng dẫn chi tiết cách ghép nối an toàn giữa giao diện người dùng (Frontend View) và hệ thống xử lý (ViewModel / Backend API), bảo đảm bạn có thể **toàn quyền tự do sáng tạo thiết kế mỹ thuật, layout, màu sắc và phong cách** mà **không làm đứt gãy kết nối dữ liệu logic**.
+# 📱 TÀI LIỆU ĐẶC TẢ YÊU CẦU GIAO DIỆN & TÍCH HỢP FRONTEND (UI/UX REQUIREMENTS SPECIFICATION)
+## HỆ THỐNG QUẢN LÝ CHI TIÊU & HOẠCH ĐỊNH TÀI CHÍNH CÁ NHÂN THÔNG MINH (PFM + AI)
+
+> **Dự Án:** Smart Personal Expense and Financial Planning Management System with AI Integration  
+> **Nền Tảng Kỹ Thuật:** .NET MAUI 10 (C# / XAML) — Kiến trúc MVVM (CommunityToolkit.Mvvm)  
+> **Đối Tượng Tiếp Nhận:** Chuyên viên thiết kế & Lập trình viên Frontend (UI/UX Developer)  
+> **Mục Đích Tài Liệu:** Định nghĩa toàn bộ **Nhu Cầu Giao Diện (UI Requirements), Các Thành Phần Thông Tin (Components) và Điểm Neo Dữ Liệu (Data Anchors)** của toàn bộ ứng dụng.  
+> **Nguyên Tắc Thiết Kế Cốt Lõi:** **HOÀN TOÀN TỰ DO SÁNG TẠO NGHỆ THUẬT (DESIGN FREEDOM)** — Bạn có toàn quyền tự do lựa chọn màu sắc, bảng màu, typography, phong cách thiết kế (Dark/Light Mode, Glassmorphism, Neumorphism, Minimalist, Material 3...), bố cục lưới và hiệu ứng chuyển động, miễn là đảm bảo đầy đủ các thành phần dữ liệu và tương tác nghiệp vụ được đặc tả bên dưới.
 
 ---
 
-## 1. NGUYÊN TẮC CỐT LÕI KHI THIẾT KẾ & GHÉP NỐI
+## 1. ĐỊNH HƯỚNG SẢN PHẨM & TRIẾT LÝ ỨNG DỤNG
 
-Toàn bộ hệ thống Backend, API, ViewModels và Mock Repositories cho **9 Phân hệ (63 Use Cases)** đã được xây dựng và kiểm thử hoàn chỉnh 100%. Các màn hình `.xaml` hiện có trong thư mục `Views/` đóng vai trò là **bộ khung sườn mẫu (Wireframe / Data Anchors)**.
+Ứng dụng này **không phải** là một cuốn sổ ghi chép thu chi thụ động thông thường, mà là một **"Huấn Luyện Viên Tài Chính Cá Nhân Thông Minh" (Smart Personal Financial Coach)** với 3 định hướng cốt lõi:
 
-Khi bạn tiến hành thiết kế lại giao diện, hãy lưu ý **3 nguyên tắc vàng** sau:
-
-### 1.1. Bạn toàn quyền quyết định về mặt Thiết kế & Thẩm mỹ
-- Bạn được **tự do 100%** trong việc:
-  - Chọn phong cách thiết kế (Dark Theme, Light Theme, Neumorphism, Glassmorphism, Material 3...).
-  - Chọn bảng màu, font chữ, icon, kích thước, khoảng cách (`Padding`, `Margin`).
-  - Thay đổi cấu trúc bố cục (dùng `Grid`, `StackLayout`, `FlexLayout`, `Border`, `Frame`, `CardView`...).
-  - Thêm hoạt ảnh, hiệu ứng chuyển động, thư viện biểu đồ tùy ý bạn.
-
-### 1.2. Giữ nguyên vẹn "Mỏ neo dữ liệu" (Binding Names & Commands)
-- Để giao diện hiển thị đúng dữ liệu từ Backend và người dùng bấm nút có phản hồi, **tuyệt đối KHÔNG xóa hoặc đổi tên** các thuộc tính đang được Binding:
-  - **Thuộc tính hiển thị dữ liệu:** `{Binding TênThuộcTính}` (Ví dụ: `{Binding Balance}`, `{Binding Title}`).
-  - **Lệnh tương tác nút bấm:** `{Binding TênLệnhCommand}` (Ví dụ: `{Binding LoadDataCommand}`, `{Binding SubmitCommand}`).
-  - **Tham số dòng danh sách:** `CommandParameter="{Binding .}"` (Dùng khi bấm nút trên một dòng của `CollectionView` để truyền item đó vào ViewModel).
-- Bạn có thể chuyển đổi Control thoải mái (ví dụ: đổi `Label` thành `Button`, đổi `Entry` thành `Editor`, đổi thẻ `Border` thành `Frame`), miễn là giữ nguyên đường dẫn `{Binding ...}` bên trong.
-
-### 1.3. Chế độ kiểm thử giao diện độc lập (Offline Mock vs Real Backend)
-- Trong quá trình làm giao diện, bạn **không cần cài đặt database hay bật Backend**. Hệ thống đã có sẵn Mock Repository chứa dữ liệu mẫu sống động cho toàn bộ 20 màn hình.
-- Để kiểm tra hoặc chuyển đổi, bạn mở file `ExpenseTracker.Maui/MauiProgram.cs` (từ dòng 98 đến 105):
-  ```csharp
-  // DÙNG DỮ LIỆU MẪU ĐỂ LÀM GIAO DIỆN OFFLINE (KHUYÊN DÙNG):
-  builder.Services.AddScoped<IWalletRepository, MockWalletRepository>();
-  builder.Services.AddScoped<ITransactionRepository, MockTransactionRepository>();
-  builder.Services.AddScoped<IBudgetRepository, MockBudgetRepository>();
-  builder.Services.AddScoped<INotificationRepository, MockNotificationRepository>();
-  builder.Services.AddScoped<IAnalyticsReportRepository, MockAnalyticsReportRepository>();
-  builder.Services.AddScoped<IForecastingRepository, MockForecastingRepository>();
-  builder.Services.AddScoped<INudgeRepository, MockNudgeRepository>();
-  builder.Services.AddScoped<ICoolingOffRepository, MockCoolingOffRepository>();
-  builder.Services.AddScoped<IAutonomousActionRepository, MockAutonomousActionRepository>();
-
-  // KHI CẦN KẾT NỐI BACKEND THẬT THÌ ĐỔI 'Mock' THÀNH 'Api':
-  // builder.Services.AddScoped<IWalletRepository, ApiWalletRepository>();
-  // builder.Services.AddScoped<IAutonomousActionRepository, ApiAutonomousActionRepository>();
-  ```
-- **Cấu hình địa chỉ máy chủ Backend** (trong `MauiProgram.cs`):
-  - Chạy trên Windows Desktop: `"http://localhost:5018"`.
-  - Chạy trên Máy ảo Android (Android Emulator): `"http://10.0.2.2:5018"`.
-  - Chạy trên Điện thoại thật: thay địa chỉ trong mã nguồn bằng IP Wi-Fi cục bộ của máy chạy backend, ví dụ `"http://192.168.1.15:5018"`.
-  - Backend hiện lắng nghe HTTP tại cổng `5018`; không dùng cổng `5000`.
+1. **100% Tài Chính Cá Nhân (Pure Personal Finance):**
+   - Ứng dụng tập trung tuyệt đối vào việc tối ưu hóa sức khỏe tài chính của **một cá nhân**.
+   - **Tuyệt đối KHÔNG có** các tính năng chia tiền nhóm, quỹ hội nhóm, hay thanh toán tập thể phức tạp làm loãng trải nghiệm người dùng.
+2. **Kinh Tế Học Hành Vi (Behavioral Economics - Cú Hích Richard Thaler):**
+   - Giúp người dùng thay đổi hành vi chi tiêu một cách tự nhiên bằng các "Cú hích" (Nudges) nhẹ nhàng thay vì cấm đoán cực đoan.
+   - Tính toán **Hạn mức an toàn mỗi ngày (Daily Safe Amount - DSA)**: Người dùng mở app lên là biết ngay hôm nay mình được tiêu tối đa bao nhiêu tiền mà cuối tháng vẫn đủ tiền tiết kiệm.
+   - **Khoảng trễ tâm lý (Cooling-off Period):** Khi người dùng muốn chi tiêu một khoản tiền lớn bất thường, hệ thống yêu cầu họ tạm dừng 24h - 48h để cảm xúc lắng xuống trước khi ra quyết định mua sắm.
+3. **Trí Tuệ Nhân Tạo Đa Phương Thức & Tự Hành (Multimodal AI & Autonomous Agent):**
+   - **AI Vision OCR:** Chụp ảnh hóa đơn mua sắm hoặc phiếu lương $\rightarrow$ Tự động bóc tách từng món đồ, số tiền, thuế VAT và gợi ý danh mục chi tiêu chuẩn xác.
+   - **AI Voice Assistant:** Trợ lý giọng nói nhận diện tiếng Việt tự nhiên (nghìn, k, củ, chai, hôm qua, trưa nay) $\rightarrow$ Điền form tự động chỉ sau 1 câu nói rảnh tay.
+   - **Hộp Thư Tự Hành (Action Inbox):** Nhận diện biến động số dư ngân hàng qua thông báo đẩy (Push Notification) $\rightarrow$ Người dùng chỉ cần trượt nhẹ (Swipe) để duyệt hoặc từ chối mà không cần gõ bàn phím.
+4. **Kiến Trúc Hai Chế Độ (Dual-Mode: Offline Mock & Real Backend):**
+   - Khi làm giao diện, bạn **không bắt buộc phải chạy Database hay Backend**. Toàn bộ 20+ ViewModels đã có sẵn **Mock Repositories** với dữ liệu mẫu sống động, mượt mà 0ms.
+   - Khi cần kiểm thử dữ liệu thực tế, chỉ cần đổi 1 dòng cấu hình để kết nối tới Backend ASP.NET Core 10 WebApi với 25 Controllers và WebSocket SignalR thời gian thực.
 
 ---
 
-## 2. BỘ QUY CHUẨN XỬ LÝ TRẠNG THÁI GIAO DIỆN (UI STATES)
+## 2. HƯỚNG DẪN THIẾT LẬP MÔI TRƯỜNG & KHỞI CHẠY (DÀNH CHO BẠN FRONTEND)
 
-Mỗi ViewModel đều kế thừa từ `BaseViewModel` và cung cấp sẵn 3 cờ trạng thái chuẩn mực để bạn thiết kế phản hồi cho người dùng:
+### 2.1. Yêu Cầu Môi Trường Máy Tính
+- **Hệ Điều Hành:** Windows 10/11 hoặc macOS.
+- **Công Cụ Phát Triển:**
+  - **Visual Studio 2022 / 2026 (v17.12+ hoặc bản Preview hỗ trợ .NET 10)** kèm workload **".NET Multi-platform App UI development"**.
+  - Hoặc **Visual Studio Code** kèm bộ Extension: *C# Dev Kit*, *.NET MAUI*.
+- **SDK Yêu Cầu:** [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
-1. **Trạng thái đang tải (Loading State):**
-   - Thuộc tính: `IsBusy` (`bool`).
-   - Ghép nối: Dùng để bật/tắt vòng xoay loading:
-     ```xml
-     <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+### 2.2. Chế Độ 1: Làm Giao Diện Hoàn Toàn Độc Lập (Khuyên Dùng - Offline Mock)
+Trong chế độ này, bạn không cần cài PostgreSQL, không cần Docker, không cần chạy Backend:
+1. Mở solution `mobile-project/dotnet-maui-ver/backend/ExpenseTracker.slnx` hoặc mở thư mục `frontend/ExpenseTracker.Maui`.
+2. Mở file [`MauiProgram.cs`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/MauiProgram.cs).
+3. Đảm bảo các dòng đăng ký Mock Repository đang được kích hoạt (đây là trạng thái mặc định của dự án):
+   ```csharp
+   // DÙNG DỮ LIỆU MẪU ĐỂ LÀM GIAO DIỆN (OFFLINE MOCK 0ms - KHÔNG CẦN BACKEND)
+   builder.Services.AddScoped<IWalletRepository, MockWalletRepository>();
+   builder.Services.AddScoped<ITransactionRepository, MockTransactionRepository>();
+   builder.Services.AddScoped<IBudgetRepository, MockBudgetRepository>();
+   builder.Services.AddScoped<IDebtRepository, MockDebtRepository>();
+   builder.Services.AddScoped<IEmergencyFundRepository, MockEmergencyFundRepository>();
+   builder.Services.AddScoped<ISubscriptionRepository, MockSubscriptionRepository>();
+   builder.Services.AddScoped<INetWorthRepository, MockNetWorthRepository>();
+   builder.Services.AddScoped<IForecastingRepository, MockForecastingRepository>();
+   builder.Services.AddScoped<INudgeRepository, MockNudgeRepository>();
+   builder.Services.AddScoped<ICoolingOffRepository, MockCoolingOffRepository>();
+   ```
+4. Bấm `F5` chạy ứng dụng trên **Windows Machine** (để debug giao diện siêu tốc) hoặc **Android Emulator**. Ứng dụng sẽ tải ngay dữ liệu mẫu sống động!
+
+### 2.3. Chế Độ 2: Chạy Kết Nối Backend WebApi Thật & Điền Gemini API Key Cá Nhân
+Nếu bạn muốn trải nghiệm đầy đủ các tính năng AI thật (Gemini AI Vision, AI Voice, PostgreSQL):
+1. **Tạo file cấu hình Key riêng:**
+   - Đi tới thư mục: `backend/ExpenseTracker.WebApi/`
+   - Bạn sẽ thấy file mẫu: `appsettings.Local.json.example`
+   - Tạo một bản sao và đổi tên thành: `appsettings.Local.json`
+   - Mở file và dán Gemini API Key của bạn:
+     ```json
+     {
+       "AiSettings": {
+         "ApiKey": "DÁN_GEMINI_API_KEY_CỦA_BẠN_VÀO_ĐÂY"
+       }
+     }
      ```
-2. **Trạng thái thông báo lỗi (Error State):**
-   - Thuộc tính: `HasError` (`bool`) và `ErrorMessage` (`string`).
-   - Ghép nối: Dùng để hiển thị biểu ngữ hoặc popup báo lỗi khi nhập sai hoặc mất kết nối:
-     ```xml
-     <Border IsVisible="{Binding HasError}">
-         <Label Text="{Binding ErrorMessage}" />
-     </Border>
+   *(Lưu ý: File `appsettings.Local.json` đã được đưa vào `.gitignore`, sẽ không bao giờ bị lộ ra ngoài).*
+2. **Khởi chạy Backend:**
+   - Mở terminal tại thư mục `backend/ExpenseTracker.WebApi` và gõ:
+     ```bash
+     dotnet run
      ```
-3. **Trạng thái thông báo thành công (Success / Status State):**
-   - Thuộc tính: `StatusMessage` (`string`).
-   - Ghép nối: Hiển thị dòng thông báo khi giao dịch thành công hoặc cần nhắc nhở nhẹ:
-     ```xml
-     <Label Text="{Binding StatusMessage}" />
-     ```
-4. **Trạng thái danh sách rỗng (Empty State):**
-   - Trong thẻ `<CollectionView>`, luôn thiết kế phần `<CollectionView.EmptyView>` để khi người dùng chưa có giao dịch/ví/thông báo nào thì màn hình hiển thị hình minh họa và lời nhắn thân thiện thay vì để màn hình trắng trơn.
+   - Backend sẽ tự động kiểm tra PostgreSQL: Nếu máy bạn có PostgreSQL thì sẽ dùng PostgreSQL; nếu máy bạn chưa cài PostgreSQL thì Backend sẽ tự động chạy SQLite local (`expensetracker.db`) mà không báo lỗi!
+   - Swagger API Documentation sẽ xuất hiện tại: `https://localhost:7080/swagger` (hoặc `http://localhost:5080/swagger`).
+3. **Chuyển Frontend sang dùng Real API:**
+   - Trong `MauiProgram.cs`, chuyển các dòng đăng ký sang `ApiWalletRepository`, `ApiTransactionRepository`,... và thiết lập địa chỉ Server trong màn hình `SettingsPage`.
 
 ---
 
-## 3. BẢN ĐỒ CHI TIẾT KHẾ ƯỚC GHÉP NỐI (DATA BINDING CONTRACTS) CHO TỪNG MÀN HÌNH
+## 3. QUY ƯỚC GHÉP NỐI MVVM (DATA ANCHORS - NGUYÊN TẮC BẤT DI BẤT DỊCH)
 
-Dưới đây là danh sách toàn bộ 20 màn hình trong `Views/`, liệt kê chính xác các biến dữ liệu và lệnh xử lý của ViewModel để bạn đối soát khi thiết kế:
+Khi thiết kế lại bất kỳ file `.xaml` nào, bạn hoàn toàn tự do xóa toàn bộ giao diện cũ và viết lại mới từ đầu. Điều duy nhất bạn cần giữ lại để hệ thống hoạt động trơn tru là **Tên thuộc tính Binding** và **Tên Command**:
 
----
-
-### PHÂN HỆ 1: TÀI KHOẢN & ĐA VÍ CÁ NHÂN (`UC-01`)
-
-#### 1. `LoginPage.xaml` & `RegisterPage.xaml` (ViewModel: `LoginViewModel` & `RegisterViewModel`)
-- **Dữ liệu 2 chiều (Mode=TwoWay):**
-  - Form đăng nhập: `{Binding Username}`, `{Binding Password}`.
-  - Form đăng ký: `{Binding FullName}`, `{Binding Email}`, `{Binding Username}`, `{Binding Password}`, `{Binding ConfirmPassword}`.
-- **Lệnh tương tác (Commands):**
-  - Đăng nhập: `{Binding LoginCommand}`
-  - Đăng ký: `{Binding RegisterCommand}`
-  - Chuyển trang qua lại: `{Binding NavigateToRegisterCommand}`, `{Binding NavigateToLoginCommand}`
-
-#### 2. `WalletsPage.xaml` (ViewModel: `WalletsViewModel`)
-- **Dữ liệu hiển thị:**
-  - Tổng số dư tài sản: `{Binding TotalBalance, StringFormat='{0:N0} đ'}`
-  - Danh sách ví: `ItemsSource="{Binding Wallets}"` (Các trường con: `Name`, `Balance`, `WalletTypeDisplay`, `Currency`, `AccountNumber`, `BankName`, `ColorHex`).
-- **Lệnh tương tác (Commands):**
-  - Tải lại danh sách ví: `{Binding LoadWalletsCommand}`
-  - Mở form tạo ví mới: `{Binding OpenCreateWalletCommand}`
-  - Mở form chuyển tiền nội bộ: `{Binding OpenTransferCommand}`
-  - Mở form cân chỉnh số dư: `{Binding OpenAdjustBalanceCommand}`
-  - Xóa ví: `{Binding DeleteWalletCommand}` kèm `CommandParameter="{Binding .}"`
+```xml
+<!-- Bạn có thể chọn bất kỳ Control nào: Border, Frame, CardView, Label, Button... -->
+<!-- Miễn là giữ đúng đường dẫn {Binding ...} -->
+<Label Text="{Binding Balance, StringFormat='{0:N0} đ'}" />
+<Button Text="Lưu Giao Dịch" Command="{Binding SaveTransactionCommand}" />
+```
 
 ---
 
-### PHÂN HỆ 2: QUẢN LÝ THU NHẬP & AI OCR PHIẾU LƯƠNG (`UC-02`)
+## 4. CHI TIẾT ĐẶC TẢ YÊU CẦU CHO TỪNG MÀN HÌNH (UI REQUIREMENTS SPECIFICATION)
 
-#### 3. `IncomesPage.xaml` (ViewModel: `IncomesViewModel`)
-- **Dữ liệu hiển thị:**
-  - Tổng thu nhập tháng: `{Binding TotalIncomeThisMonth}`
-  - Danh sách khoản thu: `ItemsSource="{Binding Incomes}"` (Các trường con: `Amount`, `IncomeDate`, `CategoryName`, `WalletName`, `Note`).
-- **Lệnh tương tác (Commands):**
-  - Tải dữ liệu: `{Binding LoadIncomesCommand}`
-  - Tạo khoản thu mới: `{Binding CreateIncomeCommand}`
-
-#### 4. `RecurringIncomesPage.xaml` (ViewModel: `RecurringIncomesViewModel`)
-- **Dữ liệu hiển thị:**
-  - Danh sách thu định kỳ: `ItemsSource="{Binding RecurringItems}"` (Trường con: `Name`, `ExpectedAmount`, `FrequencyDisplay`, `NextDueDate`, `IsActive`).
-- **Lệnh tương tác:**
-  - Bật/Tắt trạng thái hoạt động: `{Binding ToggleStatusCommand}` kèm `CommandParameter="{Binding .}"`
-  - Tạo khoản thu định kỳ: `{Binding CreateRecurringCommand}`
-
-#### 5. `PayslipOcrPage.xaml` (ViewModel: `PayslipOcrViewModel`)
-- **Dữ liệu hiển thị:**
-  - Đường dẫn ảnh/PDF phiếu lương đã chọn: `{Binding SelectedImagePath}`
-  - Kết quả AI bóc tách: `{Binding ParsedPayslip}` (Trường con: `GrossSalary`, `NetSalary`, `Bonuses`, `InsuranceDeduction`, `TaxDeduction`, `ConfidenceScore`).
-  - Cờ trạng thái: `{Binding IsProcessingOcr}` (Dùng để hiện vòng xoay AI đang đọc phiếu lương).
-- **Lệnh tương tác:**
-  - Chọn ảnh từ thư viện thiết bị: `{Binding PickImageCommand}`
-  - Chụp ảnh phiếu lương từ camera: `{Binding CaptureImageCommand}`
-  - Xác nhận lưu vào hệ thống: `{Binding ConfirmAndSaveCommand}`
+Dưới đây là danh mục toàn bộ các màn hình chính trong ứng dụng, được mô tả dưới dạng **Yêu cầu Nghiệp vụ Giao diện (Requirement Specs)**:
 
 ---
 
-### PHÂN HỆ 3: QUẢN LÝ CHI TIÊU, HÓA ĐƠN AI OCR & TIỆN ÍCH (`UC-03`)
-
-#### 6. `ExpensesPage.xaml` (ViewModel: `ExpensesViewModel`)
-- **Dữ liệu hiển thị:**
-  - Tổng chi tiêu tháng: `{Binding TotalExpenseThisMonth}`
-  - Danh sách chi tiêu: `ItemsSource="{Binding Expenses}"` (Trường con: `Amount`, `TransactionDate`, `CategoryName`, `WalletName`, `Note`, `IsEssential`).
-- **Lệnh tương tác:**
-  - Tải danh sách: `{Binding LoadExpensesCommand}`
-  - Thêm chi tiêu: `{Binding CreateExpenseCommand}`
-  - Lọc theo danh mục/thời gian: `{Binding FilterExpensesCommand}`
-
-#### 7. `ReceiptOcrPage.xaml` (ViewModel: `ReceiptOcrViewModel`)
-- **Dữ liệu hiển thị:**
-  - Ảnh hóa đơn: `{Binding ReceiptPreviewImage}`
-  - Danh sách từng món hàng AI bóc tách: `ItemsSource="{Binding ReceiptItems}"` (Trường con: `ItemName`, `Quantity`, `UnitPrice`, `TotalPrice`, `SuggestedCategory`).
-  - Tổng tiền hóa đơn: `{Binding TotalReceiptAmount}`
-  - Cờ cảnh báo sai lệch số học: `{Binding HasArithmeticDiscrepancy}`
-- **Lệnh tương tác:**
-  - Chụp ảnh hóa đơn: `{Binding CaptureReceiptCommand}`
-  - Chọn ảnh hóa đơn: `{Binding PickReceiptCommand}`
-  - Lưu thành giao dịch chi tiêu: `{Binding SaveReceiptAsExpenseCommand}`
-
-#### 8. `SmartUtilitiesPage.xaml` (ViewModel: `SmartUtilitiesViewModel`)
-- **Dữ liệu hiển thị:**
-  - Văn bản nhận diện giọng nói: `{Binding VoiceSpokenText}`
-  - Chuỗi mã thanh toán VietQR Napas 247: `{Binding VietQrPayload}`
-  - Danh sách gói thuê bao ngủ quên (Zombie): `ItemsSource="{Binding ZombieSubscriptions}"`
-- **Lệnh tương tác:**
-  - Nhấn giữ ghi âm giọng nói: `{Binding StartVoiceRecordingCommand}` / `{Binding StopVoiceRecordingCommand}`
-  - Tạo mã VietQR: `{Binding GenerateVietQrCommand}`
-  - Đánh dấu đã hủy thuê bao: `{Binding CancelSubscriptionCommand}`
+### MÀN HÌNH 01: TRANG CHỦ / TỔNG QUAN (DASHBOARD & FINANCIAL HOME)
+* **Mục đích:** Là màn hình người dùng nhìn thấy đầu tiên mỗi ngày. Cung cấp bức tranh toàn cảnh về sức khỏe tài chính trong tích tắc (Glanceable UI) và hướng dẫn họ hôm nay nên tiêu xài ra sao.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Thẻ Tài Sản Ròng & Ví Nhanh (Net Worth & Wallet Carousel/List):**
+     - Hiển thị Tổng tài sản ròng (`NetWorthAmount`), tỷ lệ biến động so với tháng trước (`NetWorthGrowthRate`).
+     - Danh sách lướt các ví (`Wallets`): Thẻ tiền mặt, thẻ ngân hàng, ví điện tử kèm biểu tượng, tên ví, số dư hiện tại (`Balance`).
+     - Nút ẩn/hiện số dư để bảo vệ riêng tư nơi công cộng (`IsBalanceVisible`, `ToggleBalanceVisibilityCommand`).
+  2. **Thước Đo Hạn Mức An Toàn Hôm Nay (Daily Safe Amount - DSA Widget):**
+     - Số tiền tối đa được chi hôm nay (`DailySafeAmount`).
+     - Tình trạng tiêu dùng: Đã tiêu bao nhiêu (`SpentToday`), còn lại bao nhiêu (`RemainingSafeToday`).
+     - Cảnh báo tốc độ chi tiêu (`SpendingVelocity`): Nhãn trực quan (Bình thường / Nhanh / Báo động đỏ) để nhắc nhở người dùng hãm phanh.
+  3. **Hộp Thông Điệp Cú Hích Tài Chính (Richard Thaler Nudge Card):**
+     - Hiển thị lời khuyên tài chính được cá nhân hóa (`ActiveNudgeTitle`, `ActiveNudgeMessage`).
+     - Nút "Tìm hiểu lý do" (XAI Rationale - `ViewNudgeRationaleCommand`) để mở cửa sổ giải trình logic toán học đằng sau lời khuyên.
+     - Nút "Chấp thuận" (`ApproveNudgeCommand`) hoặc "Bỏ qua" (`DismissNudgeCommand`).
+  4. **Thanh Thao Tác Nhanh (Quick Actions):**
+     - Nút Thêm chi tiêu (`NavigateToExpenseCommand`).
+     - Nút Thêm thu nhập (`NavigateToIncomeCommand`).
+     - Nút Quét hóa đơn AI Vision (`NavigateToOcrCommand`).
+     - Nút Trợ lý giọng nói (`NavigateToVoiceCommand`).
+  5. **Giao Dịch Gần Đây (Recent Transactions Stream):**
+     - Danh sách 5-10 giao dịch mới nhất (`RecentTransactions`): Biểu tượng danh mục, tên khoản chi, thời gian, số tiền (âm hiển thị màu chi tiêu, dương hiển thị màu thu nhập), ví thanh toán.
+* **Các Trạng Thái Giao Diện (States):**
+  - *Loading:* Hiển thị khung xương (Skeleton loader) cho các thẻ số dư.
+  - *Empty:* Khi người dùng mới chưa có ví/giao dịch $\rightarrow$ Hiển thị lời chào kèm nút kích hoạt "Khởi tạo ví đầu tiên".
+* **Data Context:** [`DashboardViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/DashboardViewModel.cs).
 
 ---
 
-### PHÂN HỆ 4: DANH MỤC THU CHI & QUY TẮC THÔNG MINH (`UC-04`)
-
-#### 9. `CategoriesPage.xaml` (ViewModel: `CategoriesViewModel`)
-- **Dữ liệu hiển thị:**
-  - Cây danh mục Cha - Con: `ItemsSource="{Binding Categories}"` (Trường con: `Name`, `IconKey`, `ColorHex`, `TransactionType`, `BudgetRuleMappingDisplay`, `ParentCategoryId`, `SubCategories`).
-- **Lệnh tương tác:**
-  - Thêm danh mục: `{Binding CreateCategoryCommand}`
-  - Sửa danh mục: `{Binding UpdateCategoryCommand}`
-  - Xóa danh mục: `{Binding DeleteCategoryCommand}`
-
-#### 10. `AutoRulesPage.xaml` (ViewModel: `AutoRulesViewModel`)
-- **Dữ liệu hiển thị:**
-  - Danh sách quy tắc gán nhãn: `ItemsSource="{Binding Rules}"` (Trường con: `KeywordPattern`, `TargetCategoryName`, `Priority`, `IsActive`).
-- **Lệnh tương tác:**
-  - Thêm quy tắc mới: `{Binding CreateRuleCommand}`
-  - Áp dụng hồi tố cho các chi tiêu cũ: `{Binding ApplyRetroactiveCommand}`
-
----
-
-### PHÂN HỆ 5: NGÂN SÁCH ĐA PHƯƠNG PHÁP & HẠN MỨC DSA (`UC-05`)
-
-#### 11. `BudgetsPage.xaml` & `CreateBudgetPage.xaml` (ViewModel: `BudgetsViewModel` & `CreateBudgetViewModel`)
-- **Dữ liệu hiển thị:**
-  - Tên kế hoạch & Tổng ngân sách: `{Binding ActiveBudget.Name}`, `{Binding ActiveBudget.TotalAmount}`
-  - Tổng thực chi & Tỷ lệ %: `{Binding ActiveBudget.CurrentSpent}`, `{Binding ActiveBudget.SpentPercent}`
-  - Hạn mức chi tiêu mỗi ngày thích ứng (DSA): `{Binding ActiveBudget.AdaptiveDailyAllowance}`
-  - Chỉ số tốc độ tiêu tiền: `{Binding ActiveBudget.SpendingVelocityIndex}`
-  - Dự phóng ngày cạn tiền: `{Binding ActiveBudget.OutOfMoneyForecastDate}`
-  - Danh sách phân bổ từng danh mục: `ItemsSource="{Binding ActiveBudget.Allocations}"` (Trường con: `CategoryName`, `AllocatedAmount`, `CurrentSpent`, `SpentPercent`, `IsOverBudget`).
-- **Lệnh tương tác:**
-  - Tải ngân sách: `{Binding LoadActiveBudgetCommand}`
-  - Mở trang tạo ngân sách chu kỳ mới: `{Binding NavigateToCreateBudgetCommand}`
-  - Tái cân đối hạn mức danh mục: `{Binding RebalanceCategoryCommand}`
+### MÀN HÌNH 02: SỔ GIAO DỊCH & THÊM/SỬA KHOẢN CHI TIÊU (TRANSACTIONS & EXPENSE FORM)
+* **Mục đích:** Giúp người dùng tra cứu lịch sử chi tiêu và thêm mới một khoản chi tiêu một cách nhanh chóng nhất với tối thiểu số lần chạm (Frictionless Entry).
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Bộ Lọc & Tìm Kiếm Đa Năng:**
+     - Ô tìm kiếm theo từ khóa ghi chú (`SearchKeyword`).
+     - Bộ lọc theo Ví (`SelectedWalletFilter`), theo Danh mục (`SelectedCategoryFilter`), theo Khoảng thời gian (Hôm nay / Tuần này / Tháng này / Tùy chọn).
+  2. **Danh Sách Giao Dịch Phân Nhóm Theo Ngày (Grouped List):**
+     - Nhóm theo từng ngày (Ví dụ: "Hôm nay - 01/11/2026", "Hôm qua - 31/10/2026") kèm tổng tiền chi tiêu trong ngày đó.
+     - Mỗi dòng giao dịch: Biểu tượng danh mục, tên ghi chú, số tiền, ví nguồn, giờ giao dịch.
+     - Hỗ trợ thao tác vuốt (Swipe Action): Vuốt sang trái để Lưu trữ / Xóa mềm (`ArchiveTransactionCommand`), vuốt sang phải để Chỉnh sửa (`EditTransactionCommand`).
+  3. **Biểu Mẫu Thêm Khoản Chi Tiêu (Expense Form Component):**
+     - Bàn phím số nhập tiền lớn, nổi bật (`Amount`) kèm định dạng phân tách hàng nghìn tự động.
+     - Lựa chọn Ví thanh toán (`WalletsList`, `SelectedWallet`).
+     - Lựa chọn Danh mục 2 cấp (`CategoriesList`, `SelectedCategory`): Ví dụ: Danh mục cha "Ăn uống" $\rightarrow$ Danh mục con "Cà phê", "Cơm trưa".
+     - Chọn Ngày & Giờ giao dịch (`TransactionDate`).
+     - Ô nhập ghi chú (`Note`).
+     - Khối đính kèm ảnh chụp hóa đơn (`ReceiptImageThumbnail`, `AttachReceiptCommand`).
+     - Nút bấm lưu giao dịch (`SaveExpenseCommand`).
+* **Các Trạng Thái Giao Diện (States):**
+  - Khi số tiền chi tiêu vượt quá số dư ví $\rightarrow$ Báo lỗi đỏ không cho lưu hoặc gợi ý đổi ví.
+  - Khi khoản chi tiêu lớn kích hoạt khoảng trễ $\rightarrow$ Tự động chuyển hướng hiển thị thông báo "Khoảng trễ tâm lý Cooling-off".
+* **Data Context:** [`ExpensesViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/ExpensesViewModel.cs) & [`TransactionsViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/TransactionsViewModel.cs).
 
 ---
 
-### PHÂN HỆ 6: QUỸ TÍCH LŨY & NGHĨA VỤ NỢ (`UC-06`)
-
-#### 12. `SavingsGoalsPage.xaml` & `CreateSavingsGoalPage.xaml` (ViewModel: `SavingsGoalsViewModel` & `CreateSavingsGoalViewModel`)
-- **Dữ liệu hiển thị:**
-  - Danh sách mục tiêu / Hũ tài chính: `ItemsSource="{Binding Goals}"` (Trường con: `Title`, `TargetAmount`, `CurrentAmount`, `ProgressPercentage`, `TargetDate`, `CategoryJarTypeDisplay`).
-  - Bảng nghĩa vụ nợ & Tỷ lệ DTI: `{Binding DebtToIncomeRatio}`
-- **Lệnh tương tác:**
-  - Nạp tiền vào quỹ tích lũy: `{Binding DepositFundsCommand}` kèm `CommandParameter="{Binding .}"`
-  - Rút tiền từ quỹ (kèm cú hích nhập lý do): `{Binding WithdrawFundsCommand}` kèm `CommandParameter="{Binding .}"`
-  - Chạy mô phỏng trả nợ (Snowball vs Avalanche): `{Binding SimulateDebtPayoffCommand}`
-
----
-
-### PHÂN HỆ 7: BÁO CÁO & PHÂN TÍCH TÀI CHÍNH ĐA CHIỀU (`UC-07`)
-
-#### 13. `ReportsPage.xaml` (ViewModel: `ReportsViewModel`)
-- **Dữ liệu hiển thị:**
-  - Báo cáo Thu - Chi đối sánh: `{Binding IncomeExpenseReport.TotalIncome}`, `{Binding IncomeExpenseReport.TotalExpense}`, `{Binding IncomeExpenseReport.NetSavings}`
-  - Báo cáo Giá trị Tài sản ròng: `{Binding NetWorthReport.CurrentNetWorth}`, `{Binding NetWorthReport.TotalAssets}`, `{Binding NetWorthReport.TotalLiabilities}`
-  - Dòng tiền ròng (Net Cashflow): `{Binding CashflowReport.OperatingCashflow}`, `{Binding CashflowReport.SavingsRate}`
-  - Danh sách khoản chi đột biến (Z-Score Outlier): `ItemsSource="{Binding OutlierExpenses}"`
-- **Lệnh tương tác:**
-  - Đổi khoảng thời gian lọc (Tuần / Tháng / Quý / Năm): `{Binding SelectPeriodCommand}`
-  - Ghi nhận ảnh chụp nhanh Net Worth: `{Binding TakeNetWorthSnapshotCommand}`
+### MÀN HÌNH 03: QUẢN LÝ ĐA VÍ & ĐIỀU CHUYỂN TIỀN (WALLETS & MONEY TRANSFER)
+* **Mục đích:** Quản lý toàn bộ các nguồn tiền của cá nhân (Tiền mặt, Tài khoản ngân hàng, Thẻ tín dụng, Ví MoMo, Sổ tiết kiệm) và điều chuyển qua lại.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Danh Sách Thẻ Ví Trực Quan:**
+     - Thiết kế dạng thẻ bài (Cards Grid / Stack): Mỗi ví hiển thị Tên ví (`WalletName`), Biểu tượng (`Icon`), Số dư hiện thời (`Balance`), Loại ví (`WalletType`: Cash, Bank, CreditCard, EWallet).
+     - Đánh dấu ví mặc định (`IsDefault`).
+     - Nút thêm ví mới (`AddNewWalletCommand`).
+  2. **Thao Tác Điều Chuyển Nội Bộ (Transfer Modal/Component):**
+     - Chọn Ví nguồn (`SourceWallet`).
+     - Chọn Ví đích (`DestinationWallet`).
+     - Nhập số tiền chuyển (`TransferAmount`) và Phí chuyển nếu có (`Fee`).
+     - Ghi chú chuyển tiền (`TransferNote`).
+     - Nút xác nhận chuyển tiền (`ExecuteTransferCommand`).
+  3. **Tiện Ích Cân Đối Số Dư Ví (Adjust Balance):**
+     - Cho phép nhập số dư thực tế đếm được $\rightarrow$ Hệ thống tự động sinh khoản thu/chi chênh lệch để số liệu trên app khớp 100% với thực tế.
+* **Data Context:** [`WalletsViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/WalletsViewModel.cs).
 
 ---
 
-### PHÂN HỆ 8: DỰ BÁO CHUỖI THỜI GIAN & RADAR THÂM HỤT (`UC-08`)
-
-#### 14. `ForecastingPage.xaml` (ViewModel: `ForecastingViewModel`)
-- **Dữ liệu hiển thị:**
-  - Dự báo tổng chi cuối kỳ: `{Binding Forecast.EstimatedTotalSpent}`, `{Binding Forecast.ProjectedOverspendAmount}`, `{Binding Forecast.RiskLevel}`
-  - Vận tốc tiêu tiền ngày thường vs cuối tuần: `{Binding Forecast.WeekdayDailyVelocity}`, `{Binding Forecast.WeekendDailyVelocity}`
-  - Radar thanh khoản: `{Binding Liquidity.DaysUntilDepletion}`, `{Binding Liquidity.DeficitDaysBeforeSalary}`, `{Binding Liquidity.IsLiquidityCrisis}`
-  - Danh sách danh mục có nguy cơ thâm hụt: `ItemsSource="{Binding CategoryRisks}"` (Trường con: `CategoryName`, `RiskRatio`, `DaysUntilDepletion`, `RiskLevelDisplay`).
-  - Dữ liệu Sandbox What-If thử nghiệm:
-    - Số tiền giả định nhập vào: `{Binding LumpSumAmount}` (TwoWay với Slider hoặc Entry).
-    - Kết quả mô phỏng Trước vs Sau: `{Binding WhatIfResult.BeforeNetWorth}`, `{Binding WhatIfResult.AfterNetWorth}`, `{Binding WhatIfResult.BeforeDsa}`, `{Binding WhatIfResult.AfterDsa}`.
-- **Lệnh tương tác:**
-  - Tải dữ liệu dự báo: `{Binding LoadForecastDataCommand}`
-  - Kích hoạt chạy mô phỏng Sandbox What-If: `{Binding RunWhatIfSimulationCommand}`
-
----
-
-### PHÂN HỆ 9: CÚ HÍCH THALER NUDGE, KHOẢNG TRỄ 24H & TRỢ LÝ XAI (`UC-09`)
-
-#### 15. `NudgeFeedPage.xaml` (ViewModel: `NudgeFeedViewModel`)
-- **Dữ liệu hiển thị:**
-  - Danh sách Cú hích đang hoạt động: `ItemsSource="{Binding Nudges}"` (Trường con: `Title`, `Message`, `NudgeTypeDisplay`, `NudgeBadgeColor`, `TriggerContext`, `HasRebalanceProposal`).
-  - Điều khiển bật/tắt Modal giải trình XAI: `IsVisible="{Binding IsXaiModalVisible}"`
-  - Dữ liệu chi tiết bên trong Modal XAI:
-    - Tiêu đề & Hiện trạng kích hoạt: `{Binding SelectedNudge.Title}`, `{Binding ActiveXaiRationale.TriggerContext}`
-    - Công thức toán học minh bạch: `{Binding ActiveXaiRationale.MathematicalFormula}`
-    - Bằng chứng thực nghiệm: `{Binding ActiveXaiRationale.EmpiricalEvidence}`
-    - Dự phóng hệ quả tương lai: `{Binding ActiveXaiRationale.ProjectedConsequences}`, `{Binding ActiveXaiRationale.ProjectedDailyDsaAfter, StringFormat='{0:N0} đ/ngày'}`
-- **Lệnh tương tác:**
-  - Tải danh sách cú hích: `{Binding LoadNudgesCommand}`
-  - Mở Modal xem giải trình XAI: `{Binding ViewXaiRationaleCommand}` kèm `CommandParameter="{Binding .}"`
-  - Đóng Modal XAI: `{Binding CloseXaiModalCommand}`
-  - Phê duyệt áp dụng đề xuất tái cân đối: `{Binding ApproveNudgeCommand}` kèm `CommandParameter="{Binding .}"`
-  - Bỏ qua cú hích: `{Binding DismissNudgeCommand}` kèm `CommandParameter="{Binding .}"`
-
-#### 16. `CoolingOffHubPage.xaml` (ViewModel: `CoolingOffHubViewModel`)
-- **Dữ liệu hiển thị:**
-  - Danh sách khoản chi lớn bị phong tỏa 24h: `ItemsSource="{Binding PendingTransactions}"` (Trường con: `Description`, `CategoryName`, `Amount`, `RemainingTimeDisplay`, `EquivalentWorkHours`, `ProjectedDsaReduction`, `IsExpired`).
-  - Thử nghiệm đánh giá khoản chi (Sandbox):
-    - Số tiền nhập thử: `{Binding TestExpenseAmount}` (TwoWay)
-    - Tên món đồ: `{Binding TestDescription}` (TwoWay)
-  - Điều khiển Modal kết quả đánh giá ma sát: `IsVisible="{Binding IsEvaluateModalVisible}"`
-  - Điều khiển Modal mở khóa khẩn cấp: `IsVisible="{Binding IsBypassModalVisible}"`
-    - Lý do khẩn cấp nhập vào: `{Binding BypassReason}` (TwoWay với Editor)
-- **Lệnh tương tác:**
-  - Tải danh sách hạ nhiệt: `{Binding LoadPendingTransactionsCommand}`
-  - Đánh giá thử nghiệm khoản chi lớn: `{Binding EvaluateTestExpenseCommand}`
-  - Đóng modal đánh giá: `{Binding CloseEvaluateModalCommand}`
-  - Xác nhận mua (trừ tiền khi hết giờ): `{Binding ConfirmPurchaseCommand}` kèm `CommandParameter="{Binding .}"`
-  - Hủy mua hàng (tiết kiệm tiền thành công): `{Binding CancelPurchaseCommand}` kèm `CommandParameter="{Binding .}"`
-  - Mở modal giải trình khẩn cấp: `{Binding OpenBypassModalCommand}` kèm `CommandParameter="{Binding .}"`
-  - Đóng modal khẩn cấp: `{Binding CloseBypassModalCommand}`
-  - Gửi lý do mở khóa khẩn cấp: `{Binding SubmitBypassCommand}`
+### MÀN HÌNH 04: NGÂN SÁCH CHU KỲ & TÁI CÂN ĐỐI (BUDGETS & REBALANCING)
+* **Mục đích:** Giúp người dùng thiết lập hạn mức chi tiêu theo tháng và giám sát tiến độ tiêu dùng để không bị rỗng túi trước ngày nhận lương.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Thanh Tiến Độ Ngân Sách Tổng Thể (Overall Budget Progress):**
+     - Tổng ngân sách tháng (`TotalBudgetLimit`), Đã chi (`TotalSpent`), Còn lại (`RemainingBudget`), Tỷ lệ hoàn thành (`SpentPercentage`%).
+     - Đổi màu sắc cảnh báo theo ngưỡng: Xanh (<70%), Vàng (70%-85%), Đỏ (>85%).
+  2. **Danh Sách Hạn Mức Từng Danh Mục (Category Allocations):**
+     - Tên danh mục, số tiền đã tiêu / hạn mức (Ví dụ: "Ăn uống: Đã tiêu 2.500.000đ / 3.000.000đ").
+     - Thanh mini-progress bar cho từng mục.
+  3. **Công Cụ Tái Cân Đối Ngân Sách Thông Minh (Budget Rebalance Component):**
+     - Khi một danh mục bị tiêu vượt mức (Ví dụ Ăn uống bị âm 300.000đ), hệ thống hiển thị nút "Đề xuất Tái cân đối" (`OpenRebalanceProposalCommand`).
+     - Hiển thị gợi ý: "Cắt giảm 300.000đ từ danh mục Mua sắm (đang còn dư) để bù cho Ăn uống".
+     - Nút 1-chạm "Chấp nhận hoán đổi" (`ApplyRebalanceCommand`).
+* **Data Context:** [`BudgetsViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/BudgetsViewModel.cs).
 
 ---
 
-### PHÂN HỆ 10: ĐỘNG CƠ HÀNH ĐỘNG TỰ HÀNH & PHÂN TẦNG XÁC SUẤT JEV (CHẶNG 10.5 / PLAN-47)
-
-#### 17. `ActionInboxView.xaml` & `SmartActionCardView.xaml` (ViewModel: `ActionInboxViewModel`, tích hợp tại đầu `WalletsPage.xaml`)
-- **Mục đích & Cơ chế hoạt động:**
-  - Khay chứa các thẻ hành động tự hành được sinh ra khi máy chủ nhận diện biến động số dư ngân hàng hoặc ví điện tử.
-  - Tự động co lại / ẩn hoàn toàn (`IsVisible = false`) khi khay rỗng (`HasPendingActions = false`), bảo đảm không làm phiền người dùng khi không có việc cần xử lý.
-- **Dữ liệu hiển thị (Data Context: `ActionInboxViewModel`):**
-  - Số lượng việc đang chờ: `{Binding ActionCount}` (dùng cho tiêu đề: `⚡ Việc Cần Xử Lý ({0})`).
-  - Thông báo phản hồi sau khi lưu: `{Binding ActionStatusMessage}`.
-  - Danh sách thẻ hành động: `ItemsSource="{Binding PendingActions}"` (phần tử: `AutonomousActionModel`).
-- **Chi tiết dữ liệu từng thẻ (`SmartActionCardView.xaml` - Data Context: `AutonomousActionModel`):**
-  - Nhãn phân loại: `{Binding Display.BadgeText}` (Mã màu gợi ý: `{Binding Display.BadgeColor}`).
-  - Nguồn giao dịch & Thời gian: `{Binding Display.Subtitle}` (Ví dụ: `"ACB • 23:15"`, `"MoMo • 14:20"`).
-  - Tiêu đề & Số tiền: `{Binding Display.Title}` (Ví dụ: `"Shopee: 185.000 đ"`, `"Circle K: 35.000 đ"`).
-  - Số tiền nguyên bản: `{Binding Display.Amount, StringFormat='{0:N0} đ'}`.
-  - **Nhánh A - Xác suất cao (Confidence $\ge 0.85$):**
-    - Điều kiện hiển thị: `IsVisible="{Binding PrimaryAction, Converter={StaticResource NullToFalseConverter}}"`.
-    - Nút Lưu nhanh 1-chạm: `{Binding PrimaryAction.Label}` (gọi `{Binding QuickCommitCommand}` kèm `CommandParameter="{Binding .}"`).
-    - Nút Đổi chi tiết: `{Binding SecondaryAction.Label}` (gọi `{Binding NavigateCommand}` kèm `CommandParameter="{Binding .}"`).
-  - **Nhánh B - Phân tầng Jev Choice ($0.50 \le \text{Confidence} < 0.85$):**
-    - Điều kiện hiển thị: `IsVisible="{Binding Choices, Converter={StaticResource NullToFalseConverter}}"`.
-    - Danh sách lựa chọn: `BindableLayout.ItemsSource="{Binding Choices}"` (mỗi phần tử có `{Binding Label}` và `{Binding FormattedProbability}`).
-    - Lệnh khi bấm vào 1 lựa chọn: gọi `{Binding SelectChoiceCommand}` kèm `CommandParameter="{Binding .}"`.
-  - **Nút Bỏ qua (Dismiss):** Bấm nút `[✕]` gọi `{Binding DismissCommand}` kèm `CommandParameter="{Binding .}"` để dọn sạch thẻ khỏi khay.
-- **Lệnh tương tác trên khay:**
-  - Tải lại danh sách: `{Binding LoadInboxCommand}`.
+### MÀN HÌNH 05: QUẢN LÝ NỢ CÁ NHÂN & TỐI ƯU HÓA TRẢ NỢ (DEBT CATALOG & OPTIMIZER)
+* **Mục đích:** Xóa bỏ sự mơ hồ và lo lắng về nợ nần. Giúp người dùng nắm rõ từng khoản nợ và cung cấp lộ trình trả nợ khoa học nhất.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Bảng Chỉ Số Nợ Tổng Quan (Debt Summary Header):**
+     - Tổng dư nợ hiện tại (`TotalRemainingDebt`).
+     - Tổng số tiền đã thanh toán (`TotalPaidAmount`).
+     - Số tiền cần trả tối thiểu hàng tháng (`TotalMonthlyMinimum`).
+     - Tỷ lệ hoàn thành trả nợ toàn diện (`OverallProgressPercentage`%).
+  2. **Danh Sách Các Khoản Nợ Cá Nhân (Debt Cards List):**
+     - Thẻ từng khoản nợ (`DebtsList`): Tên khoản nợ (Vay mua xe, Thẻ tín dụng, Nợ người thân), Người cho vay (`Creditor`), Lãi suất năm (`InterestRate`%), Dư nợ còn lại (`RemainingAmount`), Ngày đến hạn (`DueDate`).
+     - Nút "Trả nợ ngay" (`RecordPaymentCommand`): Mở hộp thoại nhập tiền trả, chọn ví trích tiền $\rightarrow$ Tự động hạch toán giảm nợ gốc và trừ tiền ví theo chuẩn kế toán kép.
+     - Đánh dấu huy hiệu "ĐÃ TẤT TOÁN" khi nợ về 0.
+  3. **Cẩm Nang & So Sánh Chiến Lược Trả Nợ (Snowball vs Avalanche):**
+     - Cẩm nang bình dân học vụ: Giải thích dễ hiểu phương pháp **Quả cầu tuyết (Snowball - Trả món nhỏ trước để lấy động lực)** và **Thác tuyết (Avalanche - Trả món lãi cao trước để tiết kiệm tiền)**.
+     - Bộ so sánh song song (`CompareStrategiesCommand`):
+       * Số tiền lãi tiết kiệm được (`InterestSavedAmount`).
+       * Số tháng trả nợ rút ngắn được (`MonthsSaved`).
+       * Biểu đồ mô phỏng dòng thời gian trả hết nợ (Timeline).
+* **Data Context:** [`DebtOptimizerViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/DebtOptimizerViewModel.cs).
 
 ---
 
-### TIỆN ÍCH CHUNG & ĐIỀU HƯỚNG
-
-#### 18. `NotificationHistoryPage.xaml` (ViewModel: `NotificationHistoryViewModel`)
-- **Dữ liệu hiển thị:**
-  - Danh sách thông báo đẩy & nhắc nhở 21:00: `ItemsSource="{Binding Notifications}"` (Trường con: `Title`, `Message`, `CreatedAt`, `IsRead`, `SeverityColor`).
-- **Lệnh tương tác:**
-  - Đánh dấu tất cả đã đọc: `{Binding MarkAllAsReadCommand}`
-  - Xóa thông báo: `{Binding DeleteNotificationCommand}` kèm `CommandParameter="{Binding .}"`
-
-#### 19. `AppShell.xaml` & `AppShell.xaml.cs`
-- Chứa cấu trúc điều hướng toàn ứng dụng (`TabBar`, `FlyoutItem`, `ShellContent`).
-- Các Route đã được đăng ký đầy đủ: `LoginPage`, `WalletsPage`, `IncomesPage`, `RecurringIncomesPage`, `PayslipOcrPage`, `CategoriesPage`, `ExpensesPage`, `ReceiptOcrPage`, `SmartUtilitiesPage`, `BudgetsPage`, `CreateBudgetPage`, `SavingsGoalsPage`, `CreateSavingsGoalPage`, `ReportsPage`, `ForecastingPage`, `NudgeFeedPage`, `CoolingOffHubPage`, `NotificationHistoryPage`.
-- Khi cần tạo thanh điều hướng chân trang (Bottom Navigation Bar) hoặc Menu trượt cạnh bên (Flyout Drawer), bạn thoải mái tinh chỉnh lại thẻ `<TabBar>` hoặc `<FlyoutItem>` trong file `AppShell.xaml`.
+### MÀN HÌNH 06: QUỸ DỰ PHÒNG KHẨN CẤP & TÀI SẢN RÒNG (EMERGENCY FUND & NET WORTH)
+* **Mục đích:** Xây dựng tấm lá chắn an toàn tài chính vững chắc trước các rủi ro bất ngờ (mất việc, đau ốm, hỏng xe).
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Vòng Cung Quỹ Dự Phòng Khẩn Cấp (Emergency Fund Gauge/Ring):**
+     - Hiển thị số tiền hiện có trong quỹ (`CurrentAmount`) so với Mục tiêu (`TargetAmount`).
+     - Chỉ số **"Số Tháng Sinh Tồn Khả Dụng" (Survival Runway Months)**: Cho biết nếu ngày mai mất nguồn thu thì số tiền này giúp người dùng sống sót được bao nhiêu tháng (`RunwayMonths`).
+     - Gợi ý mức dự phòng dựa trên khảo sát: 3 tháng (ổn định), 6 tháng (tiêu chuẩn), 12 tháng (tự do/kinh doanh).
+  2. **Nút Thao Tác Nạp / Rút Quỹ Khẩn Cấp:**
+     - Nút "Trích tiền vào quỹ" (`DepositToFundCommand`).
+     - Nút "Rút tiền sự cố" (`WithdrawFromFundCommand`): Kèm yêu cầu nhập lý do khẩn cấp để nhắc nhở người dùng không tiêu lẹm vào quỹ này.
+  3. **Biểu Đồ Tài Sản Ròng (Net Worth Evolution Chart):**
+     - Biểu đồ đường hoặc cột thể hiện xu hướng tăng trưởng tài sản ròng theo các mốc thời gian (`NetWorthHistory`).
+     - Công thức hiển thị minh bạch: Tài sản ròng = Tổng tiền trong ví - Tổng dư nợ.
+* **Data Context:** [`EmergencyFundViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/EmergencyFundViewModel.cs) & [`NetWorthViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/NetWorthViewModel.cs).
 
 ---
 
-## 4. TỔNG KẾT & LỜI NHẮN
+### MÀN HÌNH 07: QUÉT BẪY THUÊ BAO ĐỊNH KỲ (SUBSCRIPTION TRAPS RADAR)
+* **Mục đích:** Ngăn chặn tình trạng rò rỉ dòng tiền vi mô (Micro-drain) từ các dịch vụ đăng ký định kỳ bị lãng quên (Netflix, Spotify, iCloud, ChatGPT, Gym).
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Báo Cáo Kiểm Toán Hao Tổn Hàng Năm (Annual Leakage Card):**
+     - Tổng chi phí thuê bao phải trả mỗi năm (`TotalAnnualCost`): Giúp người dùng "giật mình" khi thấy các khoản 59k, 260k hàng tháng cộng dồn thành con số tiền triệu mỗi năm.
+     - Số lượng thuê bao đang kích hoạt (`ActiveSubscriptionsCount`).
+  2. **Cảnh Báo Bẫy Dùng Thử Miễn Phí (Free Trial Trap Warning):**
+     - Khối thông báo nổi bật nếu có dịch vụ đang trong thời gian dùng thử sắp tự động trừ tiền trong 3 ngày tới (`ExpiringFreeTrials`).
+  3. **Danh Sách Dịch Vụ Thuê Bao:**
+     - Mỗi dịch vụ hiển thị logo nhận diện, tên gói, chu kỳ (Tháng / Quý / Năm), số tiền, ngày gia hạn tiếp theo (`NextBillingDate`).
+     - Nút "Hủy theo dõi / Đã hủy dịch vụ" (`ArchiveSubscriptionCommand`).
+* **Data Context:** [`SubscriptionsViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/SubscriptionsViewModel.cs).
 
-Mọi kết nối dữ liệu đã được mắc nối sẵn sàng. Khi bạn thiết kế:
-1. **Thoải mái sáng tạo giao diện:** Bạn là người làm chủ 100% phần nhìn, trải nghiệm và mỹ thuật của ứng dụng.
-2. **Đối chiếu mỏ neo Binding:** Trước khi xóa một control cũ trong wireframe, hãy nhìn xem nó đang bind thuộc tính hay command nào, sau đó gắn lại đúng tên đó vào control mới của bạn.
-3. Nếu bạn muốn thêm một trường hiển thị mới hoặc muốn đổi cách định dạng dữ liệu, bạn chỉ cần báo nhóm, nhóm sẽ hỗ trợ cập nhật ViewModel hoặc Converter ngay lập tức!
+---
 
-Chúc bạn có một trải nghiệm thiết kế giao diện thật hứng khởi và cùng nhau tạo nên đồ án DuoNoPro xuất sắc nhất! 🚀
+### MÀN HÌNH 08: MÔ PHỎNG KỊCH BẢN TÀI CHÍNH WHAT-IF (WHAT-IF SCENARIOS)
+* **Mục đích:** Cho phép người dùng thử nghiệm các quyết định mua sắm lớn trong tương lai trước khi thực sự tiêu tiền để thấy trước hậu quả.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Khung Nhập Giả Định Mua Sắm:**
+     - Tên món đồ dự kiến mua (`PlannedPurchaseName` - Ví dụ: "Mua iPhone 16 Pro Max", "Đi du lịch Nhật Bản").
+     - Số tiền dự kiến (`PlannedAmount`).
+     - Chọn ngày dự kiến chi tiêu (`PlannedDate`).
+     - Lựa chọn hình thức: Trả thẳng một lần hay Trả góp hàng tháng.
+  2. **Bảng Phân Tích Tác Động Tức Thì (Impact Analysis Results):**
+     - Tác động tới quỹ khẩn cấp: Sẽ làm giảm bao nhiêu tháng sinh tồn?
+     - Tác động tới ngân sách tháng: Có bị âm không?
+     - Đánh giá khả thi: Điểm số an toàn (An toàn / Rủi ro cao / Báo động đỏ).
+  3. **Nút Chuyển Đổi Thành Mục Tiêu Tích Lũy (Convert to Savings Goal):**
+     - Nút 1-chạm "Chuyển thành Mục tiêu Tiết kiệm" (`ConvertToGoalCommand`): Nếu mua ngay lúc này là rủi ro, hệ thống tự động lập kế hoạch mỗi tháng cần để dành bao nhiêu tiền để 6 tháng nữa mua mà không phải gánh nợ.
+* **Data Context:** [`ForecastingViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/ForecastingViewModel.cs).
+
+---
+
+### MÀN HÌNH 09: HỘP THƯ HÀNH ĐỘNG TỰ HÀNH (AUTONOMOUS ACTION INBOX)
+* **Mục đích:** Là nơi tiếp nhận các biến động số dư ngân hàng và đề xuất tài chính tự hành (Jev Protocol).
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Danh Sách Thẻ Hành Động Chờ Duyệt (Inbox Action Cards):**
+     - Mỗi thẻ hiển thị: Nguồn biến động (Logo Vietcombank, Techcombank, MoMo, ACB...), Số tiền biến động (+/-), Tên nơi chi tiêu (Highlands Coffee, Grab, Shopee, Co.opmart), Thời gian.
+     - Danh mục hệ thống tự động phán đoán (Độ tin cậy Confidence score $\ge 85\%$).
+  2. **Thao Tác Duyệt Cực Nhanh (Frictionless Approval):**
+     - Hỗ trợ vuốt sang phải hoặc bấm nút xanh "Duyệt 1-chạm" (`QuickCommitActionCommand`) $\rightarrow$ Giao dịch được lưu ngay vào CSDL, số dư ví tự nhảy.
+     - Hỗ trợ vuốt sang trái hoặc bấm nút đỏ "Bỏ qua" (`DismissActionCommand`).
+  3. **Thanh Thử Nghiệm Mô Phỏng Giả Lập (Simulator Tool):**
+     - Nút thử nghiệm giả lập biến động số dư từ các ngân hàng để người làm giao diện dễ dàng test UI mà không cần tài khoản ngân hàng thật (`SimulateBankNotificationCommand`).
+* **Data Context:** [`ActionInboxViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/Autonomous/ActionInboxViewModel.cs).
+
+---
+
+### MÀN HÌNH 10: QUÉT HÓA ĐƠN & PHIẾU LƯƠNG AI MULTIMODAL (AI VISION SCANNER)
+* **Mục đích:** Nhập liệu rảnh tay bằng cách chụp ảnh hóa đơn siêu thị/nhà hàng hoặc bảng lương.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Khối Chụp / Chọn Ảnh:**
+     - Nút Mở Camera (`CapturePhotoCommand`) và Nút Chọn Từ Thư Viện (`PickPhotoCommand`).
+     - Khung hiển thị ảnh xem trước (`ReceiptImageSource`).
+  2. **Thanh Tiến Trình Xử Lý AI Real-time (OCR Progress Bar):**
+     - Hiển thị thanh tiến trình trực quan từ 0% đến 100% kèm nhãn trạng thái nhận diện thời gian thực qua SignalR WebSocket (`OcrProgressText`: Đang tải ảnh $\rightarrow$ Đang nhận diện văn bản $\rightarrow$ Đang bóc tách từng món đồ).
+  3. **Bảng Đối Soát Dữ Liệu Sau Khi Bóc Tách (Review & Confirm):**
+     - Tên người bán (`MerchantName`).
+     - Ngày mua (`TransactionDate`).
+     - Danh sách từng món hàng đã bóc tách (`ItemsList`): Tên món, số lượng, đơn giá, thành tiền.
+     - Tiền thuế VAT và Tổng tiền cuối cùng (`TotalAmount`).
+     - Nút "Xác nhận lưu giao dịch" (`ConfirmReceiptCommand`).
+* **Data Context:** [`ReceiptOcrViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/ReceiptOcrViewModel.cs).
+
+---
+
+### MÀN HÌNH 11: TRỢ LÝ GIỌNG NÓI THÔNG MINH (AI VOICE ASSISTANT MODAL)
+* **Mục đích:** Thu âm câu lệnh tiếng Việt tự nhiên và tự động trích xuất thành giao dịch chi tiêu hoặc điều hướng ứng dụng.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Nút Mic Động Học & Sóng Âm Thanh (Pulsing Mic & Waveform):**
+     - Nút bấm micro to ở giữa màn hình (`ToggleRecordingCommand`).
+     - Hiệu ứng sóng âm thanh hoặc vòng tròn lan tỏa khi đang lắng nghe (`IsListening`).
+  2. **Khung Văn Bản Nhận Diện (Live Transcript):**
+     - Hiển thị chữ người dùng vừa nói (Ví dụ: "Ăn phở Thìn hết 65 nghìn trả tiền mặt").
+  3. **Khối Kết Quả Phân Tích Ý Định (Intent Result):**
+     - Ý định nhận diện được: Ghi chép chi tiêu / Thu nhập / Mở báo cáo.
+     - Các thực thể trích xuất: Số tiền (65.000đ), Danh mục (Ăn uống), Ví (Tiền mặt).
+     - Nút "Xác nhận tạo ngay" (`ConfirmVoiceTransactionCommand`).
+* **Data Context:** [`VoiceFloatingMicViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/AiAgent/VoiceFloatingMicViewModel.cs).
+
+---
+
+### MÀN HÌNH 12: ĐĂNG NHẬP, ĐĂNG KÝ & QUICKLOGIN SINH TRẮC HỌC (AUTH & BIOMETRICS)
+* **Mục đích:** Bảo vệ an toàn dữ liệu tài chính của người dùng với cơ chế đăng nhập nhanh hiện đại.
+* **Các Thành Phần Cần Có (Components Required):**
+  1. **Đăng Nhập Chuẩn (Standard Login):** Email, Mật khẩu, nút Đăng nhập (`LoginCommand`), Đăng nhập Google SSO (`GoogleLoginCommand`), Quên mật khẩu (`ForgotPasswordCommand`).
+  2. **Đăng Ký Tài Khoản:** Họ tên, Email, Mật khẩu, Xác nhận mã OTP 6 số gửi qua Email (`VerifyOtpCommand`).
+  3. **Màn Hình Đăng Nhập Nhanh (QuickLogin Page):**
+     - Hiển thị ảnh đại diện và lời chào cá nhân: "Chào mừng bạn trở lại, Nguyễn Văn A!".
+     - Bàn phím số nhập mã PIN 6 số tiện lợi.
+     - Nút quét Vân tay / Nhận diện khuôn mặt (FaceID / Fingerprint) để mở khóa tức thì 0 giây (`AuthenticateBiometricsCommand`).
+* **Data Context:** [`QuickLoginViewModel`](file:///mobile-project/dotnet-maui-ver/frontend/ExpenseTracker.Maui/ViewModels/QuickLoginViewModel.cs).
+
+---
+
+## 5. TỔNG KẾT BẢNG ÁNH XẠ XAML VIEWS VÀ VIEWMODELS
+
+Khi bạn thiết kế lại các file trong thư mục `Views/`, hãy tham chiếu bảng này để biết View nào gắn với ViewModel nào:
+
+| Tên Màn Hình (.xaml) | ViewModel Tương Ứng | Vai Trò Chính |
+| :--- | :--- | :--- |
+| `DashboardPage.xaml` | `DashboardViewModel` | Trang chủ, tổng quan tài chính, thẻ DSA, Nudge |
+| `ExpensesPage.xaml` | `ExpensesViewModel` | Danh sách & Form thêm chi tiêu, chọn danh mục |
+| `IncomesPage.xaml` | `IncomesViewModel` | Danh sách & Form thêm thu nhập định kỳ |
+| `TransactionsPage.xaml` | `TransactionsViewModel` | Sổ cái tra cứu toàn bộ giao dịch, bộ lọc ngày/ví |
+| `WalletsPage.xaml` | `WalletsViewModel` | Quản lý ví, điều chuyển tiền nội bộ giữa các ví |
+| `BudgetsPage.xaml` | `BudgetsViewModel` | Ngân sách chu kỳ, hạn mức danh mục, DSA velocity |
+| `DebtOptimizerPage.xaml` | `DebtOptimizerViewModel` | Quản lý nợ cá nhân, so sánh Snowball vs Avalanche |
+| `EmergencyFundPage.xaml`| `EmergencyFundViewModel` | Vòng cung quỹ khẩn cấp 3-6-12 tháng, Runway |
+| `NetWorthPage.xaml` | `NetWorthViewModel` | Biểu đồ biến động tài sản ròng theo thời gian |
+| `SubscriptionsPage.xaml`| `SubscriptionsViewModel` | Quét bẫy thuê bao định kỳ, cảnh báo dùng thử |
+| `ForecastingPage.xaml` | `ForecastingViewModel` | Dự báo tài chính & Phân tích kịch bản What-If |
+| `ActionInboxView.xaml` | `ActionInboxViewModel` | Hộp thư biến động số dư ngân hàng duyệt 1-chạm |
+| `ReceiptOcrPage.xaml` | `ReceiptOcrViewModel` | Bóc tách hóa đơn siêu thị & phiếu lương AI OCR |
+| `VoiceMicModalPage.xaml`| `VoiceFloatingMicViewModel`| Nút mic trợ lý giọng nói tiếng Việt tự nhiên |
+| `QuickLoginPage.xaml` | `QuickLoginViewModel` | Mở khóa nhanh bằng mã PIN hoặc Vân tay/FaceID |
+| `SettingsPage.xaml` | `SettingsViewModel` | Cài đặt ứng dụng, chọn máy chủ API, đổi mật khẩu |
+
+---
+
+> **Lời Nhắn Nhủ Dành Cho Bạn Thiết Kế:**  
+> Đừng ngần ngại phá vỡ các bố cục cũ nếu bạn có ý tưởng thẩm mỹ tốt hơn! Bạn hoàn toàn làm chủ nghệ thuật, màu sắc và linh hồn thị giác của ứng dụng. Hãy biến ứng dụng tài chính này thành một trải nghiệm mượt mà, cuốn hút và truyền cảm hứng nhất cho người dùng!
