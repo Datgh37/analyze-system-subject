@@ -4967,3 +4967,55 @@ hức kích hoạt Phiên Họp Hội Đồng Toàn Diện (Special AI Council S
      - **Mobile MAUI:** 139 / 139 Tests PASSED (100%).
      - **TỔNG CỘNG HỆ THỐNG: 516 / 516 Tests PASSED 100% (0 Lỗi, 0 Warning)**.
 - **Trạng thái:** COMPLETED, AUDITED & READY FOR GIAI ĐOẠN MỚI 11 (Chiến Dịch Đại Phẫu Thuật Giao Diện UI/UX Remake).
+
+---
+
+## [2026-11-01 20:55] - Quyết Định 201: Hoàn Tất Chiến Lược Diagram-First — Cập Nhật Toàn Diện Sơ Đồ Use Case, Class Diagram & Khởi Tạo Database ERD 3NF
+- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Hội đồng Kỹ thuật (Agent 03 Cockburn BA, Agent 04 Eric Evans DDD, Agent 05 Martin Kleppmann Database).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Áp dụng nguyên tắc **Diagram-First**: Ưu tiên hoàn thiện và chốt toàn bộ sơ đồ thiết kế kỹ thuật trước, báo cáo văn bản (`KhoaLuanTotNghiep.docx`) thực hiện sau cùng để bảo đảm an toàn dữ liệu và tính nhất quán.
+  - Tuyệt đối giữ nguyên vẹn 100% bố cục, tọa độ các phần tử cũ đã được người dùng căn chỉnh trên Draw.io.
+  - Phạm vi môn học PTTKHTTT chỉ dừng lại ở Thiết kế Cơ sở Dữ liệu (Mục 3.5), bỏ qua sơ đồ kiến trúc triển khai mở rộng (Bước 1.4).
+- **Các kết quả thực thi xuất sắc đã hoàn thành:**
+  1. **Cập Nhật Sơ Đồ Use Case ([`files/UCD-DuoNoPro.drawio`](../files/UCD-DuoNoPro.drawio)):**
+     - Đã tạo bản sao lưu an toàn `files/UCD-DuoNoPro.bak_pre_ai_update.drawio`.
+     - *Tab 3 (Chi Tiêu & OCR):* Thêm Use Case `UC-03.12: Tự động phát hiện biến động số dư qua Thông báo Android` (pos: 340, 840) và Actor `Hệ thống Thông báo Ngân hàng (Banking Notification Provider)` (pos: 1590, 900) cùng các đường liên kết liên quan tại khu vực trống phía dưới, giữ nguyên vẹn các node cũ.
+     - *Tab 7 (Báo Cáo & Phân Tích):* Thêm Use Case `UC-07.06: Nhập khẩu dữ liệu tài chính đa nguồn Hybrid` (pos: 740, 340) và Actor `Trợ lý AI Thông minh (Intelligent AI Agent)` (pos: 1380, 320) cùng các đường liên kết vào khoảng trống giữa dòng 2.
+  2. **Cập Nhật Sơ Đồ Lớp ([`files/ClassDiagram.drawio`](../files/ClassDiagram.drawio)):**
+     - Đã tạo bản sao lưu an toàn `files/ClassDiagram.bak_pre_ai_update.drawio`.
+     - Xác nhận các thực thể `Subscription`, `SalarySlipDetail`, `DebtAccount`, `DebtPaymentPlan` đã tồn tại nguyên vẹn.
+     - Bổ sung 2 Service Interfaces: `IBankNotificationParserService` (pos: 80, 1650) và `IHybridDataImportService` (pos: 80, 1810) trong `bc_transactions` tại vị trí trống hoàn toàn, không chạm vào bất kỳ lớp nào khác.
+  3. **Khởi Tạo Mới Sơ Đồ Cơ Sở Dữ Liệu ERD 3NF ([`files/DatabaseERD.drawio`](../files/DatabaseERD.drawio)):**
+     - Thiết kế mới toàn diện 22 bảng thực thể CSDL PostgreSQL chuẩn 3NF (Khóa chính PK, Khóa ngoại FK, kiểu dữ liệu chuẩn, quan hệ 1..N Crow's Foot rõ ràng) phân bổ thành 5 cụm logic với kích thước 3800 x 2600 px thoáng đãng, sắc nét, sẵn sàng phục vụ Mục 3.5 của Khóa luận.
+  4. **Kiểm Toán An Toàn Văn Bản:** Tệp [`files/KhoaLuanTotNghiep.docx`](../files/KhoaLuanTotNghiep.docx) được bảo vệ tuyệt đối, không can thiệp.
+- **Trạng thái:** `COMPLETED & LOCKED (100% DIAGRAM-FIRST STRATEGY DELIVERED)`.
+
+---
+
+## [2026-11-01 21:18] - Quyết Định 202: Tái Cấu Trúc Bố Cục & Phân Luồng Đi Dây Không Chồng Chéo Sơ Đồ Database ERD 3NF (Zero-Collision Wiring Architecture)
+- **Người chủ trì:** Martin Kleppmann (Agent 05 - Universal Database Lead) cùng Council Orchestrator (Agent 00).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Người dùng đã nghiệm thu và duyệt 2 file iles/UCD-DuoNoPro.drawio và iles/ClassDiagram.drawio.
+  - Riêng với iles/DatabaseERD.drawio, các đường mũi tên ban đầu bị chồng lấn tại cùng một tọa độ (stacked arrows), gây khó theo dõi quan hệ giữa các thực thể. Yêu cầu bố cục và đi dây lại toàn diện để dễ nhìn, rành mạch và trực quan.
+- **Giải Pháp & Kết Quả Kỹ Thuật Đạt Được:**
+  1. **Kiến Trúc Bố Cục 5 Cột Nghiệp Vụ Chuẩn Hóa (5-Column Domain Separation):**
+     - **Cột 1 (X: 80 - 410):** *Người dùng & Ví tiền cốt lõi* (users, wallets, wallet_transfers, alance_adjustments, 
+et_worth_snapshots, InAppNotifications).
+     - **Cột 2 (X: 520 - 860):** *Danh mục & Dịch vụ định kỳ* (categories, uto_categorization_rules, subscriptions, 
+ecurring_incomes, CoolingOffTransactions).
+     - **Cột 3 (X: 980 - 1340):** *Sổ cái Giao dịch & Bóc tách Hóa đơn* (	ransactions, salary_slip_details, 
+eceipt_items, FinancialNudges).
+     - **Cột 4 (X: 1470 - 1820):** *Hạn mức Ngân sách & Trợ lý DSA* (udgets, udget_allocations, daily_spending_allowances).
+     - **Cột 5 (X: 1950 - 2310):** *Nợ Cá nhân & Mục tiêu Tích lũy* (debts, debt_transactions, savings_goals, savings_goal_contributions).
+  2. **Kỹ Thuật Đi Dây Độc Lập Không Chồng Lấn (Zero-Collision Orthogonal Wiring):**
+     - **Đại lộ liên tỉnh trên đỉnh (Top Interstate Highways):** Các liên kết đi xuyên qua nhiều cột từ users sang udgets, debts, savings_goals được đưa ra từ đỉnh bảng users (exitY=0.0) tại các cổng phân tách (exitX=0.5, 0.6, 0.7) và chạy trên 3 cao độ riêng biệt (=105, 90, 75$) phía trên các bảng, loại bỏ 100% việc cắt ngang thân bảng hoặc đè lên nhau.
+     - **Hành lang biên trái (Left Gutters):** Các liên kết dọc từ users xuống 
+et_worth_snapshots và InAppNotifications chạy theo 2 hành lang riêng tại =30$ và =15$.
+     - **Hành lang liên cột (Inter-column Gutters):** Các liên kết giữa Cột 1 $	o$ Cột 2 $	o$ Cột 3 có các kênh tọa độ $ và $ độc lập (=420, 440, 460, 470, 940, 1370$).
+     - **Phân tách cổng kết nối (Port Offset Separation):** Mỗi đường dây sở hữu cặp exitPort và entryPort với tỉ lệ phần trăm riêng biệt, không có 2 đường dây nào dùng chung một điểm cắm.
+     - **Nhãn hiển thị nổi bật:** Mọi đường liên kết đều gắn nhãn Crow's Foot tiêu chuẩn (1 : N, 1 : 1) với khung thẻ nền trắng viền xám (labelBackgroundColor=#ffffff, labelBorderColor=#cbd5e1), đảm bảo chữ luôn nổi rõ và không bị thân dây cắt ngang.
+  3. **Kết Quả Kiểm Toán:**
+     - 22 bảng thực thể CSDL chuẩn 3NF + 1 Top Banner hướng dẫn.
+     - 25 mối quan hệ ràng buộc khóa ngoại (0 quan hệ bị gãy/broken).
+     - Không gian canvas rộng rãi: 3000 x 2200 px.
+- **Trạng thái:** COMPLETED & DELIVERED FOR USER VERIFICATION.

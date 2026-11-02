@@ -337,7 +337,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="diag_ucd03" name="UCD 03 - Chi Tiêu &amp; OCR">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1800" pageHeight="1050" math="0" shadow="0">
+    <mxGraphModel dx="1710" dy="1071" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1050" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -345,16 +345,16 @@
           <mxGeometry height="120" width="60" x="60" y="450" as="geometry" />
         </mxCell>
         <mxCell id="t3_ocr" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;" value="&lt;b&gt;Dịch vụ AI Đa phương thức&lt;/b&gt;&lt;br&gt;&lt;i&gt;(AI Multimodal Service)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="120" width="60" x="1590" y="200" as="geometry" />
+          <mxGeometry height="120" width="60" x="1600" y="195" as="geometry" />
         </mxCell>
         <mxCell id="t3_notify" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;" value="&lt;b&gt;Dịch vụ Thông báo &amp;amp; Cảnh báo&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Notification Service)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="120" width="60" x="1590" y="490" as="geometry" />
+          <mxGeometry height="120" width="60" x="1600" y="430" as="geometry" />
         </mxCell>
         <mxCell id="t3_vietqr" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;" value="&lt;b&gt;VietQR Gateway&lt;/b&gt;&lt;br&gt;(NAPAS 247)" vertex="1">
-          <mxGeometry height="120" width="60" x="1590" y="750" as="geometry" />
+          <mxGeometry height="120" width="60" x="1600" y="640" as="geometry" />
         </mxCell>
         <mxCell id="t3_bound" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=1;arcSize=3;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;startSize=35;fillColor=#f8f9fa;fontColor=#1a252f;strokeColor=#4a6b82;strokeWidth=2;dashed=1;" value="PHÂN HỆ QUẢN LÝ CHI TIÊU &amp;amp; BÓC TÁCH HÓA ĐƠN AI (UC-03)" vertex="1">
-          <mxGeometry height="960" width="1350" x="180" y="40" as="geometry" />
+          <mxGeometry height="960" width="1330" x="180" y="40" as="geometry" />
         </mxCell>
         <mxCell id="t3_uc01" parent="t3_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f4ecf7;strokeColor=#8e44ad;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-03.01:&lt;/b&gt; Thêm khoản chi tiêu thủ công&lt;br&gt;&lt;i&gt;(Khấu trừ số dư ví thanh toán)&lt;/i&gt;" vertex="1">
           <mxGeometry height="75" width="340" x="60" y="100" as="geometry" />
@@ -388,6 +388,9 @@
         </mxCell>
         <mxCell id="t3_uc11" parent="t3_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ebdef0;strokeColor=#8e44ad;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=13;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-03.11:&lt;/b&gt; Ghi nhận chi tiêu nhanh bằng khẩu lệnh giọng nói&lt;br&gt;&lt;i&gt;(Voice Command Expense Logging)&lt;/i&gt;" vertex="1">
           <mxGeometry height="75" width="340" x="380" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_uc12" parent="t3_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ebdef0;strokeColor=#8e44ad;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-03.12:&lt;/b&gt; Tự động phát hiện biến động số dư qua &lt;br&gt;Thông báo Android&lt;br&gt;&lt;i&gt;(Notification Listener)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="440" x="160" y="820" as="geometry" />
         </mxCell>
         <mxCell id="e3_t3_uc01" edge="1" parent="1" source="t3_user" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=15;" target="t3_uc01">
           <mxGeometry relative="1" as="geometry" />
@@ -442,6 +445,17 @@
         </mxCell>
         <mxCell id="t3_edge_ocr_uc11" edge="1" parent="1" source="t3_uc11" style="endArrow=none;html=1;strokeColor=#9673a6;strokeWidth=1.5;edgeStyle=entityRelationEdgeStyle;rounded=0;" target="t3_ocr">
           <mxGeometry relative="1" x="-0.0004" as="geometry" />
+        </mxCell>
+        <mxCell id="t3_bank_notif" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;" value="&lt;b&gt;Hệ thống Thông báo Ngân hàng&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Banking Notification Provider)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="120" width="60" x="1600" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="e3_t3_uc12_user" edge="1" parent="1" source="t3_user" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;fontSize=15;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t3_uc12" value="">
+          <mxGeometry relative="1" x="0.2702" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3_t3_uc12_bank" edge="1" parent="1" source="t3_bank_notif" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;fontSize=15;" target="t3_uc12" value="">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
@@ -561,7 +575,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="diag_ucd06" name="UCD 06 - Tích Lũy &amp; Nợ">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1700" pageHeight="1050" math="0" shadow="0">
+    <mxGraphModel dx="2067" dy="1294" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1050" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -627,7 +641,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="diag_ucd07" name="UCD 07 - Phân Tích Báo Cáo">
-    <mxGraphModel dx="1691" dy="1012" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="950" math="0" shadow="0">
+    <mxGraphModel dx="1510" dy="1244" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="950" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -641,16 +655,19 @@
           <mxGeometry height="75" width="390" x="80" y="120" as="geometry" />
         </mxCell>
         <mxCell id="t7_uc02" parent="t7_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#27ae60;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.02:&lt;/b&gt; Báo cáo Giá trị Tài sản ròng (Net Worth)&lt;br&gt;&lt;i&gt;(Net Worth = Tổng số dư ví - Tổng dư nợ)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="80" width="430" x="580" y="120" as="geometry" />
+          <mxGeometry height="80" width="430" x="530" y="90" as="geometry" />
         </mxCell>
         <mxCell id="t7_uc03" parent="t7_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f8f5;strokeColor=#27ae60;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.03:&lt;/b&gt; Báo cáo Dòng tiền ròng (Net Cashflow)&lt;br&gt;&lt;i&gt;(Đo lường Net Cashflow &amp;amp; Tỷ lệ tiết kiệm)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="80" width="430" x="240" y="340" as="geometry" />
+          <mxGeometry height="80" width="430" x="560" y="210" as="geometry" />
         </mxCell>
         <mxCell id="t7_uc04" parent="t7_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5eef8;strokeColor=#8e44ad;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.04:&lt;/b&gt; Phân tích cơ cấu danh mục chi tiêu&lt;br&gt;&lt;i&gt;(Biểu đồ Donut Kakeibo / 50-30-20)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="80" width="430" x="580" y="460" as="geometry" />
+          <mxGeometry height="80" width="430" x="440" y="482" as="geometry" />
         </mxCell>
         <mxCell id="t7_uc05" parent="t7_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fadbd8;strokeColor=#c0392b;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.05:&lt;/b&gt; Phân tích xu hướng &amp;amp; Biến động bất thường&lt;br&gt;&lt;i&gt;(Phát hiện các khoản chi đột biến)&lt;/i&gt;" vertex="1">
-          <mxGeometry height="80" width="430" x="330" y="580" as="geometry" />
+          <mxGeometry height="80" width="430" x="280" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_uc06" parent="t7_bound" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f4f8;strokeColor=#2980b9;strokeWidth=1.8;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;fontColor=#2c3e50;" value="&lt;b&gt;UC-07.06:&lt;/b&gt; Nhập khẩu dữ liệu tài chính đa nguồn Hybrid&lt;br&gt;&lt;i&gt;(Excel/CSV &amp;amp; Unstructured Text/Note AI)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="440" x="460" y="348" as="geometry" />
         </mxCell>
         <mxCell id="e7_t7_uc01" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;fontSize=15;" target="t7_uc01">
           <mxGeometry relative="1" as="geometry" />
@@ -665,6 +682,15 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e7_t7_uc05" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;fontSize=15;" target="t7_uc05">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t7_ai_agent" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontFamily=Segoe UI, Arial, sans-serif;fontSize=15;fontStyle=1;" value="&lt;b&gt;Trợ lý AI Thông minh&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Intelligent AI Agent)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="120" width="60" x="1360" y="370.5" as="geometry" />
+        </mxCell>
+        <mxCell id="e7_t7_uc06_user" edge="1" parent="1" source="t7_user" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;fontSize=15;" target="t7_uc06" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7_t7_uc06_ai" edge="1" parent="1" source="t7_ai_agent" style="endArrow=none;html=1;strokeWidth=1.5;rounded=0;strokeColor=#4a6b82;fontSize=15;" target="t7_uc06" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>

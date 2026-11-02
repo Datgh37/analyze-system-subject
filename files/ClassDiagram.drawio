@@ -1,7 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="Antigravity PFM Council">
   <diagram id="diag_pfm_class_diagram" name="PFM Master Class Diagram">
-    <mxGraphModel dx="2044" dy="1223" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4600" pageHeight="3400" math="0" shadow="0">
+    <mxGraphModel dx="5865" dy="3653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4600" pageHeight="3400" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -226,6 +225,18 @@
         </mxCell>
         <mxCell id="SalarySlipDetail_methods" parent="SalarySlipDetail" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;borderTop=1;strokeColor=#16a34a;" value="+ calculateTotalDeductions(): Money&lt;br&gt;+ verifyNetIncomeMath(): bool&lt;br&gt;+ getGrossSalary(): Money" vertex="1">
           <mxGeometry height="90" width="560" y="362" as="geometry" />
+        </mxCell>
+        <mxCell id="IBankNotificationParserService" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#0284c7;fillColor=#e0f2fe;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Interface»&lt;br&gt;IBankNotificationParserService&lt;/b&gt;&lt;/center&gt;" vertex="1">
+          <mxGeometry height="130" width="580" x="80" y="1650" as="geometry" />
+        </mxCell>
+        <mxCell id="IBankNotificationParserService_methods" parent="IBankNotificationParserService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;" value="+ parseNotification(pkg: string, title: string, content: string): ParsedBankTransactionDto" vertex="1">
+          <mxGeometry height="78" width="580" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="IHybridDataImportService" parent="bc_transactions" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=52;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=1;shadow=1;strokeWidth=2;strokeColor=#0284c7;fillColor=#e0f2fe;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=19;" value="&lt;center&gt;&lt;b&gt;«Interface»&lt;br&gt;IHybridDataImportService&lt;/b&gt;&lt;/center&gt;" vertex="1">
+          <mxGeometry height="150" width="580" x="80" y="1810" as="geometry" />
+        </mxCell>
+        <mxCell id="IHybridDataImportService_methods" parent="IHybridDataImportService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;fontSize=19;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#0f172a;" value="+ importFromSpreadsheetAsync(stream: Stream, format: string): Task&amp;lt;ImportResultDto&amp;gt;&lt;br&gt;+ importFromUnstructuredTextAsync(text: string): Task&amp;lt;ImportResultDto&amp;gt;" vertex="1">
+          <mxGeometry height="98" width="580" y="52" as="geometry" />
         </mxCell>
         <mxCell id="bc_debt_goals" parent="1" style="swimlane;html=1;startSize=44;strokeWidth=2.2;strokeColor=#d8b4fe;fillColor=#faf5ff;fontSize=19;fontStyle=1;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontColor=#7e22ce;align=left;spacingLeft=16;rounded=1;collapsible=0;arcSize=8;" value="5. Personal Debt &amp;amp; Financial Goals Context (Snowball vs Avalanche)" vertex="1">
           <mxGeometry height="2480" width="1660" x="2860" y="1030" as="geometry" />
@@ -661,10 +672,10 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="comp_salary_slip" edge="1" parent="1" source="Receipt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=diamond;startFill=1;endArrow=none;endFill=0;strokeColor=#16a34a;strokeWidth=2;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=16;fontColor=#1e293b;" target="SalarySlipDetail" value="«composition» 0..1" exitX="1" exitY="0.7" entryX="0" entryY="0.3">
+        <mxCell id="comp_salary_slip" edge="1" entryX="0" entryY="0.3" exitX="1" exitY="0.7" parent="1" source="Receipt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=diamond;startFill=1;endArrow=none;endFill=0;strokeColor=#16a34a;strokeWidth=2;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=16;fontColor=#1e293b;" target="SalarySlipDetail" value="«composition» 0..1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="assoc_income_salary" edge="1" parent="1" source="IncomeTransaction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;dashed=1;endFill=0;strokeColor=#475569;strokeWidth=2;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=16;fontColor=#1e293b;" target="SalarySlipDetail" value="extractedFrom" exitX="0.8" exitY="1" entryX="0.2" entryY="0">
+        <mxCell id="assoc_income_salary" edge="1" entryX="0.2" entryY="0" exitX="0.8" exitY="1" parent="1" source="IncomeTransaction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;dashed=1;endFill=0;strokeColor=#475569;strokeWidth=2;fontFamily=Segoe UI, Helvetica, Arial, sans-serif;fontSize=16;fontColor=#1e293b;" target="SalarySlipDetail" value="extractedFrom">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
