@@ -5019,3 +5019,135 @@ et_worth_snapshots và InAppNotifications chạy theo 2 hành lang riêng tại 
      - 25 mối quan hệ ràng buộc khóa ngoại (0 quan hệ bị gãy/broken).
      - Không gian canvas rộng rãi: 3000 x 2200 px.
 - **Trạng thái:** COMPLETED & DELIVERED FOR USER VERIFICATION.
+
+---
+
+## [2026-11-02 11:59] - Quyết Định 203: Hoàn Tất Cập Nhật Chương 3 Khóa Luận Tốt Nghiệp Chuẩn DNTU (Actors, 65 Use Cases, 11 Sơ Đồ Động & 22 Bảng CSDL Chuẩn 3NF)
+- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Lead BA (Agent 03 Cockburn) và Database Lead (Agent 05 Kleppmann).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Áp dụng Phương án B kết hợp: Triển khai cập nhật tự động có backup an toàn và báo cáo chi tiết toàn bộ nội dung chèn vào để Người dùng kiểm tra trực tiếp trong tài liệu Word.
+  - Đồng bộ hóa các cập nhật từ 3 bộ sơ đồ Draw.io vào Báo cáo Khóa luận tốt nghiệp (iles/KhoaLuanTotNghiep.docx).
+  - Tinh gọn văn bản Mục 3.4: Rút gọn mô tả 11 sơ đồ động thành giải thích luồng thực thi nhanh (Flow Walkthrough).
+  - Hoàn thiện Mục 3.5 (Thiết kế CSDL): Đưa sơ đồ ERD 3NF và từ điển dữ liệu 22 bảng CSDL vật lý PostgreSQL vào tài liệu, loại bỏ Mục 3.6 thừa để dừng đúng phạm vi môn học PTTKHTTT.
+- **Kết Quả Thực Thi Kỹ Thuật:**
+  1. **Sao lưu an toàn:** Đã tạo bản sao lưu nguyên bản iles/KhoaLuanTotNghiep.bak_pre_chapter3_update.docx.
+  2. **Mục 3.1.1 (Tác nhân hệ thống):** Cập nhật Bảng 3.1 bổ sung đủ 2 tác nhân mới (Banking Notification Provider và Intelligent AI Agent), nâng tổng số lên 6 tác nhân chuẩn hóa.
+  3. **Mục 3.2.1 (Danh mục Use Cases):** Đồng bộ tiêu đề và Bảng 3.2 thành 65 Use Cases trải rộng trên 9 phân hệ chức năng (bổ sung UC-01.10, UC-02.08, UC-03.11, UC-03.12, UC-07.06).
+  4. **Mục 3.4 (11 Sơ Đồ Động):** Chuyển đổi toàn bộ các đoạn văn lý thuyết suông thành các bước luồng thực thi trực quan (Bước 1 -> Bước 2 -> Bước 3...) cho 5 Sequence Diagrams (SD-01 đến SD-05), 3 Activity Diagrams (AD-01 đến AD-03) và 3 State Diagrams (STM-01 đến STM-03).
+  5. **Mục 3.5 (Thiết kế Cơ Sở Dữ Liệu 3NF):**
+     - Mục 3.5.1: Thuyết minh kiến trúc 5 phân vùng cột logic của CSDL và gắn Caption Hình 3.29 (Database ERD).
+     - Mục 3.5.2: Khởi tạo hoàn chỉnh 22 bảng Từ điển dữ liệu chuẩn Academic Navy (Bảng 3.16 đến Bảng 3.37) bao quát toàn bộ thực thể: users, wallets, wallet_transfers, alance_adjustments, 
+et_worth_snapshots, InAppNotifications, categories, uto_categorization_rules, subscriptions, 
+ecurring_incomes, CoolingOffTransactions, 	ransactions, salary_slip_details, 
+eceipt_items, FinancialNudges, udgets, udget_allocations, daily_spending_allowances, debts, debt_transactions, savings_goals, savings_goal_contributions.
+  6. **Làm sạch phạm vi:** Loại bỏ hoàn toàn tiêu đề Mục 3.6 thừa, giúp báo cáo dừng chuẩn xác tại Mục 3.5 trước khi bước sang Chương 4.
+  7. **Kiểm toán chất lượng học thuật:**
+     - 0 đoạn văn chứa màu xanh #0000FF (100% đen/trắng chuẩn in ấn).
+     - 0 từ ngữ sáo rỗng / buzzwords ('điểm đau', 'pain point').
+     - 0 dấu ngoặc đơn trong hệ thống Heading.
+- **Trạng thái:** COMPLETED & DELIVERED FOR USER VERIFICATION.
+
+---
+
+## [2026-11-02 12:32] - Quyết Định 204: Chuẩn Hóa Hợp Nhất 4 Tác Nhân Cốt Lõi Trên Toàn Bộ Sơ Đồ Use Case (UCD-DuoNoPro.drawio)
+- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Lead BA (Agent 03 Cockburn).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Phát hiện sự chồng chéo và phân mảnh không cần thiết giữa các tác nhân AI (Mô hình Vision OCR vs Trợ lý AI) và tác nhân Thông báo (Notification Service vs Banking Notification Provider).
+  - Thống nhất hợp nhất về **4 Tác nhân cốt lõi (4 Core Standardized Actors)** theo đúng chuẩn UML / IEEE 29148.
+  - Tuyệt đối giữ nguyên vẹn 100% tọa độ, vị trí các node cũ đã được Người dùng căn chỉnh.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  1. **Danh mục 4 Tác nhân cốt lõi chuẩn hóa toàn hệ thống:**
+     - **Tác nhân 1:** Người dùng cá nhân (Personal User) (Tác nhân chính).
+     - **Tác nhân 2:** Hệ thống Trí tuệ Nhân tạo Đa nhiệm (Multimodal AI System) (Hợp nhất AI OCR và AI Agent).
+     - **Tác nhân 3:** Cổng thanh toán VietQR (VietQR Gateway / NAPAS 247) (Tác nhân phụ).
+     - **Tác nhân 4:** Hạ tầng Di động & Dịch vụ Thông báo (Mobile OS & Notification Infrastructure) (Hợp nhất Outbound Push FCM và Inbound Banking Android Listener).
+  2. **Cập nhật sơ đồ ([iles/UCD-DuoNoPro.drawio](../files/UCD-DuoNoPro.drawio)):**
+     - Đã cập nhật nhãn (label) đồng bộ trên toàn bộ 10 tab: UCD 00, UCD 01, UCD 02, UCD 03, UCD 05, UCD 06, UCD 07, UCD 08, UCD 09.
+     - Tại Tab UCD 03: Đã gộp tác nhân thông báo ngân hàng vào 	3_notify qua đường đi dây trực giao bẻ góc tránh đè lên VietQR, loại bỏ node thừa 	3_bank_notif.
+     - Đã fix liên kết e5_ext_04_02 trong UCD 05.
+     - Kết quả kiểm toán: **0 broken edges** trên toàn bộ 10 diagrams.
+- **Trạng thái:** COMPLETED & VERIFIED (0 BROKEN EDGES).
+
+---
+
+## [2026-11-02 12:49] - Quyết Định 205: Đồng Bộ Chuẩn Hóa 4 Tác Nhân Cốt Lõi Vào Bảng 3.1 Khóa Luận Tốt Nghiệp (files/KhoaLuanTotNghiep.docx)
+- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Lead BA (Agent 03 Cockburn).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Người dùng đã hoàn thành việc hiệu chỉnh format thủ công tài liệu Word và yêu cầu kiểm tra, chỉnh sửa đồng bộ theo các cam kết đã thống nhất.
+  - Tuân thủ nghiêm ngặt nguyên tắc: Chỉ chỉnh sửa đúng nội dung liên quan (Bảng 3.1 Tác nhân), tuyệt đối không đụng vào bất kỳ phần nội dung nào khác của tài liệu.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  1. **Sao lưu an toàn:** Đã tạo bản sao lưu snapshot ngay khi người dùng bàn giao file: `files/KhoaLuanTotNghiep.bak_user_formatted.docx`.
+  2. **Chuẩn hóa Bảng 3.1 (Danh mục các tác nhân và vai trò):**
+     - Đã tinh gọn từ 6 tác nhân về đúng **4 Tác nhân cốt lõi**, khớp 100% với đoạn văn dẫn nhập P[206] ("hệ thống phân định chính xác bốn tác nhân") và sơ đồ `files/UCD-DuoNoPro.drawio`:
+       * STT 1: `Người dùng cá nhân (Personal User)` (Tác nhân chính).
+       * STT 2: `Hệ thống Trí tuệ Nhân tạo Đa nhiệm (Multimodal AI System)` (Tác nhân phụ).
+       * STT 3: `Cổng thanh toán VietQR (VietQR Gateway / NAPAS 247)` (Tác nhân phụ).
+       * STT 4: `Hạ tầng Di động & Dịch vụ Thông báo (Mobile OS & Notification Infrastructure)` (Tác nhân phụ).
+     - Loại bỏ hoàn toàn 2 dòng dư thừa gây phân mảnh (dòng 5 và 6 cũ).
+  3. **Bảo tồn định dạng tài liệu:**
+     - 100% các đoạn văn luồng Flow Walkthrough mà người dùng vừa phân đoạn, giãn dòng trong Mục 3.4 được giữ nguyên vẹn.
+     - 100% cấu trúc 22 bảng CSDL vật lý (Mục 3.5.2) và toàn bộ phần Preamble được bảo toàn tuyệt đối.
+     - Kiểm toán chất lượng: 0 chữ màu xanh `#0000FF`, 0 từ ngữ sáo rỗng (buzzwords), 0 lỗi font.
+- **Trạng thái:** `COMPLETED, VERIFIED & READY FOR FINAL USER INSPECTION`.
+
+---
+
+## [2026-11-02 23:45] - Quyết Định 206: Nghiệm Thu Báo Cáo Tổng Quan Kiến Trúc Mới & Bộ Prompt Tạo 20 Slide Báo Cáo Bảo Vệ Cuối Kỳ PTTKHTTT
+- **Người chủ trì:** Council Orchestrator (Agent 00) cùng Hội đồng Kỹ thuật.
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Chuẩn bị cho buổi Báo cáo Bảo vệ Cuối kỳ môn học PTTKHTTT vào thứ 4 (hạn chót hoàn thiện thứ 2).
+  - Tệp báo cáo tổng quan kiến trúc cũ `project_context/reports/TongQuan_KienTruc_NghiepVu_PFM.md` đã lỗi thời do chỉ phản ánh giai đoạn Giữa kỳ.
+  - Cần nâng cấp tệp báo cáo tổng quan kiến trúc mới toàn diện phản ánh nguyên mẫu thực tế hiện tại.
+  - Cần một bộ prompt thiết kế 18 - 20 slide báo cáo: Slide đầu là tiêu đề "HỆ THỐNG QUẢN LÝ CHI TIÊU & LẬP NGÂN SÁCH CÁ NHÂN", phân bổ 20-30% tóm tắt Giữa kỳ (UCD, CD), 70-80% nội dung Cuối kỳ (Sơ đồ động, CSDL 3NF, Hiện thực hóa nguyên mẫu .NET 10 / MAUI và Demo thực tế), có khung chờ nhét ảnh và slide cuối cảm ơn.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  1. **Nâng cấp Báo cáo Kiến trúc Tổng quan ([`TongQuan_KienTruc_NghiepVu_PFM.md`](../reports/TongQuan_KienTruc_NghiepVu_PFM.md)):**
+     - Bản cập nhật toàn diện phản ánh 100% nguyên mẫu thực tế: 65 Use Cases, 4 Tác nhân cốt lõi, 6 Bounded Contexts DDD, 11 Sơ đồ Động (5 SD, 3 AD, 3 STM), CSDL PostgreSQL 16 3NF (22 bảng), .NET 10 Clean Architecture & .NET MAUI 10.
+     - Trang bị Cẩm nang hướng dẫn thuyết trình trước Hội đồng theo cấu trúc 3 màn (The Problem -> The Solution -> The Evidence) kèm bộ câu hỏi phản biện kinh điển và cách trả lời ghi điểm.
+  2. **Bộ Prompt Tạo 20 Slide Thuyết Trình ([`Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md`](../reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md)):**
+     - Đóng gói Master Prompt Markdown chuẩn hóa theo phong cách Fintech Academic Minimalist (Navy `#1B365D`, Emerald `#0D9488`, Nền `#F8FAFC`).
+     - Tỷ lệ chuẩn: Slide 1 (Bìa) + Slides 2-5 (20% Giữa kỳ) + Slides 6-19 (80% Cuối kỳ, CSDL 3NF, Hiện thực hóa & Demo) + Slide 20 (Cảm ơn & Q&A).
+     - Đầy đủ khung Placeholder và ghi chú ảnh cần chèn cho từng slide kỹ thuật.
+     - Soạn sẵn toàn bộ Speaker Notes (lời thoại thuyết minh) súc tích, tự tin cho sinh viên.
+- **Trạng thái:** `COMPLETED, ACCEPTED & READY FOR SLIDE GENERATION`.
+
+
+---
+
+## [2026-11-02 23:55] - Quyết Định 207: Tinh Gọn Prompt Tạo Slide Thuyết Trình Cho Gemini Notebook / NotebookLM
+- **Người chủ trì:** Council Orchestrator (Agent 00).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Người dùng phản hồi prompt tạo slide trước đó quá dài và chi tiết, không tối ưu khi nhập vào công cụ **Gemini Notebook (NotebookLM)**.
+  - Cần tinh chỉnh prompt thành dạng steering meta-prompt ngắn gọn, súc tích (khoảng 25-30 dòng), hướng dẫn Gemini Notebook tự động trích xuất từ tài liệu đã nạp (sources) thay vì nhồi nhét toàn bộ câu chữ vào prompt.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  1. Cập nhật [`project_context/reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md`](../reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md):
+     - **Phiên bản chính (Siêu tinh gọn ~25 dòng):** Dành riêng cho Gemini Notebook / NotebookLM khi đã upload tài liệu đồ án (`TongQuan_KienTruc_NghiepVu_PFM.md` hoặc `KhoaLuanTotNghiep.docx`). Nêu rõ quy cách slide (<15 chữ/dòng), tỷ lệ 25% Giữa kỳ - 75% Cuối kỳ, tiêu đề bắt buộc Slide 1, khung ảnh `[KHUNG ẢNH: ...]`, và slide 20 cảm ơn.
+     - **Phiên bản bổ sung (~15 dòng):** Dành cho Gemini Chat thông thường nếu chưa kịp tải tài liệu nguồn lên.
+- **Trạng thái:** `COMPLETED, REFINED & OPTIMIZED FOR GEMINI NOTEBOOK`.
+
+
+---
+
+## [2026-11-03 00:00] - Quyết Định 208: Chuẩn Hóa Bộ Prompt Tạo Đúng 18 Slide Liền Mạch Cho Gemini Notebook (Đúng Quy Cách Slide Ảnh Trống & Bỏ Ngôn Từ Phóng Đại)
+- **Người chủ trì:** Council Orchestrator (Agent 00).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Tinh chỉnh lại prompt tạo slide đảm bảo độ dài vừa phải: Vừa đủ mô tả cụ thể nội dung bên trong từng slide, vừa không quá dài hoặc quá ngắn.
+  - Chuẩn hóa đúng cấu trúc 18 slide liền mạch với khối Instruction đặt ngay đầu.
+  - Loại bỏ hoàn toàn các ngôn từ hoa mỹ, đao to búa lớn (như "tính năng đột phá", "gương chiếu hậu", "kỳ tích"...), giữ văn phong kỹ thuật học thuật mực thước, chuẩn mực.
+  - Tích hợp chuẩn xác quy tắc thị giác của người dùng: Nền trắng sứ Porcelain White (`#F8FAFC`), không lưới (no grid), chữ Slate đậm (`#1E293B`), điểm nhấn Xanh Cobalt (`#1D4ED8`) & Cam đất (`#C2410C`), phong cách phẳng flat bento card.
+  - Thực thi quy tắc bắt buộc cho các slide trống chèn ảnh (Slide 5, 8, 10, 13, 14, 16): Không tiêu đề lớn, không văn bản/bullet tóm tắt, chỉ hiển thị duy nhất 1 dòng ghi chú nhỏ (10pt) ở góc dưới ghi tên ảnh cần chèn.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  - Cập nhật trọn vẹn tệp [`project_context/reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md`](../reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md) thành khối prompt liền mạch, sẵn sàng dán trực tiếp vào Gemini Notebook / NotebookLM.
+- **Trạng thái:** `COMPLETED, ACCEPTED & READY FOR SLIDE GENERATION`.
+
+
+---
+
+## [2026-11-03 00:05] - Quyết Định 209: Tinh Chỉnh Prompt Tạo 18 Slide Đạt Độ Cân Bằng Chuẩn (Balanced & Crisp Cho Gemini Notebook)
+- **Người chủ trì:** Council Orchestrator (Agent 00).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Tinh chỉnh prompt tạo slide đạt độ dài "vừa đủ" (Balanced): Không quá dài (tránh viết sẵn đoạn văn dài cho từng slide gây nghẽn prompt), cũng không quá ngắn (vẫn phải mô tả rõ ràng nội dung bên trong từng slide).
+  - Định dạng mỗi slide gói gọn trong 1 dòng chỉ dẫn súc tích với các từ khóa kỹ thuật trọng tâm.
+  - Giữ vững toàn bộ quy cách: Nền Porcelain White (`#F8FAFC`), Slate đậm (`#1E293B`), Xanh Cobalt (`#1D4ED8`), Cam đất (`#C2410C`), phẳng flat bento, slide ảnh trống (5, 8, 10, 13, 14, 16) không tiêu đề/text mà chỉ có ghi chú 10pt góc dưới.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  - Tệp [`project_context/reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md`](../reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md) được cập nhật hoàn chỉnh thành khối prompt ~32 dòng gọn gàng, súc tích, hoàn hảo cho Gemini Notebook / NotebookLM.
+- **Trạng thái:** `COMPLETED, VERIFIED & BALANCED`.

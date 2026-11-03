@@ -1,295 +1,240 @@
-# TỔNG QUAN KIẾN TRÚC, ĐẶC TẢ NGHIỆP VỤ VÀ ĐIỂM MỚI HỆ THỐNG
+# BÁO CÁO TỔNG QUAN KIẾN TRÚC HỆ THỐNG, ĐẶC TẢ NGHIỆP VỤ & NGUYÊN MẪU HOÀN THIỆN
 ## HỆ THỐNG QUẢN LÝ CHI TIÊU VÀ HOẠCH ĐỊNH TÀI CHÍNH CÁ NHÂN THÔNG MINH (TÍCH HỢP TRÍ TUỆ NHÂN TẠO - AI)
 *(Smart Personal Expense and Financial Planning Management System with AI Integration)*
 
 ---
 
-## MỤC LỤC TỔNG QUAN
-1. **Tầm nhìn & Sứ mệnh Đề tài (Vision & Mission)**
-2. **Điểm mới Đột phá & Đối chiếu Khoảng trống Nghiên cứu so với Thị trường**
-3. **Thuyết minh Văn xuôi Toàn diện 10 Sơ đồ Use Case (UCD 00 – UCD 09)**
-   - 3.0 Sơ đồ Use Case Tổng thể (UCD 00)
-   - 3.1 Phân hệ Quản lý Tài khoản & Đa Ví cá nhân (UCD 01)
-   - 3.2 Phân hệ Quản lý Thu nhập cá nhân (UCD 02)
-   - 3.3 Phân hệ Chi tiêu & Bóc tách Hóa đơn AI OCR (UCD 03)
-   - 3.4 Phân hệ Hoạch định Ngân sách Đa phương pháp & DSA (UCD 04)
-   - 3.5 Phân hệ Quản lý Hóa đơn định kỳ & Dịch vụ Đăng ký (UCD 05)
-   - 3.6 Phân hệ Quỹ tích lũy & Tối ưu hóa Nghĩa vụ Nợ cá nhân (UCD 06)
-   - 3.7 Phân hệ Báo cáo & Phân tích Tài chính Đa chiều (UCD 07)
-   - 3.8 Phân hệ Dự báo Tài chính & Cảnh báo Thâm hụt (UCD 08)
-   - 3.9 Phân hệ Cú hích Hành vi & Hỗ trợ Quyết định Thaler (UCD 09)
-4. **Thuyết minh Văn xuôi Chuyên sâu 6 Bounded Contexts của Class Diagram**
-   - 4.1 Bounded Context 1: Định danh & Hồ sơ cá nhân (Identity & Profile Context)
-   - 4.2 Bounded Context 2: Tài khoản & Đa ví cá nhân chuẩn ACID (Account & Multi-Wallet Context)
-   - 4.3 Bounded Context 3: Giao dịch, AI Vision OCR & Danh mục (Transactions, AI OCR & Categories Context)
-   - 4.4 Bounded Context 4: Ngân sách Đa phương pháp & DSA (Budgeting & Adaptive DSA Context)
-   - 4.5 Bounded Context 5: Quỹ tích lũy & Tối ưu hóa Nợ cá nhân (Personal Debt & Financial Goals Context)
-   - 4.6 Bounded Context 6: Cú hích Hành vi & Hỗ trợ Quyết định Thaler (Decision Support & Behavioral Nudge Context)
-   - 4.7 Đồ thị Tương tác & Luồng Dữ liệu Luân chuyển giữa 6 Bounded Contexts
-5. **Tổng kết & Khuyến nghị Thuyết trình Trước Hội đồng**
+> **Tài liệu Báo cáo Tổng quan Kiến trúc Toàn diện (System Architecture & Blueprint Summary)**  
+> **Phiên bản:** 3.0 (Cập nhật sau khi hoàn thiện toàn bộ Nguyên mẫu Thực tế & Sơ đồ Thiết kế Kỹ thuật)  
+> **Phạm vi đồ án:** Phân tích Thiết kế Hệ thống Thông tin (PTTKHTTT) & Khóa luận Tốt nghiệp Cử nhân CNTT/HTTT.
 
 ---
 
-## 1. TẦM NHÌN & SỨ MỆNH ĐỀ TÀI (VISION & MISSION)
+## MỤC LỤC TỔNG QUAN
 
-### 1.1 Bản chất Cốt lõi: 100% Tài chính Cá nhân Độc lập
-Hệ thống được thiết kế với một triết lý bất biến: **Tập trung tuyệt đối 100% vào bài toán Tài chính Cá nhân độc lập (Personal Finance Management - PFM)**. Hệ thống kiên quyết loại bỏ hoàn toàn các chức năng chia tiền nhóm bạn bè, quỹ chung phòng trọ hay đối soát nợ tập thể phức tạp. Lý do học thuật và thực tiễn cho quyết định này bắt nguồn từ bản chất tâm lý con người:
-- Quản lý tài chính cá nhân là một không gian riêng tư tối mật, đòi hỏi sự an toàn và trung thực tuyệt đối giữa người dùng và dữ liệu của chính họ.
-- Việc tích hợp các tính năng xã hội hóa (social finance) thường làm phân tán trải nghiệm, gây nhiễu loạn luồng phân tích dòng tiền và tạo ra rào cản tâm lý e ngại khi người dùng không muốn phơi bày thói quen chi tiêu thực tế.
-- Tập trung trọn vẹn tài nguyên kiến trúc vào cá nhân giúp hệ thống đi sâu vào việc giải quyết các bài toán gốc rễ: rèn luyện kỷ luật dòng tiền, tái định hình hành vi tiêu dùng và xây dựng sự tự do tài chính bền vững cho từng người dùng.
+1. [Tầm nhìn, Sứ mệnh & Bản chất Cốt lõi 100% Tài chính Cá nhân Độc lập](#1-tầm-nhìn-sứ-mệnh--bản-chất-cốt-lõi-100-tài-chính-cá-nhân-độc-lập)
+2. [Điểm mới Đột phá & Đối chiếu Khoảng trống Nghiên cứu so với Thị trường](#2-điểm-mới-đột-phá--đối-chiếu-khoảng-trống-nghiên-cứu-so-với-thị-trường)
+3. [Mô hình hóa Use Case Toàn diện (65 Use Cases & 4 Tác nhân Cốt lõi)](#3-mô-hình-hóa-use-case-toàn-diện-65-use-cases--4-tác-nhân-cốt-lõi)
+4. [Kiến trúc Hướng miền Domain-Driven Design (DDD) & Class Diagram (6 Bounded Contexts)](#4-kiến-trúc-hướng-miền-domain-driven-design-ddd--class-diagram-6-bounded-contexts)
+5. [Thiết kế Mô hình Động & Tương tác Hệ thống (11 Sơ đồ Động)](#5-thiết-kế-mô-hình-động--tương-tác-hệ-thống-11-sơ-đồ-động)
+6. [Thiết kế Cơ sở Dữ liệu Quan hệ 3NF (PostgreSQL 16 ACID)](#6-thiết-kế-cơ-sở-dữ-liệu-quan-hệ-3nf-postgresql-16-acid)
+7. [Kiến trúc Hiện thực hóa Nguyên mẫu & Kết quả Kiểm thử Thực tế](#7-kiến-trúc-hiện-thực-hóa-nguyên-mẫu--kết-quả-kiểm-thử-thực-tế)
+8. [Cẩm nang Hướng dẫn Thuyết trình & Bảo vệ Trước Hội đồng Phản biện](#8-cẩm-nang-hướng-dẫn-thuyết-trình--bảo-vệ-trước-hội-đồng-phản-biện)
+
+---
+
+## 1. TẦM NHÌN, SỨ MỆNH & BẢN CHẤT CỐT LÕI 100% TÀI CHÍNH CÁ NHÂN ĐỘC LẬP
+
+### 1.1 Triết lý 100% Personal Finance Management (PFM)
+Hệ thống kiên quyết theo đuổi nguyên tắc thiết kế bất biến: **Tập trung tuyệt đối 100% vào bài toán Tài chính Cá nhân Độc lập**, loại bỏ hoàn toàn các chức năng chia tiền nhóm, quỹ phòng trọ hay đối soát nợ tập thể. Quyết định kiến trúc này dựa trên 3 nền tảng thực tiễn:
+- **Tôn trọng sự riêng tư tối mật:** Quản lý tiền bạc cá nhân là không gian tế nhị. Người dùng chỉ trung thực ghi chép khi họ biết chắc chắn dữ liệu không bị ai phán xét hoặc dòm ngó.
+- **Triệt tiêu nhiễu loạn phân tích:** Việc gộp chi tiêu bạn bè, người yêu vào sổ sách cá nhân làm biến dạng hoàn toàn đường cong tiêu dùng thực tế, khiến các thuật toán phân tích hạn mức ngày (DSA) và dự phóng thâm hụt mất độ chính xác.
+- **Giải quyết bài toán gốc rễ:** Tập trung nguồn lực xử lý bài toán tâm lý chi tiêu bốc đồng, rèn luyện kỷ luật dòng tiền và hỗ trợ người dùng đạt được sự an tâm tài chính lâu dài.
 
 ### 1.2 Sự Chuyển dịch Mô hình: Từ Ghi chép Thụ động sang Hỗ trợ Quyết định Chủ động
-Đa số các công cụ truyền thống (sổ tay, file Excel, ứng dụng thế hệ cũ) vận hành theo cơ chế **Kế toán Ghi chép Thụ động (Passive Bookkeeping)**: chúng đóng vai trò như một chiếc gương chiếu hậu chỉ phản ánh những gì tiền bạc đã ra đi trong quá khứ. Người dùng ghi chép xong chỉ nhận lại một con số tổng kết khô khan, hoàn toàn bất lực trước câu hỏi: *"Ngày mai tôi được phép tiêu bao nhiêu tiền để không bị rỗng túi vào cuối tháng?"* hay *"Với cơ cấu nợ hiện tại, tôi nên trả khoản nào trước để tiết kiệm tiền lãi nhất?"*.
-
-Hệ thống của đề tài tạo nên một cuộc cách mạng chuyển dịch sang mô hình **Hệ thống Hỗ trợ Quyết định Tài chính Chủ động (Proactive Financial Decision Support System)**:
-- Không chỉ ghi chép, hệ thống đóng vai trò như một chuyên gia tài chính số (Digital Financial Coach) cá nhân hóa bên cạnh người dùng 24/7.
-- Tự động hóa khâu thu thập dữ liệu bằng trí tuệ nhân tạo thị giác để triệt tiêu ma sát thao tác.
-- Liên tục đo lường tốc độ chi tiêu theo thời gian thực và tự động tính toán lại hạn mức chi tiêu hàng ngày có thể thích ứng.
-- Đưa ra các cú hích tâm lý phi cưỡng chế đúng thời điểm nhằm ngăn chặn các quyết định mua sắm bốc đồng trước khi tiền thực sự rời khỏi ví.
+- **Mô hình cũ (Passive Bookkeeping):** Các ứng dụng thế hệ trước chỉ là "chiếc gương chiếu hậu" thụ động ghi nhận những gì tiền bạc đã mất đi trong quá khứ, thông báo số dư khô khan và chỉ báo đỏ khi tiền đã cạn kiệt.
+- **Mô hình mới (Proactive Decision Support System):** Hệ thống của đề tài đóng vai trò như một **Trợ lý Tài chính Số (Digital Financial Coach)** hoạt động liên tục 24/7:
+  * Thu thập dữ liệu rảnh tay (Zero-Mental Friction): Lắng nghe thông báo biến động số dư ngân hàng qua Android Native Service, bóc tách hóa đơn AI OCR đa món, và ghi chép bằng khẩu lệnh giọng nói.
+  * Tự động tính toán Hạn mức chi tiêu mỗi ngày thích ứng (ADSA): Trả lời chính xác câu hỏi *"Hôm nay tôi được phép tiêu bao nhiêu tiền để cuối tháng không bị rỗng túi?"*.
+  * Can thiệp tâm lý bằng Cú hích hành vi Thaler Nudge: Tự động kích hoạt Khoảng trễ tâm lý (Cooling-off Period 24h) đối với các khoản mua sắm bốc đồng trước khi tiền thực sự rời khỏi ví.
 
 ---
 
-## 2. ĐIỂM MỚI ĐỘT PHÁ & ĐỐI CHIẾU VỚI CÁC ỨNG DỤNG TRÊN THỊ TRƯỜNG
+## 2. ĐIỂM MỚI ĐỘT PHÁ & ĐỐI CHIẾU KHOẢNG TRỐNG NGHIÊN CỨU SO VỚI THỊ TRƯỜNG
 
-Khi phân tích các ứng dụng quản lý chi tiêu phổ biến hiện nay như **Money Lover, Spendee, Money Manager**, đề tài đã nhận diện được 4 khoảng trống nghiên cứu và giải quyết triệt để bằng 4 trụ cột công nghệ đột phá:
-
-| Trụ Cột / Tiêu Chí | Các Ứng Dụng Thị Trường (Money Lover, Spendee...) | Hệ Thống PFM Thông Minh Tích Hợp AI (Đề tài) | Giá Trị Thực Tiễn & Tính Đột Phá |
+| Trụ Cột / Tiêu Chí | Các Ứng Dụng Thị Trường (Money Lover, Spendee...) | Hệ Thống PFM Tích Hợp AI (Đề tài) | Giá Trị Thực Tiễn & Tính Đột Phá |
 | :--- | :--- | :--- | :--- |
-| **1. Công nghệ Bóc tách Hóa đơn** | Nhập liệu thủ công từng dòng hoặc OCR ký tự quang học thô (OCR regex), dễ sai sót số học, không đối soát logic. | Pipeline Multimodal AI Vision (Gemini / GPT-4o) kết hợp Thuật toán Hậu kiểm toán số học (Mathematical Audit Algorithm). | Tự động hóa phân tách từng dòng mặt hàng, tự đối soát: $\sum(\text{SL} \times \text{ĐG}) + \text{VAT} = \text{Tổng tiền}$. Phát hiện sai lệch và tự điều chỉnh, đạt độ chính xác >90%. |
-| **2. Cơ chế Hoạch định Ngân sách** | Ngân sách tĩnh cứng nhắc (cố định số tiền theo tháng). Nếu lỡ tiêu lố đầu tháng, hệ thống chỉ báo đỏ thụ động, gây nản lòng và bỏ cuộc. | Động cơ Hạn mức Chi tiêu Mỗi ngày Thích ứng (Adaptive Daily Spending Allowance - DSA). | Tự động tính toán lại số tiền được phép tiêu hôm nay dựa trên số ngày còn lại và tốc độ tiêu tiền thực tế (Spending Velocity). Tự động tái cân bằng linh hoạt, bảo đảm không bao giờ vỡ nợ cuối chu kỳ. |
-| **3. Quản trị & Giải phóng Nghĩa vụ Nợ** | Chỉ cho ghi chép nợ đơn giản như một giao dịch thu/chi, không có công cụ tính lãi, không có chiến lược trả nợ. | Động cơ Tối ưu hóa Nghĩa vụ Nợ & Đồ thị Dòng tiền (Debt Snowball vs. Debt Avalanche Solver). | Đồ thị hóa danh mục nợ, thuật toán tự động mô phỏng và đối kháng 2 chiến lược: Quả cầu tuyết (Snowball - trả nợ nhỏ trước lấy động lực) vs Tuyết lở (Avalanche - trả lãi cao trước tiết kiệm tiền). Ưu tiên bảo vệ Quỹ khẩn cấp 3-6 tháng. |
-| **4. Can thiệp Tâm lý Hành vi** | Thông báo đẩy khô khan, nhắc nhở ghi sổ định kỳ, không tác động được đến căn nguyên tâm lý bốc đồng. | Động cơ Cú hích Hành vi Tài chính (Behavioral Nudge Engine) dựa trên Lý thuyết Nobel Richard Thaler. | Áp dụng Kiến trúc lựa chọn phi cưỡng chế, kích hoạt Khoảng trễ tâm lý (Cooling-off Period 24h-48h) cho các khoản chi bốc đồng/xa xỉ, tái định vị Tài khoản tâm lý (Mental Accounting) giúp người dùng thấy rõ cái giá cơ hội trước khi mua. |
-| **5. Tính Toàn vẹn Dữ liệu & Đa Ví** | Số dư ảo, cho phép ghi đè tùy tiện, thao tác chuyển ví không có khóa an toàn, dễ sai lệch số dư thực tế. | Kiến trúc Đa Ví chuẩn ngân hàng với Giao dịch ACID và Khóa bi quan (Pessimistic Locking). | Mọi biến động nạp, rút, chuyển ví nội bộ được bao bọc trong transaction CSDL 3NF, bảo đảm số dư tiền mặt, ngân hàng và hạn mức thẻ tín dụng luôn khớp 100% với thực tế đời sống. |
+| **1. Tự động hóa Nhập liệu** | Nhập tay từng khoản hoặc OCR ký tự thô regex, tỷ lệ lỗi cao, không đối soát số học, ma sát thao tác lớn. | Pipeline Multimodal AI Vision (Gemini 2.5 Flash) kết hợp Thuật toán Hậu kiểm toán số học $\Delta = 0$ và Android Notification Listener tự động. | Nhận diện từng món hàng trên hóa đơn, tự đối soát: $\sum(\text{SL} \times \text{ĐG}) + \text{VAT} = \text{Tổng tiền}$. Tự động nhận diện biến động số dư từ 9 ngân hàng Việt Nam 0ms. |
+| **2. Cơ chế Hoạch định Ngân sách** | Ngân sách tĩnh cứng nhắc theo tháng. Khi chi vượt mức đầu tháng, app chỉ đổi màu đỏ thụ động gây chán nản. | Động cơ Hạn mức Chi tiêu Mỗi ngày Thích ứng (Adaptive Daily Spending Allowance - ADSA). | Liên tục co giãn hạn mức ngày dựa trên số ngày còn lại trong kỳ và Tốc độ tiêu tiền thực tế (Spending Velocity Index). Giúp người dùng tái cân đối êm ái mà không vỡ ngân sách. |
+| **3. Quản trị & Giải phóng Nợ** | Ghi chép nợ đơn giản như một giao dịch thu/chi, không có công cụ tính lãi, không có lộ trình trả nợ. | Động cơ Tối ưu hóa Nợ Cá nhân: So sánh đối kháng Debt Snowball vs Debt Avalanche Solver. | Mô phỏng chính xác lộ trình trả nợ: Snowball (trả nợ nhỏ trước lấy động lực) vs Avalanche (trả lãi cao trước tiết kiệm tiền). Ưu tiên bảo vệ Quỹ khẩn cấp 3 - 6 tháng sinh hoạt. |
+| **4. Can thiệp Tâm lý Hành vi** | Thông báo đẩy khô khan, nhắc nhở ghi sổ định kỳ, không tác động được vào tâm lý bốc đồng lúc mua sắm. | Động cơ Cú hích Hành vi Tài chính (Thaler Behavioral Nudge) & Khoảng trễ tâm lý (Cooling-off Period 24h - 48h). | Áp dụng Kiến trúc lựa chọn phi cưỡng chế: Tạm khóa khoản chi xa xỉ trong 24h, quy đổi giá trị món hàng thành số giờ lao động thực tế, giúp người dùng suy ngẫm lý trí. |
+| **5. Tính Toàn vẹn Dữ liệu Đa Ví** | Số dư ảo, cho phép sửa tùy tiện, chuyển ví không có khóa an toàn, dễ sai lệch số dư thực tế. | Kiến trúc Đa Ví chuẩn ngân hàng với Giao dịch ACID và Khóa bi quan (Pessimistic Locking). | Mọi biến động nạp, rút, chuyển ví nội bộ được bao bọc trong transaction CSDL PostgreSQL 3NF, bảo đảm tính toàn vẹn 100% khớp thực tế đời sống. |
 
 ---
 
-## 3. THUYẾT MINH VĂN XUÔI TOÀN DIỆN 10 SƠ ĐỒ USE CASE (UCD 00 – UCD 09)
+## 3. MÔ HÌNH HÓA USE CASE TOÀN DIỆN (65 USE CASES & 4 TÁC NHÂN CỐT LÕI)
 
-Hệ thống được mô hình hóa thành 10 bản vẽ Use Case độc lập chuẩn quốc tế, bao quát 60 ca sử dụng chi tiết phục vụ 1 tác nhân chính là Người dùng cá nhân (Personal User) và tương tác với 4 hệ thống dịch vụ ngoại vi độc lập:
+### 3.1 Chuẩn Hóa 4 Tác Nhân Cốt Lõi Hệ Thống (Core Actors)
+Theo chuẩn phân tích hướng đối tượng UML (Alistair Cockburn & IEEE 29148), hệ thống chuẩn hóa về **đúng 4 tác nhân cốt lõi**, loại bỏ sự phân mảnh kỹ thuật:
+1. **Người dùng cá nhân (Personal User)** *(Tác nhân chính - Primary Human Actor):* Chủ sở hữu dữ liệu tài chính, trực tiếp khởi tạo ví, lập ngân sách, xác nhận giao dịch và kích hoạt kế hoạch tài chính.
+2. **Hệ thống Trí tuệ Nhân tạo Đa nhiệm (Multimodal AI System)** *(Tác nhân phụ - Secondary System Actor):* Nền tảng AI ngoại vi (Google Gemini 2.5 Flash / NLP Whisper) cung cấp năng lực nhận thức thông minh: OCR hóa đơn, bóc tách phiếu lương, nhận diện giọng nói tự nhiên, phân tích xu hướng và giải trình thuật toán minh bạch (Explainable AI).
+3. **Cổng thanh toán VietQR (VietQR Gateway / NAPAS 247)** *(Tác nhân phụ - Secondary System Actor):* Dịch vụ cổng thanh toán quốc gia mã hóa thông tin giao dịch thành chuỗi mã QR chuẩn EMVCo Merchant-Presented Mode phục vụ thanh toán không tiền mặt.
+4. **Hạ tầng Di động & Dịch vụ Thông báo (Mobile OS & Notification Infrastructure)** *(Tác nhân phụ - Secondary System Actor):* Kênh tương tác hai chiều với thiết bị di động:
+   * *Chiều vào (Inbound):* Android `NotificationListenerService` bắt sự kiện biến động số dư từ các app ngân hàng (ACB, MoMo, VCB, TCB, MBBank...).
+   * *Chiều ra (Outbound):* Đẩy các cảnh báo vi mô (Micro-alerts), nhắc nợ và phát tín hiệu Cú hích hành vi Nudge qua Firebase Cloud Messaging (FCM).
 
-### 3.0 Sơ đồ Use Case Tổng thể (UCD 00)
-- **Bản chất nghiệp vụ:** Bản vẽ cung cấp tầm nhìn toàn cảnh về ranh giới hệ thống (System Boundary). Trung tâm là Người dùng cá nhân (Personal User) – người nắm toàn quyền sở hữu và quyết định dữ liệu tài chính của mình. Hệ thống tương tác với 4 tác nhân ngoài (External Services) gồm: Dịch vụ Thị giác AI OCR (AI Vision Service), Dịch vụ Khuyến nghị AI (AI Recommendation Service), Cổng thanh toán VietQR (VietQR Payment Gateway) và Dịch vụ Thông báo đa kênh (Notification Service).
-- **Hành vi tương tác:** 9 phân hệ chức năng xoay quanh Người dùng được phân rã rành mạch: từ hạ tầng tài khoản ví (UCD 01), quản lý hai dòng tiền vào - ra (UCD 02, UCD 03), hoạch định ngân sách thích ứng (UCD 04), kiểm soát cam kết định kỳ (UCD 05), đến các phân hệ chiến lược cấp cao như tích lũy & trả nợ (UCD 06), phân tích báo cáo (UCD 07), dự báo rủi ro (UCD 08) và trợ lý cú hích tâm lý (UCD 09).
+### 3.2 Danh Mục 65 Use Cases Phân Bổ Qua 9 Phân Hệ Chức Năng
 
----
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│               TỔNG THỂ 65 USE CASES THEO 9 PHÂN HỆ NGHIỆP VỤ           │
+├────────────────────────────────────────────────────────────────────────┤
+│ PH1: Quản lý Tài khoản & Đa Ví (10 UCs)   [UC-01.01 -> UC-01.10]       │
+│ PH2: Quản lý Thu nhập Cá nhân (8 UCs)     [UC-02.01 -> UC-02.08]       │
+│ PH3: Chi tiêu & Bóc tách AI OCR (12 UCs)  [UC-03.01 -> UC-03.12]       │
+│ PH4: Danh mục Thu Chi & Quy tắc (7 UCs)   [UC-04.01 -> UC-04.07]       │
+│ PH5: Ngân sách & Hạn mức DSA (6 UCs)      [UC-05.01 -> UC-05.06]       │
+│ PH6: Quỹ Tích lũy & Quản trị Nợ (7 UCs)   [UC-06.01 -> UC-06.07]       │
+│ PH7: Báo cáo & Phân tích Đa chiều (6 UCs) [UC-07.01 -> UC-07.06]       │
+│ PH8: Dự báo Tài chính & Rủi ro (4 UCs)    [UC-08.01 -> UC-08.04]       │
+│ PH9: Cú hích Hành vi Thaler Nudge (5 UCs) [UC-09.01 -> UC-09.05]       │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
-### 3.1 Phân hệ Quản lý Tài khoản & Đa Ví cá nhân (UCD 01)
-- **Bản chất nghiệp vụ:** Thiết lập nền tảng tài sản thực tế của người dùng. Một người hiện đại không bao giờ chỉ có một chiếc ví duy nhất; họ sở hữu ví tiền mặt trong túi, tài khoản thanh toán tại ngân hàng, thẻ tín dụng với hạn mức tiêu trước trả sau và các ví điện tử mua sắm.
-- **Hành vi tương tác:**
-  - Người dùng thực hiện Khởi tạo cấu trúc đa ví tài sản (`UC-01`). Khi người dùng tạo một ví thẻ tín dụng (`UC-02`), hệ thống yêu cầu thiết lập hạn mức tín dụng và ngày chốt sao kê để kích hoạt cơ chế giám sát nợ quay vòng.
-  - Nghiệp vụ trọng tâm là Chuyển tiền nội bộ giữa các ví (`UC-04`). Hành vi này tự động bao hàm (`<<include>>`) việc Khóa bi quan bản ghi số dư hai ví nguồn và đích nhằm bảo đảm tính toàn vẹn ACID: tiền trừ ở ví này bắt buộc phải cộng tương ứng vào ví kia trong cùng một đơn vị giao dịch.
-  - Định kỳ, người dùng thực hiện Kiểm kê và điều chỉnh số dư thực tế (`UC-05`). Khi có chênh lệch giữa tiền thực đếm và số liệu trên app, hệ thống kích hoạt quan hệ mở rộng (`<<extend>>`) Ghi nhận giao dịch điều chỉnh số dư kèm lý do rõ ràng, ngăn chặn việc sửa số liệu tùy tiện làm mất vết kiểm toán.
-
----
-
-### 3.2 Phân hệ Quản lý Thu nhập cá nhân (UCD 02)
-- **Bản chất nghiệp vụ:** Quản lý và điều phối các dòng tiền đi vào hệ thống tài chính cá nhân, phân biệt rành mạch giữa thu nhập định kỳ và thu nhập đột xuất.
-- **Hành vi tương tác:**
-  - Người dùng thực hiện Ghi nhận thu nhập chủ động (`UC-07` - lương cứng, tiền công) và Thu nhập thụ động (`UC-08` - tiền lãi tiết kiệm, cổ tức).
-  - Khi có một khoản tiền lớn bất thường đổ về (thưởng quý, quà biếu, bán đồ cũ), người dùng ghi nhận Thu nhập bất thường (`UC-09`). Hành động này sẽ mở rộng (`<<extend>>`) kích hoạt Cú hích điều hướng thu nhập bất thường Thaler Nudge (`UC-12`). Thay vì để người dùng rơi vào cạm bẫy tâm lý "tiền từ trên trời rơi xuống nên thoải mái tiêu xài", hệ thống lập tức xuất hiện thông điệp đề xuất trích ngay 50-70% khoản này vào Quỹ khẩn cấp hoặc dồn vào Lịch trả nợ trước khi phân bổ vào ví chi tiêu hàng ngày.
-
----
-
-### 3.3 Phân hệ Chi tiêu & Bóc tách Hóa đơn AI OCR (UCD 03)
-- **Bản chất nghiệp vụ:** Phân hệ được sử dụng thường xuyên nhất, giải quyết triệt để rào cản lười ghi chép bằng công nghệ thị giác trí tuệ nhân tạo.
-- **Hành vi tương tác:**
-  - Người dùng có thể Ghi chép chi tiêu thủ công (`UC-13`) hoặc sử dụng tính năng đột phá: Chụp ảnh bóc tách hóa đơn bằng AI Vision OCR (`UC-14`).
-  - Khi chụp ảnh hóa đơn, hệ thống gửi ảnh đến Dịch vụ AI đa phương thức xử lý bất đồng bộ (HTTP 202 Accepted). Quá trình bóc tách tự động bao hàm (`<<include>>`) việc Bóc tách chi tiết từng dòng mặt hàng (`UC-15`) và Hậu kiểm toán số học hóa đơn (`UC-16`). Thuật toán chạy ngầm đối soát phương trình kế toán. Nếu phát hiện hóa đơn bị mờ hoặc số học không cân bằng, hệ thống sẽ mở rộng (`<<extend>>`) yêu cầu Người dùng xác nhận điều chỉnh thủ công trước khi phê duyệt.
-  - Khi giao dịch hoàn tất, hệ thống tự động gắn thẻ cây danh mục (`UC-17`), đồng thời mở rộng kích hoạt (`<<extend>>`) việc Cập nhật và tính toán lại Hạn mức chi tiêu ngày DSA (`UC-18`) ở phân hệ ngân sách.
-
----
-
-### 3.4 Phân hệ Hoạch định Ngân sách Đa phương pháp & DSA (UCD 04)
-- **Bản chất nghiệp vụ:** Chuyển hóa các nguyên lý tài chính kinh điển thành công cụ điều hành dòng tiền linh hoạt hàng ngày.
-- **Hành vi tương tác:**
-  - Người dùng Thiết lập kế hoạch ngân sách chu kỳ (`UC-19`), tự do lựa chọn giữa các trường phái: Quy tắc 50/30/20 (50% Thiết yếu, 30% Linh hoạt, 20% Tích lũy), Ngân sách Cân bằng Zero-Based Budgeting (mỗi đồng tiền đều có nhiệm vụ), hoặc Sổ tay Kakeibo 4 phong bì của Nhật Bản (`UC-20`).
-  - Điểm sáng tạo độc quyền của hệ thống là Theo dõi Hạn mức chi tiêu mỗi ngày thích ứng DSA (`UC-22`). Mỗi buổi sáng, màn hình chính hiển thị con số DSA: *"Hôm nay bạn được tiêu tối đa 250.000 VNĐ"*. Nếu hôm nay người dùng chỉ tiêu 150.000 VNĐ, 100.000 VNĐ còn lại được thuật toán tự động tái phân bổ làm tăng nhẹ hạn mức của các ngày tiếp theo. Ngược lại, nếu lỡ tiêu 350.000 VNĐ, hạn mức các ngày sau sẽ tự động co lại một cách êm ái mà không phá vỡ ngân sách tổng của cả tháng.
-  - Khi tốc độ chi tiêu vượt ngưỡng an toàn, hệ thống mở rộng (`<<extend>>`) Cảnh báo thâm hụt và kích hoạt chế độ chi tiêu thắt chặt khẩn cấp (`UC-24`).
+* **Các điểm mới bổ sung then chốt:**
+  * `UC-01.10`: Đối soát số dư ví qua ảnh chụp màn hình ngân hàng (Balance Screenshot OCR).
+  * `UC-02.08`: Bóc tách phiếu lương tự động bằng AI Vision OCR (Automated Payslip OCR Parsing).
+  * `UC-03.11`: Ghi nhận chi tiêu nhanh bằng khẩu lệnh giọng nói (Voice-to-Expense).
+  * `UC-03.12`: Tự động phát hiện biến động số dư qua Thông báo Android (`NotificationListenerService`).
+  * `UC-07.06`: Nhập khẩu dữ liệu tài chính đa nguồn Hybrid (Excel/CSV & Unstructured Note AI).
 
 ---
 
-### 3.5 Phân hệ Quản lý Hóa đơn định kỳ & Dịch vụ Đăng ký (UCD 05)
-- **Bản chất nghiệp vụ:** Ngăn chặn "căn bệnh rò rỉ dòng tiền" do người dùng vô tình đăng ký các dịch vụ gia hạn tự động (Netflix, Spotify, iCloud, gói cước 4G, phí phòng gym) rồi lãng quên.
-- **Hành vi tương tác:**
-  - Người dùng Thiết lập danh mục dịch vụ đăng ký định kỳ (`UC-25`), nhập chu kỳ thanh toán và tài khoản ví trích nợ.
-  - Hệ thống tự động kích hoạt Lịch theo dõi và nhắc hẹn trước kỳ hạn 3 ngày (`UC-27`) thông qua Dịch vụ Thông báo.
-  - Đối với các hóa đơn thanh toán điện thoại, điện nước, hệ thống tích hợp sinh mã thanh toán chuẩn VietQR chuyển khoản nhanh (`UC-29`), tự động điền sẵn số tiền và nội dung chuyển khoản để người dùng quét mã thanh toán trong 3 giây.
-  - Định kỳ cuối tháng, hệ thống mở rộng (`<<extend>>`) cung cấp Báo cáo kiểm toán chi phí ẩn và đề xuất hủy dịch vụ không sử dụng (`UC-30`), giúp người dùng cắt tỉa các khoản chi lãng phí.
+## 4. KIẾN TRÚC HƯỚNG MIỀN DOMAIN-DRIVEN DESIGN (DDD) & CLASS DIAGRAM (6 BOUNDED CONTEXTS)
 
----
-
-### 3.6 Phân hệ Quỹ tích lũy & Tối ưu hóa Nghĩa vụ Nợ cá nhân (UCD 06)
-- **Bản chất nghiệp vụ:** Xây dựng bệ đỡ tài chính vững chắc bằng cách tích hợp quản lý mục tiêu tiết kiệm và lộ trình giải phóng nợ vay cá nhân.
-- **Hành vi tương tác:**
-  - Người dùng Khởi tạo Mục tiêu tích lũy tài sản (`UC-31`). Hệ thống bắt buộc ưu tiên Thiết lập Quỹ dự phòng khẩn cấp (`UC-32`) với nguyên tắc bất biến: phải tích lũy tối thiểu bằng 3 đến 6 tháng sinh hoạt phí cơ bản trước khi nghĩ đến đầu tư mạo hiểm.
-  - Đối với bài toán nợ vay, người dùng Khởi tạo hồ sơ danh mục nợ cá nhân (`UC-34` - thẻ tín dụng, nợ trả góp, vay người thân).
-  - Phân hệ trang bị công cụ cực kỳ mạnh mẽ: Mô phỏng và Đối sánh chiến lược trả nợ Snowball vs. Avalanche (`UC-36`). Hệ thống tự động vẽ ra hai con đường: Con đường Quả cầu tuyết giúp người dùng dập tắt nhanh các món nợ nhỏ để lấy chiến thắng tâm lý; Con đường Tuyết lở giúp dồn lực trả món nợ lãi suất cao nhất để tiết kiệm tối đa tiền lãi. Sau khi người dùng chọn con đường phù hợp, hệ thống tự động lập Lịch trình thanh toán chi tiết (`UC-37`) và giám sát thực hiện.
-
----
-
-### 3.7 Phân hệ Báo cáo & Phân tích Tài chính Đa chiều (UCD 07)
-- **Bản chất nghiệp vụ:** Trực quan hóa dữ liệu giúp người dùng có cái nhìn trong suốt và khách quan nhất về sức khỏe tài chính của bản thân.
-- **Hành vi tương tác:**
-  - Người dùng xem Bảng điều khiển tài chính tổng quan (`UC-39` - Dashboard) với chỉ số Giá trị tài sản ròng (Net Worth = Tổng tài sản trong các ví - Tổng nghĩa vụ nợ).
-  - Hệ thống cung cấp Báo cáo cơ cấu dòng tiền thu chi đa chiều (`UC-40`), Biểu đồ phân tích tốc độ tiêu tiền Spending Velocity (`UC-41`) để người dùng nhìn thấy đường cong tiêu tiền của mình có bị dốc quá mức trong 10 ngày đầu tháng hay không.
-  - Phân hệ hỗ trợ Xuất báo cáo tài chính cá nhân định dạng PDF/Excel (`UC-44`) phục vụ việc lưu trữ hoặc chứng minh tài chính khi cần thiết.
-
----
-
-### 3.8 Phân hệ Dự báo Tài chính & Cảnh báo Thâm hụt (UCD 08)
-- **Bản chất nghiệp vụ:** Cung cấp năng lực "nhìn thấy tương lai", phát hiện sớm các nguy cơ khủng hoảng dòng tiền trước khi nó thực sự xảy ra.
-- **Hành vi tương tác:**
-  - Động cơ toán học thực hiện Dự báo dòng tiền tương lai 30 - 90 ngày (`UC-45`) dựa trên lịch sử giao dịch và các cam kết cố định đã biết.
-  - Hệ thống tính toán và đưa ra Cảnh báo ngày cạn kiệt tiền mặt dự kiến (Out-of-Money Date - `UC-47`): *"Nếu tiếp tục giữ tốc độ chi tiêu như tuần qua, ví tiền mặt của bạn sẽ cạn sạch vào ngày 22 của tháng"*.
-  - Khi nguy cơ thâm hụt xuất hiện, hệ thống mở rộng (`<<extend>>`) Mô phỏng kịch bản cắt giảm chi tiêu khẩn cấp (`UC-48`), chỉ rõ người dùng cần cắt giảm chính xác ở danh mục linh hoạt nào (ăn ngoài, giải trí) để bảo toàn sự an toàn tài chính.
-
----
-
-### 3.9 Phân hệ Cú hích Hành vi & Hỗ trợ Quyết định Thaler (UCD 09)
-- **Bản chất nghiệp vụ:** Đỉnh cao về mặt ứng dụng tâm lý học kinh tế, hiện thực hóa các nguyên lý đạt giải Nobel của GS. Richard Thaler nhằm tạo ra sự thay đổi hành vi bền vững.
-- **Hành vi tương tác:**
-  - Hệ thống ngầm đánh giá rủi ro tâm lý chi tiêu theo thời gian thực (`UC-51`).
-  - Khi phát hiện một giao dịch mua sắm có giá trị lớn bất thường hoặc thuộc danh mục xa xỉ bốc đồng, hệ thống không ngăn cấm thô bạo (tôn trọng quyền tự do lựa chọn), mà kích hoạt Cú hích Khoảng trễ tâm lý (Cooling-off Period 24h-48h - `UC-52`). Hệ thống gửi thông điệp: *"Khoản chi này bằng 40% hạn mức tuần của bạn. Hệ thống đã tạm đưa món hàng vào danh sách chờ suy nghĩ 24 giờ. Sau 24 giờ, nếu bạn vẫn thực sự muốn mua, hệ thống sẽ mở khóa để bạn xác nhận"*. Thống kê thực nghiệm cho thấy trên 70% các khoản mua sắm bốc đồng bị hủy bỏ sau khi cảm xúc nhất thời lắng xuống.
-  - Cung cấp Cú hích phân tích cái giá cơ hội (`UC-54`): Quy đổi số tiền mua một món đồ xa xỉ thành số ngày lao động thực tế hoặc số tiền lẽ ra đã tích lũy được cho Quỹ khẩn cấp, giúp đánh thức tư duy duy lý của người dùng.
-  - Người dùng có toàn quyền Xác nhận thực thi hoặc Hủy bỏ quyết định chi tiêu (`UC-56`), bảo đảm con người luôn là chủ thể quyết định cuối cùng.
-
----
-
-## 4. THUYẾT MINH VĂN XUÔI CHUYÊN SÂU 6 BOUNDED CONTEXTS CỦA CLASS DIAGRAM
-
-Áp dụng phương pháp luận **Domain-Driven Design (DDD)** của Eric Evans, kiến trúc hệ thống kiên quyết xóa bỏ mô hình thiếu máu (Anemic Domain Model - các lớp rỗng chỉ chứa getter/setter). Toàn bộ 18 lớp thực thể nghiệp vụ đều là các **Rich Domain Model** sở hữu các phương thức tính toán giàu hành vi, được tổ chức thành 6 Bounded Contexts độc lập và chặt chẽ:
+Kiến trúc hệ thống tuân thủ nghiêm ngặt phương pháp luận **Domain-Driven Design (DDD)** của Eric Evans, kiên quyết loại bỏ mô hình thiếu máu (Anemic Domain Model). Toàn bộ thực thể miền đều là các **Rich Domain Model** sở hữu hành vi và các quy tắc nghiệp vụ bất biến:
 
 ```
 +---------------------------------------------------------------------------------------------------+
 |                                      PFM BOUNDED CONTEXT MAP                                      |
 +---------------------------------------------------------------------------------------------------+
 |  [ CONTEXT 1: IDENTITY & PROFILE ] (Core Domain)                                                  |
-|  - User, Money (Value Object), DateRange (Value Object)                                           |
+|  - User, Money (Value Object bất biến), DateRange (Value Object)                                  |
 +---------------------------------------------------------------------------------------------------+
                |                                 |                                 |
                v                                 v                                 v
 +-----------------------------+   +-----------------------------+   +-----------------------------+
 | [ CONTEXT 2: MULTI-WALLET ] |   | [ CONTEXT 4: BUDGET & DSA ] |   | [ CONTEXT 5: DEBT & GOALS ] |
 | - Wallet (Abstract)         |   | - Budget (Aggregate Root)   |   | - FinancialGoal / Emergency |
-| - Cash / Bank / Credit / EW |   | - BudgetAllocation          |   | - DebtAccount               |
-| - InternalTransfer          |   | - DailySpendingAllowance    |   | - DebtPaymentPlan (Solver)  |
+| - Cash, Bank, Credit, EWal  |   | - BudgetAllocation          |   | - DebtAccount               |
+| - InternalTransfer (ACID)   |   | - DailySpendingAllowance    |   | - DebtPaymentPlan (Solver)  |
 | - BalanceAdjustment         |   |   (DSA Adaptive Engine)     |   | - DebtPaymentTransaction    |
 +-----------------------------+   +-----------------------------+   +-----------------------------+
                ^                                 ^                                 ^
-               | (Trừ tiền / Cộng tiền)          | (Cập nhật tiến độ)              | (Đóng góp mục tiêu)
+               | (Trừ/Cộng tiền ACID)            | (Cộng dồn chi tiêu thực)        | (Trích quỹ nợ/tích lũy)
 +---------------------------------------------------------------------------------------------------+
 |  [ CONTEXT 3: TRANSACTIONS, AI VISION OCR & CATEGORIES ]                                          |
 |  - Transaction (Abstract) -> IncomeTransaction / ExpenseTransaction                               |
 |  - Receipt *-- ReceiptItem (Composition - Hậu kiểm toán số học verifyMathematicalAudit)           |
-|  - Category (Cây phân cấp đệ quy) & AutoCategorizationRule                                        |
-|  - Subscription (Giám sát cam kết định kỳ)                                                        |
+|  - Category (Cây phân cấp đệ quy Cha - Con) & AutoCategorizationRule                              |
+|  - Subscription (Giám sát bẫy thuê bao định kỳ)                                                   |
+|  - Interfaces: IBankNotificationParserService & IHybridDataImportService                          |
 +---------------------------------------------------------------------------------------------------+
                                                  | (Kích hoạt cú hích khi vượt ngưỡng)
                                                  v
 +---------------------------------------------------------------------------------------------------+
 |  [ CONTEXT 6: DECISION SUPPORT & BEHAVIORAL NUDGE (THALER) ]                                      |
-|  - FinancialNudge (Cú hích hành vi, Khoảng trễ tâm lý Cooling-off Period 24h-48h, Rationale)      |
+|  - FinancialNudge (Cú hích hành vi, Khoảng trễ tâm lý Cooling-off 24h, Explainable AI Rationale)  |
 +---------------------------------------------------------------------------------------------------+
 ```
 
----
-
-### 4.1 Bounded Context 1: Định danh & Hồ sơ cá nhân (Identity & Profile Context)
-- **Vai trò miền:** Đóng vai trò là hạt nhân trung tâm (Core Domain), định danh thực thể Người dùng (User) và thiết lập các thông số tài chính nền tảng chi phối toàn bộ hành vi hệ thống.
-- **Các thực thể & Đối tượng giá trị cốt lõi:**
-  - **Thực thể User:** Quản lý thông tin định danh duy nhất, mật khẩu được băm một chiều bằng giải thuật tiên tiến Argon2id. User lưu giữ các thuộc tính tài chính nền tảng: ngày nhận lương định kỳ (`salaryDay`), chu kỳ ngân sách (`budgetCycle`), mức độ chấp nhận rủi ro (`riskTolerance`: Bảo thủ, Thận trọng, Tăng trưởng) và đơn vị tiền tệ mặc định (`defaultCurrency`).
-  - **Đối tượng Giá trị bất biến Money (Value Object):** Đóng gói hai trường dữ liệu: số tiền (`amount` kiểu Decimal độ chính xác cao 18,2) và mã tiền tệ chuẩn ISO-4217 (`currency`). Value Object này là bất biến (Immutable), không bao giờ bị thay đổi trạng thái sau khi khởi tạo. Money sở hữu các phương thức toán học an toàn: `add()`, `subtract()`, `multiply()`, `allocate()`, bảo đảm loại trừ triệt để lỗi mất mát số thập phân khi cộng trừ tiền tệ.
-  - **Đối tượng Giá trị DateRange (Value Object):** Đóng gói khoảng thời gian chu kỳ với ngày bắt đầu (`startDate`) và ngày kết thúc (`endDate`). DateRange tự động bảo đảm tính toàn vẹn với quy tắc bất biến `startDate <= endDate`, cung cấp các phương thức nghiệp vụ: `includesDate(date)` (kiểm tra một ngày có thuộc chu kỳ không) và `overlapsWith(otherRange)` (kiểm tra sự giao thoa giữa hai khoảng thời gian ngân sách).
+### 4.1 Điểm Nhấn Thiết Kế Hướng Đối Tượng & Value Objects
+1. **Value Object bất biến `Money`:** Đóng gói số tiền (`decimal` 18,2) và mã tiền tệ ISO-4217 (`string`). Đảm bảo không bao giờ bị thay đổi trạng thái sau khi khởi tạo, trang bị các phương thức an toàn `add()`, `subtract()`, `multiply()`, `allocate()` triệt tiêu lỗi mất mát số học.
+2. **Value Object `DateRange`:** Đảm bảo bất biến `startDate <= endDate`, kiểm tra giao thoa chu kỳ với `includesDate()` và `overlapsWith()`.
+3. **Quan hệ Hợp thành Hóa đơn `Receipt *-- ReceiptItem`:** Toàn bộ dòng mặt hàng thuộc quyền sở hữu sống còn của hóa đơn gốc. Phương thức `verifyMathematicalAudit()` tự động duyệt các món để đối soát phương trình kế toán:
+   $$\text{Delta} = \left| \sum (\text{Quantity} \times \text{UnitPrice}) + \text{VAT} - \text{TotalAmount} \right|$$
+   Chỉ khi $\text{Delta} == 0$, giao dịch mới được chuyển trạng thái `VERIFIED`.
 
 ---
 
-### 4.2 Bounded Context 2: Tài khoản & Đa ví cá nhân chuẩn ACID (Account & Multi-Wallet Context)
-- **Vai trò miền:** Quản trị toàn bộ các phương tiện lưu trữ tiền tệ và các kênh thanh toán thực tế của người dùng, bảo đảm tính toàn vẹn giao dịch tuyệt đối theo chuẩn ngân hàng.
-- **Cấu trúc hướng đối tượng & Quan hệ:**
-  - **Lớp cha trừu tượng Wallet (Polymorphism):** Định nghĩa các thuộc tính chung: mã ví, tên ví, số dư hiện tại (`currentBalance` kiểu Money), cờ trạng thái hoạt động và cờ cho phép số dư âm. Lớp cha định nghĩa các phương thức miền giàu hành vi: `deposit(amount)` (nạp tiền), `withdraw(amount)` (rút tiền có kiểm tra hạn mức), và `canWithdraw(amount)`.
-  - **Bốn lớp con kế thừa chuyên biệt:**
-    1. `CashWallet`: Ví tiền mặt vật lý, kiểm soát theo các lần rút tiền từ ATM.
-    2. `BankAccountWallet`: Tài khoản ngân hàng thanh toán, bổ sung số tài khoản và định danh ngân hàng chuẩn NAPAS để phục vụ sinh mã QR chuyển khoản.
-    3. `CreditCardWallet`: Thẻ tín dụng chi tiêu trước trả sau, sở hữu thuộc tính hạn mức tín dụng (`creditLimit`), ngày chốt sao kê (`statementClosingDate`) và ngày đến hạn thanh toán (`paymentDueDate`). Phương thức `getAvailableCredit()` tự động tính toán hạn mức khả dụng còn lại để cảnh báo nợ quay vòng.
-    4. `EWallet`: Ví điện tử (MoMo, ZaloPay, ShopeePay) liên kết số điện thoại thanh toán.
-  - **Lớp liên kết InternalTransfer:** Đại diện cho nghiệp vụ chuyển tiền giữa hai ví nội bộ. Hành vi chuyển tiền bắt buộc phải bao bọc trong một Transaction CSDL với cơ chế Khóa bi quan (Pessimistic Locking - UPDLOCK, ROWLOCK): hệ thống khóa đồng thời cả hai bản ghi ví nguồn và ví đích, thực hiện trừ tiền ở ví nguồn và cộng tiền ở ví đích, bảo đảm tính nguyên tử (Atomicity) – hoặc cả hai cùng thành công, hoặc không có đồng tiền nào bị thay đổi nếu xảy ra sự cố mạng.
-  - **Lớp liên kết BalanceAdjustment:** Ghi nhận lịch sử kiểm kê thực tế, lưu trữ số dư ghi nhận, số dư thực đếm và lý do chênh lệch, bảo đảm tính minh bạch kiểm toán.
+## 5. THIẾT KẾ MÔ HÌNH ĐỘNG & TƯƠNG TÁC HỆ THỐNG (11 SƠ ĐỒ ĐỘNG)
+
+Mô hình động làm rõ sự tương tác theo thời gian, phân định ranh giới xử lý bất đồng bộ và kiểm soát luân chuyển trạng thái:
+
+### 5.1 Thiết Kế Sơ Đồ Tuần Tự (Sequence Diagrams - 5 Kịch Bản Trọng Yếu)
+1. **SD-01: Bóc tách hóa đơn AI Vision OCR & Hậu kiểm toán số học:**
+   * Mobile gửi ảnh $\to$ Backend cấp mã nháp và trả ngay mã `HTTP 202 Accepted` để giải phóng giao diện.
+   * Worker chạy ngầm gọi Vision LLM trích xuất JSON đa món $\to$ `MathAuditEngine` đối soát độc lập $\Delta = 0$.
+   * Nếu khớp: tự động ghi sổ cái `VERIFIED`. Nếu sai lệch: gắn cờ nghi vấn yêu cầu người dùng xác nhận trực quan.
+2. **SD-02: Ghi nhận chi tiêu bằng giọng nói tự nhiên (Voice-to-Expense):**
+   * Mobile nén luồng âm thanh $\to$ Whisper nhận dạng văn bản tiếng Việt $\to$ NLP Extractor bóc tách 4 thực thể cốt lõi (Số tiền, Danh mục, Ví nguồn, Thời gian).
+   * Phân nhánh: Độ tin cậy $\ge 85\%$ tự động ghi sổ cái 0ms; $< 85\%$ hiển thị form điền sẵn để người dùng bổ sung.
+3. **SD-03: Thanh toán VietQR & Hạch toán đa ví chuẩn ACID:**
+   * Quét mã EMVCo $\to$ `PaymentService` khởi tạo khóa phân tán Redis (`Idempotency Key`) chống thanh toán trùng lặp.
+   * Mở giao dịch CSDL với Khóa bi quan, kiểm tra số dư khả dụng, thực hiện trừ ví và sinh biên lai điện tử vĩnh viễn.
+4. **SD-04: Động cơ tính hạn mức DSA & Phát tín hiệu Cú hích Nudge:**
+   * Kích hoạt đầu ngày hoặc sau mỗi giao dịch $\to$ `ADSA Engine` chia ngân sách còn lại cho số ngày còn lại trong kỳ.
+   * Đo lường Tốc độ tiêu tiền $V$. Nếu $V > 1.2$ (nguy cơ cạn tiền sớm), hệ thống kích hoạt thông điệp cảnh báo vi mô kèm giải trình minh bạch XAI.
+5. **SD-05: Kiểm soát chi tiêu lớn với Khoảng trễ tâm lý 24 giờ:**
+   * Phát hiện khoản chi $\ge 3.000.000$ VNĐ hoặc $\ge 30\%$ thu nhập tháng $\to$ Quy đổi số tiền thành giờ công lao động thực tế.
+   * Chuyển trạng thái sang `PENDING_COOLING_OFF`, đóng băng 24h chưa trừ tiền ví. Sau 24h, người dùng suy ngẫm lý trí trước khi xác nhận chi hoặc hủy bỏ.
+
+### 5.2 Thiết Kế Sơ Đồ Hoạt Động (Activity Diagrams - 3 Quy Trình Đa Rãnh Bơi)
+1. **AD-01 (Hoạt động bóc tách hóa đơn):** Phân chia 5 rãnh bơi (Mobile Client $\to$ API Gateway & Queue $\to$ Vision LLM Worker $\to$ Math Audit Engine $\to$ Database & FCM Notification).
+2. **AD-02 (Hoạt động kiểm soát chi tiêu lớn):** Luồng quyết định phân nhánh kiểm tra ngưỡng, hiển thị bảng quy đổi giờ công lao động và xác nhận sau khoảng trễ.
+3. **AD-03 (Hoạt động tính toán DSA & Nudge):** Luồng thu thập dữ liệu ngân sách, tính toán ADSA, phân vùng rủi ro (Xanh - Vàng - Đỏ) và đóng gói payload cú hích.
+
+### 5.3 Thiết Kế Sơ Đồ Máy Trạng Thái (State Machine Diagrams - 3 Vòng Đời Thực Thể Miền)
+1. **STM-01 (Vòng đời Giao dịch Chi tiêu - Expense):**  
+   $$\text{DRAFT} \xrightarrow{\text{Audit Pass}} \text{VERIFIED} \xrightarrow{\text{Chi lớn}} \text{PENDING\_COOLING\_OFF} \xrightarrow{\text{Xác nhận}} \text{COMPLETED} \quad (\text{hoặc } \text{CANCELLED})$$
+2. **STM-02 (Vòng đời Kế hoạch Trả nợ - DebtPaymentPlan):**  
+   $$\text{PLANNING} \xrightarrow{\text{Kích hoạt}} \text{ACTIVE} \xrightarrow{\text{Thặng dư dồn thêm}} \text{ACCELERATED} \xrightarrow{\text{Trễ hạn}} \text{OVERDUE\_RISK} \xrightarrow{\text{Hết nợ}} \text{SETTLED}$$
+3. **STM-03 (Vòng đời Cú hích Hành vi - FinancialNudge):**  
+   $$\text{TRIGGERED} \xrightarrow{\text{Đóng gói}} \text{DISPATCHED} \xrightarrow{\text{Hiển thị}} \text{DISPLAYED} \xrightarrow{\text{Xem XAI}} \text{EXPLAINED} \xrightarrow{\text{Tiếp thu}} \text{CONVERTED} \quad (\text{hoặc } \text{DISMISSED})$$
 
 ---
 
-### 4.3 Bounded Context 3: Giao dịch, AI Vision OCR & Danh mục (Transactions, AI OCR & Categories Context)
-- **Vai trò miền:** Chịu trách nhiệm ghi nhận, bóc tách và phân loại toàn bộ các luồng tiền biến động phát sinh hàng ngày.
-- **Cấu trúc hướng đối tượng & Quan hệ:**
-  - **Lớp cha trừu tượng Transaction:** Chứa các thông tin cốt lõi: mã giao dịch, thời điểm phát sinh, số tiền (`Money`), ví thực hiện, ghi chú và phương thức trừu tượng `applyToWallet()`.
-  - **Hai lớp con kế thừa:**
-    1. `IncomeTransaction`: Giao dịch thu nhập, sở hữu cờ đánh dấu thu nhập bất thường (`isWindfall`). Khi giao dịch này được lưu, phương thức `applyToWallet()` sẽ gọi lệnh `wallet.deposit(amount)`.
-    2. `ExpenseTransaction`: Giao dịch chi tiêu, liên kết bắt buộc với một danh mục chi tiêu (`Category`) và cờ đánh dấu chi phí thiết yếu (`isEssentialExpense`). Khi thực thi, phương thức sẽ gọi lệnh `wallet.withdraw(amount)`.
-  - **Quan hệ Hợp thành Hóa đơn bóc tách (Receipt *-- ReceiptItem):** Đây là điểm nhấn kiến trúc kỹ thuật của hệ thống. Mỗi hóa đơn `Receipt` sở hữu một danh sách các dòng mặt hàng `ReceiptItem`. Quan hệ giữa chúng là Hợp thành chặt chẽ (Composition): nếu hóa đơn bị xóa, toàn bộ các dòng mặt hàng chi tiết sẽ bị hủy theo. Lớp `Receipt` sở hữu phương thức đặc thù `verifyMathematicalAudit()`: tự động duyệt qua toàn bộ các `ReceiptItem`, nhân số lượng với đơn giá của từng dòng, cộng thuế VAT và so sánh với tổng tiền trên hóa đơn. Giao dịch chỉ được chuyển sang trạng thái hợp lệ khi phương trình kiểm toán số học đạt sai số bằng 0.
-  - **Cây danh mục Category (Parent-Child Recursive):** Thiết kế theo mô hình cây phân cấp đệ quy: một danh mục cha có thể chứa nhiều danh mục con (ví dụ: Danh mục cha "Ăn uống" chứa danh mục con "Đi chợ / Siêu thị", "Cà phê", "Nhà hàng"). Lớp `AutoCategorizationRule` liên kết với danh mục để tự động nhận diện từ khóa từ mô tả hóa đơn AI và gắn thẻ danh mục tự động.
-  - **Lớp Subscription:** Giám sát các dịch vụ trừ tiền định kỳ, theo dõi ngày gia hạn tiếp theo (`nextBillingDate`) và tự động kích hoạt thông báo cảnh báo trước 3 ngày.
+## 6. THIẾT KẾ CƠ SỞ DỮ LIỆU QUAN HỆ 3NF (POSTGRESQL 16 ACID)
+
+### 6.1 Kiến Trúc Bố Cục ERD 5 Cột Logic Phân Kênh (Zero-Collision Routing)
+Sơ đồ cơ sở dữ liệu vật lý bao gồm **22 bảng thực thể** và **25 đường liên kết quan hệ khóa ngoại**, được bố trí thành 5 cột chuyên môn hóa độc lập trong file [DatabaseERD.drawio](file:///d:/University%20Study%20Subjects/Information%20System%20Design%20Analysis/Project/Analyze%20System/files/DatabaseERD.drawio):
+* **Cột 1 (Người dùng & Ví tiền cốt lõi):** `users`, `wallets`, `wallet_transfers`, `balance_adjustments`, `net_worth_snapshots`, `InAppNotifications`.
+* **Cột 2 (Danh mục & Dịch vụ định kỳ):** `categories`, `auto_categorization_rules`, `subscriptions`, `recurring_incomes`, `CoolingOffTransactions`.
+* **Cột 3 (Sổ cái Giao dịch & Bóc tách Hóa đơn):** `transactions`, `salary_slip_details`, `receipt_items`, `FinancialNudges`.
+* **Cột 4 (Hạn mức Ngân sách & Trợ lý DSA):** `budgets`, `budget_allocations`, `daily_spending_allowances`.
+* **Cột 5 (Nợ Cá nhân & Mục tiêu Tích lũy):** `debts`, `debt_transactions`, `savings_goals`, `savings_goal_contributions`.
+
+### 6.2 Từ Điển Dữ Liệu 22 Bảng Thực Thể Vật Lý Chuẩn 3NF
+Toàn bộ 22 bảng được chuẩn hóa đạt Chuẩn dạng 3 (3NF), khóa ngoại có ràng buộc toàn vẹn tham chiếu (`ON DELETE CASCADE` hoặc `RESTRICT`), kiểu dữ liệu tiền tệ chính xác cao `DECIMAL(18,2)` và định danh UUID độc lập:
+1. `users`: Thông tin tài khoản, mật khẩu băm, lương cơ sở, khẩu vị rủi ro.
+2. `wallets`: Các loại ví tài chính (Tiền mặt, Ngân hàng, Thẻ tín dụng, Ví điện tử).
+3. `wallet_transfers`: Nhật ký chuyển tiền giữa 2 ví chuẩn ACID.
+4. `balance_adjustments`: Lịch sử kiểm kê đối soát số dư thực tế.
+5. `net_worth_snapshots`: Ảnh chụp giá trị tài sản ròng theo thời gian.
+6. `InAppNotifications`: Thông báo đẩy và cảnh báo nội ứng dụng.
+7. `categories`: Cây phân cấp danh mục thu chi (Parent-Child).
+8. `auto_categorization_rules`: Quy tắc regex/keyword tự động gắn thẻ danh mục.
+9. `subscriptions`: Quản lý dịch vụ trừ tiền định kỳ và bẫy thuê bao lãng phí.
+10. `recurring_incomes`: Theo dõi các nguồn thu nhập định kỳ hàng tháng.
+11. `CoolingOffTransactions`: Lưu trữ các giao dịch chi tiêu lớn đang đóng băng 24h.
+12. `transactions`: Sổ cái trung tâm lưu trữ toàn bộ giao dịch tài chính.
+13. `salary_slip_details`: Bóc tách chi tiết phiếu lương (Gross, Net, BHXH, Thuế TNCN).
+14. `receipt_items`: Chi tiết từng mặt hàng trên hóa đơn bóc tách AI OCR.
+15. `FinancialNudges`: Quản lý các cú hích hành vi và giải trình lý do XAI.
+16. `budgets`: Kế hoạch ngân sách chu kỳ (50/30/20, Zero-Based, Kakeibo).
+17. `budget_allocations`: Hạn mức chi tiết giao cho từng danh mục.
+18. `daily_spending_allowances`: Hạn mức chi tiêu mỗi ngày thích ứng (DSA) và chỉ số Velocity.
+19. `debts`: Danh mục nợ cá nhân, lãi suất phần trăm và kỳ hạn trả.
+20. `debt_transactions`: Nhật ký thanh toán trả nợ (phân tách gốc và lãi).
+21. `savings_goals`: Mục tiêu tích lũy tài sản và Quỹ khẩn cấp 3 - 6 tháng.
+22. `savings_goal_contributions`: Nhật ký trích tiền đóng góp vào mục tiêu tích lũy.
 
 ---
 
-### 4.4 Bounded Context 4: Ngân sách Đa phương pháp & DSA (Budgeting & Adaptive DSA Context)
-- **Vai trò miền:** Hiện thực hóa các trường phái hoạch định ngân sách chuẩn mực và vận hành động cơ tính toán hạn mức chi tiêu mỗi ngày thích ứng.
-- **Cấu trúc hướng đối tượng & Quan hệ:**
-  - **Thực thể Aggregate Root Budget:** Quản lý kế hoạch ngân sách cho một chu kỳ thời gian (`DateRange`). Budget chứa tổng số tiền ngân sách kế hoạch, tổng số tiền đã chi tiêu lũy kế và phương pháp áp dụng (50/30/20, Zero-Based, Kakeibo).
-  - **Lớp thành phần BudgetAllocation (Composition):** Mỗi Budget hợp thành từ nhiều BudgetAllocation tương ứng với từng nhóm danh mục (ví dụ: Hạn mức cho nhóm Thiết yếu: 10.000.000 VNĐ; Hạn mức cho nhóm Linh hoạt: 4.000.000 VNĐ).
-  - **Thực thể DSA (DailySpendingAllowance):** Động cơ toán học của phân hệ. Thực thể này liên tục cập nhật theo mỗi giao dịch chi tiêu mới và sở hữu 3 phương thức nghiệp vụ giàu hành vi:
-    1. `calculateDSA()`: Tính hạn mức chi tiêu hôm nay bằng công thức lấy tổng số tiền ngân sách còn lại chia cho số ngày thực tế còn lại trong chu kỳ, có nhân hệ số điều chỉnh ngày cuối tuần (người dùng thường chi tiêu nhiều hơn vào Thứ Bảy và Chủ Nhật).
-    2. `computeSpendingVelocity()`: Đo lường tốc độ chi tiêu thực tế (số tiền chi trung bình mỗi ngày trong 7 ngày qua) so với tốc độ chi tiêu lý thuyết an toàn.
-    3. `estimateOutOfMoneyDate()`: Dự báo chính xác ngày người dùng sẽ cạn kiệt ngân sách nếu vẫn duy trì tốc độ chi tiêu hiện tại.
+## 7. KIẾN TRÚC HIỆN THỰC HÓA NGUYÊN MẪU & KẾT QUẢ KIỂM THỬ THỰC TẾ
+
+### 7.1 Ngăn Xếp Công Nghệ Chuẩn Hóa (Production Tech Stack)
+* **Backend:** **.NET 10 (C# 14)** xây dựng theo **Clean Architecture** (Domain, Application, Infrastructure, WebApi), Entity Framework Core 10, CSDL PostgreSQL 16 ACID, Redis Cache & Distributed Lock, SignalR Hub thời gian thực.
+* **Frontend Mobile/Desktop:** **.NET MAUI 10** đa nền tảng (Android Native & Windows Desktop), kiến trúc MVVM CommunityToolkit, SkiaSharp biểu đồ tài chính, thiết kế vi thẩm mỹ Dark/Light theme chuẩn phong cách Apple HIG.
+* **Bộ nhân AI & Nhận thức:** Google Gemini 2.5 Flash Multimodal Vision API, Whisper AI Speech-to-Text, Offline Regex Engine tiếng Việt tài chính.
+
+### 7.2 Các Tính Năng Đột Phá Đã Hoàn Thiện Trên Nguyên Mẫu
+1. **Android Native Notification Listener:** Tích hợp trực tiếp `NotificationListenerService` cấp hệ điều hành Android, tự động lắng nghe và giải mã biến động số dư trừ tiền từ **9 ứng dụng ngân hàng lớn tại Việt Nam** (ACB, MoMo, Vietcombank, Techcombank, MBBank, BIDV, VPBank, TPBank, ZaloPay).
+2. **Thanh Thử Nghiệm Giả Lập 5 Ngân Hàng (Simulation Test Bar):** Trang bị thanh nút 1-chạm (ACB Emart -350k, MoMo Circle K -85k, Techcombank Highlands -120k, Vietcombank ShopeePay -500k, MBBank Petrolimex -200k) phục vụ trình diễn bảo vệ đồ án ngay tại bàn mà không phụ thuộc vào tiền thật trong tài khoản ngân hàng.
+3. **Hòm Thư Hành Động Tự Hành (Action Inbox & Jev Protocol):** Phân tầng xác suất thông minh:
+   * Confidence $\ge 0.85$: Nút 1-chạm xác nhận tức thì 0ms vào sổ cái.
+   * $0.50 \le \text{Confidence} < 0.85$: Khối lựa chọn đồng cấp Jev Choice giải quyết nhập nhằng.
+   * Confidence $< 0.50$: Thẻ chờ phân loại thủ công an toàn.
+4. **AI Vision OCR Bóc Tách Hóa Đơn Đa Món & Phiếu Lương:** Trích xuất chi tiết từng món hàng, tỷ lệ chính xác cao, tự động đối soát cân bằng kế toán $\Delta = 0$.
+5. **Trợ Lý Giọng Nói Hai Chiều (AI Voice Assistant):** Nhận diện khẩu lệnh tiếng Việt đời thường ("2 củ rưỡi", "năm xị", "hai trẹo"), định tuyến thông minh vào 5 phân hệ chuyên sâu.
+6. **Mô Phỏng Trả Nợ Đối Kháng:** So sánh trực quan biểu đồ dòng tiền giữa Snowball và Avalanche, tính toán chính xác số tiền lãi tiết kiệm được và ngày sạch nợ dự kiến.
+
+### 7.3 Kim Tự Tháp Kiểm Thử & Nghiệm Thu Chất Lượng Toàn Trình
+Hệ thống đạt tiêu chuẩn kiểm thử tự động nghiêm ngặt nhất với độ bao phủ kiểm thử cao:
+* **Backend Domain Tests:** **113 / 113 Tests PASSED (100%)** — Kiểm tra Money Value Object, Rich Domain Logic, Công thức DSA, Snowball/Avalanche Solver.
+* **Backend Application Tests:** **264 / 264 Tests PASSED (100%)** — Kiểm tra Use Case Handlers, Pipeline OCR, Idempotency, Phân loại ngân hàng NLP.
+* **Mobile Client Tests:** **139 / 139 Tests PASSED (100%)** — Kiểm tra ViewModels, Action Inbox Protocol, Điều hướng Shell, Offline Cache.
+* **TỔNG CỘNG HỆ THỐNG:** **516 / 516 Tests PASSED 100% (0 Lỗi, 0 Warning)**.
 
 ---
-
-### 4.5 Bounded Context 5: Quỹ tích lũy & Tối ưu hóa Nợ cá nhân (Personal Debt & Financial Goals Context)
-- **Vai trò miền:** Quản trị tầm nhìn tài chính dài hạn, cân bằng giữa mục tiêu kiến tạo tài sản và lộ trình giải phóng các nghĩa vụ nợ.
-- **Cấu trúc hướng đối tượng & Quan hệ:**
-  - **Thực thể FinancialGoal:** Đại diện cho các mục tiêu tiết kiệm (mua nhà, mua xe, học tập). Thực thể quản lý số tiền mục tiêu (`targetAmount`), số tiền hiện có (`currentAmount`), hạn chót (`targetDate`) và liên kết với các khoản đóng góp định kỳ `GoalContribution`.
-  - **Lớp con kế thừa EmergencyFundGoal:** Quỹ dự phòng khẩn cấp. Lớp con này kế thừa toàn bộ thuộc tính của FinancialGoal nhưng bổ sung thêm ràng buộc nghiệp vụ khắt khe: mục tiêu số tiền bắt buộc phải tương đương từ 3 đến 6 tháng sinh hoạt phí cơ bản và số dư quỹ này tuyệt đối không được phép rút ra cho các mục tiêu mua sắm thông thường.
-  - **Thực thể DebtAccount:** Đại diện cho một tài khoản nợ cá nhân (vay ngân hàng, thẻ tín dụng, nợ người thân). Quản lý số nợ gốc ban đầu, số dư nợ hiện tại, lãi suất phần trăm hàng năm (APR) và ngày đến hạn thanh toán hàng tháng.
-  - **Thực thể Kế hoạch trả nợ DebtPaymentPlan:** Đóng vai trò là Solver tối ưu hóa. Kế hoạch này hợp thành chặt chẽ với các dòng lịch trình trả nợ `DebtRepaymentScheduleItem` và liên kết với các giao dịch trả nợ `DebtPaymentTransaction`. Thực thể sở hữu 2 thuật toán mô phỏng đối sánh:
-    * `simulateSnowball()`: Sắp xếp các khoản nợ theo thứ tự số dư nợ tăng dần. Dồn toàn bộ nguồn tiền khả dụng thanh toán dứt điểm khoản nợ nhỏ nhất trước để giải phóng nhanh số lượng đầu nợ, tạo hưng phấn tâm lý mạnh mẽ.
-    * `simulateAvalanche()`: Sắp xếp các khoản nợ theo thứ tự lãi suất giảm dần. Dồn tiền thanh toán khoản nợ có lãi suất cao nhất trước để triệt tiêu số tiền lãi phải trả, tối ưu hóa lợi ích tài chính toán học.
-
----
-
-### 4.6 Bounded Context 6: Cú hích Hành vi & Hỗ trợ Quyết định Thaler (Decision Support & Behavioral Nudge Context)
-- **Vai trò miền:** Điều phối các can thiệp tâm lý kinh tế học hành vi nhằm hỗ trợ người dùng đưa ra các quyết định chi tiêu sáng suốt và kỷ luật.
-- **Cấu trúc hướng đối tượng & Quan hệ:**
-  - **Thực thể FinancialNudge:** Đại diện cho một cú hích tài chính cụ thể. Thực thể lưu trữ loại cú hích (Cảnh báo tốc độ tiêu tiền, Đề xuất điều hướng thu nhập bất thường, Cảnh báo giao dịch bốc đồng, Nhắc nhở cái giá cơ hội).
-  - **Tính Minh bạch & Giải trình (Explainable AI):** Thuộc tính `rationaleExplanation` lưu trữ câu giải thích bằng ngôn ngữ tự nhiên, mạch lạc về lý do tại sao hệ thống đưa ra cú hích này (ví dụ: *"Khoản chi 3.500.000 VNĐ cho chiếc đồng hồ này chiếm tới 70% ngân sách linh hoạt của cả tuần"*).
-  - **Cơ chế Khoảng trễ tâm lý (Cooling-off Period):** Thuộc tính `coolingOffUntil` lưu thời điểm hết hạn tạm hoãn quyết định (thường là 24 giờ đến 48 giờ sau thời điểm kích hoạt). Phương thức `applyCoolingOff()` tạm khóa quyết định mua sắm và đưa vào danh sách suy nghĩ.
-  - **Xác nhận có ý thức:** Thuộc tính cờ `isApprovedByUser` và phương thức `confirmHumanAction()` bảo đảm hệ thống không bao giờ tự ý tước đoạt quyền tự do lựa chọn của người dùng, tôn trọng triệt để nguyên lý cốt lõi của Kinh tế học Hành vi: Kiến trúc lựa chọn phi cưỡng chế.
-
----
-
-### 4.7 Đồ thị Tương tác & Luồng Dữ liệu Luân chuyển giữa 6 Bounded Contexts
-
-Dữ liệu trong hệ thống không tồn tại ở các ốc đảo cô lập mà luân chuyển nhịp nhàng tạo thành một vòng lặp kiểm soát tài chính khép kín:
-1. **Khởi tạo:** Người dùng ở Context 1 thiết lập các Ví tài sản ở Context 2, tạo Kế hoạch ngân sách ở Context 4 và thiết lập Mục tiêu tích lũy ở Context 5.
-2. **Giao dịch phát sinh:** Khi Người dùng chụp ảnh hóa đơn ở Context 3, pipeline AI OCR bóc tách và đối soát số học xong sẽ phát ra sự kiện giao dịch hợp lệ.
-3. **Cập nhật số dư & Ngân sách:** Giao dịch chi tiêu ngay lập tức gọi phương thức `withdraw()` trừ tiền trên Ví tương ứng ở Context 2 theo chuẩn ACID. Đồng thời, giao dịch chuyển tiếp thông tin sang Context 4 để cộng dồn vào chi tiêu thực tế của BudgetAllocation.
-4. **Tự động thích ứng hạn mức DSA:** Động cơ DSA ở Context 4 lập tức kích hoạt phương thức `calculateDSA()` để tính toán lại số tiền được tiêu cho các ngày còn lại trong tháng.
-5. **Kích hoạt Cú hích can thiệp:** Nếu tốc độ chi tiêu ở Context 4 vượt ngưỡng an toàn hoặc giao dịch ở Context 3 là một khoản chi bốc đồng lớn, sự kiện cảnh báo được gửi sang Context 6. Thực thể `FinancialNudge` lập tức tạo ra thông báo giải trình và kích hoạt Khoảng trễ tâm lý Cooling-off Period 24h.
-6. **Điều hướng dòng tiền thặng dư:** Khi người dùng nhận được một khoản thu nhập bất thường ở Context 2 hoặc tiết kiệm được một khoản tiền thừa cuối chu kỳ ở Context 4, Context 6 đưa ra cú hích gợi ý Người dùng chuyển khoản thặng dư đó vào Quỹ khẩn cấp hoặc Lịch trả nợ Avalanche ở Context 5.
-
-Toàn bộ chu trình này bảo đảm hệ thống vận hành tự động, chặt chẽ, hỗ trợ người dùng đạt được kỷ luật dòng tiền mà không đòi hỏi nỗ lực tính toán thủ công phức tạp.
-
----
-
-## 5. TỔNG KẾT & KHUYẾN NGHỊ THUYẾT TRÌNH TRƯỚC HỘI ĐỒNG
-
-Khi đứng trước Hội đồng Đánh giá, bạn hãy tự tin dẫn dắt câu chuyện thuyết trình theo cấu trúc 3 phần rõ ràng:
-
-1. **Mở đầu bằng "Nỗi đau thực tế" (The Problem):**
-   - Đừng nói về công nghệ trước. Hãy bắt đầu từ việc hầu hết sinh viên và người trẻ hiện nay đều nản lòng sau 1-2 tuần dùng app chi tiêu vì quá lười gõ từng khoản tiền, và các app hiện tại như Money Lover chỉ biết báo đỏ khi đã tiêu hết tiền chứ không giúp ích được gì cho tương lai.
-2. **Khẳng định "Vũ khí giải pháp đột phá" (The Solution):**
-   - Nhấn mạnh đề tài giải quyết triệt để vấn đề trên bằng **Bộ 4 Trụ Cột Độc Quyền**: AI Vision OCR đối soát số học tự động triệt tiêu thao tác nhập; DSA tự co giãn ngân sách theo ngày giúp không bao giờ bị rỗng túi; Giải thuật Snowball/Avalanche chỉ rõ đường đi trả nợ; và Cú hích Thaler Nudge 24h dập tắt mua sắm bốc đồng.
-   - Nhấn mạnh nguyên tắc kiến trúc: **100% tài chính cá nhân độc lập**, bảo mật tuyệt đối, Clean Architecture và CSDL 3NF khóa bi quan bảo đảm tiền tệ an toàn chuẩn ngân hàng.
-3. **Minh chứng bằng "Mô hình thiết kế chuẩn mực" (The Evidence):**
-   - Chiếu Sơ đồ Use Case tổng quan và 6 Bounded Contexts của Class Diagram.
-   - Giải thích mạch lạc cách dữ liệu chảy từ Hóa đơn AI -> Trừ tiền Ví ACID -> DSA co giãn hạn mức -> Kích hoạt Nudge tâm lý. Điều này chứng minh hệ thống không phải là một bài tập làm thêm giao diện đơn thuần, mà là một hệ thống thông tin hoàn chỉnh, có chiều sâu học thuật và giá trị ứng dụng thực tiễn rất cao.
-
----
-*Tài liệu được biên soạn đồng bộ với Khóa luận Tốt nghiệp và Báo cáo Đồ án Phân tích Thiết kế Hệ thống Thông tin.*
+*Tài liệu tổng quan kiến trúc này là tài sản kỹ thuật trung tâm, đồng bộ 100% với Khóa luận Tốt nghiệp, Sơ đồ Draw.io và Mã nguồn Nguyên mẫu Thực tế.*
