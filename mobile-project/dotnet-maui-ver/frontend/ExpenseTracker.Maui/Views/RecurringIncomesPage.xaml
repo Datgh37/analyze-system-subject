@@ -293,7 +293,7 @@
                             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
                             Padding="32" Margin="0,8">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="📅" FontSize="40" HorizontalOptions="Center" />
+                            <Image Source="ic_calendar.svg" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
                             <Label Text="Chưa có nguồn thu định kỳ nào"
                                    FontSize="15" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
@@ -353,7 +353,7 @@
                                     <!-- Row 2: Due Date & Active Status Badge -->
                                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                                         <Label Grid.Column="0"
-                                               Text="{Binding NextDueDate, StringFormat='📅 Kỳ tiếp theo: {0:dd/MM/yyyy}'}"
+                                               Text="{Binding NextDueDate, StringFormat='Kỳ tiếp theo: {0:dd/MM/yyyy}'}"
                                                FontSize="12" FontAttributes="Italic"
                                                TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
                                                VerticalOptions="Center" />
@@ -364,7 +364,7 @@
                                                 Padding="8,3"
                                                 VerticalOptions="Center"
                                                 IsVisible="{Binding IsActive}">
-                                            <Label Text="🟢 Đang bật"
+                                            <Label Text="Đang bật"
                                                    FontSize="10" FontAttributes="Bold"
                                                    TextColor="{AppThemeBinding Light=#059669, Dark=#6EE7B7}" />
                                         </Border>

@@ -2,6 +2,24 @@
 
 Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tinh chỉnh phạm vi (De-scoping), và các quyết định kiến trúc quan trọng từ lúc bắt đầu dự án đến nay.
 
+## [2026-11-03] - Quyết Định 200: Khởi Tạo Hệ Thống Thiết Kế UI/UX & Bộ Nguyên Mẫu Frontend 10 Màn Hình Bằng Extension Open Design (PLAN-71)
+- **Bối cảnh & Mục tiêu:**
+  - Sau khi Backend và MVVM Core đã được nâng cấp toàn diện qua 10 giai đoạn (PLAN-60 đến PLAN-70), bước tiếp theo là nâng tầm toàn diện chất lượng thẩm mỹ và trải nghiệm người dùng Frontend (FE).
+  - Sử dụng Extension Open Design (Open Design MCP) để thiết lập Design System nhất quán (user:duonopro-fintech), tạo bộ nguyên mẫu tương tác cao cấp 10 màn hình trong khung điện thoại chuẩn công thái học, hỗ trợ xem trước thời gian thực (Live Preview) và làm khuôn mẫu chuẩn xác để đồng bộ vào các View .NET MAUI.
+- **Quyết định Chiến lược:**
+  1. **Khởi tạo Design System user:duonopro-fintech:**
+     - Thiết lập bảng mã màu Dark Luxury Fintech: Nền Deep Space #0B0F19, Bề mặt Thẻ #111827 & #1E293B, Màu nhấn Indigo #4F46E5, Sky Blue #38BDF8, Emerald Thu nhập #10B981, Rose Chi tiêu #F43F5E, Thẻ VIP Vàng #F59E0B.
+     - Tuyệt đối loại bỏ biểu tượng emoji rập khuôn, chuyển sang bộ Icon Vector sắc nét.
+     - Quy chuẩn kiểu chữ Plus Jakarta Sans với số liệu thẳng cột (	abular-nums), bo góc đồng tâm (Double-bezel concentric radii) và nhịp khoảng trắng 8pt.
+  2. **Xây dựng Bộ Nguyên Mẫu Trực Quan Đa Màn Hình (10 Màn Hình Toàn Diện):**
+     - Tái hiện đầy đủ 10 phân hệ của DuoNoPro PFM (Dashboard & Đa ví, Sổ chi tiêu & AI OCR hóa đơn, Thu nhập & Thu nhập định kỳ, Ngân sách thích ứng DSA 50/30/20, Báo cáo dòng tiền thác nước & Net Worth, Quỹ mục tiêu tích lũy & Hũ Kakeibo, Phòng thí nghiệm What-If Sandbox & Radar thâm hụt, Cú hích hành vi Nudge & Cooling-off Hub, Khay hành động tự hành Server-Driven Action Protocol, và Trung tâm bảo mật mã hóa AES-256).
+     - Đăng ký và mở Live Browser Preview qua Open Design để kiểm thử công thái học và tương tác thời gian thực.
+  3. **Cơ chế Chuyển Giao (Port to App):**
+     - Đóng gói tài liệu đối soát và các class kiểu dáng tương ứng tại implement-docs/OPEN_DESIGN_MAUI_MAPPING.md để ánh xạ mượt mà vào Resources/Styles/ và các trang XAML trong .NET MAUI.
+- **Trạng thái:** ACCEPTED & IN-PROGRESS (Plan-71).
+
+---
+
 ## [2026-10-31] - Quyết Định 199: Nghiệm Thu Giai Đoạn Mới 10 — Android Native Push & Tự Động Phân Tích Thông Báo Biến Động Số Dư Ngân Hàng Toàn Trình (Android Notification Listener, Banking NLP Parser, Server-Driven Action Protocol & Action Inbox — UC-03.09, UC-03.10, PLAN-69)
 - **Bối cảnh & Chỉ đạo từ Chủ tọa:**
   - Kích hoạt Giai đoạn Mới 10 theo Kế hoạch PLAN-69 đã được Chủ tọa phê duyệt, khép lại trọn vẹn Khối 3 (Trí Tuệ Nhân Tạo & Phần Cứng Native).

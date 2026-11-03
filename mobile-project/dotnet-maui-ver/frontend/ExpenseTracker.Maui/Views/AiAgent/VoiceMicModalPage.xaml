@@ -13,7 +13,7 @@
             <!-- 1. Close Button Bar -->
             <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,4,0,14">
                 <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
-                    <Label Text="🎙️" FontSize="18" VerticalOptions="Center" />
+                    <Image Source="ic_mic.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
                     <Label Text="Trợ Lý Giọng Nói Tài Chính AI" TextColor="#38BDF8" FontSize="15" FontAttributes="Bold" VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
@@ -45,7 +45,7 @@
                         <Shadow Brush="#38BDF8" Offset="0,0" Radius="24" Opacity="0.4" />
                     </Border.Shadow>
 
-                    <Label Text="🎙️" FontSize="42" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Image Source="ic_mic.svg" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
 
                 <!-- Dynamic Feedback / Assistant Prompt -->

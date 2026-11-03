@@ -153,7 +153,7 @@
                                 BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
                                 Padding="12,10">
                             <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                                <Label Text="💼" FontSize="18" VerticalOptions="Center" />
+                                <Image Source="ic_forecast.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
                                 <VerticalStackLayout Spacing="1">
                                     <Label Text="Tốc độ Ngày thường" FontSize="10" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
                                     <Label Text="{Binding Forecast.WeekdayDailyVelocity, StringFormat='{0:N0} đ/ngày'}"
@@ -498,7 +498,7 @@
                                         <Label Text="Hạn Mức DSA" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="10" />
                                         <Label Text="{Binding WhatIfResult.DsaBefore, StringFormat='{0:N0} đ'}"
                                                TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}" FontSize="11" />
-                                        <Label Text="{Binding WhatIfResult.DsaAfter, StringFormat='➔ {0:N0} đ'}"
+                                        <Label Text="{Binding WhatIfResult.DsaAfter, StringFormat='-> {0:N0} đ'}"
                                                TextColor="{AppThemeBinding Light=#DC2626, Dark=#F87171}" FontSize="12" FontAttributes="Bold" />
                                     </VerticalStackLayout>
                                 </Border>
@@ -511,7 +511,7 @@
                                         <Label Text="Tỷ Số DTI" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="10" />
                                         <Label Text="{Binding WhatIfResult.DtiBefore, StringFormat='{0}%'}"
                                                TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}" FontSize="11" />
-                                        <Label Text="{Binding WhatIfResult.DtiAfter, StringFormat='➔ {0}%'}"
+                                        <Label Text="{Binding WhatIfResult.DtiAfter, StringFormat='-> {0}%'}"
                                                TextColor="{AppThemeBinding Light=#D97706, Dark=#FBBF24}" FontSize="12" FontAttributes="Bold" />
                                     </VerticalStackLayout>
                                 </Border>
@@ -524,7 +524,7 @@
                                         <Label Text="Tài Sản Ròng" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="10" />
                                         <Label Text="{Binding WhatIfResult.NetWorthBefore, StringFormat='{0:N0} đ'}"
                                                TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}" FontSize="11" />
-                                        <Label Text="{Binding WhatIfResult.NetWorthAfter, StringFormat='➔ {0:N0} đ'}"
+                                        <Label Text="{Binding WhatIfResult.NetWorthAfter, StringFormat='-> {0:N0} đ'}"
                                                TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" FontSize="12" FontAttributes="Bold" />
                                     </VerticalStackLayout>
                                 </Border>
@@ -548,7 +548,7 @@
                                     BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
-                                    <Label Text="💡 Cú hích Thaler: Đừng mua bốc đồng, hãy tích lũy!"
+                                    <Label Text="Cú hích Thaler: Đừng mua bốc đồng, hãy tích lũy!"
                                            FontSize="11" FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}" />
                                     <Button Text="Chuyển Khoản Này Thành Mục Tiêu Tích Lũy"

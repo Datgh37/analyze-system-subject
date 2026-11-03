@@ -39,8 +39,8 @@
                         BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
                         Shadow="{Shadow Brush='#4F46E5', Offset='0,6', Radius=14, Opacity=0.25}">
                     <Grid>
-                        <Label Text="👤"
-                               FontSize="42"
+                        <Image Source="ic_user.svg" WidthRequest="44" HeightRequest="44"
+                               
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
                     </Grid>

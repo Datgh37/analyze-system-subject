@@ -27,7 +27,7 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="💼" FontSize="18" VerticalOptions="Center" />
+                            <Image Source="ic_income.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
                             <Label Text="PAYROLL AI OCR ENGINE"
                                    FontSize="11"
                                    FontAttributes="Bold"
@@ -98,7 +98,7 @@
                             Padding="12,8"
                             IsVisible="{Binding SelectedFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                         <HorizontalStackLayout Spacing="8">
-                            <Label Text="📄" FontSize="14" VerticalOptions="Center" />
+                            <Image Source="ic_ocr.svg" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
                             <Label Text="{Binding SelectedFileName, StringFormat='Tệp đã chọn: {0}'}"
                                    FontSize="12"
                                    FontAttributes="Bold"
@@ -352,7 +352,7 @@
                                        FontSize="11"
                                        TextColor="{AppThemeBinding Light='#065F46', Dark='#A7F3D0'}"
                                        FontAttributes="Bold" />
-                                <Label Grid.Column="1" Text="💰" FontSize="16" />
+                                <Image Grid.Column="1" Source="ic_income.svg" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
                             </Grid>
                             <Entry Text="{Binding NetSalary}"
                                    Keyboard="Numeric"

@@ -112,7 +112,7 @@
                         BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
                         Padding="32" Margin="0,10">
                     <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                        <Label Text="📋" FontSize="44" HorizontalOptions="Center" />
+                        <Image Source="ic_ocr.svg" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" />
                         <Label Text="Chưa có dữ liệu nhập nào"
                                FontSize="15" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"

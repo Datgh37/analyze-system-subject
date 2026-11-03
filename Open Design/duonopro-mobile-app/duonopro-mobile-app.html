@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DuoNoPro — Full 10-Screen Personal Finance Prototype (Updated)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../design-systems/duonopro-fintech/tokens.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: #060911;
+      background-image: 
+        radial-gradient(circle at 50% 12%, rgba(79, 70, 229, 0.2) 0%, transparent 60%),
+        radial-gradient(circle at 85% 75%, rgba(56, 189, 248, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+      color: var(--fg);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px 48px;
+    }
+
+    /* Showcase Stage Chrome */
+    .stage-header {
+      text-align: center;
+      margin-bottom: 18px;
+      max-width: 680px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(79, 70, 229, 0.15);
+      border: 1px solid rgba(79, 70, 229, 0.35);
+      color: #818CF8;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stage-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .stage-desc {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* Grouped Screen Switcher Navigation */
+    .screen-pills-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .screen-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(17, 24, 39, 0.85);
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .screen-pill-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all var(--motion-fast) var(--ease-standard);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .screen-pill-btn:hover {
+      color: var(--fg);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .screen-pill-btn.active {
+      color: #FFFFFF;
+      background: var(--accent);
+      box-shadow: 0 2px 10px rgba(79, 70, 229, 0.45);
+    }
+
+    /* iPhone 16 Pro Hardware Chassis */
+    .phone-chassis {
+      width: 390px;
+      height: 844px;
+      background: #000000;
+      border-radius: 54px;
+      position: relative;
+      padding: 12px;
+      box-shadow: 
+        0 0 0 4px #262E3D,
+        0 0 0 7px #121721,
+        0 25px 60px -10px rgba(0, 0, 0, 0.8),
+        0 0 80px rgba(79, 70, 229, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Screen Bezel Inside Phone */
+    .screen-canvas {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* iPhone Dynamic Island & Status Bar */
+    .status-bar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 600;
+      position: relative;
+      z-index: 50;
+      color: var(--fg);
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 32px;
+      background: #000000;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+
+    .island-camera {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #080D1A;
+      box-shadow: inset 0 0 2px #38BDF8;
+    }
+
+    .island-sensor {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0A0F1D;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* App Top Bar */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 18px 12px;
+      z-index: 10;
+    }
+
+    .app-branding {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-logo-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4F46E5 0%, #38BDF8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+    }
+
+    .app-name {
+      font-size: var(--text-base);
+      font-weight: 800;
+      color: var(--fg);
+      letter-spacing: -0.01em;
+    }
+
+    .realtime-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
+      color: #34D399;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulseAnim 2s infinite;
+    }
+
+    @keyframes pulseAnim {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Scrollable Screen Content Container */
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 90px;
+      display: none;
+      animation: fadeInScreen var(--motion-base) var(--ease-standard);
+    }
+
+    .screen-content.active {
+      display: block;
+    }
+
+    @keyframes fadeInScreen {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    .screen-content::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    /* Common Card Components */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-action-link {
+      font-size: 12px;
+      color: #818CF8;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Obsidian VIP Hero Card */
+    .obsidian-card {
+      background: linear-gradient(135deg, #181533 0%, #0F172A 70%, #111E38 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .obsidian-card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .gold-chip {
+      width: 36px;
+      height: 26px;
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      border-radius: 6px;
+      border: 1px solid #FDE68A;
+      position: relative;
+    }
+    .gold-chip::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .vip-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #FBBF24;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .hero-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-amount {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .card-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Emerald Hero Card (Income) */
+    .emerald-card {
+      background: linear-gradient(135deg, #064E3B 0%, #065F46 60%, #047857 100%);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 30px -5px rgba(6, 78, 59, 0.5);
+    }
+
+    /* DSA Daily Banner */
+    .dsa-banner {
+      background: var(--surface-warm);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .dsa-title {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .dsa-value {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: #10B981;
+    }
+
+    .dsa-status-tag {
+      font-size: 11px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    /* Quick Action Buttons Grid */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .action-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all var(--motion-fast) var(--ease-standard);
+    }
+
+    .action-btn:hover {
+      background: var(--surface-warm);
+      border-color: #4F46E5;
+      transform: translateY(-1px);
+    }
+
+    .action-icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(79, 70, 229, 0.15);
+      color: #818CF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--fg-2);
+      text-align: center;
+    }
+
+    /* Wallet Rows */
+    .wallet-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .wallet-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .wallet-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wallet-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38BDF8;
+    }
+
+    .wallet-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg);
+    }
+
+    .wallet-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .wallet-balance {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fg);
+    }
+
+    /* Transaction Feed Items */
+    .tx-group-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 14px 0 8px;
+    }
+
+    .tx-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 8px;
+    }
+
+    .tx-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tx-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tx-icon-box.expense { background: rgba(244, 63, 94, 0.12); color: #FB7185; }
+    .tx-icon-box.income { background: rgba(16, 185, 129, 0.12); color: #34D399; }
+    .tx-icon-box.ocr { background: rgba(129, 140, 248, 0.15); color: #818CF8; }
+    .tx-icon-box.recurring { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
+
+    .tx-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 2px;
+    }
+
+    .tx-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tx-tag {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--surface-warm);
+      color: var(--muted);
+    }
+
+    .tx-amount {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+    }
+    .tx-amount.neg { color: #F43F5E; }
+    .tx-amount.pos { color: #10B981; }
+
+    /* AI OCR Multi-item Card */
+    .ocr-pill-banner {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.15) 0%, rgba(56, 189, 248, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .audit-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34D399;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    /* Budget Progress Bars */
+    .budget-bar-wrap {
+      margin-bottom: 12px;
+    }
+
+    .budget-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: var(--surface-warm);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width var(--motion-base) var(--ease-standard);
+    }
+    .progress-fill.safe { background: #10B981; }
+    .progress-fill.warn { background: #F59E0B; }
+    .progress-fill.danger { background: #EF4444; }
+
+    /* Waterfall Cashflow Rows */
+    .waterfall-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .waterfall-row.in { background: rgba(16, 185, 129, 0.08); color: #34D399; }
+    .waterfall-row.out { background: rgba(244, 63, 94, 0.08); color: #FB7185; }
+    .waterfall-row.net { background: rgba(79, 70, 229, 0.15); color: #818CF8; font-weight: 700; }
+
+    /* Nudge XAI Card */
+    .nudge-card {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.6) 0%, rgba(17, 24, 39, 0.9) 100%);
+      border: 1px solid rgba(129, 140, 248, 0.4);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .xai-breakdown {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 11px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: var(--muted);
+    }
+
+    .btn-nudge-primary {
+      flex: 1;
+      background: var(--accent);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-nudge-secondary {
+      background: var(--surface-warm);
+      color: var(--fg-2);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Cooling-off Hub Freeze Card */
+    .cooling-off-card {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(17, 24, 39, 0.8) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .countdown-clock {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: #F87171;
+      text-align: center;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+
+    /* Simulation Test Bar & Smart Actions */
+    .sim-bar-container {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+
+    .sim-chips-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-top: 6px;
+    }
+    .sim-chips-scroll::-webkit-scrollbar { display: none; }
+
+    .sim-bank-btn {
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: #38BDF8;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all var(--motion-fast);
+    }
+    .sim-bank-btn:hover {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+
+    .smart-action-card {
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(30, 41, 59, 0.8) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .jev-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.18);
+      color: #38BDF8;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    /* Debt Optimizer Strategy Card */
+    .strategy-tabs {
+      display: flex;
+      background: rgba(0,0,0,0.3);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      gap: 4px;
+    }
+
+    .strategy-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .strategy-tab-btn.active {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    /* Fixed Bottom Navigation Dock */
+    .bottom-nav-dock {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 78px;
+      background: rgba(17, 24, 39, 0.88);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px 18px;
+      z-index: 40;
+    }
+
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all var(--motion-fast);
+      width: 58px;
+    }
+
+    .nav-tab-btn svg { width: 20px; height: 20px; stroke-width: 2; }
+    .nav-tab-btn span { font-size: 10px; font-weight: 600; }
+    .nav-tab-btn.active { color: #38BDF8; }
+
+    /* Voice AI Floating Action Button */
+    .voice-fab-wrap {
+      position: relative;
+      top: -14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .voice-fab {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4F46E5 0%, #38BDF8 100%);
+      border: 2px solid #0B0F19;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 18px rgba(79, 70, 229, 0.55);
+      cursor: pointer;
+      transition: transform var(--motion-fast);
+    }
+    .voice-fab:hover { transform: scale(1.06); }
+
+    /* iPhone Home Indicator */
+    .home-indicator {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 136px;
+      height: 5px;
+      background: #FFFFFF;
+      opacity: 0.35;
+      border-radius: 3px;
+      z-index: 60;
+    }
+
+    /* Modals */
+    .voice-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .voice-modal-overlay.open { display: flex; }
+
+    .voice-modal-box {
+      width: 100%;
+      background: #111827;
+      border: 1px solid #4F46E5;
+      border-radius: 24px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .voice-wave {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 36px;
+      margin: 16px 0;
+    }
+
+    .wave-bar {
+      width: 4px;
+      background: #38BDF8;
+      border-radius: 2px;
+      animation: wavePulse 1.2s infinite ease-in-out;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.3s; }
+
+    @keyframes wavePulse {
+      0%, 100% { height: 8px; }
+      50% { height: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stage Chrome Header -->
+  <header class="stage-header">
+    <div class="brand-badge">Open Design &bull; .NET MAUI 10 Specification</div>
+    <h1 class="stage-title">DuoNoPro — Full 10-Screen Suite</h1>
+    <p class="stage-desc">Bộ nguyên mẫu tương tác 10 phân hệ tài chính cá nhân chuẩn Dark Luxury Fintech. Tích hợp Snowball vs Avalanche, Khay giả lập 5 Ngân hàng và Quick Login FaceID.</p>
+  </header>
+
+  <!-- Grouped Screen Switcher Navigation -->
+  <nav class="screen-pills-container" aria-label="Screen selector">
+    <!-- Row 1: Core Financial Flows -->
+    <div class="screen-pills-row">
+      <button class="screen-pill-btn active" data-target="tab-wallets">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        1. Ví & Net Worth
+      </button>
+      <button class="screen-pill-btn" data-target="tab-expenses">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v12"/></svg>
+        2. Chi Tiêu & OCR
+      </button>
+      <button class="screen-pill-btn" data-target="tab-incomes">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="19" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        3. Thu Nhập
+      </button>
+      <button class="screen-pill-btn" data-target="tab-budgets">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        4. Ngân Sách
+      </button>
+      <button class="screen-pill-btn" data-target="tab-reports">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+        5. Báo Cáo
+      </button>
+    </div>
+
+    <!-- Row 2: Advanced AI & Discipline Modules -->
+    <div class="screen-pills-row">
+      <button class="screen-pill-btn" data-target="tab-savings">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/></svg>
+        6. Tích Lũy & Trả Nợ
+      </button>
+      <button class="screen-pill-btn" data-target="tab-forecasting">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        7. What-If Sandbox
+      </button>
+      <button class="screen-pill-btn" data-target="tab-nudges">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        8. Cú Hích & 24h
+      </button>
+      <button class="screen-pill-btn" data-target="tab-utilities">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/></svg>
+        9. Khay Hành Động AI
+      </button>
+      <button class="screen-pill-btn" data-target="tab-settings">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        10. Bảo Mật & Quick Login
+      </button>
+    </div>
+  </nav>
+
+  <!-- iPhone 16 Pro Chassis -->
+  <div class="phone-chassis">
+    <div class="screen-canvas">
+      
+      <!-- iOS Status Bar -->
+      <div class="status-bar">
+        <span>09:41</span>
+        <div class="dynamic-island">
+          <div class="island-camera"></div>
+          <div class="island-sensor"></div>
+        </div>
+        <div class="status-icons">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor">
+            <rect x="0" y="9" width="3" height="3" rx="0.5"/>
+            <rect x="4" y="6" width="3" height="6" rx="0.5"/>
+            <rect x="8" y="3" width="3" height="9" rx="0.5"/>
+            <rect x="12" y="0" width="3" height="12" rx="0.5"/>
+          </svg>
+          <svg width="15" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 20h.01"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M5 13a10 10 0 0 1 14 0"/><path d="M1.5 9.5a15 15 0 0 1 21 0"/>
+          </svg>
+          <svg width="22" height="11" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="1" width="18" height="10" rx="3"/>
+            <path d="M21 4v4"/>
+            <rect x="3" y="3" width="13" height="6" rx="1" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- App Header Bar -->
+      <div class="app-header">
+        <div class="app-branding">
+          <div class="app-logo-badge">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="app-name">DuoNoPro</div>
+          </div>
+        </div>
+        <div class="realtime-pill">
+          <div class="pulse-dot"></div>
+          <span>SignalR Live</span>
+        </div>
+      </div>
+
+      <!-- 1. WALLETS & BALANCE -->
+      <div class="screen-content active" id="tab-wallets">
+        <div class="obsidian-card">
+          <div class="card-chip-row">
+            <div class="gold-chip"></div>
+            <div class="vip-tag">OBSIDIAN VIP</div>
+          </div>
+          <div class="hero-label">Tổng Tài Sản Ròng (Net Worth)</div>
+          <div class="hero-amount">128,450,000 ₫</div>
+          <div class="card-footer-row">
+            <span>NGUYEN VAN A</span>
+            <span>&bull;&bull;&bull;&bull; 8899</span>
+          </div>
+        </div>
+
+        <div class="dsa-banner">
+          <div>
+            <div class="dsa-title">Hạn Mức Hôm Nay (DSA)</div>
+            <div class="dsa-value">450,000 ₫ / ngày</div>
+          </div>
+          <div class="dsa-status-tag">Đã tiêu 180k (40% - An toàn)</div>
+        </div>
+
+        <div class="quick-actions">
+          <div class="action-btn" onclick="openVoiceModal()">
+            <div class="action-icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            </div>
+            <span class="action-label">Voice AI</span>
+          </div>
+          <div class="action-btn" onclick="switchTab('tab-utilities')">
+            <div class="action-icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/></svg>
+            </div>
+            <span class="action-label">Quét QR</span>
+          </div>
+          <div class="action-btn" onclick="switchTab('tab-incomes')">
+            <div class="action-icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/></svg>
+            </div>
+            <span class="action-label">Nạp Ví</span>
+          </div>
+          <div class="action-btn" onclick="switchTab('tab-savings')">
+            <div class="action-icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span class="action-label">Chuyển Ví</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Danh Sách Ví Chuẩn ACID</span>
+            <span class="card-action-link">+ Thêm ví</span>
+          </div>
+          
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="wallet-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+              <div><div class="wallet-name">Techcombank Priority</div><div class="wallet-sub">Tài khoản chi tiêu chính</div></div>
+            </div>
+            <div class="wallet-balance">45,200,000 ₫</div>
+          </div>
+
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="wallet-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/></svg></div>
+              <div><div class="wallet-name">MBBank Tích Lũy</div><div class="wallet-sub">Quỹ khẩn cấp 6 tháng</div></div>
+            </div>
+            <div class="wallet-balance">75,000,000 ₫</div>
+          </div>
+
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="wallet-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+              <div><div class="wallet-name">Ví MoMo</div><div class="wallet-sub">Thanh toán vi mô</div></div>
+            </div>
+            <div class="wallet-balance">3,250,000 ₫</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. EXPENSES & AI OCR -->
+      <div class="screen-content" id="tab-expenses">
+        <div class="ocr-pill-banner">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 700; color: #A5B4FC; display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+              Multimodal AI OCR Hóa Đơn
+            </div>
+            <div class="audit-badge">HẬU KIỂM 100%</div>
+          </div>
+          <p style="font-size: 11px; color: var(--fg-2); line-height: 1.4;">
+            Bóc tách tự động 5 món từ hóa đơn WinMart+ đối soát số học sai lệch $\le 1.000$ đ.
+          </p>
+        </div>
+
+        <div class="tx-group-header">Hôm Nay — 03/11/2026</div>
+        <div class="tx-item">
+          <div class="tx-meta">
+            <div class="tx-icon-box ocr"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/></svg></div>
+            <div>
+              <div class="tx-title">Hóa Đơn WinMart+ (5 món)</div>
+              <div class="tx-tags"><span class="tx-tag">Thiết Yếu (Needs)</span><span class="tx-tag">Techcombank</span></div>
+            </div>
+          </div>
+          <div class="tx-amount neg">-245,000 ₫</div>
+        </div>
+
+        <div class="tx-item">
+          <div class="tx-meta">
+            <div class="tx-icon-box expense"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg></div>
+            <div>
+              <div class="tx-title">Highlands Coffee Phin Sữa</div>
+              <div class="tx-tags"><span class="tx-tag">Mong Muốn (Wants)</span><span class="tx-tag">Ví MoMo</span></div>
+            </div>
+          </div>
+          <div class="tx-amount neg">-45,000 ₫</div>
+        </div>
+
+        <div class="tx-item">
+          <div class="tx-meta">
+            <div class="tx-icon-box expense"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></div>
+            <div>
+              <div class="tx-title">Netflix Subscription</div>
+              <div class="tx-tags"><span class="tx-tag" style="color:#FBBF24;">Bẫy Định Kỳ ⚠️</span><span class="tx-tag">Techcombank</span></div>
+            </div>
+          </div>
+          <div class="tx-amount neg">-260,000 ₫</div>
+        </div>
+      </div>
+
+      <!-- 3. INCOMES & RECURRING -->
+      <div class="screen-content" id="tab-incomes">
+        <div class="emerald-card">
+          <div class="hero-label" style="color: #A7F3D0;">TỔNG THU NHẬP THÁNG NÀY</div>
+          <div class="hero-amount" style="color: #FFFFFF;">38,500,000 ₫</div>
+          <div style="font-size: 11px; color: #D1FAE5; opacity: 0.9;">Tự động cộng dồn vào số dư các ví tương ứng</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Lịch Thu Nhập Định Kỳ</span>
+            <span class="card-action-link">+ Thêm lịch</span>
+          </div>
+
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="tx-icon-box recurring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg></div>
+              <div>
+                <div class="wallet-name">Lương Công Ty Chính Thức</div>
+                <div class="wallet-sub">Ngày 05 hàng tháng &bull; Techcombank</div>
+              </div>
+            </div>
+            <div class="tx-amount pos">+30,000,000 ₫</div>
+          </div>
+
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="tx-icon-box recurring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg></div>
+              <div>
+                <div class="wallet-name">Cổ Tức FPT Hàng Tháng</div>
+                <div class="wallet-sub">Ngày 15 hàng tháng &bull; MBBank</div>
+              </div>
+            </div>
+            <div class="tx-amount pos">+2,500,000 ₫</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            OCR Bóc Tách Bảng Lương (Payslip)
+          </div>
+          <p style="font-size: 12px; color: var(--fg-2); margin: 8px 0; line-height: 1.4;">
+            Đối soát phiếu lương: Lương gộp 35M - BHXH (10.5%) - Thuế TNCN = 30,000,000 ₫ thực nhận (Sai lệch công thức: 0 đ).
+          </p>
+          <button class="btn-nudge-primary" style="background: #059669;">Quét Phiếu Lương Mới</button>
+        </div>
+      </div>
+
+      <!-- 4. BUDGETS & DSA -->
+      <div class="screen-content" id="tab-budgets">
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Quy Tắc 50/30/20</span>
+            <span class="card-action-link">Đổi Kakeibo</span>
+          </div>
+
+          <div class="budget-bar-wrap">
+            <div class="budget-bar-label"><span>Thiết Yếu (Needs 50%)</span><span style="font-family: var(--font-mono);">12.5M / 15M (83%)</span></div>
+            <div class="progress-track"><div class="progress-fill warn" style="width: 83%;"></div></div>
+          </div>
+          <div class="budget-bar-wrap">
+            <div class="budget-bar-label"><span>Mong Muốn (Wants 30%)</span><span style="font-family: var(--font-mono);">5.2M / 9M (58%)</span></div>
+            <div class="progress-track"><div class="progress-fill safe" style="width: 58%;"></div></div>
+          </div>
+          <div class="budget-bar-wrap">
+            <div class="budget-bar-label"><span>Tích Lũy (Savings 20%)</span><span style="font-family: var(--font-mono);">6.0M / 6M (100%)</span></div>
+            <div class="progress-track"><div class="progress-fill safe" style="width: 100%;"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Radar Tốc Độ Chi Tiêu (Spending Velocity)
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+            <div><div style="font-size: 11px; color: var(--muted);">Chỉ số Vận tốc:</div><div style="font-size: 18px; font-weight: 700; color: #10B981; font-family: var(--font-mono);">1.05x (An toàn)</div></div>
+            <div><div style="font-size: 11px; color: var(--muted); text-align: right;">Dự phóng cạn tiền:</div><div style="font-size: 14px; font-weight: 700; color: #38BDF8; font-family: var(--font-mono);">30/11/2026</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. REPORTS & WATERFALL -->
+      <div class="screen-content" id="tab-reports">
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Thác Nước Dòng Tiền (Waterfall)</span>
+            <span style="font-size: 11px; color: var(--muted);">Tháng 11/2026</span>
+          </div>
+
+          <div class="waterfall-row in"><span>1. Tổng Thu Nhập Nhận Được</span><span style="font-family: var(--font-mono);">+30,000,000 ₫</span></div>
+          <div class="waterfall-row out"><span>2. Chi Phí Cố Định (Nhà, Điện Nước)</span><span style="font-family: var(--font-mono);">-10,500,000 ₫</span></div>
+          <div class="waterfall-row out"><span>3. Chi Phí Linh Hoạt Sinh Hoạt</span><span style="font-family: var(--font-mono);">-7,200,000 ₫</span></div>
+          <div class="waterfall-row out"><span>4. Tích Lũy Vào Quỹ Mục Tiêu</span><span style="font-family: var(--font-mono);">-6,000,000 ₫</span></div>
+          <div class="waterfall-row net"><span>5. Dòng Tiền Tự Do Khả Dụng (Net)</span><span style="font-family: var(--font-mono);">+6,300,000 ₫</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2"><path d="M12 2v20"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="M14.83 9.17l4.24-4.24"/></svg> Kiểm Định Ngoại Lai Z-Score (&mu; &plusmn; 2&sigma;)</div>
+          <p style="font-size: 12px; color: var(--fg-2); margin-top: 6px; line-height: 1.4;">Không phát hiện giao dịch đột biến trong 30 ngày qua (Z-score &lt; 1.4).</p>
+        </div>
+      </div>
+
+      <!-- 6. SAVINGS GOALS & DEBT OPTIMIZER -->
+      <div class="screen-content" id="tab-savings">
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Quỹ Khẩn Cấp (Emergency Fund)</span>
+            <span style="font-size: 11px; color: #34D399; font-weight: 700;">75% ĐẠT CHỈ TIÊU</span>
+          </div>
+          <div style="font-size: 20px; font-weight: 700; font-family: var(--font-mono); color: #FFFFFF; margin-bottom: 4px;">75,000,000 / 100,000,000 ₫</div>
+          <div class="progress-track" style="margin-bottom: 12px;"><div class="progress-fill safe" style="width: 75%;"></div></div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary">+ Nạp Quỹ</button>
+            <button class="btn-nudge-secondary" style="border-color: #EF4444; color: #F87171;">Rút Quỹ (Nudge Cảnh Báo)</button>
+          </div>
+        </div>
+
+        <!-- NEW FEATURE: Debt Snowball vs Avalanche Optimizer -->
+        <div class="card" style="border-color: #F59E0B;">
+          <div class="card-title-row">
+            <span class="card-title" style="color: #FBBF24;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Chiến Lược Tối Ưu Nợ Cá Nhân
+            </span>
+            <span style="font-size: 10px; background: rgba(245, 158, 11, 0.2); color: #FDE68A; padding: 2px 6px; border-radius: 4px;">TIẾT KIỆM 12.8M</span>
+          </div>
+
+          <div class="strategy-tabs">
+            <button class="strategy-tab-btn active" id="btnAvalanche" onclick="selectDebtStrategy('avalanche')">Avalanche (Lãi Cao)</button>
+            <button class="strategy-tab-btn" id="btnSnowball" onclick="selectDebtStrategy('snowball')">Snowball (Khoản Nhỏ)</button>
+          </div>
+
+          <div id="debtStrategyDesc" style="font-size: 12px; color: var(--fg-2); margin-bottom: 10px; line-height: 1.4;">
+            <strong>Chiến lược Avalanche (Toán học):</strong> Ưu tiên tất toán khoản Vay FE Credit (Lãi 24%/năm) trước, giúp tiết kiệm <strong>12.800.000 ₫</strong> tiền lãi lũy kế và giải phóng nợ trước 4 tháng.
+          </div>
+
+          <div class="wallet-row" style="padding: 6px 0;">
+            <div class="wallet-info">
+              <span style="font-size: 10px; background: rgba(239, 68, 68, 0.2); color: #FCA5A5; padding: 2px 6px; border-radius: 4px;">ƯU TIÊN 1</span>
+              <div><div style="font-size: 12px; font-weight: 700;">Vay Tiêu Dùng FE Credit</div><div style="font-size: 10px; color: var(--muted);">Lãi 24% &bull; Tối thiểu 1.5M/th</div></div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">18,500,000 ₫</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Sổ Kakeibo 4 Cột Trụ Hũ Tài Chính</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+            <div style="background: var(--surface-warm); padding: 10px; border-radius: 10px;">
+              <div style="font-size: 11px; color: var(--muted);">1. Thiết Yếu (Needs)</div>
+              <div style="font-size: 14px; font-weight: 700; font-family: var(--font-mono); color: #10B981;">15,000,000 ₫</div>
+            </div>
+            <div style="background: var(--surface-warm); padding: 10px; border-radius: 10px;">
+              <div style="font-size: 11px; color: var(--muted);">2. Mong Muốn (Wants)</div>
+              <div style="font-size: 14px; font-weight: 700; font-family: var(--font-mono); color: #F59E0B;">9,000,000 ₫</div>
+            </div>
+            <div style="background: var(--surface-warm); padding: 10px; border-radius: 10px;">
+              <div style="font-size: 11px; color: var(--muted);">3. Văn Hóa (Culture)</div>
+              <div style="font-size: 14px; font-weight: 700; font-family: var(--font-mono); color: #818CF8;">3,000,000 ₫</div>
+            </div>
+            <div style="background: var(--surface-warm); padding: 10px; border-radius: 10px;">
+              <div style="font-size: 11px; color: var(--muted);">4. Bất Ngờ (Unexpected)</div>
+              <div style="font-size: 14px; font-weight: 700; font-family: var(--font-mono); color: #38BDF8;">3,000,000 ₫</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. WHAT-IF SANDBOX & FORECASTING -->
+      <div class="screen-content" id="tab-forecasting">
+        <div class="card" style="border-color: #38BDF8;">
+          <div class="card-title" style="color: #38BDF8;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            Phòng Thí Nghiệm What-If Sandbox (0ms)
+          </div>
+          <p style="font-size: 12px; color: var(--muted); margin: 6px 0 12px;">Mô phỏng các biến động tài chính trong bộ nhớ mà không ghi vào cơ sở dữ liệu thật.</p>
+
+          <div style="background: var(--surface-warm); padding: 12px; border-radius: 12px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 4px;">
+              <span>Kịch bản: Sụt giảm thu nhập (-20%)</span>
+              <span style="color: #F43F5E;">DSA: 360k/ngày</span>
+            </div>
+            <div style="font-size: 11px; color: var(--muted);">Hạn mức chi tiêu mỗi ngày tự động thắt chặt để bảo toàn 100% quỹ tích lũy.</div>
+          </div>
+
+          <div style="background: var(--surface-warm); padding: 12px; border-radius: 12px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 4px;">
+              <span>Kịch bản: Vay mua xe trả góp (4.5M/th)</span>
+              <span style="color: #38BDF8;">DTI: 27% (An toàn)</span>
+            </div>
+            <div style="font-size: 11px; color: var(--muted);">Tỷ lệ nợ trên thu nhập (DTI) vẫn nằm dưới ngưỡng cảnh báo rủi ro 35%.</div>
+          </div>
+
+          <button class="btn-nudge-primary" style="background: #0284C7;">Chạy Mô Phỏng Kịch Bản Mới</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Radar Thâm Hụt Kỳ Lương Kế Tiếp</div>
+          <div style="font-size: 13px; color: var(--fg-2); margin-top: 6px; line-height: 1.4;">
+            Ngày cạn tiền lỏng dự kiến: <strong>30/11/2026</strong> &bull; Ngày nhận lương kế tiếp: <strong>05/12/2026</strong>.
+            <div style="margin-top: 6px; color: #10B981; font-weight: 600;">✓ Không có nguy cơ khủng hoảng thanh khoản (IsLiquidityCrisis = false).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. NUDGES & COOLING-OFF HUB -->
+      <div class="screen-content" id="tab-nudges">
+        <div class="nudge-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 11px; font-weight: 700; color: #A5B4FC; background: rgba(79, 70, 229, 0.25); padding: 3px 8px; border-radius: 6px;">THALER NUDGE &bull; XAI 3 THÀNH PHẦN</span>
+            <span style="font-size: 11px; color: #818CF8;">Độ tin cậy: 92%</span>
+          </div>
+          <div style="font-size: 13px; line-height: 1.45; color: var(--fg-2); margin-bottom: 12px;">
+            <strong>Cảnh báo vi mô:</strong> Tốc độ chi ăn uống ngoài hàng đang tăng 85% so với tuần trước. Bạn có nguy cơ thâm hụt 1.2 triệu vào cuối tháng nếu không điều chỉnh.
+          </div>
+          <div class="xai-breakdown">
+            <div>&bull; <strong>Dữ liệu:</strong> Đã tiêu 2.1M / 2.5M hạn mức danh mục Ăn uống.</div>
+            <div>&bull; <strong>Toán học:</strong> Tốc độ 1.85x vượt ngưỡng giới hạn DSA an toàn.</div>
+            <div>&bull; <strong>Đề xuất:</strong> Tái cân đối 400.000 ₫ từ quỹ "Giải Trí" bù sang "Ăn Uống".</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary">Đồng Ý Tái Cân Đối</button>
+            <button class="btn-nudge-secondary">Xem Xét Sau</button>
+          </div>
+        </div>
+
+        <div class="cooling-off-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 700; color: #F87171;">KHOẢNG TRỄ TÂM LÝ 24H (COOLING-OFF)</span>
+            <span style="font-size: 10px; background: rgba(239, 68, 68, 0.2); color: #FCA5A5; padding: 2px 6px; border-radius: 4px;">Đang phong tỏa</span>
+          </div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 8px;">iPhone 16 Pro Max 256GB</div>
+          <div style="font-size: 18px; font-weight: 700; font-family: var(--font-mono); color: #FFFFFF;">32,500,000 ₫</div>
+          <div class="countdown-clock">14 : 22 : 39</div>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-size: 11px; color: #E2E8F0; margin-bottom: 12px;">
+            Quy đổi lao động: <strong>&asymp; 162.5 giờ làm việc</strong> (~20.3 ngày công toàn thời gian).
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-secondary" style="flex: 1; border-color: #EF4444; color: #FCA5A5;">Hủy Bỏ Khoản Chi</button>
+            <button class="btn-nudge-secondary" style="font-size: 11px;">Mở Khóa Khẩn Cấp</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. SMART UTILITIES & ACTION INBOX WITH 5-BANK SIMULATION -->
+      <div class="screen-content" id="tab-utilities">
+        <!-- SIMULATION TEST BAR FOR DEFENSE DEMO -->
+        <div class="sim-bar-container">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--fg);">Thanh Giả Lập Biến Động Số Dư (Demo 1-Chạm)</span>
+            <span style="font-size: 10px; color: #38BDF8;">5 Ngân Hàng</span>
+          </div>
+          <div class="sim-chips-scroll">
+            <button class="sim-bank-btn" onclick="simulateBank('ACB', 'Emart Gò Vấp', '-350,000 ₫', 0.94, 'Ăn Uống (Needs)')">ACB (-350k)</button>
+            <button class="sim-bank-btn" onclick="simulateBank('MOMO', 'Circle K', '-85,000 ₫', 0.91, 'Tiện Ích (Needs)')">MoMo (-85k)</button>
+            <button class="sim-bank-btn" onclick="simulateBank('TCB', 'Highlands Coffee', '-120,000 ₫', 0.72, 'Mong Muốn (Wants)?')">TCB (-120k)</button>
+            <button class="sim-bank-btn" onclick="simulateBank('VCB', 'ShopeePay', '-500,000 ₫', 0.88, 'Mua Sắm (Wants)')">VCB (-500k)</button>
+            <button class="sim-bank-btn" onclick="simulateBank('MB', 'Petrolimex', '-200,000 ₫', 0.96, 'Đi Lại (Needs)')">MB (-200k)</button>
+          </div>
+        </div>
+
+        <div class="smart-action-card" id="smartActionCard">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #38BDF8;" id="actionBankTag">ACB NOTIFICATION NLP &bull; KHOẢN CHI MỚI</span>
+            <span class="jev-badge" id="actionJevBadge">Jev Xác Suất: 0.94 (&ge; 0.85)</span>
+          </div>
+          <div style="font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 4px;" id="actionMerchantTitle">
+            Emart Gò Vấp: -350,000 ₫
+          </div>
+          <p style="font-size: 11px; color: var(--muted); margin-bottom: 10px;" id="actionCategorySuggestion">
+            Đề xuất danh mục: Ăn Uống &amp; Nhu Yếu Phẩm (Thiết Yếu - Needs).
+          </p>
+          <button class="btn-nudge-primary" style="background: linear-gradient(135deg, #10B981, #059669);" id="actionBtnCommit">
+            ✓ Lưu Nhanh 1-Chạm (Auto-save 0ms)
+          </button>
+        </div>
+
+        <!-- Subscription Traps Hub -->
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Quản Lý Bẫy Thuê Bao Định Kỳ</span>
+            <span style="font-size: 10px; background: rgba(245, 158, 11, 0.2); color: #FBBF24; padding: 2px 6px; border-radius: 4px;">3 Bẫy</span>
+          </div>
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="tx-icon-box expense"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/></svg></div>
+              <div><div style="font-size: 12px; font-weight: 700;">Netflix Premium 4K</div><div style="font-size: 10px; color: var(--muted);">Tự trừ ngày 02 hàng tháng</div></div>
+            </div>
+            <div style="text-align: right;"><div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">-260,000 ₫</div><button style="border:none; background:transparent; font-size:10px; color:#EF4444; font-weight:700; cursor:pointer;">Hủy gói</button></div>
+          </div>
+          <div class="wallet-row">
+            <div class="wallet-info">
+              <div class="tx-icon-box expense"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/></svg></div>
+              <div><div style="font-size: 12px; font-weight: 700;">Spotify Family Plan</div><div style="font-size: 10px; color: var(--muted);">Tự trừ ngày 18 hàng tháng</div></div>
+            </div>
+            <div style="text-align: right;"><div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">-99,000 ₫</div><button style="border:none; background:transparent; font-size:10px; color:#EF4444; font-weight:700; cursor:pointer;">Hủy gói</button></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Tạo Mã Chuyển Khoản VietQR Napas 247</span>
+            <span style="font-size: 10px; color: #38BDF8; font-weight: 700;">CHUẨN EMVCo</span>
+          </div>
+          <div style="background: #FFFFFF; width: 130px; height: 130px; margin: 0 auto 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.4);">
+            <svg width="90" height="90" viewBox="0 0 24 24" fill="#000000">
+              <rect x="2" y="2" width="8" height="8" rx="1.5"/>
+              <rect x="4" y="4" width="4" height="4" fill="#FFFFFF"/>
+              <rect x="14" y="2" width="8" height="8" rx="1.5"/>
+              <rect x="16" y="4" width="4" height="4" fill="#FFFFFF"/>
+              <rect x="2" y="14" width="8" height="8" rx="1.5"/>
+              <rect x="4" y="16" width="4" height="4" fill="#FFFFFF"/>
+              <rect x="14" y="14" width="4" height="4"/>
+              <rect x="19" y="14" width="3" height="3"/>
+              <rect x="14" y="19" width="3" height="3"/>
+            </svg>
+          </div>
+          <div style="text-align: center; font-size: 11px; font-weight: 700; color: #E2E8F0;">Techcombank &bull; 1903688888 &bull; 245,000 ₫</div>
+        </div>
+      </div>
+
+      <!-- 10. SECURITY & SETTINGS HUB -->
+      <div class="screen-content" id="tab-settings">
+        <!-- Quick Login Fingerprint Area Preview -->
+        <div class="card" style="text-align: center; border-color: #4F46E5;">
+          <div style="font-size: 12px; font-weight: 700; color: #818CF8; margin-bottom: 12px;">ĐĂNG NHẬP NHANH BIOMETRICS (QUICK LOGIN)</div>
+          <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #4F46E5, #7C3AED); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div style="font-size: 14px; font-weight: 700; color: #FFFFFF;">Xác thực FaceID / Vân tay 1-Chạm</div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">Nguyễn Văn A &bull; vana@example.com</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Két Bảo Mật Dữ Liệu Fintech (Security Vault)
+          </div>
+          <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--muted);">Mã hóa nhạy cảm:</span>
+              <span style="color: #10B981; font-weight: 700;">AES-256-GCM Đang bảo vệ</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--muted);">Khóa sinh trắc học:</span>
+              <span style="color: #38BDF8; font-weight: 700;">FaceID / Vân tay: BẬT</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0;">
+              <span style="color: var(--muted);">Phiên xác thực:</span>
+              <span style="color: #E2E8F0; font-family: var(--font-mono);">JWT Rotation + Redis</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title-row">
+            <span class="card-title">Chuyển Đổi Nguồn Dữ Liệu (Data Mode)</span>
+          </div>
+          <p style="font-size: 11px; color: var(--muted); margin-bottom: 10px;">
+            Dynamic Repository Factory cho phép chuyển đổi tức thì giữa Backend thật và Mock Data ngoại tuyến 0ms.
+          </p>
+          <div style="background: var(--surface-warm); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 13px; font-weight: 700; color: #10B981;">🟢 Live API Mode (Refit)</div>
+              <div style="font-size: 11px; color: var(--muted);">http://localhost:5018 (Web API)</div>
+            </div>
+            <button class="btn-nudge-secondary" style="font-size: 11px;">Đổi sang Offline Mock</button>
+          </div>
+        </div>
+
+        <button class="btn-nudge-secondary" style="width: 100%; border-color: #EF4444; color: #F87171; padding: 12px; margin-top: 10px;">
+          Đăng Xuất Tài Khoản
+        </button>
+      </div>
+
+      <!-- Fixed Bottom Navigation Dock -->
+      <div class="bottom-nav-dock">
+        <button class="nav-tab-btn active" data-target="tab-wallets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span>Ví</span>
+        </button>
+        <button class="nav-tab-btn" data-target="tab-expenses">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v12"/></svg>
+          <span>Chi Tiêu</span>
+        </button>
+
+        <div class="voice-fab-wrap">
+          <button class="voice-fab" onclick="openVoiceModal()" aria-label="Ra lệnh bằng giọng nói">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          </button>
+        </div>
+
+        <button class="nav-tab-btn" data-target="tab-budgets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Ngân Sách</span>
+        </button>
+        <button class="nav-tab-btn" data-target="tab-reports">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+          <span>Báo Cáo</span>
+        </button>
+      </div>
+
+      <!-- iOS Home Indicator -->
+      <div class="home-indicator"></div>
+
+      <!-- Interactive Voice AI Modal Popup -->
+      <div class="voice-modal-overlay" id="voiceModal" onclick="closeVoiceModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()">
+          <div style="font-size: 11px; font-weight: 700; color: #818CF8; letter-spacing: 0.1em; text-transform: uppercase;">
+            VOICE INTENT ROUTER AGENT
+          </div>
+          <div style="font-size: 15px; font-weight: 700; color: #FFFFFF; margin-top: 6px;">
+            Đang lắng nghe giọng nói...
+          </div>
+          <div class="voice-wave">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+          </div>
+          <div style="font-size: 13px; color: #38BDF8; font-style: italic; background: rgba(56, 189, 248, 0.1); padding: 8px 12px; border-radius: 8px; margin-bottom: 16px;">
+            "Ăn trưa bún bò 65 nghìn thanh toán bằng Techcombank"
+          </div>
+          <button class="btn-nudge-primary" onclick="closeVoiceModal()">Xác Nhận Ghi Nhận (1-Chạm)</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function switchTab(targetId) {
+      document.querySelectorAll('.screen-content').forEach(el => el.classList.remove('active'));
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) targetEl.classList.add('active');
+
+      document.querySelectorAll('.screen-pill-btn').forEach(btn => {
+        if (btn.getAttribute('data-target') === targetId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-target') === targetId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    document.querySelectorAll('.screen-pill-btn, .nav-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-target');
+        if (target) switchTab(target);
+      });
+    });
+
+    function openVoiceModal() {
+      document.getElementById('voiceModal').classList.add('open');
+    }
+    function closeVoiceModal(e) {
+      document.getElementById('voiceModal').classList.remove('open');
+    }
+
+    // Dynamic Bank Simulation on Screen 9
+    function simulateBank(bank, merchant, amount, conf, cat) {
+      document.getElementById('actionBankTag').textContent = `${bank} NOTIFICATION NLP • BIẾN ĐỘNG MỚI`;
+      document.getElementById('actionJevBadge').textContent = `Jev Xác Suất: ${conf} (${conf >= 0.85 ? '≥ 0.85' : '< 0.85'})`;
+      document.getElementById('actionMerchantTitle').textContent = `${merchant}: ${amount}`;
+      document.getElementById('actionCategorySuggestion').innerHTML = `Đề xuất phân loại: <strong>${cat}</strong>`;
+      
+      const btn = document.getElementById('actionBtnCommit');
+      if (conf >= 0.85) {
+        btn.textContent = '✓ Lưu Nhanh 1-Chạm (Auto-save 0ms)';
+        btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+      } else {
+        btn.textContent = '⚡ Jev Choice: Xác Nhận Danh Mục';
+        btn.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
+      }
+    }
+
+    // Debt Strategy Switcher
+    function selectDebtStrategy(strategy) {
+      const btnAvalanche = document.getElementById('btnAvalanche');
+      const btnSnowball = document.getElementById('btnSnowball');
+      const desc = document.getElementById('debtStrategyDesc');
+
+      if (strategy === 'avalanche') {
+        btnAvalanche.classList.add('active');
+        btnSnowball.classList.remove('active');
+        desc.innerHTML = '<strong>Chiến lược Avalanche (Toán học):</strong> Ưu tiên tất toán khoản Vay FE Credit (Lãi 24%/năm) trước, giúp tiết kiệm <strong>12.800.000 ₫</strong> tiền lãi lũy kế và giải phóng nợ trước 4 tháng.';
+      } else {
+        btnSnowball.classList.add('active');
+        btnAvalanche.classList.remove('active');
+        desc.innerHTML = '<strong>Chiến lược Snowball (Tâm lý):</strong> Ưu tiên thanh toán dứt điểm Thẻ tín dụng 5 triệu trước để tạo cảm giác chiến thắng tinh thần (Quick Psychological Win), sau đó dồn tiền trả tiếp khoản lớn hơn.';
+      }
+    }
+
+    // Live countdown clock simulation
+    let secondsLeft = 14 * 3600 + 22 * 60 + 39;
+    const clockEl = document.querySelector('.countdown-clock');
+    if (clockEl) {
+      setInterval(() => {
+        if (secondsLeft > 0) secondsLeft--;
+        const h = Math.floor(secondsLeft / 3600).toString().padStart(2, '0');
+        const m = Math.floor((secondsLeft % 3600) / 60).toString().padStart(2, '0');
+        const s = (secondsLeft % 60).toString().padStart(2, '0');
+        clockEl.textContent = `${h} : ${m} : ${s}`;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

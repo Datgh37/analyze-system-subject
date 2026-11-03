@@ -28,7 +28,7 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="✨" FontSize="18" VerticalOptions="Center" />
+                            <Image Source="ic_ocr.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
                             <Label Text="GEMINI 2.5 FLASH VISION"
                                    FontSize="11"
                                    FontAttributes="Bold"
@@ -70,7 +70,7 @@
                         Padding="10,12"
                         Stroke="{AppThemeBinding Light='#C7D2FE', Dark='#312E81'}">
                     <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                        <Label Text="📷" FontSize="24" HorizontalOptions="Center" />
+                        <Image Source="ic_camera.svg" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" />
                         <Label Text="Chụp Ảnh"
                                FontSize="12"
                                FontAttributes="Bold"
@@ -98,7 +98,7 @@
                         Padding="10,12"
                         Stroke="{AppThemeBinding Light='#C7D2FE', Dark='#312E81'}">
                     <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                        <Label Text="🖼️" FontSize="24" HorizontalOptions="Center" />
+                        <Image Source="ic_ocr.svg" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" />
                         <Label Text="Tải Hóa Đơn"
                                FontSize="12"
                                FontAttributes="Bold"
@@ -126,7 +126,7 @@
                         Padding="10,12"
                         Stroke="{AppThemeBinding Light='#DDD6FE', Dark='#4C1D95'}">
                     <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                        <Label Text="🎤" FontSize="24" HorizontalOptions="Center" />
+                        <Image Source="ic_mic.svg" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" />
                         <Label Text="Khẩu Lệnh AI"
                                FontSize="12"
                                FontAttributes="Bold"
@@ -158,7 +158,7 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                         <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
-                            <Label Text="📷" FontSize="16" VerticalOptions="Center" />
+                            <Image Source="ic_camera.svg" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
                             <Label Text="Ảnh Hóa Đơn Xem Trước"
                                    FontSize="13" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light='#1E293B', Dark='#F1F5F9'}"
@@ -222,7 +222,7 @@
                     Padding="12,8"
                     IsVisible="{Binding SelectedFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                    <Label Grid.Column="0" Text="📄" FontSize="14" VerticalOptions="Center" />
+                    <Image Grid.Column="0" Source="ic_ocr.svg" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding SelectedFileName}" FontSize="12" LineBreakMode="MiddleTruncation" VerticalOptions="Center" />
                     <Label Grid.Column="2" Text="Đã sẵn sàng" TextColor="#2563EB" FontSize="11" FontAttributes="Bold" VerticalOptions="Center" />
                 </Grid>
@@ -418,7 +418,7 @@
                             IsVisible="{Binding IsMathDiscrepancy}">
                         <VerticalStackLayout Spacing="4">
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                <Label Text="⚠️" FontSize="14" VerticalOptions="Center" />
+                                <Image Source="ic_warning.svg" WidthRequest="14" HeightRequest="14" VerticalOptions="Center" />
                                 <Label Text="CẢNH BÁO SAI LỆCH SỐ HỌC (UC-03.08)"
                                        FontSize="11" FontAttributes="Bold"
                                        TextColor="#B91C1C" VerticalOptions="Center" />
@@ -437,7 +437,7 @@
                             Stroke="#BBF7D0"
                             IsVisible="{Binding IsMathDiscrepancy, Converter={StaticResource InvertedBoolConverter}}">
                         <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                            <Label Text="✅" FontSize="14" VerticalOptions="Center" />
+                            <Image Source="ic_check.svg" WidthRequest="14" HeightRequest="14" VerticalOptions="Center" />
                             <Label Text="Kiểm toán số học khớp 100% (Δ ≤ 1.000 đ) — Độ tin cậy AI cao"
                                    FontSize="11" FontAttributes="Bold"
                                    TextColor="#15803D" VerticalOptions="Center" />

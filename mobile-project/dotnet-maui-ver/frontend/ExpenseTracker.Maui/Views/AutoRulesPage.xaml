@@ -28,7 +28,7 @@
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="🤖" FontSize="18" VerticalOptions="Center" />
+                            <Image Source="ic_rules.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
                             <Label Text="CONTINUOUS LEARNING RULES"
                                    FontSize="11"
                                    FontAttributes="Bold"
@@ -256,7 +256,7 @@
 
                                 <!-- Row 2: Target Category Destination -->
                                 <HorizontalStackLayout Grid.Row="2" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="➔ Tự động gán:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" VerticalOptions="Center" />
+                                    <Label Text="Tự động gán:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" VerticalOptions="Center" />
                                     <Border BackgroundColor="{AppThemeBinding Light='#ECFDF5', Dark='#064E3B'}"
                                             Stroke="{AppThemeBinding Light='#A7F3D0', Dark='#047857'}"
                                             StrokeThickness="1"

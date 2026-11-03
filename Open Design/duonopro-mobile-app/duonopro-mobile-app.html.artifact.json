@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "DuoNoPro Full 10-Screen Mobile Prototype (Updated)",
+  "entry": "Open Design/duonopro-mobile-app/duonopro-mobile-app.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "standalone",
+    "site",
+    "png",
+    "jpeg",
+    "pdf"
+  ],
+  "createdAt": "2026-11-03T05:38:21.686Z",
+  "updatedAt": "2026-11-03T05:38:21.686Z",
+  "sourceSkillId": "od:prototype:mobile-app",
+  "designSystemId": "user:duonopro-fintech"
+}

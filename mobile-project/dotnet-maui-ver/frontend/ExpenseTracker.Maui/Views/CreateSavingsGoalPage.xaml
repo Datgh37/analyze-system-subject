@@ -249,7 +249,7 @@
                         <VerticalStackLayout Spacing="6">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
-                                       Text="📊 TÍNH TOÁN DỰ KIẾN MỖI THÁNG"
+                                       Text="TÍNH TOÁN DỰ KIẾN MỖI THÁNG"
                                        FontSize="11"
                                        FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light='#1E40AF', Dark='#93C5FD'}" />
