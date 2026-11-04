@@ -1111,19 +1111,19 @@
             </div>
             <span class="action-label">Voice AI</span>
           </div>
-          <div class="action-btn" onclick="switchTab('tab-utilities')">
+          <div class="action-btn" onclick="openQrScannerModal()">
             <div class="action-icon-circle">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/></svg>
             </div>
             <span class="action-label">Quét QR</span>
           </div>
-          <div class="action-btn" onclick="switchTab('tab-incomes')">
+          <div class="action-btn" onclick="openDepositModal()">
             <div class="action-icon-circle">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/></svg>
             </div>
             <span class="action-label">Nạp Ví</span>
           </div>
-          <div class="action-btn" onclick="switchTab('tab-savings')">
+          <div class="action-btn" onclick="openTransferModal()">
             <div class="action-icon-circle">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
@@ -1229,7 +1229,7 @@
         <div class="card">
           <div class="card-title-row">
             <span class="card-title">Lịch Thu Nhập Định Kỳ</span>
-            <span class="card-action-link">+ Thêm lịch</span>
+            <span class="card-action-link" onclick="openAddRecurringModal()">+ Thêm lịch</span>
           </div>
 
           <div class="wallet-row">
@@ -1263,7 +1263,7 @@
           <p style="font-size: 12px; color: var(--fg-2); margin: 8px 0; line-height: 1.4;">
             Đối soát phiếu lương: Lương gộp 35M - BHXH (10.5%) - Thuế TNCN = 30,000,000 ₫ thực nhận (Sai lệch công thức: 0 đ).
           </p>
-          <button class="btn-nudge-primary" style="background: #059669;">Quét Phiếu Lương Mới</button>
+          <button class="btn-nudge-primary" style="background: #059669;" onclick="scanPayslipOcr()">Quét Phiếu Lương Mới</button>
         </div>
       </div>
 
@@ -1272,7 +1272,7 @@
         <div class="card">
           <div class="card-title-row">
             <span class="card-title">Quy Tắc 50/30/20</span>
-            <span class="card-action-link">Đổi Kakeibo</span>
+            <span class="card-action-link" id="linkToggleBudgetMethod" onclick="toggleBudgetMethod()">Đổi Kakeibo</span>
           </div>
 
           <div class="budget-bar-wrap">
@@ -1332,8 +1332,8 @@
           <div style="font-size: 20px; font-weight: 700; font-family: var(--font-mono); color: #FFFFFF; margin-bottom: 4px;">75,000,000 / 100,000,000 ₫</div>
           <div class="progress-track" style="margin-bottom: 12px;"><div class="progress-fill safe" style="width: 75%;"></div></div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn-nudge-primary">+ Nạp Quỹ</button>
-            <button class="btn-nudge-secondary" style="border-color: #EF4444; color: #F87171;">Rút Quỹ (Nudge Cảnh Báo)</button>
+            <button class="btn-nudge-primary" onclick="depositEmergencyFund()">+ Nạp Quỹ</button>
+            <button class="btn-nudge-secondary" style="border-color: #EF4444; color: #F87171;" onclick="openEmergencyWithdrawModal()">Rút Quỹ (Nudge Cảnh Báo)</button>
           </div>
         </div>
 
@@ -1413,7 +1413,7 @@
             <div style="font-size: 11px; color: var(--muted);">Tỷ lệ nợ trên thu nhập (DTI) vẫn nằm dưới ngưỡng cảnh báo rủi ro 35%.</div>
           </div>
 
-          <button class="btn-nudge-primary" style="background: #0284C7;">Chạy Mô Phỏng Kịch Bản Mới</button>
+          <button class="btn-nudge-primary" style="background: #0284C7;" onclick="runWhatIfSimulation()">Chạy Mô Phỏng Kịch Bản Mới</button>
         </div>
 
         <div class="card">
@@ -1441,8 +1441,8 @@
             <div>&bull; <strong>Đề xuất:</strong> Tái cân đối 400.000 ₫ từ quỹ "Giải Trí" bù sang "Ăn Uống".</div>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn-nudge-primary">Đồng Ý Tái Cân Đối</button>
-            <button class="btn-nudge-secondary">Xem Xét Sau</button>
+            <button class="btn-nudge-primary" onclick="approveNudgeRebalance()">Đồng Ý Tái Cân Đối</button>
+            <button class="btn-nudge-secondary" onclick="dismissNudge()">Xem Xét Sau</button>
           </div>
         </div>
 
@@ -1458,8 +1458,8 @@
             Quy đổi lao động: <strong>&asymp; 162.5 giờ làm việc</strong> (~20.3 ngày công toàn thời gian).
           </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn-nudge-secondary" style="flex: 1; border-color: #EF4444; color: #FCA5A5;">Hủy Bỏ Khoản Chi</button>
-            <button class="btn-nudge-secondary" style="font-size: 11px;">Mở Khóa Khẩn Cấp</button>
+            <button class="btn-nudge-secondary" style="flex: 1; border-color: #EF4444; color: #FCA5A5;" onclick="cancelImpulsiveExpense()">Hủy Bỏ Khoản Chi</button>
+            <button class="btn-nudge-secondary" style="font-size: 11px;" onclick="emergencyUnlockExpense()">Mở Khóa Khẩn Cấp</button>
           </div>
         </div>
       </div>
@@ -1492,7 +1492,7 @@
           <p style="font-size: 11px; color: var(--muted); margin-bottom: 10px;" id="actionCategorySuggestion">
             Đề xuất danh mục: Ăn Uống &amp; Nhu Yếu Phẩm (Thiết Yếu - Needs).
           </p>
-          <button class="btn-nudge-primary" style="background: linear-gradient(135deg, #10B981, #059669);" id="actionBtnCommit">
+          <button class="btn-nudge-primary" style="background: linear-gradient(135deg, #10B981, #059669);" id="actionBtnCommit" onclick="DuoNoProApi.quickCommitAction('act_default', 'Emart Gò Vấp: -350.000 ₫', 350000)">
             ✓ Lưu Nhanh 1-Chạm (Auto-save 0ms)
           </button>
         </div>
@@ -1508,14 +1508,14 @@
               <div class="tx-icon-box expense"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/></svg></div>
               <div><div style="font-size: 12px; font-weight: 700;">Netflix Premium 4K</div><div style="font-size: 10px; color: var(--muted);">Tự trừ ngày 02 hàng tháng</div></div>
             </div>
-            <div style="text-align: right;"><div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">-260,000 ₫</div><button style="border:none; background:transparent; font-size:10px; color:#EF4444; font-weight:700; cursor:pointer;">Hủy gói</button></div>
+            <div style="text-align: right;"><div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">-260,000 ₫</div><button style="border:none; background:transparent; font-size:10px; color:#EF4444; font-weight:700; cursor:pointer;" onclick="cancelSubscription(this, 'Netflix Premium 4K', 260000)">Hủy gói</button></div>
           </div>
           <div class="wallet-row">
             <div class="wallet-info">
               <div class="tx-icon-box expense"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/></svg></div>
               <div><div style="font-size: 12px; font-weight: 700;">Spotify Family Plan</div><div style="font-size: 10px; color: var(--muted);">Tự trừ ngày 18 hàng tháng</div></div>
             </div>
-            <div style="text-align: right;"><div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">-99,000 ₫</div><button style="border:none; background:transparent; font-size:10px; color:#EF4444; font-weight:700; cursor:pointer;">Hủy gói</button></div>
+            <div style="text-align: right;"><div style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #F43F5E;">-99,000 ₫</div><button style="border:none; background:transparent; font-size:10px; color:#EF4444; font-weight:700; cursor:pointer;" onclick="cancelSubscription(this, 'Spotify Family Plan', 99000)">Hủy gói</button></div>
           </div>
         </div>
 
@@ -1590,7 +1590,7 @@
           </div>
         </div>
 
-        <button class="btn-nudge-secondary" style="width: 100%; border-color: #EF4444; color: #F87171; padding: 12px; margin-top: 10px;">
+        <button class="btn-nudge-secondary" style="width: 100%; border-color: #EF4444; color: #F87171; padding: 12px; margin-top: 10px;" onclick="logoutAccount()">
           Đăng Xuất Tài Khoản
         </button>
       </div>
@@ -1630,6 +1630,113 @@
       <div id="appToast" style="position: absolute; top: 58px; left: 20px; right: 20px; background: rgba(17, 24, 39, 0.95); border: 1px solid #10B981; border-radius: 12px; padding: 10px 14px; display: none; align-items: center; gap: 8px; z-index: 120; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px); animation: fadeInScreen 0.2s ease;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         <span id="toastMessage" style="font-size: 12px; font-weight: 600; color: #F8FAFC;">Thao tác thành công</span>
+      </div>
+
+      
+      <!-- Deposit Modal -->
+      <div class="voice-modal-overlay" id="depositModal" onclick="closeDepositModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: left;">
+          <div style="font-size: 11px; font-weight: 700; color: #10B981; text-transform: uppercase; margin-bottom: 6px;">
+            NẠP TIỀN VÀO VÍ &bull; ACID TRANSACTION
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px;">
+            Nạp Tiền Vào Số Dư Ví
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Chọn ví nhận tiền:</label>
+              <select id="depositWalletSelect" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;">
+                <option value="Techcombank Priority">Techcombank Priority</option>
+                <option value="MBBank Tích Lũy">MBBank Tích Lũy</option>
+                <option value="Ví MoMo">Ví MoMo</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Số tiền nạp (VNĐ):</label>
+              <input type="number" id="depositAmount" value="5000000" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-mono); font-size: 14px;" />
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary" style="background: #10B981;" onclick="submitDeposit()">✓ Nạp Tiền Ngay</button>
+            <button class="btn-nudge-secondary" onclick="closeDepositModal()">Hủy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transfer Modal -->
+      <div class="voice-modal-overlay" id="transferModal" onclick="closeTransferModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: left;">
+          <div style="font-size: 11px; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">
+            CHUYỂN TIỀN NỘI BỘ &bull; 2-PHASE COMMIT ACID
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px;">
+            Chuyển Tiền Giữa Các Ví
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Ví nguồn (Trừ tiền):</label>
+              <select id="transferSourceWallet" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;">
+                <option value="Techcombank Priority">Techcombank Priority</option>
+                <option value="Ví MoMo">Ví MoMo</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Ví đích (Cộng tiền):</label>
+              <select id="transferDestWallet" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;">
+                <option value="MBBank Tích Lũy">MBBank Tích Lũy (Quỹ khẩn cấp)</option>
+                <option value="Ví MoMo">Ví MoMo</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Số tiền chuyển (VNĐ):</label>
+              <input type="number" id="transferAmount" value="2000000" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-mono); font-size: 14px;" />
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary" style="background: #4F46E5;" onclick="submitTransfer()">✓ Xác Nhận Chuyển Ví</button>
+            <button class="btn-nudge-secondary" onclick="closeTransferModal()">Hủy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QR Scanner Modal -->
+      <div class="voice-modal-overlay" id="qrScanModal" onclick="closeQrScannerModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: center;">
+          <div style="font-size: 11px; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">
+            CAMERA SCANNER &bull; NHẬN DIỆN VIETQR 247
+          </div>
+          <div style="font-size: 15px; font-weight: 700; color: #FFFFFF; margin-bottom: 12px;">
+            Đang Quét Mã VietQR Napas
+          </div>
+          <div style="width: 140px; height: 140px; margin: 0 auto 14px; border: 2px dashed #38BDF8; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: rgba(56, 189, 248, 0.08); position: relative;">
+            <div style="width: 90%; height: 2px; background: #38BDF8; position: absolute; animation: wavePulse 1.5s infinite;"></div>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/></svg>
+          </div>
+          <div style="font-size: 12px; color: #34D399; font-weight: 600; margin-bottom: 14px;">
+            ✓ Đã phát hiện: Techcombank &bull; 245.000 ₫ (WinMart+)
+          </div>
+          <button class="btn-nudge-primary" onclick="confirmQrPayment()">Thanh Toán &amp; Lưu Vào Sổ Cái</button>
+          <button class="btn-nudge-secondary" style="margin-top: 8px; width: 100%;" onclick="closeQrScannerModal()">Đóng</button>
+        </div>
+      </div>
+
+      <!-- Emergency Withdraw Warning Modal -->
+      <div class="voice-modal-overlay" id="emergencyWithdrawModal" onclick="closeEmergencyWithdrawModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: left;">
+          <div style="font-size: 11px; font-weight: 700; color: #EF4444; text-transform: uppercase; margin-bottom: 6px;">
+            CÚ HÍCH THALER &bull; MA SÁT NHẬN THỨC
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin-bottom: 10px;">
+            ⚠️ Cảnh Báo Rút Quỹ Khẩn Cấp
+          </div>
+          <p style="font-size: 12px; color: var(--fg-2); line-height: 1.5; margin-bottom: 14px; background: rgba(239, 68, 68, 0.12); padding: 10px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.3);">
+            Quỹ khẩn cấp là lưới an toàn tài chính cuối cùng của bạn. Việc rút tiền lúc này sẽ làm giảm <strong>Runway sinh tồn xuống dưới 2.5 tháng</strong> và làm tăng nguy cơ khủng hoảng thanh khoản nếu gặp biến cố!
+          </p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary" style="background: #10B981;" onclick="closeEmergencyWithdrawModal(); showToast('✓ Quyết định sáng suốt! Bạn đã bảo vệ trọn vẹn Quỹ Khẩn Cấp.');">Giữ Lại Tích Lũy (Khuyên Dùng)</button>
+            <button class="btn-nudge-secondary" style="border-color: #EF4444; color: #FCA5A5;" onclick="confirmEmergencyWithdraw()">Vẫn Rút 5.000.000 ₫</button>
+          </div>
+        </div>
       </div>
 
       <!-- Add Wallet Modal -->
@@ -1752,7 +1859,7 @@
           <div style="font-size: 13px; color: #38BDF8; font-style: italic; background: rgba(56, 189, 248, 0.1); padding: 8px 12px; border-radius: 8px; margin-bottom: 16px;">
             "Ăn trưa bún bò 65 nghìn thanh toán bằng Techcombank"
           </div>
-          <button class="btn-nudge-primary" onclick="closeVoiceModal()">Xác Nhận Ghi Nhận (1-Chạm)</button>
+          <button class="btn-nudge-primary" onclick="confirmVoiceExpense()">Xác Nhận Ghi Nhận (1-Chạm)</button>
         </div>
       </div>
 
