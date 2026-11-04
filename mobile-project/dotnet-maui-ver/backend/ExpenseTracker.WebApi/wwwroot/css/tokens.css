@@ -1,0 +1,71 @@
+:root {
+  /* Canvas & Surfaces */
+  --bg: #0B0F19;
+  --surface: #111827;
+  --surface-warm: #1E293B;
+  --fg: #F8FAFC;
+  --fg-2: #E2E8F0;
+  --muted: #94A3B8;
+  --meta: #64748B;
+  --border: #334155;
+  --border-soft: #1E293B;
+
+  /* Brand Accents & Semantics */
+  --accent: #4F46E5;
+  --accent-on: #FFFFFF;
+  --accent-hover: #4338CA;
+  --accent-active: #3730A3;
+  --success: #10B981;
+  --warn: #F59E0B;
+  --danger: #EF4444;
+
+  /* Typography Stacks */
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+
+  /* Typographic Scale */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  --text-3xl: 24px;
+  --text-4xl: 28px;
+  --leading-body: 1.5;
+  --leading-tight: 1.25;
+  --tracking-display: -0.02em;
+
+  /* Spacing Grid (8pt rhythm) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Radii & Concentric Double-Bezels */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  /* Container & Layout */
+  --container-max: 430px;
+  --container-gutter-desktop: 16px;
+  --container-gutter-tablet: 16px;
+  --container-gutter-phone: 16px;
+  --section-y-desktop: 24px;
+  --section-y-tablet: 20px;
+  --section-y-phone: 16px;
+
+  /* Elevations & Focus */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --focus-ring: 0 0 0 3px rgba(79, 70, 229, 0.35);
+}
+

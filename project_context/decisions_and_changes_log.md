@@ -2,6 +2,24 @@
 
 Tài liệu này ghi lại toàn bộ quá trình biến đổi ý tưởng, tinh chỉnh phạm vi (De-scoping), và các quyết định kiến trúc quan trọng từ lúc bắt đầu dự án đến nay.
 
+## [2026-11-04] - Quyết Định 201: Tích Hợp Toàn Diện Giao Diện Web Open Design Với Backend ASP.NET Core 10 Web API (PLAN-72)
+- **Bối cảnh & Mục tiêu:**
+  - Nhằm hiện thực hóa trải nghiệm thực tế ngay trên nền tảng Web cho đồ án, gắn kết nguyên mẫu trực quan 10 màn hình chuẩn Dark Luxury Fintech với tầng Backend Web API (.NET 10 Clean Architecture).
+  - Cho phép người dùng và hội đồng chấm thi tương tác trực tiếp với dữ liệu CSDL thật (Wallets, Transactions, DSA Budgets, Autonomous Bank Simulation, Debt Optimizer) mà không đòi hỏi phải cài đặt môi trường Android Emulator phức tạp.
+- **Quyết định Kỹ thuật:**
+  1. **Lớp Cổng Giao Tiếp Web API Client (DuoNoProApiGateway):**
+     - Tự động phát hiện môi trường: Nếu chạy trên cùng cổng Web API (http://localhost:5018/) thì dùng relative path; nếu chạy từ Open Design Preview thì gọi trực tiếp qua CORS AllowAll.
+     - Tự động xác thực JWT Token với tài khoản Demo/Admin mặc định và lưu phiên tại localStorage.
+     - Tự động chuyển đổi mượt mà giữa Live Backend API và Offline Mock Graceful Fallback kèm chỉ báo độ trễ ping thực tế.
+  2. **Xuất Bản & Phục Vụ Web Trực Tiếp Từ Backend:**
+     - Tích hợp giao diện chính thức vào wwwroot/index.html của ExpenseTracker.WebApi, phục vụ tĩnh thông qua app.UseDefaultFiles() và app.UseStaticFiles().
+     - Đồng bộ tokens.css vào wwwroot/css/tokens.css đảm bảo tính nhất quán thẩm mỹ 100%.
+  3. **Kết Nối Realtime SignalR Hub:**
+     - Thiết lập kết nối SignalR Hub /hubs/financial cho phép cập nhật tức thì biến động số dư và thẻ hành động khi backend phát sinh sự kiện.
+- **Trạng thái:** ACCEPTED & IN-PROGRESS (Plan-72).
+
+---
+
 ## [2026-11-03] - Quyết Định 200: Khởi Tạo Hệ Thống Thiết Kế UI/UX & Bộ Nguyên Mẫu Frontend 10 Màn Hình Bằng Extension Open Design (PLAN-71)
 - **Bối cảnh & Mục tiêu:**
   - Sau khi Backend và MVVM Core đã được nâng cấp toàn diện qua 10 giai đoạn (PLAN-60 đến PLAN-70), bước tiếp theo là nâng tầm toàn diện chất lượng thẩm mỹ và trải nghiệm người dùng Frontend (FE).

@@ -29,6 +29,7 @@ desktop.ini
 tmp/
 temp/
 Open Design/.checks/
+.open-design/.checks/
 
 # Node.js & React Native / Expo
 node_modules/

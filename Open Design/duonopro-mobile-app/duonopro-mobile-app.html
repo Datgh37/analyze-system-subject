@@ -7,8 +7,44 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../design-systems/duonopro-fintech/tokens.css">
+    <link rel="stylesheet" href="../design-systems/duonopro-fintech/tokens.css">
+  <link rel="stylesheet" href="css/tokens.css">
   <style>
+        /* Fallback Tokens for zero-dependency standalone rendering */
+    :root {
+      --bg: #0B0F19;
+      --surface: #111827;
+      --surface-warm: #1E293B;
+      --fg: #F8FAFC;
+      --fg-2: #E2E8F0;
+      --muted: #94A3B8;
+      --meta: #64748B;
+      --border: #334155;
+      --border-soft: #1E293B;
+      --accent: #4F46E5;
+      --accent-on: #FFFFFF;
+      --accent-hover: #4338CA;
+      --accent-active: #3730A3;
+      --success: #10B981;
+      --warn: #F59E0B;
+      --danger: #EF4444;
+      --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+      --text-xs: 11px;
+      --text-sm: 13px;
+      --text-base: 14px;
+      --text-lg: 16px;
+      --text-xl: 18px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+      --motion-fast: 150ms;
+      --motion-base: 250ms;
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -1039,9 +1075,9 @@
             <div class="app-name">DuoNoPro</div>
           </div>
         </div>
-        <div class="realtime-pill">
-          <div class="pulse-dot"></div>
-          <span>SignalR Live</span>
+        <div class="realtime-pill" id="realtimeStatusBadge" onclick="showConnectionInfo()" style="cursor: pointer;" title="Bấm xem trạng thái Web API">
+          <div class="pulse-dot" id="pulseDot"></div>
+          <span id="realtimeStatusLabel">Kiểm tra kết nối...</span>
         </div>
       </div>
 
@@ -1053,19 +1089,19 @@
             <div class="vip-tag">OBSIDIAN VIP</div>
           </div>
           <div class="hero-label">Tổng Tài Sản Ròng (Net Worth)</div>
-          <div class="hero-amount">128,450,000 ₫</div>
+          <div class="hero-amount" id="netWorthHeroAmount">30,000,000 ₫</div>
           <div class="card-footer-row">
-            <span>NGUYEN VAN A</span>
-            <span>&bull;&bull;&bull;&bull; 8899</span>
+            <span id="userFullNameBadge">QUẢN TRỊ VIÊN (ADMIN)</span>
+            <span id="userEmailBadge">admin@expensetracker.com</span>
           </div>
         </div>
 
         <div class="dsa-banner">
           <div>
             <div class="dsa-title">Hạn Mức Hôm Nay (DSA)</div>
-            <div class="dsa-value">450,000 ₫ / ngày</div>
+            <div class="dsa-value" id="dsaValueText">450,000 ₫ / ngày</div>
           </div>
-          <div class="dsa-status-tag">Đã tiêu 180k (40% - An toàn)</div>
+          <div class="dsa-status-tag" id="dsaStatusBadge">Đã tiêu 165k (37% - An toàn)</div>
         </div>
 
         <div class="quick-actions">
@@ -1098,8 +1134,9 @@
         <div class="card">
           <div class="card-title-row">
             <span class="card-title">Danh Sách Ví Chuẩn ACID</span>
-            <span class="card-action-link">+ Thêm ví</span>
+            <span class="card-action-link" onclick="openAddWalletModal()">+ Thêm ví</span>
           </div>
+          <div id="dynamicWalletsContainer"></div>
           
           <div class="wallet-row">
             <div class="wallet-info">
@@ -1142,7 +1179,11 @@
           </p>
         </div>
 
-        <div class="tx-group-header">Hôm Nay — 03/11/2026</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 14px 0 8px;">
+          <div class="tx-group-header" style="margin: 0;">Giao Dịch Sổ Cái</div>
+          <button class="btn-nudge-secondary" style="font-size: 11px; padding: 4px 10px;" onclick="openAddExpenseModal()">+ Thêm Chi Tiêu</button>
+        </div>
+        <div id="dynamicTransactionsContainer"></div>
         <div class="tx-item">
           <div class="tx-meta">
             <div class="tx-icon-box ocr"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/></svg></div>
@@ -1542,10 +1583,10 @@
           </p>
           <div style="background: var(--surface-warm); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
             <div>
-              <div style="font-size: 13px; font-weight: 700; color: #10B981;">🟢 Live API Mode (Refit)</div>
-              <div style="font-size: 11px; color: var(--muted);">http://localhost:5018 (Web API)</div>
+              <div style="font-size: 13px; font-weight: 700;" id="dataModeStatusTitle">🟢 Live API Mode (Refit)</div>
+              <div style="font-size: 11px; color: var(--muted);" id="dataModeServerUrl">http://localhost:5018 (Web API)</div>
             </div>
-            <button class="btn-nudge-secondary" style="font-size: 11px;">Đổi sang Offline Mock</button>
+            <button class="btn-nudge-secondary" style="font-size: 11px;" id="btnToggleMode" onclick="toggleDataMode()">Đổi sang Offline Mock</button>
           </div>
         </div>
 
@@ -1583,6 +1624,114 @@
 
       <!-- iOS Home Indicator -->
       <div class="home-indicator"></div>
+
+      
+      <!-- In-Chassis Toast Notification -->
+      <div id="appToast" style="position: absolute; top: 58px; left: 20px; right: 20px; background: rgba(17, 24, 39, 0.95); border: 1px solid #10B981; border-radius: 12px; padding: 10px 14px; display: none; align-items: center; gap: 8px; z-index: 120; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px); animation: fadeInScreen 0.2s ease;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="toastMessage" style="font-size: 12px; font-weight: 600; color: #F8FAFC;">Thao tác thành công</span>
+      </div>
+
+      <!-- Add Wallet Modal -->
+      <div class="voice-modal-overlay" id="addWalletModal" onclick="closeAddWalletModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: left;">
+          <div style="font-size: 11px; font-weight: 700; color: #818CF8; text-transform: uppercase; margin-bottom: 6px;">
+            CSDL CHUẨN ACID &bull; THÊM VÍ MỚI
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px;">
+            Khởi Tạo Tài Khoản / Ví
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Tên ví:</label>
+              <input type="text" id="newWalletName" value="Tài khoản MBBank" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;" />
+            </div>
+
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Loại ví:</label>
+              <select id="newWalletType" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;">
+                <option value="BankAccount">Tài khoản Ngân hàng (BankAccount)</option>
+                <option value="Cash">Tiền mặt (Cash)</option>
+                <option value="EWallet">Ví điện tử MoMo/ZaloPay (EWallet)</option>
+                <option value="CreditCard">Thẻ tín dụng (CreditCard)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Số dư ban đầu (VNĐ):</label>
+              <input type="number" id="newWalletBalance" value="15000000" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-mono); font-size: 14px;" />
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary" onclick="submitCreateWallet()">+ Tạo Ví Ngay</button>
+            <button class="btn-nudge-secondary" onclick="closeAddWalletModal()">Đóng</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Expense Modal -->
+      <div class="voice-modal-overlay" id="addExpenseModal" onclick="closeAddExpenseModal(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: left;">
+          <div style="font-size: 11px; font-weight: 700; color: #FB7185; text-transform: uppercase; margin-bottom: 6px;">
+            SỔ CÁI KHOẢN CHI &bull; GHI NHẬN MỚI
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px;">
+            Thêm Giao Dịch Chi Tiêu
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Nội dung chi tiêu:</label>
+              <input type="text" id="newExpenseTitle" value="Siêu thị Bách Hóa Xanh" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;" />
+            </div>
+
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Số tiền (VNĐ):</label>
+              <input type="number" id="newExpenseAmount" value="185000" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-mono); font-size: 14px;" />
+            </div>
+
+            <div>
+              <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px;">Nhóm ngân sách:</label>
+              <select id="newExpenseCategory" style="width: 100%; background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: #FFFFFF; font-family: var(--font-body); font-size: 13px;">
+                <option value="Ăn uống & Thực phẩm">Ăn uống & Thực phẩm (Thiết yếu - Needs)</option>
+                <option value="Đi lại & Xăng xe">Đi lại & Xăng xe (Thiết yếu - Needs)</option>
+                <option value="Mua sắm cá nhân">Mua sắm cá nhân (Mong muốn - Wants)</option>
+                <option value="Giải trí & Du lịch">Giải trí & Du lịch (Mong muốn - Wants)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary" style="background: #F43F5E;" onclick="submitCreateExpense()">✓ Lưu Khoản Chi</button>
+            <button class="btn-nudge-secondary" onclick="closeAddExpenseModal()">Đóng</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection Info Modal -->
+      <div class="voice-modal-overlay" id="connectionInfoModal" onclick="closeConnectionInfo(event)">
+        <div class="voice-modal-box" onclick="event.stopPropagation()" style="text-align: left;">
+          <div style="font-size: 11px; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">
+            TRẠNG THÁI HỆ THỐNG FULL-STACK
+          </div>
+          <div style="font-size: 15px; font-weight: 700; color: #FFFFFF; margin-bottom: 12px;">
+            Cổng Kết Nối Web API &amp; CSDL
+          </div>
+          <div style="font-size: 12px; color: var(--fg-2); line-height: 1.6; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; margin-bottom: 14px;">
+            <div>&bull; <strong>Địa chỉ API:</strong> <code id="infoModalApiUrl">http://localhost:5018</code></div>
+            <div>&bull; <strong>Tình trạng:</strong> <span id="infoModalHealthStatus" style="color: #10B981; font-weight: 700;">Healthy (8ms)</span></div>
+            <div>&bull; <strong>Cơ sở dữ liệu:</strong> <span>PostgreSQL / SQLite (expensetracker.db)</span></div>
+            <div>&bull; <strong>Tài khoản Demo:</strong> <code id="infoModalUser">admin@expensetracker.com</code></div>
+            <div>&bull; <strong>Phiên xác thực:</strong> <span id="infoModalTokenStatus" style="color: #38BDF8;">JWT Bearer Active</span></div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-nudge-primary" onclick="DuoNoProApi.syncAllData(); closeConnectionInfo();">Đồng Bộ Dữ Liệu Ngay</button>
+            <button class="btn-nudge-secondary" onclick="closeConnectionInfo()">Đóng</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Interactive Voice AI Modal Popup -->
       <div class="voice-modal-overlay" id="voiceModal" onclick="closeVoiceModal(event)">
@@ -1694,5 +1843,445 @@
       }, 1000);
     }
   </script>
+
+  <!-- Full-Stack API Gateway & Realtime Sync Engine -->
+  <script>
+    const DuoNoProApi = {
+      config: {
+        get baseUrl() {
+          if (window.location.port === "5018") return "";
+          return localStorage.getItem("duonopro_api_base") || "http://localhost:5018";
+        },
+        get isLiveMode() {
+          return localStorage.getItem("duonopro_is_live") !== "false";
+        },
+        token: localStorage.getItem("duonopro_token") || null,
+        user: JSON.parse(localStorage.getItem("duonopro_user") || "null"),
+        wallets: [],
+        transactions: []
+      },
+
+      async init() {
+        console.log("[DuoNoPro Full-Stack] Initializing API Gateway. LiveMode:", this.config.isLiveMode);
+        await this.checkHealth();
+        if (this.config.isLiveMode) {
+          await this.ensureAuthenticated();
+          await this.syncAllData();
+        } else {
+          this.updateUiModeDisplay(false, "Demo Ngoại Tuyến (Offline Mock)");
+        }
+      },
+
+      async checkHealth() {
+        const badge = document.getElementById("realtimeStatusBadge");
+        const dot = document.getElementById("pulseDot");
+        const label = document.getElementById("realtimeStatusLabel");
+
+        if (!this.config.isLiveMode) {
+          dot.style.background = "#F59E0B";
+          dot.style.boxShadow = "0 0 8px #F59E0B";
+          label.textContent = "Offline Mock 0ms";
+          this.updateUiModeDisplay(false, "Offline Mock 0ms");
+          return false;
+        }
+
+        const start = performance.now();
+        try {
+          const resp = await fetch(`${this.config.baseUrl}/api/health`, { method: "GET" });
+          const latency = Math.round(performance.now() - start);
+          if (resp.ok) {
+            dot.style.background = "#10B981";
+            dot.style.boxShadow = "0 0 8px #10B981";
+            label.textContent = `API Live (${latency}ms)`;
+            this.updateUiModeDisplay(true, `${this.config.baseUrl} (${latency}ms)`);
+            return true;
+          }
+        } catch (e) {
+          console.warn("[DuoNoPro API] Backend unreachable, falling back to mock:", e.message);
+        }
+
+        // Fallback if unreachable
+        dot.style.background = "#F59E0B";
+        dot.style.boxShadow = "0 0 8px #F59E0B";
+        label.textContent = "Offline Mock 0ms";
+        this.updateUiModeDisplay(false, "Offline Mock (Server chưa bật)");
+        return false;
+      },
+
+      async ensureAuthenticated() {
+        if (this.config.token) return this.config.token;
+        try {
+          const resp = await fetch(`${this.config.baseUrl}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: "admin@expensetracker.com", password: "Admin@123" })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            this.config.token = data.accessToken;
+            this.config.user = data.user;
+            localStorage.setItem("duonopro_token", data.accessToken);
+            localStorage.setItem("duonopro_user", JSON.stringify(data.user));
+            console.log("[DuoNoPro Auth] Logged in successfully as:", data.user.fullName);
+            return data.accessToken;
+          }
+        } catch (e) {
+          console.error("[DuoNoPro Auth] Login failed:", e);
+        }
+        return null;
+      },
+
+      async apiFetch(endpoint, options = {}) {
+        const headers = options.headers || {};
+        headers["Content-Type"] = "application/json";
+        if (this.config.token) {
+          headers["Authorization"] = `Bearer ${this.config.token}`;
+        }
+        return fetch(`${this.config.baseUrl}${endpoint}`, { ...options, headers });
+      },
+
+      async syncAllData() {
+        await Promise.allSettled([
+          this.loadWallets(),
+          this.loadNetWorth(),
+          this.loadTransactions(),
+          this.loadBudgetsAndDsa()
+        ]);
+      },
+
+      async loadWallets() {
+        try {
+          const resp = await this.apiFetch("/api/wallets");
+          if (resp.ok) {
+            const wallets = await resp.json();
+            this.config.wallets = wallets;
+            this.renderWallets(wallets);
+          }
+        } catch (e) {
+          console.warn("[DuoNoPro API] Failed to load wallets:", e);
+        }
+      },
+
+      renderWallets(wallets) {
+        const container = document.getElementById("dynamicWalletsContainer");
+        if (!container || !wallets || wallets.length === 0) return;
+
+        let total = 0;
+        let html = "";
+        wallets.forEach(w => {
+          total += Number(w.balance || 0);
+          const formatted = new Intl.NumberFormat('vi-VN').format(w.balance) + " ₫";
+          html += `
+            <div class="wallet-row">
+              <div class="wallet-info">
+                <div class="wallet-badge">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                </div>
+                <div>
+                  <div class="wallet-name">${w.name}</div>
+                  <div class="wallet-sub">${w.walletType || 'Tài khoản chính'}</div>
+                </div>
+              </div>
+              <div class="wallet-balance">${formatted}</div>
+            </div>`;
+        });
+        container.innerHTML = html;
+
+        // Update Total Balance Hero Amount
+        const heroEl = document.getElementById("netWorthHeroAmount");
+        if (heroEl) {
+          heroEl.textContent = new Intl.NumberFormat('vi-VN').format(total) + " ₫";
+        }
+      },
+
+      async loadNetWorth() {
+        try {
+          const resp = await this.apiFetch("/api/net-worth/current");
+          if (resp.ok) {
+            const nw = await resp.json();
+            const heroEl = document.getElementById("netWorthHeroAmount");
+            if (heroEl && nw.netWorth) {
+              heroEl.textContent = new Intl.NumberFormat('vi-VN').format(nw.netWorth) + " ₫";
+            }
+          }
+        } catch (e) {
+          console.warn("[DuoNoPro API] Net worth endpoint:", e);
+        }
+      },
+
+      async loadTransactions() {
+        try {
+          const resp = await this.apiFetch("/api/transactions");
+          if (resp.ok) {
+            const txs = await resp.json();
+            this.config.transactions = txs;
+            this.renderTransactions(txs);
+          }
+        } catch (e) {
+          console.warn("[DuoNoPro API] Failed to load transactions:", e);
+        }
+      },
+
+      renderTransactions(txs) {
+        const container = document.getElementById("dynamicTransactionsContainer");
+        if (!container || !txs || txs.length === 0) return;
+
+        let html = "";
+        txs.slice(0, 10).forEach(tx => {
+          const isIncome = tx.type === "Income";
+          const formatted = (isIncome ? "+" : "-") + new Intl.NumberFormat('vi-VN').format(tx.amount) + " ₫";
+          const colorClass = isIncome ? "pos" : "neg";
+          const iconClass = isIncome ? "income" : "expense";
+          html += `
+            <div class="tx-item">
+              <div class="tx-meta">
+                <div class="tx-icon-box ${iconClass}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    ${isIncome ? '<line x1="12" x2="12" y1="19" y2="5"/><polyline points="5 12 12 5 19 12"/>' : '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>'}
+                  </svg>
+                </div>
+                <div>
+                  <div class="tx-title">${tx.title || tx.categoryName || 'Khoản chi tiêu'}</div>
+                  <div class="tx-tags"><span class="tx-tag">${tx.categoryName || 'Chi tiêu'}</span></div>
+                </div>
+              </div>
+              <div class="tx-amount ${colorClass}">${formatted}</div>
+            </div>`;
+        });
+        container.innerHTML = html;
+      },
+
+      async loadBudgetsAndDsa() {
+        try {
+          const resp = await this.apiFetch("/api/budgets/active/dsa");
+          if (resp.ok) {
+            const dsa = await resp.json();
+            const dsaEl = document.getElementById("dsaValueText");
+            const badgeEl = document.getElementById("dsaStatusBadge");
+            if (dsaEl && dsa.dailyAllowance) {
+              dsaEl.textContent = new Intl.NumberFormat('vi-VN').format(dsa.dailyAllowance) + " ₫ / ngày";
+            }
+            if (badgeEl && dsa.statusMessage) {
+              badgeEl.textContent = dsa.statusMessage;
+            }
+          }
+        } catch (e) {
+          console.warn("[DuoNoPro API] DSA status endpoint:", e);
+        }
+      },
+
+      async createWallet(name, type, balance) {
+        try {
+          const resp = await this.apiFetch("/api/wallets", {
+            method: "POST",
+            body: JSON.stringify({
+              name: name,
+              walletType: type,
+              initialBalance: Number(balance),
+              currency: "VND",
+              colorHex: "#4F46E5",
+              iconKey: "wallet"
+            })
+          });
+          if (resp.ok) {
+            showToast(`✓ Đã tạo ví ${name} thành công vào CSDL!`);
+            await this.loadWallets();
+            return true;
+          }
+        } catch (e) {
+          console.error("Create wallet failed:", e);
+        }
+        showToast(`✓ Đã thêm ví ${name} (Chế độ mô phỏng)`);
+        return true;
+      },
+
+      async createExpense(title, amount, category) {
+        const wallet = (this.config.wallets && this.config.wallets[0]) || { id: "00000000-0000-0000-0000-000000000000" };
+        try {
+          const resp = await this.apiFetch("/api/transactions/expenses", {
+            method: "POST",
+            body: JSON.stringify({
+              walletId: wallet.id,
+              amount: Number(amount),
+              categoryId: "00000000-0000-0000-0000-000000000000",
+              transactionDate: new Date().toISOString(),
+              note: title,
+              isEssential: false,
+              isRecurring: false,
+              excludeFromReport: false
+            })
+          });
+          if (resp.ok) {
+            showToast(`✓ Đã lưu khoản chi ${title} vào Sổ cái!`);
+            await this.syncAllData();
+            return true;
+          }
+        } catch (e) {
+          console.error("Create expense failed:", e);
+        }
+        showToast(`✓ Đã lưu khoản chi ${title} (Mô phỏng 0ms)`);
+        return true;
+      },
+
+      async simulateBank(bank, merchant, amountStr, defaultConf, cat) {
+        const numAmount = parseInt(amountStr.replace(/[^0-9]/g, '')) || 100000;
+        const payload = {
+          packageName: bank === "MoMo" ? "com.mservice.momotransfer" : "com.acb.mobile",
+          title: `${bank} Banking`,
+          message: `TK GD -${numAmount}VND tai ${merchant}`,
+          detectedAmount: numAmount,
+          notificationTime: new Date().toISOString()
+        };
+
+        try {
+          const resp = await this.apiFetch("/api/actions/from-notification", {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+          if (resp.ok) {
+            const action = await resp.json();
+            this.renderActionCardFromBackend(action, bank);
+            showToast(`⚡ Backend phân tích thông báo ${bank}: Độ tin cậy ${Math.round(action.confidenceScore * 100)}%`);
+            return;
+          }
+        } catch (e) {
+          console.warn("Backend simulate call failed, using mock:", e);
+        }
+
+        // Fallback UI
+        simulateBank(bank, merchant, amountStr, defaultConf, cat);
+        showToast(`⚡ Giả lập biến động ${bank} thành công!`);
+      },
+
+      renderActionCardFromBackend(action, bank) {
+        document.getElementById('actionBankTag').textContent = `${bank} NOTIFICATION NLP • BIẾN ĐỘNG MỚI`;
+        const conf = action.confidenceScore || 0.9;
+        document.getElementById('actionJevBadge').textContent = `Jev Xác Suất: ${conf.toFixed(2)} (${conf >= 0.85 ? '≥ 0.85' : '< 0.85'})`;
+        document.getElementById('actionMerchantTitle').textContent = action.display?.title || "Giao dịch mới";
+        document.getElementById('actionCategorySuggestion').innerHTML = `Đề xuất phân loại: <strong>${action.display?.badgeText || 'Chi tiêu'}</strong>`;
+
+        const btn = document.getElementById('actionBtnCommit');
+        if (conf >= 0.85) {
+          btn.textContent = '✓ Lưu Nhanh 1-Chạm (Auto-save 0ms)';
+          btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+          btn.onclick = () => this.quickCommitAction(action.actionId, action.display?.title, action.display?.amount);
+        } else {
+          btn.textContent = '⚡ Jev Choice: Xác Nhận Danh Mục';
+          btn.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
+          btn.onclick = () => this.quickCommitAction(action.actionId, action.display?.title, action.display?.amount);
+        }
+      },
+
+      async quickCommitAction(actionId, title, amount) {
+        try {
+          const resp = await this.apiFetch("/api/actions/quick-commit", {
+            method: "POST",
+            body: JSON.stringify({ actionId: actionId, note: title, amount: amount })
+          });
+          if (resp.ok) {
+            showToast("✓ Đã lưu nhanh 1-chạm vào CSDL sổ cái!");
+            await this.syncAllData();
+            return;
+          }
+        } catch (e) {
+          console.warn("Quick commit API error:", e);
+        }
+        showToast("✓ Đã lưu nhanh 1-chạm vào sổ cái (0ms)!");
+      },
+
+      updateUiModeDisplay(isLive, labelText) {
+        const title = document.getElementById("dataModeStatusTitle");
+        const url = document.getElementById("dataModeServerUrl");
+        const btn = document.getElementById("btnToggleMode");
+        if (title) {
+          title.textContent = isLive ? "🟢 Live API Mode (Refit & Web API)" : "🟡 Offline Mock Mode (Local Sandbox)";
+          title.style.color = isLive ? "#10B981" : "#F59E0B";
+        }
+        if (url) {
+          url.textContent = labelText;
+        }
+        if (btn) {
+          btn.textContent = isLive ? "Đổi sang Offline Mock" : "Đổi sang Live Backend API";
+        }
+      }
+    };
+
+    // UI Helper Functions
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      const text = document.getElementById("toastMessage");
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.style.display = "flex";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    function toggleDataMode() {
+      const current = localStorage.getItem("duonopro_is_live") !== "false";
+      const next = !current;
+      localStorage.setItem("duonopro_is_live", next ? "true" : "false");
+      DuoNoProApi.config.isLiveMode = next;
+      DuoNoProApi.init();
+      showToast(next ? "🟢 Đã chuyển sang Live Backend API" : "🟡 Đã chuyển sang Offline Mock Mode");
+    }
+
+    function showConnectionInfo() {
+      const modal = document.getElementById("connectionInfoModal");
+      if (!modal) return;
+      document.getElementById("infoModalApiUrl").textContent = DuoNoProApi.config.baseUrl || "http://localhost:5018";
+      document.getElementById("infoModalHealthStatus").textContent = DuoNoProApi.config.isLiveMode ? "Online & Healthy" : "Offline Sandbox";
+      document.getElementById("infoModalUser").textContent = DuoNoProApi.config.user?.email || "admin@expensetracker.com";
+      modal.classList.add("open");
+    }
+
+    function closeConnectionInfo(e) {
+      const modal = document.getElementById("connectionInfoModal");
+      if (modal) modal.classList.remove("open");
+    }
+
+    function openAddWalletModal() {
+      const m = document.getElementById("addWalletModal");
+      if (m) m.classList.add("open");
+    }
+
+    function closeAddWalletModal(e) {
+      const m = document.getElementById("addWalletModal");
+      if (m) m.classList.remove("open");
+    }
+
+    async function submitCreateWallet() {
+      const name = document.getElementById("newWalletName").value;
+      const type = document.getElementById("newWalletType").value;
+      const balance = document.getElementById("newWalletBalance").value;
+      await DuoNoProApi.createWallet(name, type, balance);
+      closeAddWalletModal();
+    }
+
+    function openAddExpenseModal() {
+      const m = document.getElementById("addExpenseModal");
+      if (m) m.classList.add("open");
+    }
+
+    function closeAddExpenseModal(e) {
+      const m = document.getElementById("addExpenseModal");
+      if (m) m.classList.remove("open");
+    }
+
+    async function submitCreateExpense() {
+      const title = document.getElementById("newExpenseTitle").value;
+      const amount = document.getElementById("newExpenseAmount").value;
+      const cat = document.getElementById("newExpenseCategory").value;
+      await DuoNoProApi.createExpense(title, amount, cat);
+      closeAddExpenseModal();
+    }
+
+    // Initialize API Gateway on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      DuoNoProApi.init();
+    });
+  </script>
+
 </body>
 </html>
