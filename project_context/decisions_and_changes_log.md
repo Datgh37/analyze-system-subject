@@ -5187,3 +5187,32 @@ eceipt_items, FinancialNudges, udgets, udget_allocations, daily_spending_allow
 - **Kết Quả Kỹ Thuật Đạt Được:**
   - Tệp [`project_context/reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md`](../reports/Prompt_Tao_Slide_Thuyet_Trinh_Cuoi_Ky.md) được cập nhật hoàn chỉnh thành khối prompt ~32 dòng gọn gàng, súc tích, hoàn hảo cho Gemini Notebook / NotebookLM.
 - **Trạng thái:** `COMPLETED, VERIFIED & BALANCED`.
+
+
+---
+
+## [2026-11-04 07:45] - Quyết Định 210: Khắc Phục Triệt Để ReferenceError & Đấu Nối 100% 37 Trình Xử Lý Tương Tác Web Frontend
+- **Người chủ trì:** Dan Abramov (Agent 10) & Council Orchestrator (Agent 00).
+- **Bối cảnh & Chỉ đạo từ Người dùng:**
+  - Người dùng báo cáo các lỗi trình duyệt:
+    `Uncaught ReferenceError: openQrScannerModal is not defined`
+    `Uncaught ReferenceError: openDepositModal is not defined`
+    `Uncaught ReferenceError: openTransferModal is not defined`
+  - Yêu cầu kiểm tra toàn diện tất cả các nút bấm và chức năng trên giao diện Web (`duonopro-mobile-app.html` và `wwwroot/index.html`) để đảm bảo hệ thống vận hành trơn tru, không còn nút chết hay lỗi runtime.
+- **Nguyên Nhân Gốc Rễ (Root Cause):**
+  - Trong quá trình tiêm mã trước đó, bộ lọc kiểm tra chuỗi `if 'openDepositModal' not in html` bị đánh lừa do chuỗi `openDepositModal()` đã xuất hiện trong thuộc tính `onclick` của thẻ HTML nhưng phần định nghĩa hàm `function openDepositModal()` trong thẻ `<script>` chưa được chèn vào.
+- **Kết Quả Kỹ Thuật Đạt Được:**
+  1. **Định nghĩa đầy đủ 37/37 trình xử lý sự kiện onclick:**
+     - Các modal nạp/chuyển/rút tiền: `openDepositModal`, `closeDepositModal`, `submitDeposit`, `openTransferModal`, `closeTransferModal`, `submitTransfer`, `openEmergencyWithdrawModal`, `closeEmergencyWithdrawModal`, `confirmEmergencyWithdraw`.
+     - Quét QR thanh toán: `openQrScannerModal`, `closeQrScannerModal`, `confirmQrPayment`.
+     - Giả lập 5 Ngân hàng (ACB, MoMo, TCB, VCB, MB): `simulateBank`.
+     - Các nghiệp vụ Behavioral Nudge & Khoảng lặng tâm lý (Cooling-Off): `approveNudgeRebalance`, `dismissNudge`, `cancelImpulsiveExpense`, `emergencyUnlockExpense`.
+     - Quản lý ngân sách & mô phỏng: `runWhatIfSimulation`, `toggleBudgetMethod`, `scanPayslipOcr`, `cancelSubscription`.
+     - Quản lý tài khoản: `logoutAccount`.
+  2. **Kiểm tra tự động hóa toàn diện:**
+     - Script kiểm tra AST / regex xác nhận 37/37 hàm đều được khai báo đầy đủ (0 missing) trên cả hai tệp `Open Design/duonopro-mobile-app/duonopro-mobile-app.html` và `ExpenseTracker.WebApi/wwwroot/index.html`.
+     - Cú pháp JavaScript vượt qua kiểm định `node -c` với 0 lỗi cú pháp.
+     - Kiểm định giao diện `check_open_design_artifact` đạt chuẩn: Preflight Passed (0 errors, 0 warnings).
+  3. **Đồng bộ mã nguồn:**
+     - Commit `93f1b62`: `fix(fe): wire all 37 interactive handlers including QR scanner, deposit, transfer and modal actions` và đẩy thành công lên nhánh remote `origin/feature/open-design-frontend-ui`.
+- **Trạng thái:** `COMPLETED, VERIFIED & PRODUCTION READY`.
