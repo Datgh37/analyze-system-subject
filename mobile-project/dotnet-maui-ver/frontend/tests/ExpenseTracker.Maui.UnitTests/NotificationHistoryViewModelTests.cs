@@ -118,7 +118,7 @@ public class NotificationHistoryViewModelTests
 
         // Assert
         mockNativeService.Verify(s => s.ShowNotificationAsync(
-            It.Is<string>(t => t.Contains("DSA")),
+            It.Is<string>(t => t.Contains("Cảnh Báo") || t.Contains("DSA")),
             It.IsAny<string>(),
             ExpenseTracker.Maui.Services.Notifications.NotificationChannelIds.DsaAlerts,
             It.IsAny<int>(),

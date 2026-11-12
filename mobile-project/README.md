@@ -21,8 +21,7 @@ mobile-project/
 │   ├── BE/                       # Backend PHP WAMP (21 RESTful APIs, JWT Bearer)
 │   ├── FE/                       # Frontend React Native (Expo SDK 54, React 19)
 │   ├── realtime-server/          # Cổng Gateway WebSocket thời gian thực (Socket.IO + Web Simulator)
-│   ├── README.md                 # Hướng dẫn chi tiết chạy bản React Native
-│   └── BaoCaoLTMB.docx           # Tài liệu báo cáo môn học Lập trình Mobile (Word)
+│   └── README.md                 # Hướng dẫn chi tiết chạy bản React Native
 │
 └── ⚡ dotnet-maui-ver/           # PHÂN HỆ HỆ THỐNG HOÀN CHỈNH KLTN (FULL SCOPE)
     ├── README.md                 # Hướng dẫn kiến trúc chi tiết bản .NET MAUI
@@ -74,7 +73,7 @@ Xem tài liệu đặc tả kiến trúc tại: [`dotnet-maui-ver/README.md`](do
 
 ---
 
-## 4. 📜 Liên Kết Ngữ Cảnh Dự Án
+## 4. 📜 Tài Liệu Phân Tích & Thiết Kế Hệ Thống
 
-* 📄 **Chiến lược tiến hóa công nghệ hai giai đoạn:** [`PLAN-22`](../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md)
-* 📜 **Nhật ký quyết định kiến trúc:** [`decisions_and_changes_log.md`](../project_context/decisions_and_changes_log.md) (Quyết định 82, 84, 85 & 86)
+* 📊 **Sơ đồ Kiến trúc & Thiết kế Tổng thể:** Xem tại tệp gốc [`../README.md`](../README.md)
+* 📐 **Tập tin mô hình hóa UML & ERD chuẩn:** Xem thư mục [`../files/`](../files/) (Bao gồm `DatabaseERD.drawio`, `ClassDiagram.drawio`, `SequenceDiagram.drawio`, `ActivityDiagram.drawio`)

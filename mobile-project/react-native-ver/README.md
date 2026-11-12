@@ -1,7 +1,7 @@
 # 📱 ỨNG DỤNG QUẢN LÝ CHI TIÊU CÁ NHÂN (PERSONAL EXPENSE TRACKER)
 > **Đồ án môn học:** Lập trình Thiết bị Di động (Mobile Application Development)  
 > **Mối quan hệ đề tài:** Phân hệ ứng dụng di động tinh gọn (Mobile Client MVP) được trích xuất từ đề tài lớn môn **Phân tích Thiết kế Hệ thống Thông tin (PTTKHTTT)**.  
-> 🗺️ **Kế hoạch & Lộ trình phân công chi tiết:** Xem tại [ROADMAP.md](ROADMAP.md) | 📄 **Báo cáo Giữa kỳ (Markdown):** [BAO_CAO_GIUA_KY.md](BAO_CAO_GIUA_KY.md) | 📑 **Tài liệu Báo cáo Word:** [BaoCaoLTMB.docx](BaoCaoLTMB.docx)
+> 🗺️ **Kế hoạch & Lộ trình phân công chi tiết:** Xem tại [ROADMAP.md](ROADMAP.md) | 📄 **Báo cáo Giữa kỳ (Markdown):** [BAO_CAO_GIUA_KY.md](BAO_CAO_GIUA_KY.md)
 
 ---
 
@@ -68,7 +68,7 @@ Dự án này tập trung xây dựng một **ứng dụng di động quản lý
 >    - **Giai đoạn 2 (Sắp tới - Trùng tu sang Stack Hiện đại):** Khi Giảng viên mới chốt yêu cầu, nhóm sẽ chuyển đổi sang 1 trong 2 phương án chuẩn công nghiệp:
 >      - *Phương án A:* **.NET MAUI (C# / XAML)** kết hợp **Backend ASP.NET Core Web API (.NET 8/9, Clean Architecture)**.
 >      - *Phương án B:* **React Native (Expo)** kết hợp **Backend ASP.NET Core Web API** hoặc **Node.js (NestJS / Express)**.
-> 📄 *Chi tiết kế hoạch chuyển đổi:* Xem tại [`PLAN-22`](../../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
+> 📄 *Chi tiết phiên bản .NET MAUI hoàn chỉnh:* Xem tại [`../dotnet-maui-ver/README.md`](../dotnet-maui-ver/README.md).
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -249,16 +249,16 @@ Mở PowerShell tại thư mục `mobile-project/react-native-ver/BE/` và chạ
 
 #### Cách 2: Chạy Lệnh Thủ Công Bằng PowerShell
 ```powershell
-# Chạy trên máy bạn Đạt (WAMP cài ổ D):
-New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\react-native-ver\BE"
+# Chạy trên máy Windows có WAMP cài ổ D:
+New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\Projects\ExpenseTracker\mobile-project\react-native-ver\BE"
 
-# Hoặc trên máy bạn Đại (Nếu WAMP cài ổ C):
-New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\To\Your\Repo\mobile-project\react-native-ver\BE"
+# Hoặc nếu cài WampServer mặc định ở ổ C:
+New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "C:\Projects\ExpenseTracker\mobile-project\react-native-ver\BE"
 ```
 
 #### Cách 3: Chạy Lệnh Bằng Command Prompt (CMD)
 ```cmd
-mklink /J "D:\WampServer\www\expense_api" "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\react-native-ver\BE"
+mklink /J "D:\WampServer\www\expense_api" "D:\Projects\ExpenseTracker\mobile-project\react-native-ver\BE"
 ```
 
 ---
@@ -371,7 +371,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 > ⚠️ **THÔNG BÁO QUAN TRỌNG:**  
 > - **Đóng băng (Frozen):** Dừng triển khai lên máy chủ FTP `nhom46.itimit.id.vn` do Giảng viên cũ đã rời đi.
 > - **Môi trường Dev & Test hiện tại:** Tiếp tục chạy trên WAMP Server Localhost (`http://localhost/expense_api/api`) và kết nối máy ảo Android (`10.0.2.2`) hoặc điện thoại thật cùng mạng Wifi.
-> - **Sẵn sàng chuyển đổi (Migration Ready):** Khi Giảng viên mới chốt định hướng công nghệ, nhóm sẽ chuyển đổi Backend sang ASP.NET Core Web API hoặc Node.js / Docker Container theo kế hoạch [`PLAN-22`](../../project_context/plans/plans-mobile-app/2026-10-07_plan_22_tech_stack_evolution_and_migration_strategy.md).
+> - **Sẵn sàng chuyển đổi (Migration Ready):** Khi Giảng viên mới chốt định hướng công nghệ, nhóm đã hoàn thành chuyển đổi hệ thống sang phân hệ .NET MAUI 10 & ASP.NET Core 10 Web API Clean Architecture theo tài liệu tại [`../dotnet-maui-ver/README.md`](../dotnet-maui-ver/README.md).
 
 
 ---

@@ -13,7 +13,7 @@ Dự án là nền tảng quản trị tài chính cá nhân thế hệ mới, g
 - **Trí tuệ nhân tạo Multimodal Vision OCR:** Bóc tách hóa đơn siêu thị, phiếu lương tự động, tích hợp bộ kiểm toán số học (Mathematical Audit Engine) đối soát số học chính xác đến từng dòng hàng.
 - **Tâm lý học hành vi & Cú hích (Nudge):** Thiết lập khoảng trễ tâm lý 24 giờ (Cooling-off Period) cho các quyết định mua sắm lớn và các khuyến nghị tài chính cá nhân hóa có khả năng tự giải trình (Explainable AI - XAI).
 - **Động cơ hành động tự hành (Jev Protocol):** Tự động nhận diện tin nhắn biến động số dư ngân hàng và phân tầng xác suất để hiển thị thẻ xác nhận 1-chạm (Quick Commit).
-- **Phạm vi nghiêm ngặt:** **100% Quản trị Tài chính Cá nhân (Personal Finance)** — Không chia tiền nhóm, không quỹ tập thể (xem chi tiết tại [`PRODUCT.md`](PRODUCT.md)).
+- **Phạm vi nghiêm ngặt:** **100% Quản trị Tài chính Cá nhân (Personal Finance)** — Không chia tiền nhóm, không quỹ tập thể (xem chi tiết tại [`implement-docs/PRODUCT.md`](implement-docs/PRODUCT.md)).
 
 ---
 
@@ -67,10 +67,6 @@ Dự án là nền tảng quản trị tài chính cá nhân thế hệ mới, g
 
 ---
 
-## 3. Kiến Trúc Thư Mục & Phân Hệ Dự Án
-
----
-
 ## 3. Hướng Dẫn Khởi Chạy Backend (ASP.NET Core 10 Web API)
 
 ### 3.1. Khởi Chạy Nhanh (2 Bước)
@@ -107,12 +103,12 @@ Mở trình duyệt truy cập tài liệu API trực quan:
   - Host: `localhost:5432` | Database: `expensetracker_db`
   - User: `expensetracker_user` | Password: `expensetracker_password`
   - *Tự động Migration & Seeder:* Khi kết nối CSDL lần đầu, hệ thống tự động chạy `MigrateAsync()` tạo toàn bộ bảng và nạp dữ liệu mẫu ban đầu qua `DatabaseSeeder.cs`.
-- **Chạy toàn bộ 254 bài kiểm thử Backend:**
+- **Chạy toàn bộ 377 bài kiểm thử Backend:**
   ```powershell
   cd backend
   dotnet test
   ```
-  *(83 tests Domain + 171 tests Application đạt tỷ lệ đạt 100%)*.
+  *(113 tests Domain + 264 tests Application đạt tỷ lệ đạt 100%)*.
 
 ---
 
@@ -223,20 +219,20 @@ File cấu hình: `frontend/ExpenseTracker.Maui/MauiProgram.cs` (từ dòng 125 
 
 ---
 
-### 4.6. Chạy Kiểm Thử Tự Động Cho Toàn Hệ Thống (363 Unit Tests Passed 100%)
-Dự án sở hữu bộ kiểm thử tự động toàn diện đạt tỷ lệ vượt qua **100% (363 / 363 Tests Passed)**:
-- **Frontend MAUI Unit Tests (82 bài tests):**
+### 4.6. Chạy Kiểm Thử Tự Động Cho Toàn Hệ Thống (516 Unit Tests Passed 100%)
+Dự án sở hữu bộ kiểm thử tự động toàn diện đạt tỷ lệ vượt qua **100% (516 / 516 Tests Passed)**:
+- **Frontend MAUI Unit Tests (139 bài tests):**
   ```powershell
   cd frontend/tests/ExpenseTracker.Maui.UnitTests
   dotnet test
   ```
-  *(82/82 Tests Passed 100% trong ~899ms, kiểm thử toàn bộ ViewModel logic, Regex bóc tách ngân hàng, OTP, DSA)*.
-- **Backend Unit Tests (281 bài tests):**
+  *(139/139 Tests Passed 100% trong ~200ms, kiểm thử toàn bộ ViewModel logic, Regex bóc tách ngân hàng, OTP, DSA)*.
+- **Backend Unit Tests (377 bài tests):**
   ```powershell
   cd backend
   dotnet test
   ```
-  *(89 tests Domain + 192 tests Application đạt tỷ lệ 100% Passed)*.
+  *(113 tests Domain + 264 tests Application đạt tỷ lệ 100% Passed)*.
 - **Kiểm thử tự động API Suite:** Click đúp vào **`TEST_API.bat`** (hoặc chạy `.\quick-run-scripts\test_api_suite.ps1`).
 
 ---
@@ -330,6 +326,6 @@ adb shell am start -n com.companyname.expensetracker.maui/crc647f035efecdfd55fa.
 - 📘 **Cẩm nang kiểm thử toàn bộ API (9 Phân hệ E2E, HTTP PATCH & Realtime Hub):** [`implement-docs/API_TESTING_PLAYBOOK.md`](implement-docs/API_TESTING_PLAYBOOK.md)
 - 📋 **Bản ghi nguồn sự thật sản phẩm (Durable Product Truth):** [`implement-docs/PRODUCT.md`](implement-docs/PRODUCT.md)
 - 📱 **Bản hướng dẫn ghép nối Frontend MAUI chi tiết 20 màn hình:** [`implement-docs/HUONG_DAN_FE.md`](implement-docs/HUONG_DAN_FE.md)
-- 🎨 **Hướng dẫn triển khai giao diện chuyên sâu (Immersive UI & Design Tokens):** [`HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md)
+- 🎨 **Hướng dẫn triển khai giao diện chuyên sâu (Immersive UI & Design Tokens):** [`implement-docs/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md`](implement-docs/HUONG_DAN_TRIEN_KHAI_IMMERSIVE_FRONTEND.md)
 - 🏗️ **Đặc tả kiến trúc kỹ thuật toàn diện:** [`implement-docs/TECHNICAL_ARCHITECTURE_SPEC.md`](implement-docs/TECHNICAL_ARCHITECTURE_SPEC.md)
 - 🗺️ **Lộ trình tổng thể dự án:** [`implement-docs/MASTER_PROJECT_ROADMAP.md`](implement-docs/MASTER_PROJECT_ROADMAP.md)

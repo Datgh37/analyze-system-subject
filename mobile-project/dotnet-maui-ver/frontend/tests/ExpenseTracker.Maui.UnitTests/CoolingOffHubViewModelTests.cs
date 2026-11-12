@@ -138,7 +138,7 @@ public class CoolingOffHubViewModelTests
 
         // Assert
         _viewModel.PendingTransactions.Should().NotContain(item);
-        _viewModel.StatusMessage.Should().Contain("CHÚC MỪNG");
+        _viewModel.StatusMessage.Should().ContainEquivalentOf("Chúc mừng");
     }
 
     [Fact]

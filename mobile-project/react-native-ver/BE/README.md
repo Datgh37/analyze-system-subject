@@ -45,11 +45,11 @@ Mở PowerShell với quyền User bình thường (không cần Administrator) 
 # Cú pháp:
 # New-Item -ItemType Junction -Path "<Đường_dẫn_Wamp_www>\expense_api" -Target "<Đường_dẫn_thư_mục_BE_của_bạn>"
 
-# Ví dụ trên máy bạn Đạt (WAMP cài ổ D):
-New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\react-native-ver\BE"
+# Ví dụ trên máy Windows có WAMP cài ổ D:
+New-Item -ItemType Junction -Path "D:\WampServer\www\expense_api" -Target "D:\Projects\ExpenseTracker\mobile-project\react-native-ver\BE"
 
-# Ví dụ nếu bạn Đại cài WampServer mặc định ở ổ C:
-New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\To\Your\Repo\mobile-project\react-native-ver\BE"
+# Ví dụ nếu cài WampServer mặc định ở ổ C:
+New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "C:\Projects\ExpenseTracker\mobile-project\react-native-ver\BE"
 ```
 
 ---
@@ -58,7 +58,7 @@ New-Item -ItemType Junction -Path "C:\wamp64\www\expense_api" -Target "D:\Path\T
 
 Nếu bạn hoặc Agent sử dụng CMD (Command Prompt):
 ```cmd
-mklink /J "D:\WampServer\www\expense_api" "D:\University Study Subjects\Information System Design Analysis\Project\Analyze System\mobile-project\react-native-ver\BE"
+mklink /J "D:\WampServer\www\expense_api" "D:\Projects\ExpenseTracker\mobile-project\react-native-ver\BE"
 ```
 
 ---
