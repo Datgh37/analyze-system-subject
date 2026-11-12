@@ -3,217 +3,145 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Notifications"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.NotificationHistoryPage"
              x:DataType="vm:NotificationHistoryViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
-    <Grid RowDefinitions="Auto,Auto,*,Auto" MaximumWidthRequest="640" Margin="0,0,0,0">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
 
-        <!-- 1. Header & Action Bar -->
-        <Border Grid.Row="0" Margin="20,16,20,10" Padding="18"
-                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 20"
-                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
-            <Border.Shadow>
-                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                        Offset="0,4" Radius="12" 
-                        Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-            </Border.Shadow>
-
+        <!-- 1. TOP HEADER BAR TÍCH HỢP -->
+        <Border Grid.Row="0" Margin="16,12,16,8" Padding="18"
+                Style="{StaticResource FintechCardStyle}">
             <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                 <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
                     <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="Thông Báo Hệ Thống"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        <Label Text="Trung Tâm Thông Báo" Style="{StaticResource FintechCardTitleStyle}" />
                         <Border StrokeThickness="0" StrokeShape="RoundRectangle 10"
                                 BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
                                 Padding="8,2"
                                 IsVisible="{Binding UnreadCount, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                             <Label Text="{Binding UnreadCount, StringFormat='{0} mới'}"
                                    FontSize="11" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
+                                   TextColor="{StaticResource FintechPrimary}" />
                         </Border>
                     </HorizontalStackLayout>
-                    <Label Text="{Binding StatusMessage, FallbackValue='Cập nhật thông báo theo thời gian thực (SignalR)'}"
-                           FontSize="11"
-                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                    <Label Text="{Binding StatusMessage, FallbackValue='Cập nhật thông báo biến động tài chính tức thì'}"
+                           Style="{StaticResource FintechCaptionStyle}"
                            LineBreakMode="TailTruncation" />
                 </VerticalStackLayout>
 
                 <Button Grid.Column="1"
                         Text="Đọc tất cả"
                         Command="{Binding MarkAllAsReadCommand}"
-                        BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
+                        BackgroundColor="{StaticResource FintechPrimary}"
                         TextColor="#FFFFFF"
                         FontAttributes="Bold"
                         CornerRadius="10"
                         HeightRequest="36"
                         FontSize="12"
-                        Padding="12,0" />
+                        Padding="14,0" />
             </Grid>
         </Border>
 
-        <!-- 2. Filter Segment & Demo Test Trigger Bar -->
-        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Margin="20,0,20,10">
+        <!-- 2. BỘ LỌC THÔNG BÁO DẠNG PILLS LƯỚT NGANG -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Margin="16,0,16,10">
             <HorizontalStackLayout Spacing="8">
                 <Button Text="Tất cả"
                         Command="{Binding SetFilterCommand}"
                         CommandParameter="All"
                         BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                        FontAttributes="Bold"
-                        HeightRequest="36"
-                        Padding="14,0"
-                        CornerRadius="10"
-                        FontSize="12" />
+                        TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                        FontAttributes="Bold" HeightRequest="36" Padding="14,0" CornerRadius="10" FontSize="12" />
 
                 <Button Text="Chưa đọc"
                         Command="{Binding SetFilterCommand}"
                         CommandParameter="Unread"
                         BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
-                        TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
-                        FontAttributes="Bold"
-                        HeightRequest="36"
-                        Padding="14,0"
-                        CornerRadius="10"
-                        FontSize="12" />
+                        TextColor="{StaticResource FintechPrimary}"
+                        FontAttributes="Bold" HeightRequest="36" Padding="14,0" CornerRadius="10" FontSize="12" />
 
-                <!-- Quick Demo Testing Buttons for Defense -->
-                <Button Text="+ Test Cảnh báo"
+                <Button Text="🔔 Test Cảnh báo"
                         Command="{Binding SendTestNotificationCommand}"
                         CommandParameter="budget"
                         BackgroundColor="{AppThemeBinding Light=#FFFBEB, Dark=#451A03}"
                         TextColor="{AppThemeBinding Light=#B45309, Dark=#FBBF24}"
-                        FontAttributes="Bold"
-                        HeightRequest="36"
-                        Padding="12,0"
-                        CornerRadius="10"
-                        FontSize="11" />
+                        FontAttributes="Bold" HeightRequest="36" Padding="12,0" CornerRadius="10" FontSize="11" />
 
-                <Button Text="+ Test Số dư"
+                <Button Text="💰 Test Số dư"
                         Command="{Binding SendTestNotificationCommand}"
                         CommandParameter="balance"
                         BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                        TextColor="{AppThemeBinding Light=#047857, Dark=#6EE7B7}"
-                        FontAttributes="Bold"
-                        HeightRequest="36"
-                        Padding="12,0"
-                        CornerRadius="10"
-                        FontSize="11" />
+                        TextColor="{StaticResource FintechIncome}"
+                        FontAttributes="Bold" HeightRequest="36" Padding="12,0" CornerRadius="10" FontSize="11" />
 
-                <!-- Native Android Notification & Alarm Triggers (Chặng 2) -->
-                <Border StrokeShape="RoundRectangle 10"
-                        StrokeThickness="0"
-                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
-                        HeightRequest="36"
-                        Padding="12,0"
-                        VerticalOptions="Center">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SendNativeNotificationCommand}" CommandParameter="dsa" />
-                    </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Grid.Column="0" Source="ic_bell.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="Bắn Native Test" TextColor="{AppThemeBinding Light=#4F46E5, Dark=#C7D2FE}" FontSize="11" FontAttributes="Bold" VerticalOptions="Center" />
-                    </Grid>
-                </Border>
-
-                <Button Text="Hẹn Báo Thức 21:00"
+                <Button Text="⏰ Nhắc nhở 21:00"
                         Command="{Binding ScheduleDailyReminderCommand}"
                         BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}"
                         TextColor="{AppThemeBinding Light=#B45309, Dark=#FDE68A}"
-                        FontAttributes="Bold"
-                        HeightRequest="36"
-                        Padding="12,0"
-                        CornerRadius="10"
-                        FontSize="11" />
+                        FontAttributes="Bold" HeightRequest="36" Padding="12,0" CornerRadius="10" FontSize="11" />
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- 3. Notification List with RefreshView -->
+        <!-- 3. DANH SÁCH THÔNG BÁO THEO THỜI GIAN THỰC -->
         <RefreshView Grid.Row="2"
                      IsRefreshing="{Binding IsRefreshing}"
                      Command="{Binding LoadNotificationsCommand}">
             <CollectionView ItemsSource="{Binding Notifications}" SelectionMode="None">
                 <CollectionView.EmptyView>
-                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 20"
-                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                            Padding="32" Margin="20,10">
+                    <Border Style="{StaticResource FintechCardStyle}" Padding="32" Margin="16,10">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="🔔" FontSize="44" HorizontalOptions="Center" />
-                            <Label Text="Không có thông báo nào"
-                                   FontSize="15" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                   HorizontalOptions="Center" />
-                            <Label Text="Mọi biến động số dư, cảnh báo ngân sách và nhắc nhở 21:00 sẽ xuất hiện tại đây."
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                   HorizontalOptions="Center"
-                                   HorizontalTextAlignment="Center" />
+                            <Image Source="ic_bell.svg" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" />
+                            <Label Text="Không có thông báo nào" Style="{StaticResource FintechCardTitleStyle}" HorizontalOptions="Center" />
+                            <Label Text="Mọi biến động số dư, cảnh báo hạn mức ngân sách và nhắc nhở chi tiêu sẽ xuất hiện tại đây."
+                                   Style="{StaticResource FintechCaptionStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
                         </VerticalStackLayout>
                     </Border>
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:InAppNotificationModel">
-                        <Border Margin="20,4,20,8" Padding="16,14"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 16"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
-                            <Border.Shadow>
-                                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                                        Offset="0,2" Radius="6" 
-                                        Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
-                            </Border.Shadow>
+                        <Border Margin="16,0,16,10" Padding="16,14"
+                                Style="{StaticResource FintechCardStyle}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationHistoryViewModel}}, Path=OpenNotificationDetailCommand}"
                                                       CommandParameter="{Binding .}" />
                             </Border.GestureRecognizers>
 
-                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" VerticalOptions="Center">
-                                <!-- Type Icon Badge -->
+                            <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
                                 <Border Grid.Column="0" WidthRequest="44" HeightRequest="44"
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 22"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 14"
                                         BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
                                         VerticalOptions="Center">
-                                    <Label Text="{Binding TypeIcon}" FontSize="22"
+                                    <Image Source="{Binding TypeSvgIcon}" WidthRequest="22" HeightRequest="22"
                                            HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
 
-                                <!-- Title, Message & Timestamp -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
                                     <Label Text="{Binding Title}"
-                                           FontSize="14" FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                           Style="{StaticResource FintechCardTitleStyle}"
                                            LineBreakMode="TailTruncation" />
                                     <Label Text="{Binding Message}"
-                                           FontSize="12" LineBreakMode="WordWrap" MaxLines="2"
-                                           TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                           Style="{StaticResource FintechCaptionStyle}"
+                                           LineBreakMode="WordWrap" MaxLines="2" />
                                     <Label Text="{Binding FormattedCreatedAt}"
-                                           FontSize="11"
-                                           TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}" />
+                                           FontSize="10" TextColor="{StaticResource FintechTextMuted}" />
                                 </VerticalStackLayout>
 
-                                <!-- Action Button -->
-                                <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
-                                    <Button Text="Chi Tiết"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationHistoryViewModel}}, Path=OpenNotificationDetailCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                            TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}"
-                                            FontAttributes="Bold"
-                                            FontSize="11"
-                                            HeightRequest="30"
-                                            Padding="10,0"
-                                            CornerRadius="8" />
-                                </VerticalStackLayout>
+                                <Button Grid.Column="2"
+                                        Text="Chi Tiết"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationHistoryViewModel}}, Path=OpenNotificationDetailCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                        TextColor="{StaticResource FintechPrimary}"
+                                        FontAttributes="Bold"
+                                        FontSize="11"
+                                        HeightRequest="32"
+                                        Padding="12,0"
+                                        CornerRadius="8"
+                                        VerticalOptions="Center" />
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -221,16 +149,17 @@
             </CollectionView>
         </RefreshView>
 
-        <!-- 4. Bottom Error Bar if present -->
-        <Border Grid.Row="3" Margin="20,6" Padding="14"
-                Stroke="#FCA5A5" StrokeThickness="1"
-                StrokeShape="RoundRectangle 12"
+        <!-- 4. THÔNG BÁO LỖI (NẾU CÓ) -->
+        <Border Grid.Row="3" Margin="16,6" Padding="14"
+                Stroke="#FCA5A5" StrokeThickness="1" StrokeShape="RoundRectangle 12"
                 BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
                 IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
             <Label Text="{Binding ErrorMessage}"
                    TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
                    FontSize="12" FontAttributes="Bold" />
         </Border>
-    </Grid>
 
+        <!-- 5. DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
+        <components:BottomNavDockView Grid.Row="4" ActiveTab="Home" />
+    </Grid>
 </ContentPage>

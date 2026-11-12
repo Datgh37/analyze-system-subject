@@ -7,406 +7,289 @@
              x:Class="ExpenseTracker.Maui.Views.ExpensesPage"
              x:DataType="vm:ExpensesViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
     <Grid RowDefinitions="*, Auto">
+        <!-- VÙNG CUỘN NỘI DUNG CHÍNH -->
         <ScrollView Grid.Row="0">
-        <VerticalStackLayout Padding="16,12,16,24" Spacing="18" MaximumWidthRequest="640">
+            <VerticalStackLayout Padding="16,12,16,28" Spacing="16" MaximumWidthRequest="640">
 
-            <!-- 1. Hero Monthly Expense Summary Card (Crimson Rose Gradient) -->
-            <Border Stroke="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 22"
-                    Padding="22">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#4C0519" Offset="0.0" />
-                        <GradientStop Color="#881337" Offset="0.5" />
-                        <GradientStop Color="#BE123C" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Background>
-                <Border.Shadow>
-                    <Shadow Brush="#F43F5E" Offset="0,8" Radius="20" Opacity="0.3" />
-                </Border.Shadow>
+                <!-- 1. HERO EXPENSE CARD: TỔNG CHI TIÊU & NÚT 1-CHẠM AI OCR -->
+                <Border Stroke="{AppThemeBinding Light=#FB7185, Dark=#E11D48}"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 24"
+                        Padding="22">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4C0519" Offset="0.0" />
+                            <GradientStop Color="#881337" Offset="0.5" />
+                            <GradientStop Color="#BE123C" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#BE123C" Offset="0,6" Radius="20" Opacity="0.35" />
+                    </Border.Shadow>
 
-                <VerticalStackLayout Spacing="6">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="TỔNG CHI TIÊU THÁNG NÀY"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               TextColor="#FECDD3"
-                               CharacterSpacing="1.2" />
-                        <Border Grid.Column="1"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8"
-                                BackgroundColor="#9F1239"
-                                Padding="8,3">
-                            <Label Text="Chi Phí"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#FFE4E6" />
-                        </Border>
-                    </Grid>
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                <Image Source="ic_expense.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Label Text="TỔNG CHI TIÊU THÁNG NÀY" FontSize="11" FontAttributes="Bold" TextColor="#FECDD3" CharacterSpacing="1" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Grid.Column="1" BackgroundColor="#9F1239" StrokeShape="RoundRectangle 8" Padding="8,3" VerticalOptions="Center">
+                                <Label Text="TIỀN RA TÚI" FontSize="10" FontAttributes="Bold" TextColor="#FFE4E6" />
+                            </Border>
+                        </Grid>
 
-                    <Label Text="{Binding MonthlyTotalExpense, StringFormat='-{0:N0} VND'}"
-                           FontSize="26"
-                           FontAttributes="Bold"
-                           TextColor="#FFFFFF"
-                           Margin="0,4" />
+                        <!-- Số tiền chi tiêu lớn 32pt -->
+                        <Label Text="{Binding MonthlyTotalExpense, StringFormat='-{0:N0} đ'}"
+                               FontSize="32" FontAttributes="Bold" TextColor="#FFFFFF" />
 
-                    <Label Text="Khoản tiền đã trừ trực tiếp từ các ví cá nhân"
-                           FontSize="11"
-                           TextColor="#FFE4E6"
-                           Opacity="0.85" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 2. Error Banner -->
-            <Border Stroke="#FCA5A5"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                    Padding="14"
-                    IsVisible="{Binding HasError}">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
-                    <Label Grid.Column="1" Text="{Binding ErrorMessage}"
-                           TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
-                           FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                </Grid>
-            </Border>
-
-            <!-- 3. Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}"
-                               HorizontalOptions="Center" />
-
-            <!-- Auto-fill Notification Banner from Bank Listener -->
-            <Border Stroke="#60A5FA"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 14"
-                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
-                    Padding="14,12"
-                    IsVisible="{Binding AutoFillBannerMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <Image Grid.Column="0" Source="ic_wallet_card.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
-                    <Label Grid.Column="1" Text="{Binding AutoFillBannerMessage}"
-                           TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
-                           FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
-                </Grid>
-            </Border>
-
-            <!-- 4. Add Expense Interactive Card (UC-03.01) -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="20">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="14">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="Ghi Nhận Khoản Chi Mới"
-                               FontAttributes="Bold"
-                               FontSize="17"
-                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        <Border Grid.Column="1"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#881337}"
-                                Padding="10,4">
-                            <Label Text="Tức thì"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#E11D48, Dark=#FECDD3}" />
-                        </Border>
-                    </Grid>
-
-                    <!-- Amount Input -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Số tiền chi (VND):" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,4">
-                            <Entry Placeholder="Ví dụ: 150000"
-                                   Text="{Binding NewAmount}"
-                                   Keyboard="Numeric"
-                                   FontSize="15"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Wallet Picker -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Ví thanh toán (Khấu trừ số dư):" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,2">
-                            <Picker Title="-- Chọn ví thanh toán --"
-                                    ItemsSource="{Binding Wallets}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    SelectedItem="{Binding SelectedWallet}"
-                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Note Entry with Live Keyword Gợi ý -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Ghi chú chi tiêu:" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,4">
-                            <Entry Placeholder="Ví dụ: WinMart, GrabFood, Highlands Coffee..."
-                                   Text="{Binding Note}"
-                                   FontSize="14"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-
-                        <!-- Live Auto-categorization Badge -->
-                        <Border StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8"
-                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                Padding="10,6"
-                                IsVisible="{Binding AutoMatchedHint, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                            <Label Text="{Binding AutoMatchedHint}"
-                                   TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}"
-                                   FontAttributes="Bold"
-                                   FontSize="12" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Category Picker -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Danh mục chi tiêu:" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,2">
-                            <Picker Title="-- Chọn danh mục --"
-                                    ItemsSource="{Binding Categories}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    SelectedItem="{Binding SelectedCategory}"
-                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Date Picker -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Ngày chi tiêu:" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,2">
-                            <DatePicker Date="{Binding TransactionDate}"
-                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- 50/30/20 Essential Needs Flag -->
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
-                        <CheckBox Grid.Column="0" IsChecked="{Binding IsEssential}"
-                                  VerticalOptions="Center"
-                                  Color="{AppThemeBinding Light=#E11D48, Dark=#F43F5E}" />
-                        <Label Grid.Column="1" Text="Khoản chi thiết yếu (Quy tắc 50/30/20)"
-                               VerticalOptions="Center"
-                               FontSize="13" LineBreakMode="WordWrap"
-                               TextColor="{AppThemeBinding Light=#334155, Dark=#CBD5E1}" />
-                    </Grid>
-
-                    <!-- Submit Button -->
-                    <Button Text="Lưu Khoản Chi Tiêu"
-                            BackgroundColor="#E11D48"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="15"
-                            CornerRadius="12"
-                            HeightRequest="48"
-                            Margin="0,8,0,0"
-                            Command="{Binding CreateExpenseCommand}" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Quick Bank Simulation Triggers for Presentation Defense -->
-            <Border Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#334155}"
-                    StrokeDashArray="4,4"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#111827}"
-                    Padding="14,12">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Công Cụ Trải Nghiệm Demo (Dành Cho Giám Khảo):"
-                           FontSize="11" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
-                        <HorizontalStackLayout Spacing="8">
-                            <Button Text="Ví MoMo (-85k)"
-                                    Command="{Binding SimulateBankDeductionCommand}"
-                                    CommandParameter="momo"
-                                    BackgroundColor="{AppThemeBinding Light=#FCE7F3, Dark=#831843}"
-                                    TextColor="{AppThemeBinding Light=#BE185D, Dark=#F472B6}"
-                                    FontAttributes="Bold"
-                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
-                            <Button Text="ACB ONE (-350k)"
-                                    Command="{Binding SimulateBankDeductionCommand}"
-                                    CommandParameter="acb"
-                                    BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
-                                    TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
-                                    FontAttributes="Bold"
-                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
-                            <Button Text="Vietcombank (-500k)"
-                                    Command="{Binding SimulateBankDeductionCommand}"
-                                    CommandParameter="vcb"
-                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                    TextColor="{AppThemeBinding Light=#047857, Dark=#6EE7B7}"
-                                    FontAttributes="Bold"
-                                    HeightRequest="34" CornerRadius="8" FontSize="11" Padding="12,0" />
-                        </HorizontalStackLayout>
-                    </ScrollView>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 5. Expenses Timeline List (UC-03.02) -->
-            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
-                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
-                    <Label Text="Lịch Sử Các Khoản Chi"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                    <Label Text="Dòng thời gian chi tiêu theo tháng"
-                           FontSize="12"
-                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                </VerticalStackLayout>
-            </Grid>
-
-            <CollectionView ItemsSource="{Binding Expenses}">
-                <CollectionView.EmptyView>
-                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 16"
-                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                            Padding="24,36">
-                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                            <Image Source="ic_expense.png"
-                                   WidthRequest="36"
-                                   HeightRequest="36"
-                                   Opacity="0.4"
-                                   HorizontalOptions="Center" />
-                            <Label Text="Chưa có khoản chi tiêu nào trong tháng"
-                                   FontSize="15"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                        </VerticalStackLayout>
-                    </Border>
-                </CollectionView.EmptyView>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:TransactionModel">
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 18"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                                Padding="14,12"
-                                Margin="0,0,0,10">
+                        <!-- Nút 1-Chạm Quét Hóa Đơn AI OCR Ngay Trên Header -->
+                        <Border BackgroundColor="#FFFFFF"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,10"
+                                Margin="0,4,0,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnQuickScanOcrClicked" />
+                            </Border.GestureRecognizers>
                             <Border.Shadow>
-                                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                                        Offset="0,2" Radius="6" 
-                                        Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
+                                <Shadow Brush="#000000" Offset="0,3" Radius="8" Opacity="0.2" />
                             </Border.Shadow>
-
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
-                                <!-- Category Icon Badge (46x46 Pill Container) -->
-                                <Border Grid.Column="0"
-                                        WidthRequest="46"
-                                        HeightRequest="46"
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 14"
-                                        BackgroundColor="{Binding DisplayCategoryBg}"
-                                        VerticalOptions="Center"
-                                        HorizontalOptions="Center">
-                                    <Image Source="{Binding DisplayVectorIcon}"
-                                           WidthRequest="24"
-                                           HeightRequest="24"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                <Border Grid.Column="0" WidthRequest="36" HeightRequest="36" StrokeShape="RoundRectangle 10" BackgroundColor="#FFE4E6" StrokeThickness="0">
+                                    <Image Source="ic_ocr.svg" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
-
-                                <!-- Middle Column: Category Name, Note, Wallet & Date -->
                                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                    <Label Text="{Binding CategoryName}"
-                                           FontAttributes="Bold"
-                                           FontSize="15"
-                                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                           LineBreakMode="TailTruncation" />
-
-                                    <Label Text="{Binding Note}"
-                                           FontSize="12"
-                                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                           LineBreakMode="TailTruncation"
-                                           IsVisible="{Binding Note, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
-
-                                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                        <Border BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
-                                                StrokeThickness="0"
-                                                StrokeShape="RoundRectangle 6"
-                                                Padding="6,2">
-                                            <Label Text="{Binding WalletName}"
-                                                   FontSize="10"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light=#4F46E5, Dark=#A5B4FC}" />
-                                        </Border>
-                                        <Label Text="•" FontSize="11" TextColor="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" VerticalOptions="Center" />
-                                        <Label Text="{Binding TransactionDate, StringFormat='{0:dd/MM/yyyy}'}"
-                                               FontSize="11"
-                                               TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
-                                               VerticalOptions="Center" />
-                                    </HorizontalStackLayout>
+                                    <Label Text="Quét Hóa Đơn Bằng AI OCR" FontSize="13" FontAttributes="Bold" TextColor="#9F1239" />
+                                    <Label Text="Tự động bóc tách hóa đơn không cần nhập tay" FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
-
-                                <!-- Right Column: Amount & Delete Button -->
-                                <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End" VerticalOptions="Center">
-                                    <Label Text="{Binding Amount, StringFormat='-{0:N0} đ'}"
-                                           FontAttributes="Bold"
-                                           FontSize="15"
-                                           TextColor="{AppThemeBinding Light=#E11D48, Dark=#FB7185}"
-                                           HorizontalOptions="End" />
-
-                                    <ImageButton Source="ic_trash.png"
-                                                 BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#2A1215}"
-                                                 CornerRadius="8"
-                                                 HeightRequest="34"
-                                                 WidthRequest="34"
-                                                 Padding="8"
-                                                 Aspect="AspectFit"
-                                                 HorizontalOptions="End"
-                                                 ToolTipProperties.Text="Xóa chi tiêu"
-                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExpensesViewModel}}, Path=DeleteExpenseCommand}"
-                                                 CommandParameter="{Binding .}" />
-                                </VerticalStackLayout>
+                                <Label Grid.Column="2" Text="Quét ngay →" FontSize="12" FontAttributes="Bold" TextColor="#BE123C" VerticalOptions="Center" />
                             </Grid>
                         </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- THÔNG BÁO LỖI (NẾU CÓ) -->
+                <Border Stroke="#FCA5A5" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                        Padding="14" IsVisible="{Binding HasError}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding ErrorMessage}"
+                               TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
+                               FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
 
-        <!-- Bottom Navigation Bar (Center Docked Voice Mic FAB) -->
+                <!-- TRỢ LÝ TỰ ĐỘNG GỢI Ý DANH MỤC (AUTO-MATCH HINT) -->
+                <Border Stroke="#60A5FA" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+                        Padding="14,12"
+                        IsVisible="{Binding AutoMatchedHint, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#3B82F6" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding AutoMatchedHint}"
+                               TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
+                               FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- 2. FORM NHẬP KHOẢN CHI MỚI HIỆN ĐẠI (BIG KEYPAD AMOUNT ENTRY) -->
+                <Border Style="{StaticResource FintechCardStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="GHI CHÉP KHOẢN CHI MỚI" Style="{StaticResource FintechCardTitleStyle}" />
+                            <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#FFE4E6, Dark=#4C0519}" StrokeShape="RoundRectangle 8" Padding="8,3">
+                                <Label Text="0ms Lưu Tức Thì" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource FintechExpense}" />
+                            </Border>
+                        </Grid>
+
+                        <!-- Ô NHẬP SỐ TIỀN CỰC LỚN 34pt CÓ TIỀN TỐ TRỪ ĐỎ RỰC RỠ -->
+                        <Border Stroke="{AppThemeBinding Light=#FECDD3, Dark=#881337}"
+                                StrokeThickness="1.5"
+                                StrokeShape="RoundRectangle 16"
+                                BackgroundColor="{AppThemeBinding Light=#FFF1F2, Dark=#1E1523}"
+                                Padding="16,12">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                                <Label Grid.Column="0" Text="-" FontSize="34" FontAttributes="Bold" TextColor="{StaticResource FintechExpense}" VerticalOptions="Center" />
+                                <Entry Grid.Column="1"
+                                       Text="{Binding NewAmount}"
+                                       Placeholder="0"
+                                       Keyboard="Numeric"
+                                       FontSize="34"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource FintechExpense}"
+                                       BackgroundColor="Transparent"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="2" Text="VND" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource FintechExpense}" VerticalOptions="Center" Opacity="0.8" />
+                            </Grid>
+                        </Border>
+
+                        <!-- GHI CHÚ KHOẢN CHI -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Nội dung khoản chi" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="14,4">
+                                <Entry Text="{Binding Note}"
+                                       Placeholder="Ví dụ: Cơm trưa văn phòng, Cà phê Highland..."
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- VÍ TRỪ TIỀN & DANH MỤC CHI -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                                <Label Text="Trừ tiền từ ví" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Picker ItemsSource="{Binding Wallets}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedWallet}"
+                                            Title="-- Chọn ví --"
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Xếp vào nhóm" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Picker ItemsSource="{Binding Categories}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedCategory}"
+                                            Title="-- Chọn nhóm --"
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- BẬT/TẮT KHOẢN CHI THIẾT YẾU (NEEDS 50/30/20) -->
+                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0"
+                                Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Khoản chi thiết yếu (Nhóm 50% Needs)" FontSize="13" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                    <Label Text="Phân loại tự động vào quy tắc ngân sách 50/30/20" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding IsEssential}" OnColor="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+
+                        <!-- NÚT GHI NHẬN KHOẢN CHI -->
+                        <Button Text="✓ Xác Nhận Chi Tiêu"
+                                Command="{Binding CreateExpenseCommand}"
+                                BackgroundColor="{StaticResource FintechExpense}"
+                                TextColor="#FFFFFF"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                CornerRadius="14"
+                                HeightRequest="50"
+                                Margin="0,4,0,0">
+                            <Button.Shadow>
+                                <Shadow Brush="{StaticResource FintechExpense}" Offset="0,4" Radius="12" Opacity="0.3" />
+                            </Button.Shadow>
+                        </Button>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 3. LỊCH SỬ CHI TIÊU GẦN ĐÂY -->
+                <Grid ColumnDefinitions="*,Auto" Margin="2,8,2,0" VerticalOptions="Center">
+                    <Label Grid.Column="0" Text="LỊCH SỬ GIAO DỊCH GẦN ĐÂY" Style="{StaticResource FintechSectionTitleStyle}" />
+                    <Label Grid.Column="1" Text="Theo thời gian thực" FontSize="11" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding Expenses}" SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <Border Style="{StaticResource FintechCardStyle}" Padding="28">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Image Source="ic_expense.svg" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                                <Label Text="Chưa có khoản chi tiêu nào trong tháng này." Style="{StaticResource FintechBodyStyle}" HorizontalTextAlignment="Center" />
+                                <Label Text="Nhấn xác nhận chi tiêu ở trên hoặc quét hóa đơn để bắt đầu." FontSize="12" TextColor="{StaticResource FintechTextMuted}" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:TransactionModel">
+                            <Border Style="{StaticResource FintechCardStyle}" Margin="0,0,0,10">
+                                <Grid ColumnDefinitions="46,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                    <Border Grid.Column="0"
+                                            WidthRequest="46"
+                                            HeightRequest="46"
+                                            StrokeShape="RoundRectangle 14"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{Binding DisplayCategoryBg}"
+                                            VerticalOptions="Center">
+                                        <Image Source="ic_expense.svg"
+                                               WidthRequest="22"
+                                               HeightRequest="22"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                        <Label Text="{Binding CategoryName}"
+                                               Style="{StaticResource FintechCardTitleStyle}"
+                                               LineBreakMode="TailTruncation" />
+
+                                        <Label Text="{Binding Note}"
+                                               Style="{StaticResource FintechCaptionStyle}"
+                                               LineBreakMode="TailTruncation"
+                                               IsVisible="{Binding Note, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+
+                                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                            <Label Text="{Binding WalletName}"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource FintechPrimary}" />
+                                            <Label Text="•" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                            <Label Text="{Binding TransactionDate, StringFormat='{0:dd/MM/yyyy}'}"
+                                                   Style="{StaticResource FintechCaptionStyle}" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End" VerticalOptions="Center">
+                                        <Label Text="{Binding Amount, StringFormat='-{0:N0} đ'}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource FintechExpense}"
+                                               HorizontalOptions="End" />
+
+                                        <ImageButton Source="ic_trash.svg"
+                                                     BackgroundColor="Transparent"
+                                                     HeightRequest="30"
+                                                     WidthRequest="30"
+                                                     Padding="6"
+                                                     Aspect="AspectFit"
+                                                     HorizontalOptions="End"
+                                                     ToolTipProperties.Text="Xóa chi tiêu"
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExpensesViewModel}}, Path=DeleteExpenseCommand}"
+                                                     CommandParameter="{Binding .}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
         <components:BottomNavDockView Grid.Row="1" ActiveTab="Expenses" />
     </Grid>
 </ContentPage>

@@ -3,60 +3,54 @@
     x:Class="ExpenseTracker.Maui.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ExpenseTracker.Maui"
     xmlns:views="clr-namespace:ExpenseTracker.Maui.Views"
-    Title="DuoNoPro"
+    Title="DuoNoPro Finance"
     FlyoutBehavior="Flyout"
     FlyoutWidth="330"
-    FlyoutBackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0B0F19}">
+    FlyoutBackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0B0F17}"
+    Shell.TabBarIsVisible="False">
 
-    <!-- ======================================================== -->
-    <!-- LUXURY FINTECH FLYOUT HEADER                             -->
-    <!-- ======================================================== -->
     <Shell.FlyoutHeader>
-        <Border BackgroundColor="#1E1B4B" Padding="20,44,20,20" StrokeThickness="0">
+        <Border Padding="20,44,20,20" StrokeThickness="0">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#0F172A" Offset="0.0" />
-                    <GradientStop Color="#1E1B4B" Offset="0.5" />
+                    <GradientStop Color="#1E1B4B" Offset="0.6" />
                     <GradientStop Color="#312E81" Offset="1.0" />
                 </LinearGradientBrush>
             </Border.Background>
             <VerticalStackLayout Spacing="14">
-                <!-- App Identity & Pro Badge -->
                 <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                     <Border WidthRequest="46" HeightRequest="46" StrokeShape="RoundRectangle 14"
                             StrokeThickness="0" BackgroundColor="#4F46E5">
-                        <Image Source="ic_diamond.png" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center" />
+                        <Image Source="ic_diamond.svg" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center" />
                     </Border>
                     <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-                        <Label Text="DuoNoPro" FontSize="18" FontAttributes="Bold" TextColor="#FFFFFF" />
-                        <Border BackgroundColor="#3730A3" StrokeShape="RoundRectangle 6" Padding="6,2" HorizontalOptions="Start">
-                            <Label Text="✨ FINTECH PRO" FontSize="9" FontAttributes="Bold" TextColor="#A5B4FC" />
+                        <Label Text="DuoNoPro Finance" FontSize="17" FontAttributes="Bold" TextColor="#FFFFFF" />
+                        <Border BackgroundColor="#3730A3" StrokeShape="RoundRectangle 6" Padding="8,3" HorizontalOptions="Start">
+                            <Label Text="TÀI CHÍNH THÔNG MINH" FontSize="9" FontAttributes="Bold" TextColor="#A5B4FC" />
                         </Border>
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
 
-                <!-- Daily Safe Spending (DSA) Indicator Chip -->
-                <Border BackgroundColor="#111827" Stroke="#312E81" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="12,8">
+                <Border BackgroundColor="#111827" Stroke="#312E81" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="14,10">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <VerticalStackLayout Grid.Column="0" Spacing="1">
-                            <Label Text="HẠN MỨC AN TOÀN (DSA)" FontSize="10" FontAttributes="Bold" TextColor="#94A3B8" />
-                            <Label Text="450,000 đ / ngày" FontSize="13" FontAttributes="Bold" TextColor="#10B981" />
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="HẠN MỨC TIÊU DÙNG HÔM NAY" FontSize="10" FontAttributes="Bold" TextColor="#94A3B8" />
+                            <Label Text="450.000 đ / ngày" FontSize="14" FontAttributes="Bold" TextColor="#10B981" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="1" Text="🟢 0ms" FontSize="11" TextColor="#6EE7B7" FontAttributes="Bold" VerticalOptions="Center" />
+                        <Border Grid.Column="1" BackgroundColor="#064E3B" StrokeShape="RoundRectangle 6" Padding="6,2" VerticalOptions="Center">
+                            <Label Text="AN TOÀN" FontSize="10" TextColor="#6EE7B7" FontAttributes="Bold" />
+                        </Border>
                     </Grid>
                 </Border>
             </VerticalStackLayout>
         </Border>
     </Shell.FlyoutHeader>
 
-    <!-- ======================================================== -->
-    <!-- CUSTOM LUXURY FLYOUT ITEM TEMPLATE                       -->
-    <!-- ======================================================== -->
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Grid HeightRequest="44" Padding="16,4" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Grid HeightRequest="46" Padding="16,4" ColumnDefinitions="Auto,*" ColumnSpacing="14">
                 <Image Grid.Column="0"
                        Source="{Binding FlyoutIcon}"
                        WidthRequest="22" HeightRequest="22"
@@ -71,94 +65,95 @@
         </DataTemplate>
     </Shell.ItemTemplate>
 
-    <!-- ======================================================== -->
-    <!-- NHÓM 1: TÀI CHÍNH CỐT LÕI (CORE FINANCE)                 -->
-    <!-- ======================================================== -->
-    <FlyoutItem Title="Quản Lý Đa Ví (Tổng Quan)" FlyoutIcon="ic_wallet.png" Route="WalletsPage">
+    <!-- CÁC TRANG CỐT LÕI (DÙNG FLYOUTITEM, HOÀN TOÀN KHÔNG DÙNG TABBAR ĐỂ TRÁNH LỖI CHỒNG THANH ĐÁY) -->
+    <FlyoutItem Title="Tổng Quan Đa Ví" FlyoutIcon="ic_wallet.svg" Route="WalletsPage">
         <ShellContent ContentTemplate="{DataTemplate views:WalletsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Chi Tiêu &amp; Khoản Chi" FlyoutIcon="ic_expense.png" Route="ExpensesPage">
+    <FlyoutItem Title="Quản Lý &amp; Thiết Lập Các Ví" FlyoutIcon="ic_wallet.svg" Route="ManageWalletsPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ManageWalletsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Sổ Chi Tiêu Cá Nhân" FlyoutIcon="ic_expense.svg" Route="ExpensesPage">
         <ShellContent ContentTemplate="{DataTemplate views:ExpensesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Thu Nhập Cá Nhân" FlyoutIcon="ic_income.png" Route="IncomesPage">
+    <FlyoutItem Title="Thu Nhập Cá Nhân" FlyoutIcon="ic_income.svg" Route="IncomesPage">
         <ShellContent ContentTemplate="{DataTemplate views:IncomesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Thu Nhập Định Kỳ" FlyoutIcon="ic_rules.png" Route="RecurringIncomesPage">
+    <FlyoutItem Title="Nguồn Thu Định Kỳ" FlyoutIcon="ic_rules.svg" Route="RecurringIncomesPage">
         <ShellContent ContentTemplate="{DataTemplate views:RecurringIncomesPage}" />
     </FlyoutItem>
 
-    <!-- ======================================================== -->
-    <!-- NHÓM 2: TRÍ TUỆ NHÂN TẠO & TIỆN ÍCH (AI VISION)          -->
-    <!-- ======================================================== -->
-    <FlyoutItem Title="Quét Hóa Đơn AI OCR" FlyoutIcon="ic_ocr.png" Route="ReceiptOcrPage">
-        <ShellContent ContentTemplate="{DataTemplate views:ReceiptOcrPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Bóc Tách Phiếu Lương" FlyoutIcon="ic_reports.png" Route="PayslipOcrPage">
-        <ShellContent ContentTemplate="{DataTemplate views:PayslipOcrPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Tiện Ích &amp; VietQR" FlyoutIcon="ic_card.png" Route="SmartUtilitiesPage">
-        <ShellContent ContentTemplate="{DataTemplate views:SmartUtilitiesPage}" />
-    </FlyoutItem>
-
-    <!-- ======================================================== -->
-    <!-- NHÓM 3: KỶ LUẬT NGÂN SÁCH (BUDGET & SAVINGS)             -->
-    <!-- ======================================================== -->
-    <FlyoutItem Title="Ngân Sách &amp; Hạn Mức DSA" FlyoutIcon="ic_budget.png" Route="BudgetsPage">
+    <FlyoutItem Title="Ngân Sách &amp; Hạn Mức An Toàn" FlyoutIcon="ic_budget.svg" Route="BudgetsPage">
         <ShellContent ContentTemplate="{DataTemplate views:BudgetsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Mục Tiêu Tích Lũy" FlyoutIcon="ic_savings.png" Route="SavingsGoalsPage">
+    <FlyoutItem Title="Mục Tiêu Tiết Kiệm Tích Lũy" FlyoutIcon="ic_savings.svg" Route="SavingsGoalsPage">
         <ShellContent ContentTemplate="{DataTemplate views:SavingsGoalsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Cây Danh Mục Thu Chi" FlyoutIcon="ic_category.png" Route="CategoriesPage">
+    <FlyoutItem Title="Danh Mục Thu Chi" FlyoutIcon="ic_category.svg" Route="CategoriesPage">
         <ShellContent ContentTemplate="{DataTemplate views:CategoriesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Quy Tắc Tự Động Hóa" FlyoutIcon="ic_rules.png" Route="AutoRulesPage">
+    <FlyoutItem Title="Quy Tắc Tự Động Phân Loại" FlyoutIcon="ic_rules.svg" Route="AutoRulesPage">
         <ShellContent ContentTemplate="{DataTemplate views:AutoRulesPage}" />
     </FlyoutItem>
 
-    <!-- ======================================================== -->
-    <!-- NHÓM 4: TÂM LÝ HÀNH VI & DỰ BÁO (BEHAVIORAL FINANCE)     -->
-    <!-- ======================================================== -->
-    <FlyoutItem Title="Cú Hích Thaler Nudge" FlyoutIcon="ic_nudge.png" Route="NudgeFeedPage">
-        <ShellContent ContentTemplate="{DataTemplate views:NudgeFeedPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Khoảng Trễ 24h Mua Sắm" FlyoutIcon="ic_cooling.png" Route="CoolingOffHubPage">
-        <ShellContent ContentTemplate="{DataTemplate views:CoolingOffHubPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Dự Báo Dòng Tiền &amp; Rủi Ro" FlyoutIcon="ic_forecast.png" Route="ForecastingPage">
-        <ShellContent ContentTemplate="{DataTemplate views:ForecastingPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Báo Cáo Tài Chính Đa Chiều" FlyoutIcon="ic_reports.png" Route="ReportsPage">
+    <FlyoutItem Title="Báo Cáo &amp; Phân Tích Tài Chính" FlyoutIcon="ic_reports.svg" Route="ReportsPage">
         <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" />
     </FlyoutItem>
 
-    <!-- ======================================================== -->
-    <!-- NHÓM 5: THIẾT LẬP & TÀI KHOẢN (SYSTEM & SECURITY)        -->
-    <!-- ======================================================== -->
-    <FlyoutItem Title="Lịch Sử &amp; Thông Báo" FlyoutIcon="ic_bell.png" Route="NotificationHistoryPage">
+    <FlyoutItem Title="Cú Hích Tài Chính Thaler" FlyoutIcon="ic_nudge.svg" Route="NudgeFeedPage">
+        <ShellContent ContentTemplate="{DataTemplate views:NudgeFeedPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Khoảng Trễ Mua Sắm 24 Giờ" FlyoutIcon="ic_cooling.svg" Route="CoolingOffHubPage">
+        <ShellContent ContentTemplate="{DataTemplate views:CoolingOffHubPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Thử Nghiệm Mua Sắm Trước Khi Chi" FlyoutIcon="ic_forecast.svg" Route="ForecastingPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ForecastingPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Lộ Trình Sạch Nợ (Snowball/Avalanche)" FlyoutIcon="ic_debt.svg" Route="DebtOptimizerPage">
+        <ShellContent ContentTemplate="{DataTemplate views:DebtOptimizerPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Quỹ Dự Phòng Khẩn Cấp" FlyoutIcon="ic_shield.svg" Route="EmergencyFundPage">
+        <ShellContent ContentTemplate="{DataTemplate views:EmergencyFundPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Bẫy Thuê Bao &amp; Chi Phí Định Kỳ" FlyoutIcon="ic_subscription.svg" Route="SubscriptionsPage">
+        <ShellContent ContentTemplate="{DataTemplate views:SubscriptionsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Quét Hóa Đơn AI OCR" FlyoutIcon="ic_ocr.svg" Route="ReceiptOcrPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ReceiptOcrPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Quét Bảng Lương Payslip" FlyoutIcon="ic_reports.svg" Route="PayslipOcrPage">
+        <ShellContent ContentTemplate="{DataTemplate views:PayslipOcrPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Mã Chuyển Khoản Nhanh VietQR" FlyoutIcon="ic_card.svg" Route="SmartUtilitiesPage">
+        <ShellContent ContentTemplate="{DataTemplate views:SmartUtilitiesPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Thông Báo Từ Hệ Thống" FlyoutIcon="ic_bell.svg" Route="NotificationHistoryPage">
         <ShellContent ContentTemplate="{DataTemplate views:NotificationHistoryPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Cài Đặt Máy Chủ &amp; Demo" FlyoutIcon="ic_settings.png" Route="SettingsPage">
+    <FlyoutItem Title="Cài Đặt Hệ Thống &amp; Bảo Mật" FlyoutIcon="ic_settings.svg" Route="SettingsPage">
         <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Tài Khoản &amp; Đăng Nhập" FlyoutIcon="ic_user.png" Route="LoginPage">
+    <FlyoutItem Title="Hồ Sơ &amp; Đăng Xuất" FlyoutIcon="ic_user.svg" Route="LoginPage">
         <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
     </FlyoutItem>
 
-    <!-- TRANG ĐĂNG NHẬP NHANH (ẨN KHỎI MENU) -->
     <FlyoutItem Title="Đăng Nhập Nhanh" FlyoutItemIsVisible="False" Route="QuickLoginPage">
         <ShellContent ContentTemplate="{DataTemplate views:QuickLoginPage}" />
     </FlyoutItem>

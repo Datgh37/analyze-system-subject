@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="FintechCardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <Style x:Key="FintechHeroCardStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="0,0,0,16" />
+        <Setter Property="Background">
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#0F172A" Offset="0.0" />
+                <GradientStop Color="#1E1B4B" Offset="0.6" />
+                <GradientStop Color="#312E81" Offset="1.0" />
+            </LinearGradientBrush>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FintechBadgeStyle" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="FintechPrimaryBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource FintechPrimary}" />
+        <Setter Property="TextColor" Value="#FFFFFF" />
+        <Setter Property="FontSize" Value="{StaticResource FontBodyNormal}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="1.0" />
+                            <Setter Property="Opacity" Value="1.0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.98" />
+                            <Setter Property="Opacity" Value="0.9" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource FintechPrimaryHover}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.4" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FintechSecondaryBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource FintechSurfaceElevatedLight}, Dark={StaticResource FintechSurfaceElevatedDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+        <Setter Property="FontSize" Value="{StaticResource FontBodyNormal}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="1.0" />
+                            <Setter Property="Opacity" Value="1.0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale" Value="0.98" />
+                            <Setter Property="Opacity" Value="0.85" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FintechGhostBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource FintechPrimary}" />
+        <Setter Property="FontSize" Value="{StaticResource FontBodyNormal}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="12,0" />
+    </Style>
+
+    <Style x:Key="FintechDangerBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource FintechExpenseLight}, Dark={StaticResource FintechExpenseDark}}" />
+        <Setter Property="TextColor" Value="#FFFFFF" />
+        <Setter Property="FontSize" Value="{StaticResource FontBodyNormal}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+
+    <Style x:Key="FintechHeroNumberStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="{StaticResource FontDisplayHero}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+        <Setter Property="LineHeight" Value="1.1" />
+    </Style>
+
+    <Style x:Key="FintechSectionTitleStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="{StaticResource FontHeadingMedium}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+    </Style>
+
+    <Style x:Key="FintechCardTitleStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="{StaticResource FontBodyLarge}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+    </Style>
+
+    <Style x:Key="FintechBodyStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="{StaticResource FontBodyNormal}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextSecondaryLight}, Dark={StaticResource FintechTextSecondaryDark}}" />
+        <Setter Property="LineHeight" Value="1.25" />
+    </Style>
+
+    <Style x:Key="FintechCaptionStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="{StaticResource FontCaption}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextMutedLight}, Dark={StaticResource FintechTextMutedDark}}" />
+    </Style>
+
+    <Style x:Key="FintechEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource FintechSurfaceElevatedLight}, Dark={StaticResource FintechSurfaceElevatedDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource FintechTextMutedLight}, Dark={StaticResource FintechTextMutedDark}}" />
+        <Setter Property="FontSize" Value="{StaticResource FontBodyNormal}" />
+        <Setter Property="HeightRequest" Value="48" />
+    </Style>
+
+    <!-- Component Style Aliases -->
+    <Style x:Key="FintechCard" BasedOn="{StaticResource FintechCardStyle}" TargetType="Border" />
+    <Style x:Key="FintechHeroCard" BasedOn="{StaticResource FintechHeroCardStyle}" TargetType="Border" />
+    <Style x:Key="FintechButtonPrimary" BasedOn="{StaticResource FintechPrimaryBtnStyle}" TargetType="Button" />
+    <Style x:Key="FintechButtonSecondary" BasedOn="{StaticResource FintechSecondaryBtnStyle}" TargetType="Button" />
+    <Style x:Key="FintechInput" BasedOn="{StaticResource FintechCardStyle}" TargetType="Border">
+        <Setter Property="Padding" Value="10,2" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+    <Style x:Key="FintechLabelTitle" BasedOn="{StaticResource FintechSectionTitleStyle}" TargetType="Label" />
+    <Style x:Key="FintechLabelSubtitle" BasedOn="{StaticResource FintechCardTitleStyle}" TargetType="Label" />
+    <Style x:Key="FintechLabelBody" BasedOn="{StaticResource FintechBodyStyle}" TargetType="Label" />
+    <Style x:Key="FintechLabelCaption" BasedOn="{StaticResource FintechCaptionStyle}" TargetType="Label" />
+
+</ResourceDictionary>

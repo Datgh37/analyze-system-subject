@@ -6,45 +6,38 @@
              x:DataType="vm:RegisterViewModel"
              Title="{Binding Title}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource PageBgDark}}">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="24" Padding="24,40,24,40" MaximumWidthRequest="460">
-            <!-- Header -->
+        <VerticalStackLayout Spacing="24" Padding="24,40,24,36" MaximumWidthRequest="460">
             <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                 <Border StrokeThickness="0"
                         StrokeShape="RoundRectangle 20"
                         WidthRequest="64"
                         HeightRequest="64"
                         HorizontalOptions="Center"
-                        Shadow="{Shadow Brush='#4F46E5', Offset='0,8', Radius=16, Opacity=0.3}">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#4F46E5" Offset="0.0" />
-                            <GradientStop Color="#7C3AED" Offset="1.0" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Image Source="ic_diamond.png" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" VerticalOptions="Center" />
+                        BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" 
+                                Offset="0,6" Radius="14" Opacity="0.3" />
+                    </Border.Shadow>
+                    <Image Source="ic_diamond.svg" WidthRequest="34" HeightRequest="34" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
 
                 <Label Text="Tạo Tài Khoản Mới" 
-                       FontSize="26" 
+                       FontSize="24" 
                        FontAttributes="Bold" 
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                 <Label Text="Bắt đầu hành trình quản lý tài chính cá nhân thông minh" 
                        FontSize="13" 
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
 
-            <!-- Card Container -->
-            <Border Style="{StaticResource ModernCard}"
-                    Padding="24"
-                    Shadow="{Shadow Brush='#000000', Offset='0,4', Radius=12, Opacity=0.08}">
+            <Border Style="{StaticResource FintechCard}" Padding="22">
                 <VerticalStackLayout Spacing="16">
-                    <!-- Error Alert -->
                     <Border BackgroundColor="#FEF2F2"
                             Stroke="#FECACA"
                             StrokeThickness="1"
@@ -60,91 +53,91 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!-- Full Name -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Họ và Tên" 
                                FontSize="12" 
                                FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 10"
                                 Padding="12,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Placeholder="Nguyễn Văn A"
                                    Text="{Binding FullName}"
                                    FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    ClearButtonVisibility="WhileEditing" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Email Input -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Địa chỉ Email" 
                                FontSize="12" 
                                FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 10"
                                 Padding="12,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Placeholder="name@example.com"
                                    Keyboard="Email"
                                    Text="{Binding Email}"
                                    FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    ClearButtonVisibility="WhileEditing" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Password Input -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Mật khẩu" 
                                FontSize="12" 
                                FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 10"
                                 Padding="12,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Placeholder="Tối thiểu 6 ký tự"
                                    IsPassword="True"
                                    FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    Text="{Binding Password}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Confirm Password -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Xác nhận mật khẩu" 
                                FontSize="12" 
                                FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 10"
                                 Padding="12,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Placeholder="Nhập lại mật khẩu"
                                    IsPassword="True"
                                    FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    Text="{Binding ConfirmPassword}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Base Currency -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Đơn vị tiền tệ cơ sở" 
                                FontSize="12" 
                                FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 10"
                                 Padding="8,0"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
-                            <Picker SelectedItem="{Binding BaseCurrency}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
+                            <Picker SelectedItem="{Binding BaseCurrency}"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
                                         <x:String>VND</x:String>
@@ -157,36 +150,28 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Submit Button -->
                     <Button Text="Tạo Tài Khoản" 
                             Command="{Binding RegisterCommand}"
                             IsEnabled="{Binding IsNotBusy}"
-                            BackgroundColor="#4F46E5"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="14"
-                            CornerRadius="10"
-                            HeightRequest="48"
+                            Style="{StaticResource FintechButtonPrimary}"
+                            HeightRequest="46"
                             Margin="0,8,0,0" />
 
-                    <!-- Loading Indicator -->
                     <ActivityIndicator IsRunning="{Binding IsBusy}" 
                                        IsVisible="{Binding IsBusy}" 
-                                       Color="#4F46E5"
+                                       Color="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                                        HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Switch to Login -->
             <Button Text="Đã có tài khoản? Đăng Nhập" 
                     Command="{Binding NavigateToLoginCommand}"
                     BackgroundColor="Transparent"
-                    TextColor="#4F46E5"
+                    TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                     FontSize="13"
                     FontAttributes="Bold"
                     HorizontalOptions="Center"
-                    HeightRequest="40" />
+                    HeightRequest="36" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
-

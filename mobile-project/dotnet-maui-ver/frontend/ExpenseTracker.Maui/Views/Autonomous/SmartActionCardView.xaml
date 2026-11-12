@@ -6,23 +6,20 @@
              x:Name="thisCard"
              x:DataType="models:AutonomousActionModel">
 
-    <!-- Smart Action Card: 1-Tap Quick Commit (Confidence >= 0.85) or Jev Choice (0.50..0.85) -->
-    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
+    <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
             StrokeThickness="1"
             StrokeShape="RoundRectangle 16"
-            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource CardBgLight}, Dark={StaticResource CardBgDark}}"
             Padding="16"
             Margin="0,0,0,10">
         <Border.Shadow>
-            <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+            <Shadow Brush="{AppThemeBinding Light={StaticResource Neutral900}, Dark=#000000}" 
                     Offset="0,2" Radius="8" 
                     Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
         </Border.Shadow>
         
         <VerticalStackLayout Spacing="10">
-            <!-- Header Row: Category Badge + Bank/Time Subtitle + Dismiss Button -->
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
-                <!-- Category Badge (Sleek Pill) -->
                 <Border Grid.Column="0"
                         StrokeThickness="0"
                         BackgroundColor="{Binding Display.BadgeColor}"
@@ -37,72 +34,65 @@
                            TextColor="#FFFFFF" />
                 </Border>
 
-                <!-- Bank Source and Time Subtitle -->
                 <Label Grid.Column="1"
                        Text="{Binding Display.Subtitle}"
                        FontSize="12"
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                        VerticalOptions="Center"
                        LineBreakMode="TailTruncation" />
 
-                <!-- Dismiss Button (Circular Touchpoint) -->
                 <Button Grid.Column="2"
-                        Text="✕"
+                        Text="Bỏ qua"
                         FontSize="11"
                         FontAttributes="Bold"
-                        WidthRequest="28"
                         HeightRequest="28"
-                        Padding="0"
+                        Padding="10,0"
                         CornerRadius="14"
-                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Neutral100}, Dark={StaticResource Neutral800}}"
+                        TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                         Command="{Binding Source={x:Reference thisCard}, Path=DismissCommand}"
                         CommandParameter="{Binding .}" />
             </Grid>
 
-            <!-- Title & Monetary Amount -->
             <Label Text="{Binding Display.Title}"
                    FontSize="16"
                    FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
 
-            <!-- ACTION BUTTONS ROW -->
             <VerticalStackLayout Spacing="8">
-                <!-- Case A: High Confidence -> 1-Tap Quick Commit + Navigate -->
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10"
                       IsVisible="{Binding PrimaryAction, Converter={StaticResource NullToFalseConverter}}">
-                    <!-- Primary 1-Tap Quick Commit Button -->
                     <Button Grid.Column="0"
-                            Text="{Binding PrimaryAction.Label, StringFormat='✓ {0}'}"
+                            Text="{Binding PrimaryAction.Label}"
                             FontAttributes="Bold"
                             FontSize="13"
                             HeightRequest="40"
                             CornerRadius="10"
-                            BackgroundColor="{AppThemeBinding Light=#10B981, Dark=#059669}"
+                            BackgroundColor="{StaticResource Emerald500}"
                             TextColor="#FFFFFF"
                             Command="{Binding Source={x:Reference thisCard}, Path=QuickCommitCommand}"
                             CommandParameter="{Binding .}">
                         <Button.Shadow>
-                            <Shadow Brush="#10B981" Offset="0,2" Radius="6" Opacity="0.25" />
+                            <Shadow Brush="{StaticResource Emerald500}" Offset="0,2" Radius="6" Opacity="0.25" />
                         </Button.Shadow>
                     </Button>
 
-                    <!-- Secondary Change / Navigate Button -->
                     <Button Grid.Column="1"
                             Text="{Binding SecondaryAction.Label}"
                             FontSize="13"
                             HeightRequest="40"
                             CornerRadius="10"
-                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                            TextColor="{AppThemeBinding Light=#334155, Dark=#F8FAFC}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Neutral100}, Dark={StaticResource Neutral800}}"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                             Command="{Binding Source={x:Reference thisCard}, Path=NavigateCommand}"
                             CommandParameter="{Binding .}" />
                 </Grid>
 
-                <!-- Case B: Jev Choice Disambiguation (Peer Options) -->
                 <VerticalStackLayout Spacing="6"
                                      IsVisible="{Binding Choices, Converter={StaticResource NullToFalseConverter}}">
-                    <Label Text="Chọn danh mục đúng:" FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                    <Label Text="Gợi ý danh mục:" 
+                           FontSize="12" 
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                     <HorizontalStackLayout Spacing="8"
                                            BindableLayout.ItemsSource="{Binding Choices}">
                         <BindableLayout.ItemTemplate>
@@ -112,8 +102,8 @@
                                         HeightRequest="36"
                                         Padding="14,0"
                                         CornerRadius="8"
-                                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
-                                        TextColor="{AppThemeBinding Light=#4338CA, Dark=#E0E7FF}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource PrimarySoftLight}, Dark={StaticResource Neutral800}}"
+                                        TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                                         FontAttributes="Bold"
                                         Command="{Binding Source={x:Reference thisCard}, Path=SelectChoiceCommand}"
                                         CommandParameter="{Binding .}">

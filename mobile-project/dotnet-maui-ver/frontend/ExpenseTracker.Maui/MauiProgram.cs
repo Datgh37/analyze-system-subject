@@ -46,7 +46,13 @@ public static class MauiProgram
         Action<HttpClient> configureClient = c =>
         {
             c.BaseAddress = new Uri(baseApiUrl);
-            c.Timeout = TimeSpan.FromSeconds(10);
+            c.Timeout = TimeSpan.FromSeconds(30);
+        };
+
+        Action<HttpClient> configureAiClient = c =>
+        {
+            c.BaseAddress = new Uri(baseApiUrl);
+            c.Timeout = TimeSpan.FromSeconds(60);
         };
 
         var refitSettings = RefitSettingsFactory.GetSettings();
@@ -82,7 +88,7 @@ public static class MauiProgram
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IPayslipApi>(refitSettings)
-            .ConfigureHttpClient(configureClient)
+            .ConfigureHttpClient(configureAiClient)
             .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
@@ -92,7 +98,7 @@ public static class MauiProgram
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IReceiptApi>(refitSettings)
-            .ConfigureHttpClient(configureClient)
+            .ConfigureHttpClient(configureAiClient)
             .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
@@ -117,7 +123,7 @@ public static class MauiProgram
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IAnalyticsReportApi>(refitSettings)
-            .ConfigureHttpClient(configureClient)
+            .ConfigureHttpClient(configureAiClient)
             .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
@@ -137,12 +143,12 @@ public static class MauiProgram
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IVoiceAgentApi>(refitSettings)
-            .ConfigureHttpClient(configureClient)
+            .ConfigureHttpClient(configureAiClient)
             .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddRefitClient<IDataImportApi>(refitSettings)
-            .ConfigureHttpClient(configureClient)
+            .ConfigureHttpClient(configureAiClient)
             .AddHttpMessageHandler<DynamicBaseAddressHandler>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
@@ -307,6 +313,7 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<VerifyOtpViewModel>();
         builder.Services.AddTransient<WalletsViewModel>();
+        builder.Services.AddTransient<ManageWalletsViewModel>();
         builder.Services.AddTransient<CategoriesViewModel>();
         builder.Services.AddTransient<AutoRulesViewModel>();
         builder.Services.AddTransient<IncomesViewModel>();
@@ -339,6 +346,7 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<VerifyOtpPage>();
         builder.Services.AddTransient<WalletsPage>();
+        builder.Services.AddTransient<ManageWalletsPage>();
         builder.Services.AddTransient<CategoriesPage>();
         builder.Services.AddTransient<AutoRulesPage>();
         builder.Services.AddTransient<IncomesPage>();
@@ -359,6 +367,9 @@ public static class MauiProgram
         builder.Services.AddTransient<VoiceMicModalPage>();
         builder.Services.AddTransient<ImportPreviewPage>();
         builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<DebtOptimizerPage>();
+        builder.Services.AddTransient<EmergencyFundPage>();
+        builder.Services.AddTransient<SubscriptionsPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -165,101 +165,158 @@ public class GeminiApiClient : IGeminiApiClient
         CancellationToken ct)
     {
         var endpoint = _settings.Endpoint.TrimEnd('/');
-        var url = $"{endpoint}/models/{_settings.Model}:generateContent?key={_settings.ApiKey}";
-
-        var jsonContent = new StringContent(
-            requestPayload.ToJsonString(),
-            Encoding.UTF8,
-            "application/json");
-
-        var sw = Stopwatch.StartNew();
-
-        if (_settings.EnableLogging)
+        var candidateModels = new List<string>();
+        if (!string.IsNullOrWhiteSpace(_settings.Model))
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            var payloadDesc = imageSizeKb > 0 ? $"Image {imageSizeKb:F1} KB" : "Text Prompt";
-            Console.WriteLine($"\n================================================================================");
-            Console.WriteLine($"[Gemini >> Request] Model: {_settings.Model} | Type: {payloadDesc} | Time: {DateTime.Now:HH:mm:ss}");
-            Console.ResetColor();
+            candidateModels.Add(_settings.Model.Trim());
         }
 
-        try
+        var defaultFallbacks = new[] { "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro" };
+        foreach (var fb in defaultFallbacks)
         {
-            var response = await _httpClient.PostAsync(url, jsonContent, ct);
-            sw.Stop();
-
-            var responseBody = await response.Content.ReadAsStringAsync(ct);
-
-            if (!response.IsSuccessStatusCode)
+            if (!candidateModels.Contains(fb, StringComparer.OrdinalIgnoreCase))
             {
+                candidateModels.Add(fb);
+            }
+        }
+
+        string lastResponseBody = string.Empty;
+        HttpStatusCode lastStatusCode = HttpStatusCode.OK;
+
+        for (int i = 0; i < candidateModels.Count; i++)
+        {
+            var currentModel = candidateModels[i];
+            var url = $"{endpoint}/models/{currentModel}:generateContent?key={_settings.ApiKey}";
+
+            var jsonContent = new StringContent(
+                requestPayload.ToJsonString(),
+                Encoding.UTF8,
+                "application/json");
+
+            var sw = Stopwatch.StartNew();
+
+            if (_settings.EnableLogging)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                var payloadDesc = imageSizeKb > 0 ? $"Image {imageSizeKb:F1} KB" : "Text Prompt";
+                Console.WriteLine($"\n================================================================================");
+                Console.WriteLine($"[Gemini >> Request] Model: {currentModel} | Type: {payloadDesc} | Time: {DateTime.Now:HH:mm:ss}");
+                Console.ResetColor();
+            }
+
+            try
+            {
+                var response = await _httpClient.PostAsync(url, jsonContent, ct);
+                sw.Stop();
+
+                var responseBody = await response.Content.ReadAsStringAsync(ct);
+                lastResponseBody = responseBody;
+                lastStatusCode = response.StatusCode;
+
+                // Nếu gặp lỗi 404 Model Not Found hoặc 400 Unsupported, tự động fallback sang model tiếp theo
+                if ((response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.BadRequest) && i + 1 < candidateModels.Count)
+                {
+                    var nextModel = candidateModels[i + 1];
+                    if (_settings.EnableLogging)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"[Gemini >> Auto-Fallback] Model '{currentModel}' không khả dụng (HTTP {(int)response.StatusCode}). Đang tự động chuyển sang '{nextModel}'...");
+                        Console.ResetColor();
+                    }
+                    continue;
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (_settings.EnableLogging)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"[Gemini << Error] HTTP {(int)response.StatusCode} {response.StatusCode} | Latency: {sw.ElapsedMilliseconds} ms");
+                        Console.WriteLine($"[Gemini << Error Body]: {responseBody}");
+                        Console.WriteLine($"================================================================================\n");
+                        Console.ResetColor();
+                    }
+
+                    return response.StatusCode switch
+                    {
+                        HttpStatusCode.Unauthorized => Result<string>.Failure("Khóa Gemini API Key không hợp lệ hoặc đã bị vô hiệu hóa (HTTP 401)."),
+                        HttpStatusCode.Forbidden => Result<string>.Failure("Quyền truy cập API bị từ chối hoặc sai cấu hình dự án Google Cloud (HTTP 403)."),
+                        HttpStatusCode.TooManyRequests => Result<string>.Failure("Đã vượt quá hạn mức gọi Google Gemini API (Quota Exceeded HTTP 429). Vui lòng thử lại sau."),
+                        _ => Result<string>.Failure($"Google Gemini API trả về mã lỗi {(int)response.StatusCode}: {responseBody}")
+                    };
+                }
+
+                // Parse response from Google Gemini
+                var root = JsonNode.Parse(responseBody);
+                string? textPart = null;
+
+                var candidates = root?["candidates"]?.AsArray();
+                if (candidates != null && candidates.Count > 0)
+                {
+                    var contentParts = candidates[0]?["content"]?["parts"]?.AsArray();
+                    if (contentParts != null && contentParts.Count > 0)
+                    {
+                        textPart = contentParts[0]?["text"]?.GetValue<string>();
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(textPart))
+                {
+                    _logger.LogWarning("[Gemini] API trả về HTTP 200 nhưng không tìm thấy trường text trong candidates.");
+                    return Result<string>.Failure("Mô hình AI phản hồi rỗng hoặc không có kết quả hợp lệ.");
+                }
+
                 if (_settings.EnableLogging)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[Gemini << Error] HTTP {(int)response.StatusCode} {response.StatusCode} | Latency: {sw.ElapsedMilliseconds} ms");
-                    Console.WriteLine($"[Gemini << Error Body]: {responseBody}");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"[Gemini << Response] Status: 200 OK | Latency: {sw.ElapsedMilliseconds} ms");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"[Gemini << Raw JSON Output]:");
+                    Console.WriteLine(textPart);
                     Console.WriteLine($"================================================================================\n");
                     Console.ResetColor();
                 }
 
-                return response.StatusCode switch
-                {
-                    HttpStatusCode.Unauthorized => Result<string>.Failure("Khóa Gemini API Key không hợp lệ hoặc đã bị vô hiệu hóa (HTTP 401)."),
-                    HttpStatusCode.Forbidden => Result<string>.Failure("Quyền truy cập API bị từ chối hoặc sai cấu hình dự án Google Cloud (HTTP 403)."),
-                    HttpStatusCode.TooManyRequests => Result<string>.Failure("Đã vượt quá hạn mức gọi Google Gemini API (Quota Exceeded HTTP 429). Vui lòng thử lại sau."),
-                    _ => Result<string>.Failure($"Google Gemini API trả về mã lỗi {(int)response.StatusCode}: {responseBody}")
-                };
+                return Result<string>.Success(textPart);
             }
-
-            // Parse response from Google Gemini
-            var root = JsonNode.Parse(responseBody);
-            string? textPart = null;
-
-            var candidates = root?["candidates"]?.AsArray();
-            if (candidates != null && candidates.Count > 0)
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
             {
-                var contentParts = candidates[0]?["content"]?["parts"]?.AsArray();
-                if (contentParts != null && contentParts.Count > 0)
+                sw.Stop();
+                _logger.LogWarning("[Gemini] Yêu cầu gọi Gemini API bị hủy bởi client sau {Elapsed} ms.", sw.ElapsedMilliseconds);
+                return Result<string>.Failure($"Yêu cầu xử lý AI bị quá hạn hoặc bị hủy từ thiết bị (Hết thời gian chờ sau {sw.ElapsedMilliseconds}ms). Vui lòng thử lại.");
+            }
+            catch (TaskCanceledException)
+            {
+                sw.Stop();
+                _logger.LogWarning("[Gemini] Request bị timeout nội bộ sau {Elapsed} ms với model {Model}.", sw.ElapsedMilliseconds, currentModel);
+                if (i + 1 < candidateModels.Count)
                 {
-                    textPart = contentParts[0]?["text"]?.GetValue<string>();
+                    continue;
                 }
+                return Result<string>.Failure($"Kết nối tới Google Gemini API bị quá hạn thời gian (Timeout sau {sw.ElapsedMilliseconds}ms). Vui lòng thử lại.");
             }
-
-            if (string.IsNullOrWhiteSpace(textPart))
+            catch (HttpRequestException ex)
             {
-                _logger.LogWarning("[Gemini] API trả về HTTP 200 nhưng không tìm thấy trường text trong candidates.");
-                return Result<string>.Failure("Mô hình AI phản hồi rỗng hoặc không có kết quả hợp lệ.");
+                sw.Stop();
+                _logger.LogError(ex, "[Gemini] Lỗi kết nối mạng khi gọi Gemini API với model {Model}", currentModel);
+                if (i + 1 < candidateModels.Count)
+                {
+                    continue;
+                }
+                return Result<string>.Failure($"Không thể kết nối đến máy chủ Google Gemini: {ex.Message}");
             }
-
-            if (_settings.EnableLogging)
+            catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[Gemini << Response] Status: 200 OK | Latency: {sw.ElapsedMilliseconds} ms");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"[Gemini << Raw JSON Output]:");
-                Console.WriteLine(textPart);
-                Console.WriteLine($"================================================================================\n");
-                Console.ResetColor();
+                sw.Stop();
+                _logger.LogError(ex, "[Gemini] Lỗi không xác định khi gọi Gemini API với model {Model}", currentModel);
+                if (i + 1 < candidateModels.Count)
+                {
+                    continue;
+                }
+                return Result<string>.Failure($"Lỗi giao tiếp Gemini AI: {ex.Message}");
             }
+        }
 
-            return Result<string>.Success(textPart);
-        }
-        catch (TaskCanceledException ex) when (ex.CancellationToken != ct)
-        {
-            sw.Stop();
-            _logger.LogWarning("[Gemini] Request bị timeout sau {Elapsed} ms", sw.ElapsedMilliseconds);
-            return Result<string>.Failure($"Kết nối tới Google Gemini API bị quá hạn thời gian (Timeout sau {sw.ElapsedMilliseconds}ms).");
-        }
-        catch (HttpRequestException ex)
-        {
-            sw.Stop();
-            _logger.LogError(ex, "[Gemini] Lỗi kết nối mạng khi gọi Gemini API");
-            return Result<string>.Failure($"Không thể kết nối đến máy chủ Google Gemini: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            sw.Stop();
-            _logger.LogError(ex, "[Gemini] Lỗi không xác định khi gọi Gemini API");
-            return Result<string>.Failure($"Lỗi giao tiếp Gemini AI: {ex.Message}");
-        }
+        return Result<string>.Failure($"Google Gemini API trả về mã lỗi {(int)lastStatusCode}: {lastResponseBody}");
     }
 }

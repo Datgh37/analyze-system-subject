@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Debts"
+             x:Class="ExpenseTracker.Maui.Views.DebtOptimizerPage"
+             x:DataType="vm:DebtOptimizerViewModel"
+             Title="{Binding Title}"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,14,16,100" Spacing="16" MaximumWidthRequest="640">
+
+            <Border Style="{StaticResource FintechHeroCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Image Source="ic_debt.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                            <Label Text="TỐI ƯU HÓA NỢ"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#A5B4FC"
+                                   CharacterSpacing="1.2"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#3730A3"
+                                Padding="8,4"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent">
+                            <Label Text="LỘ TRÌNH SẠCH NỢ"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="#E0E7FF" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Chiến Lược Trả Nợ Thông Minh"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF" />
+
+                    <Label Text="So sánh giữa phương pháp Quả cầu tuyết (trả món nhỏ trước tạo động lực) và Tuyết lở (trả món lãi cao trước tiết kiệm tiền lãi) để tìm ra lộ trình phù hợp nhất cho bạn."
+                           FontSize="12"
+                           TextColor="#C7D2FE"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                    Stroke="#FECACA"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="14,10"
+                    IsVisible="{Binding HasError}">
+                <HorizontalStackLayout Spacing="10">
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#B91C1C"
+                           FontAttributes="Bold"
+                           FontSize="13"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}"
+                    Padding="14"
+                    IsVisible="{Binding IsBusy}">
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="{StaticResource PrimaryLight}" WidthRequest="20" HeightRequest="20" />
+                    <Label Text="Đang tính toán mô phỏng tối ưu..."
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryLight}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Ngân Sách Trả Thêm Khuyến Nghị"
+                           Style="{StaticResource FintechLabelSubtitle}" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Thặng dư dòng tiền:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding SafeBudgetRecommendation.MonthlySurplus, StringFormat='{0:N0} đ / tháng'}"
+                                   FontSize="14" FontAttributes="Bold" TextColor="#10B981" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Mức trả thêm tối ưu:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding SafeBudgetRecommendation.RecommendedAmount, StringFormat='{0:N0} đ / tháng'}"
+                                   FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryLight}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="Chọn nhanh ngân sách trả thêm:"
+                           Style="{StaticResource FintechLabelCaption}"
+                           FontAttributes="Bold"
+                           Margin="0,4,0,0" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Text="An toàn"
+                                Command="{Binding ApplySuggestedBudgetCommand}"
+                                CommandParameter="{Binding SafeBudgetRecommendation.ConservativeAmount}"
+                                Style="{StaticResource FintechButtonSecondary}"
+                                FontSize="11"
+                                HeightRequest="38"
+                                Padding="4,0" />
+
+                        <Button Grid.Column="1"
+                                Text="Khuyên dùng"
+                                Command="{Binding ApplySuggestedBudgetCommand}"
+                                CommandParameter="{Binding SafeBudgetRecommendation.RecommendedAmount}"
+                                Style="{StaticResource FintechButtonPrimary}"
+                                FontSize="11"
+                                HeightRequest="38"
+                                Padding="4,0" />
+
+                        <Button Grid.Column="2"
+                                Text="Tăng tốc"
+                                Command="{Binding ApplySuggestedBudgetCommand}"
+                                CommandParameter="{Binding SafeBudgetRecommendation.AggressiveAmount}"
+                                Style="{StaticResource FintechButtonSecondary}"
+                                FontSize="11"
+                                HeightRequest="38"
+                                Padding="4,0" />
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="4" Margin="0,6,0,0">
+                        <Label Text="Số tiền trả thêm mỗi tháng tự chọn (VND):"
+                               Style="{StaticResource FintechLabelCaption}"
+                               FontAttributes="Bold" />
+                        <Border Style="{StaticResource FintechInput}">
+                            <Entry Text="{Binding ExtraMonthlyBudget}"
+                                   Keyboard="Numeric"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="End" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Button Text="Chạy Mô Phỏng Lộ Trình Mới"
+                            Command="{Binding SimulateCommand}"
+                            Style="{StaticResource FintechButtonPrimary}"
+                            HeightRequest="44"
+                            Margin="0,4,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Kết Quả So Sánh 2 Chiến Lược"
+                   Style="{StaticResource FintechLabelSubtitle}" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Grid.Column="0"
+                        Style="{StaticResource FintechCard}"
+                        Stroke="#06B6D4"
+                        StrokeThickness="1.5"
+                        Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="TUYẾT LỞ (LÃI CAO)"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#0891B2" />
+                        <Label Text="{Binding ComparisonResult.Avalanche.TotalMonths, StringFormat='{0} tháng'}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        <Label Text="{Binding ComparisonResult.Avalanche.ProjectedPayoffDate, StringFormat='Sạch nợ: {0:MM/yyyy}'}"
+                               Style="{StaticResource FintechLabelCaption}" />
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}" Margin="0,2" />
+                        <Label Text="Tổng tiền lãi:" Style="{StaticResource FintechLabelCaption}" />
+                        <Label Text="{Binding ComparisonResult.Avalanche.TotalInterestPaid, StringFormat='{0:N0} đ'}"
+                               FontSize="13" FontAttributes="Bold" TextColor="#10B981" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Style="{StaticResource FintechCard}"
+                        Stroke="#8B5CF6"
+                        StrokeThickness="1.5"
+                        Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="QUẢ CẦU TUYẾT (MÓN NHỎ)"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#7C3AED" />
+                        <Label Text="{Binding ComparisonResult.Snowball.TotalMonths, StringFormat='{0} tháng'}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        <Label Text="{Binding ComparisonResult.Snowball.ProjectedPayoffDate, StringFormat='Sạch nợ: {0:MM/yyyy}'}"
+                               Style="{StaticResource FintechLabelCaption}" />
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}" Margin="0,2" />
+                        <Label Text="Tổng tiền lãi:" Style="{StaticResource FintechLabelCaption}" />
+                        <Label Text="{Binding ComparisonResult.Snowball.TotalInterestPaid, StringFormat='{0:N0} đ'}"
+                               FontSize="13" FontAttributes="Bold" TextColor="#F59E0B" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                    Stroke="#A7F3D0"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Image Grid.Column="0" Source="ic_shield.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Start" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Lời Khuyên Tài Chính Dành Cho Bạn"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}" />
+                            <Label Text="{Binding LaymanAdvice}"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#047857, Dark=#D1FAE5}"
+                                   LineHeight="1.3" />
+                            <Label Text="{Binding ComparisonResult.InterestSavingsWithAvalanche, StringFormat='Tiết kiệm tiền lãi khi chọn Tuyết lở: {0:N0} đ'}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}"
+                                   Margin="0,4,0,0" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}" Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0"
+                               Text="Nguyên Tắc Vàng Khi Trả Nợ"
+                               Style="{StaticResource FintechLabelSubtitle}"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="1"
+                                Text="Đóng / Mở"
+                                Command="{Binding ToggleGuideCommand}"
+                                Style="{StaticResource FintechButtonSecondary}"
+                                HeightRequest="34"
+                                FontSize="11"
+                                Padding="8,0" />
+                    </Grid>
+
+                    <VerticalStackLayout IsVisible="{Binding IsGuideExpanded}" Spacing="6" Margin="0,4,0,0">
+                        <Label Text="• Tuyệt đối trả đủ mức thanh toán tối thiểu của tất cả các món để tránh phí phạt và nợ xấu."
+                               Style="{StaticResource FintechLabelCaption}" />
+                        <Label Text="• Toàn bộ ngân sách trả thêm sẽ tập trung 100% vào đúng 1 món nợ mục tiêu duy nhất."
+                               Style="{StaticResource FintechLabelCaption}" />
+                        <Label Text="• Khi một món nợ được trả dứt điểm, hãy dồn toàn bộ số tiền hàng tháng đó sang món tiếp theo."
+                               Style="{StaticResource FintechLabelCaption}" />
+                        <Label Text="• Giữ một khoản quỹ khẩn cấp tối thiểu để không phải vay mới khi gặp biến cố bất ngờ."
+                               Style="{StaticResource FintechLabelCaption}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

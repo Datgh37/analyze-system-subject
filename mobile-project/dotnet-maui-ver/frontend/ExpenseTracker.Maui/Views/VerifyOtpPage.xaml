@@ -6,66 +6,58 @@
              x:DataType="vm:VerifyOtpViewModel"
              Title="{Binding Title}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource PageBgDark}}">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="28" Padding="24,60,24,40" MaximumWidthRequest="460">
-            <!-- Brand Header -->
+        <VerticalStackLayout Spacing="24" Padding="24,50,24,36" MaximumWidthRequest="460">
             <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                 <Border StrokeThickness="0"
                         StrokeShape="RoundRectangle 20"
-                        WidthRequest="72"
-                        HeightRequest="72"
+                        WidthRequest="64"
+                        HeightRequest="64"
                         HorizontalOptions="Center"
-                        Shadow="{Shadow Brush='#4F46E5', Offset='0,8', Radius=16, Opacity=0.3}">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#4F46E5" Offset="0.0" />
-                            <GradientStop Color="#7C3AED" Offset="1.0" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Image Source="ic_diamond.png" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" VerticalOptions="Center" />
+                        BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}">
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" 
+                                Offset="0,6" Radius="14" Opacity="0.3" />
+                    </Border.Shadow>
+                    <Image Source="ic_diamond.svg" WidthRequest="34" HeightRequest="34" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
 
-                <Label Text="Xác Thực Email" 
-                       FontSize="26" 
+                <Label Text="Xác Thực Bảo Mật" 
+                       FontSize="24" 
                        FontAttributes="Bold" 
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                 <Label Text="Nhập mã 6 chữ số để kích hoạt tài khoản" 
                        FontSize="13" 
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
             </VerticalStackLayout>
 
-            <!-- Card Container -->
-            <Border Style="{StaticResource ModernCard}"
-                    Padding="26"
-                    Shadow="{Shadow Brush='#000000', Offset='0,4', Radius=12, Opacity=0.08}">
-                <VerticalStackLayout Spacing="20">
+            <Border Style="{StaticResource FintechCard}" Padding="22">
+                <VerticalStackLayout Spacing="18">
                     <Label Text="Mã OTP Xác Thực" 
-                           FontSize="18" 
+                           FontSize="16" 
                            FontAttributes="Bold" 
-                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
 
-                    <!-- Recipient Email Notice -->
-                    <Border BackgroundColor="{AppThemeBinding Light='#EEF2FF', Dark='#1E1B4B'}"
-                            Stroke="{AppThemeBinding Light='#C7D2FE', Dark='#3730A3'}"
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource PrimarySoftLight}, Dark={StaticResource Neutral800}}"
+                            Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral700}}"
                             StrokeThickness="1"
                             StrokeShape="RoundRectangle 8"
                             Padding="12">
                         <VerticalStackLayout Spacing="4">
                             <Label Text="Mã xác thực đã được gửi tới địa chỉ:" 
                                    FontSize="11" 
-                                   TextColor="{AppThemeBinding Light=#4338CA, Dark=#A5B4FC}" />
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                             <Label Text="{Binding Email}" 
                                    FontAttributes="Bold" 
                                    FontSize="13" 
-                                   TextColor="{AppThemeBinding Light=#312E81, Dark=#E0E7FF}" />
+                                   TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" />
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Error Alert -->
                     <Border BackgroundColor="#FEF2F2"
                             Stroke="#FECACA"
                             StrokeThickness="1"
@@ -81,7 +73,6 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!-- Success / Info Alert -->
                     <Border BackgroundColor="#F0FDF4"
                             Stroke="#BBF7D0"
                             StrokeThickness="1"
@@ -97,17 +88,16 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!-- 6-Digit OTP Input -->
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Nhập mã 6 số bí mật" 
                                FontSize="12" 
                                FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Stroke="{AppThemeBinding Light='#4F46E5', Dark='#6366F1'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                                 StrokeThickness="2"
                                 StrokeShape="RoundRectangle 12"
                                 Padding="16,8"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Placeholder="• • • • • •"
                                    Text="{Binding OtpCode}"
                                    Keyboard="Numeric"
@@ -116,50 +106,43 @@
                                    FontAttributes="Bold"
                                    CharacterSpacing="14"
                                    HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    ClearButtonVisibility="WhileEditing" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Submit Button -->
                     <Button Text="Xác Thực Ngay" 
                             Command="{Binding VerifyOtpCommand}"
                             IsEnabled="{Binding IsNotBusy}"
-                            BackgroundColor="#4F46E5"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="14"
-                            CornerRadius="10"
-                            HeightRequest="48"
+                            Style="{StaticResource FintechButtonPrimary}"
+                            HeightRequest="46"
                             Margin="0,4,0,0" />
 
-                    <!-- Resend OTP Action -->
                     <Button Text="{Binding ResendButtonText}" 
                             Command="{Binding ResendOtpCommand}"
                             IsEnabled="{Binding CanResend}"
                             BackgroundColor="Transparent"
                             TextColor="{Binding ResendTextColor}"
-                            FontSize="13"
+                            FontSize="12"
                             FontAttributes="Bold"
                             HeightRequest="36"
                             HorizontalOptions="Center" />
 
-                    <!-- Loading Indicator -->
                     <ActivityIndicator IsRunning="{Binding IsBusy}" 
                                        IsVisible="{Binding IsBusy}" 
-                                       Color="#4F46E5"
+                                       Color="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                                        HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Back to Login -->
-            <Button Text="← Quay lại Đăng Nhập" 
+            <Button Text="Quay lại Đăng Nhập" 
                     Command="{Binding NavigateToLoginCommand}"
                     BackgroundColor="Transparent"
-                    TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                     FontSize="13"
                     FontAttributes="Bold"
                     HorizontalOptions="Center"
-                    HeightRequest="40" />
+                    HeightRequest="36" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

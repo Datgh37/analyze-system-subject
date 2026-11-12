@@ -23,7 +23,7 @@ public partial class LoginViewModel : BaseViewModel
     [NotifyPropertyChangedFor(nameof(PasswordToggleIcon))]
     private bool _isPasswordHidden = true;
 
-    public string PasswordToggleIcon => IsPasswordHidden ? "ic_eye.png" : "ic_eye_off.png";
+    public string PasswordToggleIcon => IsPasswordHidden ? "ic_eye.svg" : "ic_eye_off.svg";
 
     [RelayCommand]
     private void TogglePasswordVisibility()
@@ -53,14 +53,14 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     private string? _pingResult;
 
-    public string ModeTitle => IsLiveApiMode ? "Backend Web API Thật" : "Demo Ngoại Tuyến (Offline Mock)";
-    public string ModeBadgeText => IsLiveApiMode ? "LIVE" : "OFFLINE";
+    public string ModeTitle => IsLiveApiMode ? "Máy Chủ Trực Tuyến (Live API)" : "Dữ Liệu Thử Nghiệm (Offline)";
+    public string ModeBadgeText => IsLiveApiMode ? "TRỰC TUYẾN" : "DỮ LIỆU MẪU";
     public string ModeBadgeColor => IsLiveApiMode ? "#10B981" : "#F59E0B";
-    public string ModeIcon => IsLiveApiMode ? "🟢" : "🟠";
+    public string ModeIcon => IsLiveApiMode ? "ic_check.svg" : "ic_shield.svg";
     public string ServerUrlSummary => IsLiveApiMode 
         ? (string.IsNullOrWhiteSpace(ServerUrl) ? "Chưa cấu hình URL" : ServerUrl) 
         : "Dữ liệu mẫu 0ms (Không cần server)";
-    public string ServerConfigButtonText => ShowServerConfig ? "▲ Thu gọn cấu hình" : "⚙️ Cài đặt máy chủ & URL...";
+    public string ServerConfigButtonText => ShowServerConfig ? "Thu gọn cấu hình" : "Cài đặt máy chủ & đường dẫn...";
 
     public LoginViewModel(
         IClientAuthService authService, 
@@ -132,12 +132,12 @@ public partial class LoginViewModel : BaseViewModel
 
             bool isAlive = await _serverConfig.PingServerAsync(ServerUrl);
             PingResult = isAlive 
-                ? "🟢 Máy chủ phản hồi tốt (HTTP 200 OK)" 
-                : "🔴 Không thể kết nối tới máy chủ!";
+                ? "Máy chủ phản hồi tốt (HTTP 200 OK)" 
+                : "Không thể kết nối tới máy chủ!";
         }
         catch (Exception ex)
         {
-            PingResult = $"🔴 Lỗi: {ex.Message}";
+            PingResult = $"Lỗi kết nối: {ex.Message}";
         }
         finally
         {

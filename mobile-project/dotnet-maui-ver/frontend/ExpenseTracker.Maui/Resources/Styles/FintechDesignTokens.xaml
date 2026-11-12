@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Color x:Key="FintechBackgroundDark">#0B0F17</Color>
+    <Color x:Key="FintechBackgroundLight">#F8FAFC</Color>
+    <Color x:Key="FintechSurfaceDark">#161F30</Color>
+    <Color x:Key="FintechSurfaceLight">#FFFFFF</Color>
+    <Color x:Key="FintechSurfaceElevatedDark">#1E2B42</Color>
+    <Color x:Key="FintechSurfaceElevatedLight">#F1F5F9</Color>
+
+    <Color x:Key="FintechBorderDark">#26354D</Color>
+    <Color x:Key="FintechBorderLight">#E2E8F0</Color>
+    <Color x:Key="FintechBorderSubtleDark">#1A2436</Color>
+    <Color x:Key="FintechBorderSubtleLight">#F1F5F9</Color>
+
+    <Color x:Key="FintechTextPrimaryDark">#FFFFFF</Color>
+    <Color x:Key="FintechTextPrimaryLight">#0F172A</Color>
+    <Color x:Key="FintechTextSecondaryDark">#94A3B8</Color>
+    <Color x:Key="FintechTextSecondaryLight">#475569</Color>
+    <Color x:Key="FintechTextMutedDark">#64748B</Color>
+    <Color x:Key="FintechTextMutedLight">#94A3B8</Color>
+
+    <Color x:Key="FintechPrimary">#4F46E5</Color>
+    <Color x:Key="FintechPrimaryDark">#6366F1</Color>
+    <Color x:Key="FintechPrimaryHover">#4338CA</Color>
+
+    <Color x:Key="FintechIncome">#10B981</Color>
+    <Color x:Key="FintechIncomeDark">#10B981</Color>
+    <Color x:Key="FintechIncomeLight">#059669</Color>
+
+    <Color x:Key="FintechExpense">#F43F5E</Color>
+    <Color x:Key="FintechExpenseDark">#F43F5E</Color>
+    <Color x:Key="FintechExpenseLight">#E11D48</Color>
+
+    <Color x:Key="FintechSafeDark">#06B6D4</Color>
+    <Color x:Key="FintechSafeLight">#0891B2</Color>
+
+    <Color x:Key="FintechWarningDark">#F59E0B</Color>
+    <Color x:Key="FintechWarningLight">#D97706</Color>
+
+    <Color x:Key="FintechAiAgentDark">#8B5CF6</Color>
+    <Color x:Key="FintechAiAgentLight">#7C3AED</Color>
+
+    <Color x:Key="FintechBackground">#0B0F17</Color>
+    <Color x:Key="FintechTextPrimary">#0F172A</Color>
+    <Color x:Key="FintechTextMuted">#64748B</Color>
+
+    <x:Double x:Key="FontDisplayHero">32</x:Double>
+    <x:Double x:Key="FontHeadingLarge">24</x:Double>
+    <x:Double x:Key="FontHeadingMedium">20</x:Double>
+    <x:Double x:Key="FontBodyLarge">16</x:Double>
+    <x:Double x:Key="FontBodyNormal">14</x:Double>
+    <x:Double x:Key="FontCaption">12</x:Double>
+    <x:Double x:Key="FontMicro">10</x:Double>
+
+    <x:Double x:Key="Space2">2</x:Double>
+    <x:Double x:Key="Space4">4</x:Double>
+    <x:Double x:Key="Space8">8</x:Double>
+    <x:Double x:Key="Space12">12</x:Double>
+    <x:Double x:Key="Space16">16</x:Double>
+    <x:Double x:Key="Space20">20</x:Double>
+    <x:Double x:Key="Space24">24</x:Double>
+    <x:Double x:Key="Space32">32</x:Double>
+    <x:Double x:Key="Space48">48</x:Double>
+
+</ResourceDictionary>

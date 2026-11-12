@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Wallets"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
+             x:Class="ExpenseTracker.Maui.Views.ManageWalletsPage"
+             x:DataType="vm:ManageWalletsViewModel"
+             Title="{Binding Title}"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
+
+    <Grid>
+        <!-- VÙNG NỘI DUNG CHÍNH -->
+        <Grid RowDefinitions="*, Auto">
+            <ScrollView Grid.Row="0">
+                <VerticalStackLayout Padding="16,12,16,100" Spacing="16" MaximumWidthRequest="640">
+
+                    <!-- NÚT ĐIỀU HƯỚNG QUAY LẠI TỔNG QUAN ĐA VÍ -->
+                    <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center">
+                        <Border Grid.Column="0" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10" Padding="12,6" VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBackClicked" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="←" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                                <Label Text="Tổng quan ví" FontSize="12" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- 1. HERO CARD: QUẢN TRỊ ĐA VÍ & NÚT THÊM VÍ MỚI -->
+                    <Border Stroke="{AppThemeBinding Light=#312E81, Dark=#4338CA}"
+                            StrokeThickness="1.5"
+                            StrokeShape="RoundRectangle 24"
+                            Padding="22">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#0F172A" Offset="0.0" />
+                                <GradientStop Color="#1E1B4B" Offset="0.5" />
+                                <GradientStop Color="#312E81" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow>
+                            <Shadow Brush="#312E81" Offset="0,6" Radius="20" Opacity="0.35" />
+                        </Border.Shadow>
+
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                    <Image Source="ic_wallet.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                    <Label Text="QUẢN TRỊ &amp; THIẾT LẬP CÁC VÍ" FontSize="11" FontAttributes="Bold" TextColor="#A5B4FC" CharacterSpacing="1" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <Border Grid.Column="1" BackgroundColor="#064E3B" StrokeShape="RoundRectangle 8" Padding="8,3" VerticalOptions="Center">
+                                    <Label Text="{Binding Wallets.Count, StringFormat='{0} NGUỒN TIỀN'}" FontSize="10" FontAttributes="Bold" TextColor="#6EE7B7" />
+                                </Border>
+                            </Grid>
+
+                            <Label Text="{Binding FormattedTotalBalance}" FontSize="32" FontAttributes="Bold" TextColor="#FFFFFF" />
+
+                            <Label Text="Quản lý toàn diện tài khoản ngân hàng, ví điện tử, tiền mặt &amp; thẻ tín dụng chuẩn ACID."
+                                   FontSize="12" TextColor="#C7D2FE" />
+
+                            <!-- NÚT 1-CHẠM THÊM VÍ MỚI NGAY TRÊN HEADER -->
+                            <Button Text="+ Thêm Ví Mới Ngay"
+                                    Command="{Binding OpenCreateFormCommand}"
+                                    BackgroundColor="#4F46E5"
+                                    TextColor="#FFFFFF"
+                                    FontAttributes="Bold"
+                                    FontSize="14"
+                                    CornerRadius="14"
+                                    HeightRequest="46"
+                                    Margin="0,4,0,0">
+                                <Button.Shadow>
+                                    <Shadow Brush="#4F46E5" Offset="0,4" Radius="10" Opacity="0.4" />
+                                </Button.Shadow>
+                            </Button>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- THÔNG BÁO TRẠNG THÁI HOẶC LỖI -->
+                    <Border Stroke="#86EFAC" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                            Padding="14"
+                            IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding StatusMessage}" TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Border Stroke="#FCA5A5" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                            Padding="14" IsVisible="{Binding HasError}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding ErrorMessage}" TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- 2. DANH SÁCH TOÀN BỘ CÁC VÍ HIỆN CÓ -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="2,6,2,0" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="DANH SÁCH CÁC VÍ ĐANG HOẠT ĐỘNG" Style="{StaticResource FintechSectionTitleStyle}" />
+                        <Label Grid.Column="1" Text="Tự động đồng bộ" FontSize="11" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                    </Grid>
+
+                    <CollectionView ItemsSource="{Binding Wallets}" SelectionMode="None">
+                        <CollectionView.EmptyView>
+                            <Border Style="{StaticResource FintechCardStyle}" Padding="32">
+                                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                    <Image Source="ic_wallet.svg" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                                    <Label Text="Bạn chưa có ví nào trong hệ thống." Style="{StaticResource FintechCardTitleStyle}" HorizontalTextAlignment="Center" />
+                                    <Label Text="Bấm vào nút '+ Thêm Ví Mới Ngay' ở trên để khởi tạo ví đầu tiên." Style="{StaticResource FintechCaptionStyle}" HorizontalTextAlignment="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:WalletModel">
+                                <Border Style="{StaticResource FintechCardStyle}" Margin="0,0,0,12" Padding="16">
+                                    <VerticalStackLayout Spacing="12">
+                                        <!-- Header ví: Tên, loại ví, dải màu gradient -->
+                                        <Grid ColumnDefinitions="42,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                            <!-- Icon loại ví có màu nhận diện -->
+                                            <Border Grid.Column="0" WidthRequest="42" HeightRequest="42" StrokeShape="RoundRectangle 12"
+                                                    BackgroundColor="{Binding ColorHex}" StrokeThickness="0" VerticalOptions="Center">
+                                                <Image Source="ic_wallet.svg" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                                <Label Text="{Binding Name}" Style="{StaticResource FintechCardTitleStyle}" LineBreakMode="TailTruncation" />
+                                                <Label Text="{Binding SubtitleInfo}" Style="{StaticResource FintechCaptionStyle}" LineBreakMode="TailTruncation" />
+                                            </VerticalStackLayout>
+
+                                            <!-- Badge loại ví -->
+                                            <Border Grid.Column="2" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                                    Padding="8,3" StrokeShape="RoundRectangle 6" StrokeThickness="0" VerticalOptions="Center">
+                                                <Label Text="{Binding WalletTypeName}" FontSize="10" FontAttributes="Bold"
+                                                       TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Số dư khả dụng & Trạng thái loại trừ -->
+                                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                                StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14,10">
+                                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                                    <Label Text="SỐ DƯ HIỆN TẠI" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource FintechTextMuted}" />
+                                                    <Label Text="{Binding FormattedBalance}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" />
+                                                </VerticalStackLayout>
+
+                                                <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                                                        Padding="8,3" StrokeShape="RoundRectangle 6" StrokeThickness="0"
+                                                        IsVisible="{Binding IsExcludedFromTotal}" VerticalOptions="Center">
+                                                    <Label Text="Không tính tổng" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource FintechExpense}" />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- BỘ 3 NÚT HÀNH ĐỘNG: SỬA, CÂN CHỈNH SỐ DƯ, XÓA VÍ -->
+                                        <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8" Margin="0,2,0,0">
+                                            <!-- Nút Chỉnh Sửa -->
+                                            <Button Grid.Column="0" Text="✏️ Sửa Ví"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ManageWalletsViewModel}}, Path=OpenEditFormCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                                    TextColor="{StaticResource FintechPrimary}"
+                                                    FontAttributes="Bold" FontSize="12" CornerRadius="10" HeightRequest="38" />
+
+                                            <!-- Nút Cân Chỉnh Số Dư -->
+                                            <Button Grid.Column="1" Text="⚖️ Cân Chỉnh"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ManageWalletsViewModel}}, Path=OpenAdjustBalanceCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                                    TextColor="{StaticResource FintechIncome}"
+                                                    FontAttributes="Bold" FontSize="12" CornerRadius="10" HeightRequest="38" />
+
+                                            <!-- Nút Xóa Ví -->
+                                            <Button Grid.Column="2" Text="🗑️"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ManageWalletsViewModel}}, Path=DeleteWalletCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                                                    TextColor="{StaticResource FintechExpense}"
+                                                    FontAttributes="Bold" FontSize="14" CornerRadius="10" HeightRequest="38" WidthRequest="44" Padding="0" />
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
+            <components:BottomNavDockView Grid.Row="1" ActiveTab="Wallets" />
+        </Grid>
+
+        <!-- 3. MODAL / SHEET FORM TẠO HOẶC CHỈNH SỬA VÍ (CREATE / EDIT WALLET FORM) -->
+        <Border BackgroundColor="#99000000" IsVisible="{Binding IsFormVisible}" ZIndex="98" Padding="16">
+            <Border Stroke="{StaticResource FintechPrimary}" StrokeThickness="1" StrokeShape="RoundRectangle 24"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                    Padding="20" VerticalOptions="Center" MaximumHeightRequest="600" MaximumWidthRequest="560">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,10" Radius="30" Opacity="0.4" />
+                </Border.Shadow>
+
+                <ScrollView>
+                    <VerticalStackLayout Spacing="14">
+                        <!-- Header Form -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{Binding FormTitle}" FontSize="17" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                            <Button Grid.Column="1" Text="✕" Command="{Binding CloseFormCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                    TextColor="{StaticResource FintechTextMuted}" FontSize="14" FontAttributes="Bold"
+                                    CornerRadius="18" WidthRequest="36" HeightRequest="36" Padding="0" />
+                        </Grid>
+
+                        <!-- Chọn Loại Ví -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Phân loại ví (*)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="10,2">
+                                <Picker ItemsSource="{Binding WalletTypeNames}"
+                                        SelectedIndex="{Binding SelectedTypeIndex}"
+                                        FontSize="13"
+                                        TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Tên Ví -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Tên ví (*)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="14,4">
+                                <Entry Text="{Binding NameInput}" Placeholder="Ví dụ: Tài khoản Vietcombank, Ví Tiền Mặt..."
+                                       FontSize="14" TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Số Dư Ban Đầu (Nếu Tạo Mới) -->
+                        <VerticalStackLayout Spacing="4" IsVisible="{Binding IsEditMode, Converter={StaticResource InvertedBoolConverter}}">
+                            <Label Text="Số dư ban đầu (VND)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="14,4">
+                                <Entry Text="{Binding BalanceInput}" Placeholder="0 đ" Keyboard="Numeric"
+                                       FontSize="15" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Thông Tin Ngân Hàng (Nếu Chọn Ngân Hàng hoặc Thẻ Tín Dụng) -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10" IsVisible="{Binding IsBankDetailsVisible}">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Tên ngân hàng" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Entry Text="{Binding BankNameInput}" Placeholder="Vietcombank..." FontSize="13"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Số tài khoản" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Entry Text="{Binding AccountNumberInput}" Placeholder="9988776655..." Keyboard="Numeric" FontSize="13"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Thông Tin Thẻ Tín Dụng (Nếu Chọn Thẻ Tín Dụng) -->
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" IsVisible="{Binding IsCreditCardDetailsVisible}">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Hạn mức (đ)" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 10" Padding="8,2">
+                                    <Entry Text="{Binding CreditLimitInput}" Placeholder="50,000,000" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Ngày sao kê" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 10" Padding="8,2">
+                                    <Entry Text="{Binding StatementDayInput}" Placeholder="20" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                <Label Text="Hạn trả tiền" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 10" Padding="8,2">
+                                    <Entry Text="{Binding PaymentDueDayInput}" Placeholder="5" Keyboard="Numeric" FontSize="12" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Bảng Chọn Màu Sắc Thẻ ATM -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Màu đại diện thẻ ATM:" Style="{StaticResource FintechCaptionStyle}" />
+                            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                                <HorizontalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding ColorPresets}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <Border WidthRequest="34" HeightRequest="34" StrokeShape="RoundRectangle 17"
+                                                    BackgroundColor="{Binding .}" StrokeThickness="2"
+                                                    Stroke="{AppThemeBinding Light=#FFFFFF, Dark=#000000}">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ManageWalletsViewModel}}, Path=SelectColorCommand}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </HorizontalStackLayout>
+                            </ScrollView>
+                        </VerticalStackLayout>
+
+                        <!-- Switch Loại Trừ Khỏi Tổng -->
+                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Loại trừ khỏi Tổng số dư" FontSize="13" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                    <Label Text="Dành cho thẻ tín dụng hoặc ví giữ hộ không tính vào tài sản" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding IsExcludedFromTotal}" OnColor="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Nút Submit Form -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                            <Button Grid.Column="0" Text="Hủy Bỏ" Command="{Binding CloseFormCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                    TextColor="{StaticResource FintechTextMuted}" CornerRadius="12" HeightRequest="46" />
+
+                            <Button Grid.Column="1" Text="✓ Lưu Ví" Command="{Binding SaveWalletCommand}"
+                                    Style="{StaticResource FintechPrimaryBtnStyle}" HeightRequest="46" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Border>
+        </Border>
+
+        <!-- 4. MODAL CÂN CHỈNH SỐ DƯ (ADJUST BALANCE MODAL) -->
+        <Border BackgroundColor="#99000000" IsVisible="{Binding IsAdjustModalVisible}" ZIndex="99" Padding="20">
+            <Border Stroke="{StaticResource FintechIncome}" StrokeThickness="1.5" StrokeShape="RoundRectangle 24"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                    Padding="22" VerticalOptions="Center" MaximumWidthRequest="540">
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Cân Chỉnh Đối Soát Số Dư" FontSize="17" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" />
+                        <Button Grid.Column="1" Text="✕" Command="{Binding CloseAdjustBalanceCommand}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                TextColor="{StaticResource FintechTextMuted}" FontSize="14" FontAttributes="Bold"
+                                CornerRadius="18" WidthRequest="36" HeightRequest="36" Padding="0" />
+                    </Grid>
+
+                    <Label Text="Cập nhật số dư thực tế theo sao kê ngân hàng. Hệ thống sẽ tự động ghi nhận nhật ký chênh lệch số dư."
+                           Style="{StaticResource FintechCaptionStyle}" />
+
+                    <!-- Thẻ tóm tắt ví hiện tại -->
+                    <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}" StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding AdjustingWallet.Name}" Style="{StaticResource FintechCardTitleStyle}" />
+                                <Label Text="Số dư sổ sách hiện tại" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="{Binding AdjustingWallet.FormattedBalance}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Số dư thực tế mới -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Số dư thực tế mới (VND) (*):" Style="{StaticResource FintechCaptionStyle}" />
+                        <Border Stroke="{AppThemeBinding Light=#A7F3D0, Dark=#065F46}"
+                                StrokeThickness="1.5" StrokeShape="RoundRectangle 14"
+                                BackgroundColor="{AppThemeBinding Light=#F0FDF4, Dark=#0F291E}" Padding="14,4">
+                            <Entry Text="{Binding AdjustNewBalanceInput}" Placeholder="0" Keyboard="Numeric"
+                                   FontSize="24" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Lý do cân chỉnh -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Lý do cân chỉnh:" Style="{StaticResource FintechCaptionStyle}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                Padding="12,4">
+                            <Entry Text="{Binding AdjustReasonInput}" Placeholder="Ví dụ: Đối chiếu sao kê cuối tháng..."
+                                   FontSize="13" TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Nút xác nhận -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,6,0,0">
+                        <Button Grid.Column="0" Text="Đóng" Command="{Binding CloseAdjustBalanceCommand}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                TextColor="{StaticResource FintechTextMuted}" CornerRadius="12" HeightRequest="44" />
+
+                        <Button Grid.Column="1" Text="✓ Cập Nhật" Command="{Binding SaveAdjustBalanceCommand}"
+                                BackgroundColor="{StaticResource FintechIncome}" TextColor="#FFFFFF"
+                                FontAttributes="Bold" CornerRadius="12" HeightRequest="44" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -17,4 +17,9 @@ public partial class ExpensesPage : ContentPage
         base.OnAppearing();
         await _viewModel.LoadDataAsync();
     }
+
+    private async void OnQuickScanOcrClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//ReceiptOcrPage");
+    }
 }

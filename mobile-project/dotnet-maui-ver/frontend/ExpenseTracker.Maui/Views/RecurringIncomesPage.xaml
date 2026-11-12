@@ -3,404 +3,317 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.RecurringIncomes"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.RecurringIncomesPage"
              x:DataType="vm:RecurringIncomesViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20,16,20,36" Spacing="18" MaximumWidthRequest="640">
+    <Grid RowDefinitions="*, Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="16,12,16,28" Spacing="16" MaximumWidthRequest="640">
 
-            <!-- 1. Hero Card: Recurring Incomes Management & One-Click Scan -->
-            <Border Stroke="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 22"
-                    Padding="22">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#064E3B" Offset="0.0" />
-                        <GradientStop Color="#047857" Offset="0.5" />
-                        <GradientStop Color="#059669" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Background>
-                <Border.Shadow>
-                    <Shadow Brush="#10B981" Offset="0,8" Radius="20" Opacity="0.3" />
-                </Border.Shadow>
+                <!-- 1. HERO CARD: DÒNG THU NHẬP ĐỊNH KỲ TỰ ĐỘNG HÓA -->
+                <Border Stroke="{AppThemeBinding Light=#34D399, Dark=#059669}"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 24"
+                        Padding="22">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#064E3B" Offset="0.0" />
+                            <GradientStop Color="#047857" Offset="0.5" />
+                            <GradientStop Color="#059669" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#059669" Offset="0,6" Radius="20" Opacity="0.35" />
+                    </Border.Shadow>
 
-                <VerticalStackLayout Spacing="10">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="NGUỒN THU ĐỊNH KỲ"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               TextColor="#A7F3D0"
-                               CharacterSpacing="1.2" />
-                        <Border Grid.Column="1"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 10"
-                                BackgroundColor="#064E3B"
-                                Padding="8,4">
-                            <Label Text="Tự động cộng ví"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#6EE7B7" />
-                        </Border>
-                    </Grid>
-
-                    <Label Text="Lương, Tiền Thuê &amp; Thu Nhập Lặp Lại"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="#FFFFFF" />
-
-                    <Label Text="Thiết lập lịch định kỳ để hệ thống tự động ghi nhận và cộng tiền vào ví khi đến hạn mà không cần nhập thủ công."
-                           FontSize="12"
-                           TextColor="#D1FAE5"
-                           Opacity="0.9"
-                           LineBreakMode="WordWrap" />
-
-                    <Button Text="Quét &amp; Ghi Nhận Khoản Đến Hạn"
-                            Command="{Binding ProcessDueIncomesCommand}"
-                            BackgroundColor="#FFFFFF"
-                            TextColor="#065F46"
-                            FontAttributes="Bold"
-                            FontSize="13"
-                            CornerRadius="12"
-                            HeightRequest="42"
-                            Margin="0,4,0,0">
-                        <Button.Shadow>
-                            <Shadow Brush="#000000" Offset="0,4" Radius="8" Opacity="0.15" />
-                        </Button.Shadow>
-                    </Button>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 2. Status / Success Message -->
-            <Border Stroke="#86EFAC"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                    Padding="14"
-                    IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#059669" VerticalOptions="Center" />
-                    <Label Grid.Column="1" Text="{Binding StatusMessage}"
-                           TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
-                           FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                </Grid>
-            </Border>
-
-            <!-- 3. Error Banner -->
-            <Border Stroke="#FCA5A5"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                    Padding="14"
-                    IsVisible="{Binding HasError}">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
-                    <Label Grid.Column="1" Text="{Binding ErrorMessage}"
-                           TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
-                           FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                </Grid>
-            </Border>
-
-            <!-- 4. Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                               HorizontalOptions="Center" />
-
-            <!-- 5. Create Recurring Income Form Card -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="20">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="14">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="Thiết Lập Nguồn Thu Mới"
-                               FontAttributes="Bold"
-                               FontSize="17"
-                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        <Border Grid.Column="1"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                Padding="10,4">
-                            <Label Text="Tự động"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#059669, Dark=#6EE7B7}" />
-                        </Border>
-                    </Grid>
-
-                    <!-- Name -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Tên nguồn thu (VD: Lương công ty, Cho thuê nhà):" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,4">
-                            <Entry Placeholder="Nhập tên nguồn thu..."
-                                   Text="{Binding NameInput}"
-                                   FontSize="14"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Wallet Selection -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Ví nhận tiền:" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="8,2">
-                            <Picker Title="-- Chọn ví nhận --"
-                                    ItemsSource="{Binding Wallets}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    SelectedItem="{Binding SelectedWallet}"
-                                    FontSize="14"
-                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Category Selection -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Danh mục thu nhập:" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="8,2">
-                            <Picker Title="-- Chọn danh mục --"
-                                    ItemsSource="{Binding IncomeCategories}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    SelectedItem="{Binding SelectedCategory}"
-                                    FontSize="14"
-                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Expected Amount -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Số tiền dự kiến mỗi kỳ (VND):" FontSize="12" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,4">
-                            <Entry Placeholder="Ví dụ: 25000000"
-                                   Keyboard="Numeric"
-                                   Text="{Binding AmountInput}"
-                                   FontSize="15"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Frequency & Day of Month in a 2-Column Grid -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <VerticalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Text="Tần suất:" FontSize="12" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                    StrokeShape="RoundRectangle 12"
-                                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                    Padding="8,2">
-                                <Picker Title="-- Tần suất --"
-                                        ItemsSource="{Binding FrequencyOptions}"
-                                        SelectedIndex="{Binding SelectedFrequencyIndex}"
-                                        FontSize="13"
-                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                <Image Source="ic_rules.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Label Text="THU NHẬP ĐỊNH KỲ TỰ ĐỘNG" FontSize="11" FontAttributes="Bold" TextColor="#A7F3D0" CharacterSpacing="1" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Grid.Column="1" BackgroundColor="#065F46" StrokeShape="RoundRectangle 8" Padding="8,3" VerticalOptions="Center">
+                                <Label Text="TỰ ĐỘNG CỘNG VÍ" FontSize="10" FontAttributes="Bold" TextColor="#D1FAE5" />
                             </Border>
-                        </VerticalStackLayout>
-
-                        <VerticalStackLayout Grid.Column="1" Spacing="6">
-                            <Label Text="Ngày nhận (1-31):" FontSize="12" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
-                            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                    StrokeShape="RoundRectangle 12"
-                                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                    Padding="12,4">
-                                <Entry Placeholder="Ví dụ: 5"
-                                       Keyboard="Numeric"
-                                       Text="{Binding DayOfMonthInput}"
-                                       FontSize="14"
-                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            </Border>
-                        </VerticalStackLayout>
-                    </Grid>
-
-                    <!-- Auto Record CheckBox Card -->
-                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                            StrokeShape="RoundRectangle 12"
-                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                            Padding="12,8">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
-                            <CheckBox Grid.Column="0" IsChecked="{Binding AutoRecord}"
-                                      Color="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                                      VerticalOptions="Center" />
-                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                <Label Text="Tự động ghi nhận khi đến hạn"
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                                <Label Text="Cộng số dư ví ngay khi đến ngày nhận"
-                                       FontSize="11"
-                                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                            </VerticalStackLayout>
                         </Grid>
-                    </Border>
 
-                    <!-- Submit Button -->
-                    <Button Text="+ Lưu Thiết Lập Định Kỳ"
-                            Command="{Binding CreateRecurringIncomeCommand}"
-                            BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                            TextColor="#FFFFFF"
-                            FontAttributes="Bold"
-                            FontSize="15"
-                            CornerRadius="14"
-                            HeightRequest="48"
-                            Margin="0,6,0,0">
-                        <Button.Shadow>
-                            <Shadow Brush="#059669" Offset="0,4" Radius="10" Opacity="0.25" />
-                        </Button.Shadow>
-                    </Button>
-                </VerticalStackLayout>
-            </Border>
+                        <Label Text="Lương, Cho Thuê &amp; Thu Nhập Thụ Động"
+                               FontSize="20" FontAttributes="Bold" TextColor="#FFFFFF" />
 
-            <!-- 6. List of Active Recurring Incomes Header -->
-            <Grid ColumnDefinitions="*,Auto" Margin="4,8,4,0" VerticalOptions="Center">
-                <Label Grid.Column="0" Text="Nguồn Thu Đang Hoạt Động"
-                       FontSize="16" FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                <Label Grid.Column="1" Text="Lịch định kỳ"
-                       FontSize="12"
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-            </Grid>
+                        <Label Text="Tự động ghi nhận và cộng tiền vào ví khi đến kỳ mà không cần nhập tay."
+                               FontSize="12" TextColor="#D1FAE5" Opacity="0.9" />
 
-            <!-- 7. CollectionView Items -->
-            <CollectionView ItemsSource="{Binding RecurringIncomes}">
-                <CollectionView.EmptyView>
-                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                            StrokeShape="RoundRectangle 16"
-                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                            Padding="32" Margin="0,8">
-                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="📅" FontSize="40" HorizontalOptions="Center" />
-                            <Label Text="Chưa có nguồn thu định kỳ nào"
-                                   FontSize="15" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                   HorizontalOptions="Center" />
-                            <Label Text="Thêm lương công ty hoặc thu nhập thụ động định kỳ để hệ thống tự động hóa dòng tiền."
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                   HorizontalOptions="Center"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
-                    </Border>
-                </CollectionView.EmptyView>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:RecurringIncomeModel">
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 16"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                                Padding="16" Margin="0,4,0,8">
-                            <Border.Shadow>
-                                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                                        Offset="0,2" Radius="6" 
-                                        Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
-                            </Border.Shadow>
-
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
-                                <!-- Top: Header & Details -->
-                                <VerticalStackLayout Grid.Row="0" Spacing="6">
-                                    <!-- Row 0: Name & Expected Amount -->
-                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" VerticalOptions="Center">
-                                        <Label Grid.Column="0" Text="{Binding Name}"
-                                               FontAttributes="Bold"
-                                               FontSize="16"
-                                               LineBreakMode="TailTruncation"
-                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                                        <Label Grid.Column="1" Text="{Binding ExpectedAmount, StringFormat='+{0:N0} đ'}"
-                                               FontSize="16"
-                                               FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                                               HorizontalOptions="End" />
-                                    </Grid>
-
-                                    <!-- Row 1: Wallet & Category -->
-                                    <Label FontSize="12" LineBreakMode="TailTruncation"
-                                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Ví: " />
-                                                <Span Text="{Binding WalletName}" FontAttributes="Bold" />
-                                                <Span Text="  •  Danh mục: " />
-                                                <Span Text="{Binding CategoryName}" FontAttributes="Bold" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-
-                                    <!-- Row 2: Due Date & Active Status Badge -->
-                                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                                        <Label Grid.Column="0"
-                                               Text="{Binding NextDueDate, StringFormat='📅 Kỳ tiếp theo: {0:dd/MM/yyyy}'}"
-                                               FontSize="12" FontAttributes="Italic"
-                                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                               VerticalOptions="Center" />
-
-                                        <Border Grid.Column="1" StrokeThickness="0"
-                                                StrokeShape="RoundRectangle 8"
-                                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                                Padding="8,3"
-                                                VerticalOptions="Center"
-                                                IsVisible="{Binding IsActive}">
-                                            <Label Text="🟢 Đang bật"
-                                                   FontSize="10" FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light=#059669, Dark=#6EE7B7}" />
-                                        </Border>
-                                    </Grid>
+                        <!-- Nút Quét & Ghi Nhận Khoản Đến Hạn -->
+                        <Border BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 14" Padding="14,10" Margin="0,4,0,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ProcessDueIncomesCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                <Border Grid.Column="0" WidthRequest="36" HeightRequest="36" StrokeShape="RoundRectangle 10" BackgroundColor="#D1FAE5" StrokeThickness="0">
+                                    <Image Source="ic_income.svg" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Quét &amp; Ghi Nhận Khoản Đến Hạn" FontSize="13" FontAttributes="Bold" TextColor="#065F46" />
+                                    <Label Text="Kiểm tra lịch và cộng dồn ngay lập tức" FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
-
-                                <!-- Bottom Row: Action Buttons -->
-                                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End" Spacing="8">
-                                    <Button Text="Bật/Tắt"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=ToggleStatusCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                            TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}"
-                                            FontSize="12"
-                                            FontAttributes="Bold"
-                                            CornerRadius="10"
-                                            HeightRequest="34"
-                                            Padding="14,0" />
-
-                                    <Button Text="Xóa"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=DeleteRecurringIncomeCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
-                                            TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
-                                            FontSize="12"
-                                            FontAttributes="Bold"
-                                            CornerRadius="10"
-                                            HeightRequest="34"
-                                            Padding="14,0" />
-                                </HorizontalStackLayout>
+                                <Label Grid.Column="2" Text="Quét ngay →" FontSize="12" FontAttributes="Bold" TextColor="#059669" VerticalOptions="Center" />
                             </Grid>
                         </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- STATUS MESSAGE -->
+                <Border Stroke="#86EFAC" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                        Padding="14"
+                        IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#059669" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding StatusMessage}"
+                               TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
+                               FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- ERROR MESSAGE -->
+                <Border Stroke="#FCA5A5" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                        Padding="14" IsVisible="{Binding HasError}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding ErrorMessage}"
+                               TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
+                               FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource FintechIncome}" HorizontalOptions="Center" />
+
+                <!-- 2. FORM THIẾT LẬP NGUỒN THU MỚI -->
+                <Border Style="{StaticResource FintechCardStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="THIẾT LẬP NGUỒN THU MỚI" Style="{StaticResource FintechCardTitleStyle}" />
+                            <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}" StrokeShape="RoundRectangle 8" Padding="8,3">
+                                <Label Text="Lặp Lại Tự Động" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" />
+                            </Border>
+                        </Grid>
+
+                        <!-- TÊN NGUỒN THU -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Tên nguồn thu (VD: Lương công ty, Cho thuê căn hộ...)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="14,4">
+                                <Entry Placeholder="Nhập tên nguồn thu..."
+                                       Text="{Binding NameInput}"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- VÍ NHẬN TIỀN & DANH MỤC THU -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                                <Label Text="Ví nhận tiền" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Picker Title="-- Chọn ví --"
+                                            ItemsSource="{Binding Wallets}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedWallet}"
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Danh mục thu" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Picker Title="-- Chọn nhóm --"
+                                            ItemsSource="{Binding IncomeCategories}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedCategory}"
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- SỐ TIỀN DỰ KIẾN MỖI KỲ CỰC LỚN -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Số tiền dự kiến mỗi kỳ (VND)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light=#A7F3D0, Dark=#065F46}"
+                                    StrokeThickness="1.5"
+                                    StrokeShape="RoundRectangle 16"
+                                    BackgroundColor="{AppThemeBinding Light=#F0FDF4, Dark=#0F291E}"
+                                    Padding="16,10">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                                    <Label Grid.Column="0" Text="+" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" VerticalOptions="Center" />
+                                    <Entry Grid.Column="1"
+                                           Placeholder="25,000,000"
+                                           Keyboard="Numeric"
+                                           Text="{Binding AmountInput}"
+                                           FontSize="28"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource FintechIncome}"
+                                           BackgroundColor="Transparent"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="VND" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" VerticalOptions="Center" Opacity="0.8" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- TẦN SUẤT & NGÀY NHẬN TRONG THÁNG -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                                <Label Text="Tần suất lặp" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="10,2">
+                                    <Picker Title="-- Tần suất --"
+                                            ItemsSource="{Binding FrequencyOptions}"
+                                            SelectedIndex="{Binding SelectedFrequencyIndex}"
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Ngày nhận (1-31)" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="12,4">
+                                    <Entry Placeholder="Ví dụ: 5"
+                                           Keyboard="Numeric"
+                                           Text="{Binding DayOfMonthInput}"
+                                           FontSize="13"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- TỰ ĐỘNG GHI NHẬN CHECKBOX CARD -->
+                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0"
+                                Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Tự động ghi nhận khi đến ngày" FontSize="13" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                    <Label Text="Tự động cộng dồn số dư ví chính xác vào ngày nhận" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding AutoRecord}" OnColor="{StaticResource FintechIncome}" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+
+                        <!-- NÚT LƯU THIẾT LẬP -->
+                        <Button Text="✓ Lưu Nguồn Thu Định Kỳ"
+                                Command="{Binding CreateRecurringIncomeCommand}"
+                                BackgroundColor="{StaticResource FintechIncome}"
+                                TextColor="#FFFFFF"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                CornerRadius="14"
+                                HeightRequest="50"
+                                Margin="0,4,0,0">
+                            <Button.Shadow>
+                                <Shadow Brush="{StaticResource FintechIncome}" Offset="0,4" Radius="12" Opacity="0.3" />
+                            </Button.Shadow>
+                        </Button>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 3. DANH SÁCH NGUỒN THU ĐANG HOẠT ĐỘNG -->
+                <Grid ColumnDefinitions="*,Auto" Margin="2,8,2,0" VerticalOptions="Center">
+                    <Label Grid.Column="0" Text="NGUỒN THU ĐANG HOẠT ĐỘNG" Style="{StaticResource FintechSectionTitleStyle}" />
+                    <Label Grid.Column="1" Text="Lịch định kỳ" FontSize="11" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding RecurringIncomes}" SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <Border Style="{StaticResource FintechCardStyle}" Padding="28">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Image Source="ic_income.svg" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                                <Label Text="Chưa có nguồn thu định kỳ nào" Style="{StaticResource FintechCardTitleStyle}" HorizontalTextAlignment="Center" />
+                                <Label Text="Thêm lương hoặc thu nhập thụ động để hệ thống tự động hóa dòng tiền." FontSize="12" TextColor="{StaticResource FintechTextMuted}" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:RecurringIncomeModel">
+                            <Border Style="{StaticResource FintechCardStyle}" Margin="0,0,0,10">
+                                <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                                    <VerticalStackLayout Grid.Row="0" Spacing="4">
+                                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                            <Label Grid.Column="0" Text="{Binding Name}"
+                                                   Style="{StaticResource FintechCardTitleStyle}"
+                                                   LineBreakMode="TailTruncation" />
+                                            <Label Grid.Column="1" Text="{Binding ExpectedAmount, StringFormat='+{0:N0} đ'}"
+                                                   FontSize="16" FontAttributes="Bold"
+                                                   TextColor="{StaticResource FintechIncome}" />
+                                        </Grid>
+
+                                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                            <Label Text="Ví: " Style="{StaticResource FintechCaptionStyle}" />
+                                            <Label Text="{Binding WalletName}" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource FintechPrimary}" />
+                                            <Label Text="•" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                            <Label Text="{Binding CategoryName}" Style="{StaticResource FintechCaptionStyle}" />
+                                        </HorizontalStackLayout>
+
+                                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center" Margin="0,2,0,0">
+                                            <Label Grid.Column="0" Text="{Binding NextDueDate, StringFormat='Kỳ tiếp theo: {0:dd/MM/yyyy}'}"
+                                                   FontSize="12" FontAttributes="Italic" TextColor="{StaticResource FintechTextMuted}" />
+                                            <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}" StrokeShape="RoundRectangle 8" Padding="8,3" IsVisible="{Binding IsActive}">
+                                                <Label Text="Đang bật" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" />
+                                            </Border>
+                                        </Grid>
+                                    </VerticalStackLayout>
+
+                                    <!-- NÚT BẬT/TẮT & XÓA -->
+                                    <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End" Spacing="8">
+                                        <Button Text="Bật / Tắt"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=ToggleStatusCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                                TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}"
+                                                FontSize="12" FontAttributes="Bold"
+                                                CornerRadius="10" HeightRequest="34" Padding="14,0" />
+
+                                        <Button Text="Xóa"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecurringIncomesViewModel}}, Path=DeleteRecurringIncomeCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
+                                                TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
+                                                FontSize="12" FontAttributes="Bold"
+                                                CornerRadius="10" HeightRequest="34" Padding="14,0" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
+        <components:BottomNavDockView Grid.Row="1" ActiveTab="Home" />
+    </Grid>
 </ContentPage>

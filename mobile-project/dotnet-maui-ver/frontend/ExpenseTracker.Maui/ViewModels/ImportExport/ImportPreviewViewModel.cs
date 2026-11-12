@@ -39,7 +39,7 @@ public partial class ImportPreviewViewModel : BaseViewModel
     {
         _importRepo = importRepo;
         _walletRepo = walletRepo;
-        Title = "Xem trước nhập khẩu dữ liệu";
+        Title = "Xem Trước Dữ Liệu Nhập";
     }
 
     [RelayCommand]

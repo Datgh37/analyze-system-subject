@@ -39,7 +39,7 @@ public partial class BudgetsViewModel : BaseViewModel
     public BudgetsViewModel(IBudgetRepository budgetRepository)
     {
         _budgetRepository = budgetRepository;
-        Title = "Kế Hoạch Ngân Sách & Hạn Mức DSA";
+        Title = "Kế Hoạch Ngân Sách";
 
         // Listen for budget alerts from SignalR
         WeakReferenceMessenger.Default.Register<BudgetAlertReceivedMessage>(this, (r, m) =>
@@ -150,7 +150,7 @@ public partial class BudgetsViewModel : BaseViewModel
         try
         {
             await _budgetRepository.CloseBudgetAsync(ActiveBudget.Id);
-            StatusMessage = "✅ Đã đóng kế hoạch ngân sách thành công.";
+            StatusMessage = "Đã đóng kế hoạch ngân sách thành công.";
             await LoadActiveBudgetProgressAsync();
         }
         catch (Exception ex)
@@ -172,4 +172,5 @@ public partial class BudgetsViewModel : BaseViewModel
         }
     }
 }
+
 

@@ -5,29 +5,16 @@
              x:Class="ExpenseTracker.Maui.Views.CreateSavingsGoalPage"
              x:DataType="vm:CreateSavingsGoalViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource PageBgDark}}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20,16,20,32" Spacing="18" MaximumWidthRequest="720">
 
-            <!-- ========================================== -->
-            <!-- 1. HERO BANNER: SAVINGS GOAL CREATION      -->
-            <!-- ========================================== -->
-            <Border StrokeThickness="0"
-                    StrokeShape="RoundRectangle 20"
-                    Padding="22"
-                    Shadow="{Shadow Brush='#4F46E5', Offset='0,10', Radius=20, Opacity=0.25}">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#1E1B4B" Offset="0.0" />
-                        <GradientStop Color="#312E81" Offset="0.5" />
-                        <GradientStop Color="#4338CA" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Background>
+            <Border Style="{StaticResource FintechHeroCard}" Padding="20">
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Image Source="ic_savings.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                            <Image Source="ic_savings.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
                             <Label Text="MỤC TIÊU TÀI CHÍNH"
                                    FontSize="11"
                                    FontAttributes="Bold"
@@ -37,10 +24,10 @@
                         </HorizontalStackLayout>
                         <Border Grid.Column="1"
                                 BackgroundColor="#3730A3"
-                                Padding="8,4"
-                                StrokeShape="RoundRectangle 8"
+                                Padding="8,3"
+                                StrokeShape="RoundRectangle 6"
                                 Stroke="Transparent">
-                            <Label Text="KAKEIBO JARS"
+                            <Label Text="TÍCH LŨY"
                                    FontSize="10"
                                    FontAttributes="Bold"
                                    TextColor="#E0E7FF" />
@@ -48,25 +35,24 @@
                     </Grid>
 
                     <Label Text="Tạo Mục Tiêu Tích Lũy Mới"
-                           FontSize="22"
+                           FontSize="20"
                            FontAttributes="Bold"
                            TextColor="#FFFFFF" />
 
-                    <Label Text="Thiết lập quỹ tài chính định hướng mục tiêu (Quỹ dự phòng, mua nhà, du lịch...) với kế hoạch phân bổ tiết kiệm hàng tháng tự động."
+                    <Label Text="Thiết lập quỹ tài chính định hướng mục tiêu (Quỹ dự phòng, mua xe, du lịch...) với kế hoạch trích tiền hàng tháng tự động."
                            FontSize="12"
                            TextColor="#C7D2FE"
                            LineHeight="1.3" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Error Banner -->
             <Border IsVisible="{Binding HasError}"
                     BackgroundColor="#FEF2F2"
                     Stroke="#FECACA"
                     StrokeShape="RoundRectangle 8"
                     Padding="12,10">
                 <HorizontalStackLayout Spacing="8">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="#B91C1C"
                            FontAttributes="Bold"
@@ -75,133 +61,129 @@
                 </HorizontalStackLayout>
             </Border>
 
-            <!-- Loading Indicator -->
-            <Border Style="{StaticResource ModernCard}"
+            <Border Style="{StaticResource FintechCard}"
                     Padding="14"
                     IsVisible="{Binding IsBusy}">
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#4F46E5" />
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" />
                     <Label Text="Đang khởi tạo mục tiêu tích lũy..."
                            FontSize="12"
                            FontAttributes="Bold"
-                           TextColor="#4F46E5"
+                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                            VerticalOptions="Center" />
                 </HorizontalStackLayout>
             </Border>
 
-            <!-- ========================================== -->
-            <!-- 2. GOAL FORM CARD                          -->
-            <!-- ========================================== -->
-            <Border Style="{StaticResource ModernCard}" Padding="18">
+            <Border Style="{StaticResource FintechCard}" Padding="18">
                 <VerticalStackLayout Spacing="14">
 
-                    <!-- Goal Name -->
                     <VerticalStackLayout Spacing="4">
                         <Label Text="Tên mục tiêu tích lũy (*)"
                                FontAttributes="Bold"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="10,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Text="{Binding Name}"
                                    Placeholder="Ví dụ: Quỹ Khẩn Cấp 6 Tháng, Mua Laptop Pro..."
-                                   FontSize="13" />
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Goal Type Picker -->
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Phân loại mục tiêu / Hũ tài chính (*)"
+                        <Label Text="Phân loại mục tiêu tài chính (*)"
                                FontAttributes="Bold"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="8,0"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Picker ItemsSource="{Binding AvailableTypeOptions}"
                                     SelectedItem="{Binding SelectedTypeOption}"
                                     ItemDisplayBinding="{Binding DisplayName}"
                                     Title="-- Chọn loại mục tiêu --"
-                                    FontSize="13" />
+                                    FontSize="13"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Target Amount -->
                     <VerticalStackLayout Spacing="4">
                         <Label Text="Số tiền mục tiêu (VND) (*)"
                                FontAttributes="Bold"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="10,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Text="{Binding TargetAmount}"
                                    Keyboard="Numeric"
                                    Placeholder="Ví dụ: 30000000"
                                    FontAttributes="Bold"
-                                   FontSize="14" />
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Initial Amount -->
                     <VerticalStackLayout Spacing="4">
                         <Label Text="Số tiền ban đầu đã có sẵn trong quỹ (VND)"
                                FontAttributes="Bold"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="10,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Entry Text="{Binding InitialAmount}"
                                    Keyboard="Numeric"
                                    Placeholder="0 nếu bắt đầu từ đầu"
-                                   FontSize="13" />
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Priority Picker -->
                     <VerticalStackLayout Spacing="4">
                         <Label Text="Mức độ ưu tiên"
                                FontAttributes="Bold"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="8,0"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Picker ItemsSource="{Binding AvailablePriorityOptions}"
                                     SelectedItem="{Binding SelectedPriorityOption}"
                                     ItemDisplayBinding="{Binding DisplayName}"
                                     Title="-- Chọn mức ưu tiên --"
-                                    FontSize="13" />
+                                    FontSize="13"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Date Range: Start and Target Deadlines -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                         <VerticalStackLayout Grid.Column="0" Spacing="4">
                             <Label Text="Ngày bắt đầu:"
                                    FontAttributes="Bold"
                                    FontSize="12"
-                                   TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                     StrokeThickness="1"
                                     StrokeShape="RoundRectangle 8"
                                     Padding="10,2"
-                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                                 <DatePicker Date="{Binding StartDate}"
                                             Format="dd/MM/yyyy"
-                                            FontSize="13" />
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                             </Border>
                         </VerticalStackLayout>
 
@@ -209,87 +191,82 @@
                             <Label Text="Hạn chót hoàn thành (*):"
                                    FontAttributes="Bold"
                                    FontSize="12"
-                                   TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                            <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                     StrokeThickness="1"
                                     StrokeShape="RoundRectangle 8"
                                     Padding="10,2"
-                                    BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                                 <DatePicker Date="{Binding TargetDate}"
                                             Format="dd/MM/yyyy"
-                                            FontSize="13" />
+                                            FontSize="13"
+                                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                             </Border>
                         </VerticalStackLayout>
                     </Grid>
 
-                    <!-- Description -->
                     <VerticalStackLayout Spacing="4">
                         <Label Text="Ghi chú / Kế hoạch chi tiết:"
                                FontAttributes="Bold"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="10,6"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}">
                             <Editor Text="{Binding Description}"
-                                    Placeholder="Ghi chú thêm về mục đích hoặc kỷ luật tiết kiệm..."
+                                    Placeholder="Ghi chú thêm về mục đích hoặc kế hoạch tích lũy..."
                                     HeightRequest="75"
                                     AutoSize="Disabled"
-                                    FontSize="13" />
+                                    FontSize="13"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- PROJECTION INFO CARD -->
-                    <Border BackgroundColor="{AppThemeBinding Light='#EFF6FF', Dark='#172554'}"
-                            Stroke="{AppThemeBinding Light='#BFDBFE', Dark='#1E3A8A'}"
-                            Padding="16"
-                            StrokeShape="RoundRectangle 12">
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource PrimarySoftLight}, Dark={StaticResource Neutral800}}"
+                            Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral700}}"
+                            Padding="14"
+                            StrokeShape="RoundRectangle 10">
                         <VerticalStackLayout Spacing="6">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
-                                       Text="📊 TÍNH TOÁN DỰ KIẾN MỖI THÁNG"
+                                       Text="TÍNH TOÁN DỰ KIẾN MỖI THÁNG"
                                        FontSize="11"
                                        FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light='#1E40AF', Dark='#93C5FD'}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" />
                                 <Label Grid.Column="1"
                                        Text="Kỷ luật ngân sách"
                                        FontSize="11"
-                                       TextColor="{AppThemeBinding Light='#3B82F6', Dark='#60A5FA'}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                             </Grid>
 
                             <Label Text="Để đạt được mục tiêu trước thời hạn đã chọn, số tiền bạn cần tiết kiệm đều đặn mỗi tháng là:"
                                    FontSize="12"
-                                   TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
 
                             <Label Text="{Binding FormattedCalculatedMonthly}"
-                                   FontSize="22"
+                                   FontSize="20"
                                    FontAttributes="Bold"
-                                   TextColor="#2563EB" />
+                                   TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" />
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- ACTION BUTTONS -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
                         <Button Grid.Column="0"
                                 Text="Hủy bỏ"
-                                BackgroundColor="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                                TextColor="{AppThemeBinding Light='#475569', Dark='#F1F5F9'}"
-                                FontAttributes="Bold"
-                                FontSize="13"
-                                CornerRadius="10"
-                                HeightRequest="46"
+                                Style="{StaticResource FintechButtonSecondary}"
+                                HeightRequest="44"
                                 Command="{Binding CancelCommand}" />
 
                         <Button Grid.Column="1"
                                 Text="Tạo Mục Tiêu"
-                                BackgroundColor="#10B981"
+                                BackgroundColor="{StaticResource Emerald500}"
                                 TextColor="White"
                                 FontAttributes="Bold"
                                 FontSize="13"
                                 CornerRadius="10"
-                                HeightRequest="46"
+                                HeightRequest="44"
                                 Command="{Binding SaveGoalCommand}" />
                     </Grid>
 

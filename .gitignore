@@ -59,3 +59,35 @@ appsettings*.Secrets.json
 *.bak*
 *.bak_*
 mobile-project/screen_*.png
+
+# Academic & Thesis Documentation Artifacts
+files/*.docx
+files/*.docx*
+files/*.bak*
+files/*.txt
+files/*.pdf
+files/*.py
+files/KhoaLuanTotNghiep_images/
+files/old/
+files/NhatKy_HoiDap_ThietLap_UseCase.md
+files/ProjectAnalyze.md
+
+# Large Archives & Run Logs
+mobile-project/demo.rar
+infra.log
+
+# Legacy Course Materials & Reports
+docs/
+mobile-project/dotnet-maui-ver/BaoCao.pdf
+
+# AI Multi-Agent Council & Thesis Generation Harness
+.agents/
+core/
+core_engine/
+project_context/
+sessions/
+templates/
+tests/
+run_council_session.py
+AGENTS.md
+GEMINI.md

@@ -8,24 +8,23 @@
              x:DataType="vm:ActionInboxViewModel">
 
     <VerticalStackLayout Spacing="8">
-        <!-- Simulation Test Bar (Demo & Thử Nghiệm Biến Động Số Dư KLTN) -->
-        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+        <Border Stroke="{AppThemeBinding Light={StaticResource Neutral200}, Dark={StaticResource Neutral800}}"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
-                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource CardBgDark}}"
                 Padding="10,8">
             <VerticalStackLayout Spacing="6">
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
-                           Text="Giả Lập Biến Động Số Dư (Demo 1-Chạm)"
+                           Text="Thử nghiệm giao dịch nhanh"
                            FontAttributes="Bold"
                            FontSize="11"
-                           TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                            VerticalOptions="Center" />
                     <Label Grid.Column="1"
-                           Text="5 Ngân Hàng"
+                           Text="5 Ngân hàng"
                            FontSize="10"
-                           TextColor="{AppThemeBinding Light=#6366F1, Dark=#818CF8}"
+                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                            VerticalOptions="Center" />
                 </Grid>
 
@@ -90,44 +89,39 @@
             </VerticalStackLayout>
         </Border>
 
-        <!-- Container auto-collapses when there are no pending autonomous actions -->
         <VerticalStackLayout Spacing="8"
                              IsVisible="{Binding HasPendingActions}">
-
-            <!-- Section Header -->
             <Grid ColumnDefinitions="*,Auto" Padding="2,0">
                 <Label Grid.Column="0"
-                       Text="{Binding ActionCount, StringFormat='Việc Cần Xử Lý ({0})'}"
+                       Text="{Binding ActionCount, StringFormat='Giao dịch cần xác nhận ({0})'}"
                        FontAttributes="Bold"
                        FontSize="14"
-                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                        VerticalOptions="Center" />
 
                 <Button Grid.Column="1"
-                        Text="Làm Mới"
+                        Text="Làm mới"
                         FontSize="11"
                         FontAttributes="Bold"
                         HeightRequest="30"
                         Padding="12,0"
                         CornerRadius="15"
-                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
-                        TextColor="{AppThemeBinding Light=#4F46E5, Dark=#A5B4FC}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource PrimarySoftLight}, Dark={StaticResource Neutral800}}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"
                         Command="{Binding LoadInboxCommand}" />
             </Grid>
 
-            <!-- Feedback message after quick commit -->
-            <Border Stroke="#10B981"
+            <Border Stroke="{StaticResource Emerald500}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 6"
-                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Emerald100}, Dark={StaticResource Neutral900}}"
                     Padding="10,6"
                     IsVisible="{Binding ActionStatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                 <Label Text="{Binding ActionStatusMessage}"
                        FontSize="12"
-                       TextColor="{AppThemeBinding Light=#065F46, Dark=#A7F3D0}" />
+                       TextColor="{AppThemeBinding Light={StaticResource Emerald700}, Dark={StaticResource Emerald500}}" />
             </Border>
 
-            <!-- List of Pending Smart Action Cards -->
             <VerticalStackLayout Spacing="8"
                                  BindableLayout.ItemsSource="{Binding PendingActions}">
                 <BindableLayout.ItemTemplate>

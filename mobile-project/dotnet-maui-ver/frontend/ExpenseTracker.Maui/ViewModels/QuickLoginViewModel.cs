@@ -55,9 +55,9 @@ public partial class QuickLoginViewModel : BaseViewModel
         var hour = DateTime.Now.Hour;
         GreetingText = hour switch
         {
-            >= 5 and < 12 => "Chào buổi sáng ☀️",
-            >= 12 and < 18 => "Chào buổi chiều 🌤️",
-            _ => "Chào buổi tối 🌙"
+            >= 5 and < 12 => "Chào buổi sáng",
+            >= 12 and < 18 => "Chào buổi chiều",
+            _ => "Chào buổi tối"
         };
     }
 

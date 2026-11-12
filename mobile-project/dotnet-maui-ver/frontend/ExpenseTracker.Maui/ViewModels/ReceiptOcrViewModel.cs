@@ -303,11 +303,11 @@ public partial class ReceiptOcrViewModel : BaseViewModel
 
         if (IsMathDiscrepancy)
         {
-            StatusMessage = $"⚠️ Cảnh báo kiểm toán số học: Phát hiện chênh lệch {DiscrepancyAmount:N0} đ. Bạn có thể chỉnh sửa lại từng món hàng bên dưới (UC-03.08 A1).";
+            StatusMessage = $"Cảnh báo kiểm toán số học: Phát hiện chênh lệch {DiscrepancyAmount:N0} đ. Bạn có thể chỉnh sửa lại từng món hàng bên dưới (UC-03.08 A1).";
         }
         else
         {
-            StatusMessage = $"✅ Kiểm toán số học hoàn hảo (Δ ≤ 1,000 đ). Độ tin cậy AI: {ConfidenceScore * 100:N0}%.";
+            StatusMessage = $"Kiểm toán số học hoàn hảo (Δ ≤ 1,000 đ). Độ tin cậy AI: {ConfidenceScore * 100:N0}%.";
         }
     }
 
@@ -322,12 +322,12 @@ public partial class ReceiptOcrViewModel : BaseViewModel
         if (IsMathDiscrepancy)
         {
             AuditWarningMessage = $"Phát hiện sai lệch số học: Tổng hóa đơn ({TotalAmount:N0} đ) lệch {DiscrepancyAmount:N0} đ so với tổng các món tính toán ({CalculatedTotal:N0} đ).";
-            StatusMessage = $"⚠️ Cảnh báo chênh lệch số học: {DiscrepancyAmount:N0} đ. Vui lòng đối soát lại các dòng sản phẩm.";
+            StatusMessage = $"Cảnh báo chênh lệch số học: {DiscrepancyAmount:N0} đ. Vui lòng đối soát lại các dòng sản phẩm.";
         }
         else
         {
             AuditWarningMessage = null;
-            StatusMessage = "✅ Kiểm toán số học hoàn hảo: Dữ liệu đã khớp 100% (Δ ≤ 1.000 đ)!";
+            StatusMessage = "Kiểm toán số học hoàn hảo: Dữ liệu đã khớp 100%.";
         }
     }
 
@@ -399,7 +399,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
             }
 
             HasParsedData = true;
-            StatusMessage = $"🎤 Bóc tách giọng nói thành công: {result.Amount:N0} đ | Ví: {result.SuggestedWalletName ?? "Chưa rõ"} | Danh mục: {result.SuggestedCategoryName ?? "Chưa rõ"}";
+            StatusMessage = $"Bóc tách giọng nói thành công: {result.Amount:N0} đ | Ví: {result.SuggestedWalletName ?? "Chưa rõ"} | Danh mục: {result.SuggestedCategoryName ?? "Chưa rõ"}";
         }
         catch (Exception ex)
         {
@@ -460,7 +460,7 @@ public partial class ReceiptOcrViewModel : BaseViewModel
 
             var createdTransaction = await _receiptRepo.ConfirmReceiptAsync(request);
 
-            StatusMessage = $"🎉 Hóa đơn {MerchantName} ({createdTransaction.Amount:N0} đ) đã được ghi nhận vào sổ cái thành công!";
+            StatusMessage = $"Hóa đơn {MerchantName} ({createdTransaction.Amount:N0} đ) đã được ghi nhận vào sổ cái thành công!";
             
             // Clear current parsed data to allow new upload
             HasParsedData = false;

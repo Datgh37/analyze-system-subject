@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.SmartUtilities"
+             x:Class="ExpenseTracker.Maui.Views.SubscriptionsPage"
+             x:DataType="vm:SubscriptionsViewModel"
+             Title="{Binding Title}"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,14,16,100" Spacing="16" MaximumWidthRequest="640">
+
+            <Border Style="{StaticResource FintechHeroCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Image Source="ic_subscription.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                            <Label Text="CHI PHÍ ĐỊNH KỲ"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#A5B4FC"
+                                   CharacterSpacing="1.2"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#3730A3"
+                                Padding="8,4"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent">
+                            <Label Text="CHỐNG BẪY GIA HẠN"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="#E0E7FF" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Quản Lý Thuê Bao &amp; Dịch Vụ"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF" />
+
+                    <Label Text="Theo dõi các khoản tiền tự động trừ định kỳ hàng tháng, cảnh báo gói dùng thử miễn phí sắp hết hạn và ngăn chặn rò rỉ ngân sách âm thầm."
+                           FontSize="12"
+                           TextColor="#C7D2FE"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                    Stroke="#A7F3D0"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="14,10"
+                    IsVisible="{Binding FeedbackMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                <HorizontalStackLayout Spacing="10">
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
+                    <Label Text="{Binding FeedbackMessage}"
+                           TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}"
+                           FontAttributes="Bold"
+                           FontSize="13"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}"
+                    Padding="14"
+                    IsVisible="{Binding IsBusy}">
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="{StaticResource PrimaryLight}" WidthRequest="20" HeightRequest="20" />
+                    <Label Text="Đang cập nhật danh mục thuê bao..."
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryLight}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border Stroke="#F43F5E"
+                    StrokeThickness="1"
+                    Style="{StaticResource FintechCard}"
+                    Padding="18">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Tổng Chi Phí Rò Rỉ Mỗi Năm" Style="{StaticResource FintechLabelCaption}" FontAttributes="Bold" />
+                        <Border Grid.Column="1"
+                                BackgroundColor="#FFE4E6"
+                                Padding="8,3"
+                                StrokeShape="RoundRectangle 6"
+                                Stroke="Transparent">
+                            <Label Text="{Binding AuditReport.ActiveSubscriptionsCount, StringFormat='{0} dịch vụ'}"
+                                   FontSize="11" FontAttributes="Bold" TextColor="#BE123C" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="{Binding AuditReport.TotalAnnualDrain, StringFormat='-{0:N0} đ / năm'}"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="#F43F5E" />
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}" Margin="0,2" />
+
+                    <Grid ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Trung bình mỗi tháng:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding AuditReport.TotalMonthlyDrain, StringFormat='-{0:N0} đ'}"
+                                   FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Cảnh báo dùng thử:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding AuditReport.FreeTrialAlertsCount, StringFormat='{0} gói sắp trừ tiền'}"
+                                   FontSize="14" FontAttributes="Bold" TextColor="#D97706" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Danh Sách Dịch Vụ Đang Quản Lý"
+                   Style="{StaticResource FintechLabelSubtitle}" />
+
+            <CollectionView ItemsSource="{Binding Subscriptions}">
+                <CollectionView.EmptyView>
+                    <Border Style="{StaticResource FintechCard}" Padding="20">
+                        <Label Text="Chưa có gói thuê bao nào được ghi nhận."
+                               HorizontalOptions="Center"
+                               Style="{StaticResource FintechLabelCaption}" />
+                    </Border>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SubscriptionModel">
+                        <Border Style="{StaticResource FintechCard}" Padding="14" Margin="0,4">
+                            <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                <Border Grid.Column="0"
+                                        WidthRequest="40" HeightRequest="40"
+                                        StrokeShape="RoundRectangle 10"
+                                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                        Stroke="Transparent"
+                                        VerticalOptions="Center">
+                                    <Image Source="ic_subscription.svg" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           Style="{StaticResource FintechLabelBody}"
+                                           FontAttributes="Bold" />
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Text="{Binding BillingCycleName}"
+                                               FontSize="11" TextColor="{StaticResource PrimaryLight}" FontAttributes="Bold" />
+                                        <Label Text="•" FontSize="11" TextColor="#94A3B8" />
+                                        <Label Text="{Binding NextBillingDate, StringFormat='Gia hạn: {0:dd/MM/yyyy}'}"
+                                               Style="{StaticResource FintechLabelCaption}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="{Binding Amount, StringFormat='-{0:N0} đ'}"
+                                           FontSize="14" FontAttributes="Bold" TextColor="#F43F5E" HorizontalOptions="End" />
+                                    <Button Text="Hủy theo dõi"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SubscriptionsViewModel}}, Path=ArchiveSubscriptionCommand}"
+                                            CommandParameter="{Binding Id}"
+                                            TextColor="#EF4444"
+                                            BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
+                                            FontSize="10"
+                                            FontAttributes="Bold"
+                                            HeightRequest="28"
+                                            CornerRadius="6"
+                                            Padding="8,0" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <VerticalStackLayout Spacing="10" IsVisible="{Binding UpcomingRenewals.Count, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                <Label Text="Sắp Đến Hạn Gia Hạn Trong 7 Ngày Tới"
+                       Style="{StaticResource FintechLabelSubtitle}" />
+
+                <CollectionView ItemsSource="{Binding UpcomingRenewals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:UpcomingRenewalModel">
+                            <Border Stroke="#F59E0B"
+                                    StrokeThickness="1"
+                                    Style="{StaticResource FintechCard}"
+                                    Padding="14" Margin="0,3">
+                                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                            <Label Text="{Binding Name}"
+                                                   Style="{StaticResource FintechLabelBody}"
+                                                   FontAttributes="Bold" />
+                                            <Border IsVisible="{Binding IsFreeTrialEnding}"
+                                                    BackgroundColor="#FEF3C7"
+                                                    Padding="6,2"
+                                                    StrokeShape="RoundRectangle 4"
+                                                    Stroke="Transparent">
+                                                <Label Text="Hết dùng thử" FontSize="9" FontAttributes="Bold" TextColor="#B45309" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding DaysLeft, StringFormat='Còn {0} ngày nữa sẽ trừ tiền'}"
+                                               FontSize="11" TextColor="#D97706" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Amount, StringFormat='-{0:N0} đ'}"
+                                           FontSize="14" FontAttributes="Bold" TextColor="#F43F5E" VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

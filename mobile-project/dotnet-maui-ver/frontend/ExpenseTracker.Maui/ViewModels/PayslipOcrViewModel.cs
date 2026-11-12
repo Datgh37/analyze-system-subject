@@ -199,11 +199,11 @@ public partial class PayslipOcrViewModel : BaseViewModel
 
             if (HasDiscrepancy)
             {
-                ErrorMessage = $"⚠️ Cảnh báo sai lệch số học: Chênh lệch {DiscrepancyAmount:N0} VND giữa Net và công thức khấu trừ. Vui lòng kiểm tra lại.";
+                ErrorMessage = $"Cảnh báo sai lệch số học: Chênh lệch {DiscrepancyAmount:N0} VND giữa Net và công thức khấu trừ. Vui lòng kiểm tra lại.";
             }
             else
             {
-                StatusMessage = "✅ Đã bóc tách thành công và xác thực toàn vẹn công thức tiền lương (Δ <= 1,000 VND).";
+                StatusMessage = "Đã bóc tách thành công và xác thực toàn vẹn công thức tiền lương (Δ <= 1,000 VND).";
             }
         }
         catch (Exception ex)
@@ -264,7 +264,7 @@ public partial class PayslipOcrViewModel : BaseViewModel
 
             await _payslipRepo.ConfirmPayslipAsync(request);
 
-            StatusMessage = $"🎉 Ghi nhận thành công thu nhập lương {NetSalary:N0} VND vào ví {SelectedWallet.Name}!";
+            StatusMessage = $"Ghi nhận thành công thu nhập lương {NetSalary:N0} VND vào ví {SelectedWallet.Name}!";
             HasParsedData = false;
             SelectedFileName = null;
         }

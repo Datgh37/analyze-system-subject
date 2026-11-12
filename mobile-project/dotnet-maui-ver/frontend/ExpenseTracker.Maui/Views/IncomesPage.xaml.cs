@@ -15,6 +15,11 @@ public partial class IncomesPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _viewModel.LoadIncomesCommand.ExecuteAsync(null);
+        await _viewModel.LoadIncomesAsync();
+    }
+
+    private async void OnQuickScanPayslipClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("PayslipOcrPage");
     }
 }

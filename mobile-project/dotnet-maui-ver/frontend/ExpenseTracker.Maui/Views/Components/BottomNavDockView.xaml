@@ -28,7 +28,7 @@
                         <TapGestureRecognizer Tapped="OnWalletsTapped" />
                     </Grid.GestureRecognizers>
                     <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Source="ic_wallet.png" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Image Source="ic_wallet.svg" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
                         <Label Text="Ví" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
                                TextColor="{Binding Source={x:Reference ThisNavDock}, Path=WalletsTabColor}" />
                     </VerticalStackLayout>
@@ -40,7 +40,7 @@
                         <TapGestureRecognizer Tapped="OnExpensesTapped" />
                     </Grid.GestureRecognizers>
                     <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Source="ic_expense.png" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Image Source="ic_expense.svg" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
                         <Label Text="Chi Tiêu" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
                                TextColor="{Binding Source={x:Reference ThisNavDock}, Path=ExpensesTabColor}" />
                     </VerticalStackLayout>
@@ -48,13 +48,13 @@
 
                 <!-- Column 2 left empty for center floating FAB overlay -->
 
-                <!-- 4. TAB NGÂN SÁCH & DSA -->
+                <!-- TAB NGÂN SÁCH -->
                 <Grid Grid.Column="3" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="60">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnBudgetsTapped" />
                     </Grid.GestureRecognizers>
                     <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Source="ic_budget.png" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Image Source="ic_budget.svg" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
                         <Label Text="Ngân Sách" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
                                TextColor="{Binding Source={x:Reference ThisNavDock}, Path=BudgetsTabColor}" />
                     </VerticalStackLayout>
@@ -66,7 +66,7 @@
                         <TapGestureRecognizer Tapped="OnReportsTapped" />
                     </Grid.GestureRecognizers>
                     <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Source="ic_reports.png" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Image Source="ic_reports.svg" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
                         <Label Text="Báo Cáo" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center"
                                TextColor="{Binding Source={x:Reference ThisNavDock}, Path=ReportsTabColor}" />
                     </VerticalStackLayout>
@@ -102,7 +102,7 @@
                     <TapGestureRecognizer Tapped="OnVoiceMicTapped" />
                 </Border.GestureRecognizers>
 
-                <Image Source="ic_mic.png" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Image Source="ic_mic.svg" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center" />
             </Border>
         </Border>
 

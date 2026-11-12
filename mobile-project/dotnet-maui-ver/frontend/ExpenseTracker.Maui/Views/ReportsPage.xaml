@@ -7,7 +7,8 @@
              x:Class="ExpenseTracker.Maui.Views.ReportsPage"
              x:DataType="vm:ReportsViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
     <Grid RowDefinitions="*, Auto">
         <ScrollView Grid.Row="0">
@@ -50,13 +51,12 @@
                                 <TapGestureRecognizer Command="{Binding TakeSnapshotCommand}" />
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8" HorizontalOptions="Center" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="ic_camera.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Image Grid.Column="0" Source="ic_camera.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
                                 <Label Grid.Column="1" Text="Chụp Tài Sản" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Button Làm Mới -->
-                        <Border Grid.Column="1"
+                                                <Border Grid.Column="1"
                                 StrokeShape="RoundRectangle 10"
                                 StrokeThickness="0"
                                 BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
@@ -67,7 +67,7 @@
                                 <TapGestureRecognizer Command="{Binding LoadReportsCommand}" />
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8" HorizontalOptions="Center" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Image Grid.Column="0" Source="ic_refresh.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
                                 <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
                             </Grid>
                         </Border>

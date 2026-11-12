@@ -240,9 +240,9 @@ public partial class NotificationHistoryViewModel : BaseViewModel
             IsBusy = true;
             var (title, msg, route) = type switch
             {
-                "budget" => ("⚠️ Cảnh báo ngân sách", "Bạn đã tiêu 90% hạn mức danh mục Ăn uống!", "///BudgetsPage"),
-                "balance" => ("💰 Biến động số dư", "Ví Tiền mặt vừa nhận +2.000.000 VND tiền thưởng.", "///WalletsPage"),
-                _ => ("🧾 AI OCR Thành công", "Hóa đơn Co.opmart đã được bóc tách xong.", "///ExpensesPage")
+                "budget" => ("Cảnh báo ngân sách", "Bạn đã tiêu 90% hạn mức danh mục Ăn uống!", "///BudgetsPage"),
+                "balance" => ("Biến động số dư", "Ví Tiền mặt vừa nhận +2.000.000 VND tiền thưởng.", "///WalletsPage"),
+                _ => ("Nhận diện hóa đơn thành công", "Hóa đơn Co.opmart đã được bóc tách xong.", "///ExpensesPage")
             };
 
             var result = await _notificationRepository.SendTestNotificationAsync(title, msg, type == "budget" ? "BudgetAlert" : (type == "balance" ? "BalanceUpdate" : "AiReceiptProcessed"), route);
@@ -284,9 +284,9 @@ public partial class NotificationHistoryViewModel : BaseViewModel
         {
             var (title, msg, channelId, route) = channelType switch
             {
-                "dsa" => ("🚨 Cảnh Báo Hạn Mức DSA", "Cảnh báo khẩn cấp: Bạn đã chi tiêu 92% hạn mức ngân sách tháng!", NotificationChannelIds.DsaAlerts, "///BudgetsPage"),
-                "balance" => ("💳 Biến Động Số Dư Ví", "Tài khoản ACB vừa phát sinh giao dịch chi tiêu -120.000 VND.", NotificationChannelIds.BalanceFluctuation, "///WalletsPage"),
-                _ => ("⏰ Nhắc Nhở Báo Thức 21:00", "Đã 21:00 rồi! Đừng quên kiểm tra số dư và ghi chép chi tiêu hôm nay 💎", NotificationChannelIds.DailyReminder, "///ExpensesPage")
+                "dsa" => ("Cảnh Báo Hạn Mức", "Cảnh báo khẩn cấp: Bạn đã chi tiêu 92% hạn mức ngân sách tháng!", NotificationChannelIds.DsaAlerts, "///BudgetsPage"),
+                "balance" => ("Biến Động Số Dư", "Tài khoản ACB vừa phát sinh giao dịch chi tiêu -120.000 VND.", NotificationChannelIds.BalanceFluctuation, "///WalletsPage"),
+                _ => ("Nhắc Nhở Ghi Chép 21:00", "Đã 21:00 rồi! Đừng quên kiểm tra số dư và ghi chép chi tiêu hôm nay.", NotificationChannelIds.DailyReminder, "///ExpensesPage")
             };
 
             await _nativeNotificationService.ShowNotificationAsync(title, msg, channelId, 0, route);

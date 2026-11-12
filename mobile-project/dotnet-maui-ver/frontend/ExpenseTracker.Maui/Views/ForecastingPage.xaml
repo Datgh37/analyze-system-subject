@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
@@ -6,563 +6,240 @@
              x:Class="ExpenseTracker.Maui.Views.ForecastingPage"
              x:DataType="vm:ForecastingViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20,16,20,36" Spacing="18" MaximumWidthRequest="640">
+        <VerticalStackLayout Padding="16,14,16,36" Spacing="16" MaximumWidthRequest="640">
 
-            <!-- 1. HEADER & ACTION BAR -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="18">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
+            <Border Style="{StaticResource FintechHeroCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Image Source="ic_forecast.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                            <Label Text="RADAR RỦI RO"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#A5B4FC"
+                                   CharacterSpacing="1.2"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#3730A3"
+                                Padding="8,4"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent">
+                            <Label Text="DỰ BÁO DÒNG TIỀN"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="#E0E7FF" />
+                        </Border>
+                    </Grid>
 
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
-                    <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
-                        <Label Text="Dự Báo &amp; Radar Rủi Ro Thâm Hụt"
-                               FontSize="18"
+                    <Label Text="Dự Báo &amp; Thử Nghiệm Chi Tiêu"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF" />
+
+                    <Label Text="Phân tích tốc độ tiêu tiền, dự báo nguy cơ thâm hụt trước ngày nhận lương và thử nghiệm các quyết định mua sắm lớn trước khi thực hiện."
+                           FontSize="12"
+                           TextColor="#C7D2FE"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Label Grid.Column="0"
+                       Text="{Binding StatusMessage, FallbackValue='Dữ liệu phân tích đã sẵn sàng'}"
+                       Style="{StaticResource FintechLabelCaption}"
+                       VerticalOptions="Center"
+                       LineBreakMode="TailTruncation" />
+
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 12"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                        HeightRequest="42"
+                        Padding="14,0"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadForecastDataCommand}" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Image Source="ic_refresh.svg" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                        <Label Text="Làm Mới"
+                               Style="{StaticResource FintechLabelCaption}"
                                FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                        <Label Text="{Binding StatusMessage, FallbackValue='Mô hình chuỗi thời gian, thanh khoản kỳ lương &amp; Sandbox What-If'}"
-                               FontSize="11"
-                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                               LineBreakMode="TailTruncation" />
-                    </VerticalStackLayout>
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
 
-                    <Border Grid.Column="1"
-                            StrokeShape="RoundRectangle 10"
-                            StrokeThickness="0"
-                            BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0369A1}"
-                            HeightRequest="36"
-                            Padding="12,0"
-                            VerticalOptions="Center">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding LoadForecastDataCommand}" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                            <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Border>
-
-            <!-- 2. ERROR NOTIFICATION -->
-            <Border Stroke="#FCA5A5"
-                    StrokeThickness="1"
+            <Border BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                    Stroke="#FECACA"
                     StrokeShape="RoundRectangle 12"
-                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                    Padding="14"
+                    Padding="14,10"
                     IsVisible="{Binding HasError}">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <HorizontalStackLayout Spacing="10">
                     <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
-                    <Label Grid.Column="1" Text="{Binding ErrorMessage}"
-                           TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
-                           FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                </Grid>
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#B91C1C"
+                           FontAttributes="Bold"
+                           FontSize="13"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
             </Border>
 
-            <!-- 3. LOADING INDICATOR -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
-                               HorizontalOptions="Center" />
+            <Border Style="{StaticResource FintechCard}"
+                    Padding="14"
+                    IsVisible="{Binding IsBusy}">
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="{StaticResource PrimaryLight}" WidthRequest="20" HeightRequest="20" />
+                    <Label Text="Đang phân tích dữ liệu dự báo..."
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryLight}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
 
-            <!-- 4. SECTION 1: EXPENDITURE TRAJECTORY & FORECAST (UC-08.01) -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="20">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="14">
+            <Border Style="{StaticResource FintechCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="1. Dự Báo Tổng Chi Cuối Kỳ"
-                               FontSize="16" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
+                        <Label Grid.Column="0" Text="1. Dự Báo Tổng Chi Cuối Kỳ" Style="{StaticResource FintechLabelSubtitle}" />
                         <Border Grid.Column="1"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8"
-                                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#991B1B}"
+                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
                                 Padding="8,3"
-                                IsVisible="{Binding Forecast.ProjectedOverspendAmount, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                                StrokeShape="RoundRectangle 6"
+                                Stroke="Transparent">
                             <Label Text="{Binding Forecast.RiskLevel, StringFormat='Rủi ro: {0}'}"
-                                   FontSize="11" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#DC2626, Dark=#FECACA}" />
+                                   FontSize="11" FontAttributes="Bold" TextColor="{StaticResource PrimaryLight}" />
                         </Border>
                     </Grid>
 
-                    <!-- KPI Forecast Summary -->
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <Border Grid.Column="0"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Hạn Mức" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                <Label Text="{Binding Forecast.TotalBudget, StringFormat='{0:N0} đ'}"
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            </VerticalStackLayout>
-                        </Border>
+                    <Label Text="{Binding Forecast.EstimatedTotalSpent, StringFormat='{0:N0} đ'}"
+                           FontSize="28" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
 
-                        <Border Grid.Column="1"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Thực Chi" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                <Label Text="{Binding Forecast.CurrentSpent, StringFormat='{0:N0} đ'}"
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <Border Grid.Column="2"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Dự Phóng" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                <Label Text="{Binding Forecast.EstimatedTotalSpent, StringFormat='{0:N0} đ'}"
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#E11D48, Dark=#FB7185}" />
-                            </VerticalStackLayout>
-                        </Border>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Tốc độ ngày thường:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding Forecast.WeekdayDailyVelocity, StringFormat='{0:N0} đ'}"
+                                   FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Nguy cơ thâm hụt:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding Forecast.ProjectedOverspendAmount, StringFormat='{0:N0} đ'}"
+                                   FontSize="13" FontAttributes="Bold" TextColor="#EF4444" />
+                        </VerticalStackLayout>
                     </Grid>
 
-                    <!-- Weekday vs Weekend Velocity -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <Border Grid.Column="0"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                                <Label Text="💼" FontSize="18" VerticalOptions="Center" />
-                                <VerticalStackLayout Spacing="1">
-                                    <Label Text="Tốc độ Ngày thường" FontSize="10" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                    <Label Text="{Binding Forecast.WeekdayDailyVelocity, StringFormat='{0:N0} đ/ngày'}"
-                                           FontSize="13" FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-                        </Border>
-
-                        <Border Grid.Column="1"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                                <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#D97706" VerticalOptions="Center" />
-                                <VerticalStackLayout Spacing="1">
-                                    <Label Text="Tốc độ Cuối tuần" FontSize="10" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                    <Label Text="{Binding Forecast.WeekendDailyVelocity, StringFormat='{0:N0} đ/ngày'}"
-                                           FontSize="13" FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light=#D97706, Dark=#FBBF24}" />
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-                        </Border>
-                    </Grid>
-
-                    <!-- Advisory Alert -->
-                    <Border Stroke="{AppThemeBinding Light=#BFDBFE, Dark=#1E3A8A}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 12"
-                            BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#172554}"
-                            Padding="14,10">
-                        <Label Text="{Binding Forecast.AdvisoryMessage}"
-                               FontSize="12" LineBreakMode="WordWrap"
-                               TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#BFDBFE}" />
-                    </Border>
+                    <Label Text="{Binding Forecast.AdvisoryMessage}"
+                           Style="{StaticResource FintechLabelCaption}"
+                           FontAttributes="Italic" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- 5. SECTION 2: LIQUIDITY DEPLETION & SALARY GAP RADAR (UC-08.02) -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="20">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="14">
+            <Border Style="{StaticResource FintechCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="2. Radar Cạn Tiền vs Kỳ Lương"
-                               FontSize="16" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
+                        <Label Grid.Column="0" Text="2. Khảo Sát Thử Nghiệm Mua Sắm" Style="{StaticResource FintechLabelSubtitle}" />
                         <Border Grid.Column="1"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8"
-                                BackgroundColor="{AppThemeBinding Light=#DC2626, Dark=#991B1B}"
+                                BackgroundColor="#DCFCE7"
                                 Padding="8,3"
-                                IsVisible="{Binding Liquidity.IsLiquidityCrisis}">
-                            <Label Text="CẢNH BÁO NGUY CƠ"
-                                   FontSize="11" FontAttributes="Bold"
-                                   TextColor="#FFFFFF" />
+                                StrokeShape="RoundRectangle 6"
+                                Stroke="Transparent">
+                            <Label Text="Thử nghiệm 0ms" FontSize="10" FontAttributes="Bold" TextColor="#15803D" />
                         </Border>
                     </Grid>
 
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <Border Grid.Column="0"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Tiền Lỏng" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                <Label Text="{Binding Liquidity.TotalLiquidFunds, StringFormat='{0:N0} đ'}"
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#059669, Dark=#10B981}" />
-                            </VerticalStackLayout>
-                        </Border>
+                    <Label Text="Chọn kịch bản bạn muốn thử nghiệm:" Style="{StaticResource FintechLabelCaption}" />
 
-                        <Border Grid.Column="1"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Tốc Độ 7 Ngày" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                <Label Text="{Binding Liquidity.Recent7DaysDailyVelocity, StringFormat='{0:N0} đ'}"
-                                       FontSize="13" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#D97706, Dark=#FBBF24}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <Border Grid.Column="2"
-                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                Padding="12,10">
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="Dự Kiến Cạn" FontSize="11" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                <Label Text="{Binding Liquidity.OutOfMoneyDate, StringFormat='{0:dd/MM/yyyy}'}"
-                                       FontSize="12" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#DC2626, Dark=#F87171}" />
-                            </VerticalStackLayout>
-                        </Border>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="6">
+                        <Button Grid.Column="0" Text="Mua Sắm" Command="{Binding SelectScenarioCommand}" CommandParameter="LumpSum"
+                                Style="{StaticResource FintechButtonSecondary}" FontSize="10" HeightRequest="36" Padding="2,0" />
+                        <Button Grid.Column="1" Text="Trả Góp" Command="{Binding SelectScenarioCommand}" CommandParameter="Installment"
+                                Style="{StaticResource FintechButtonSecondary}" FontSize="10" HeightRequest="36" Padding="2,0" />
+                        <Button Grid.Column="2" Text="Giảm Thu" Command="{Binding SelectScenarioCommand}" CommandParameter="IncomeReduction"
+                                Style="{StaticResource FintechButtonSecondary}" FontSize="10" HeightRequest="36" Padding="2,0" />
+                        <Button Grid.Column="3" Text="Biến Cố" Command="{Binding SelectScenarioCommand}" CommandParameter="EmergencyShock"
+                                Style="{StaticResource FintechButtonSecondary}" FontSize="10" HeightRequest="36" Padding="2,0" />
                     </Grid>
 
-                    <!-- Crisis Counter Card -->
-                    <Border Stroke="#FECACA"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 14"
-                            BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                            Padding="14"
-                            IsVisible="{Binding Liquidity.IsLiquidityCrisis}">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" VerticalOptions="Center">
-                            <BoxView WidthRequest="12" HeightRequest="12" CornerRadius="6" Color="#DC2626" VerticalOptions="Center" />
-                            <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                <Label Text="{Binding Liquidity.DeficitDaysBeforeSalary, StringFormat='CẢNH BÁO: BẠN SẼ HẾT TIỀN TRƯỚC KỲ LƯƠNG {0} NGÀY!'}"
-                                       FontSize="12" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}" />
-                                <Label Text="{Binding Liquidity.AdvisoryMessage}"
-                                       FontSize="11" LineBreakMode="WordWrap"
-                                       TextColor="{AppThemeBinding Light=#991B1B, Dark=#FECACA}" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 6. SECTION 3: CATEGORY DEFICIT RISKS RADAR (UC-08.03) -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="20">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="14">
-                    <Label Text="3. Radar Nguy Cơ Thâm Hụt Danh Mục"
-                           FontSize="16" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
-
-                    <CollectionView ItemsSource="{Binding CategoryRisks}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:CategoryDeficitRiskModel">
-                                <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                        StrokeThickness="1"
-                                        StrokeShape="RoundRectangle 14"
-                                        BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                        Padding="14" Margin="0,0,0,10">
-                                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
-                                        <!-- Category Name & Risk Pill -->
-                                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
-                                                <Label Text="{Binding CategoryName}"
-                                                       FontSize="14" FontAttributes="Bold"
-                                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                                                <Border StrokeThickness="0" StrokeShape="RoundRectangle 6"
-                                                        BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
-                                                        Padding="6,2"
-                                                        IsVisible="{Binding IsEssential}">
-                                                    <Label Text="Thiết Yếu" FontSize="10" FontAttributes="Bold"
-                                                           TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
-                                                </Border>
-                                            </HorizontalStackLayout>
-
-                                            <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#7F1D1D}"
-                                                    Padding="8,3">
-                                                <Label Text="{Binding RiskRatio, StringFormat='Vượt {0:N1}%'}"
-                                                       FontSize="11" FontAttributes="Bold"
-                                                       TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}" />
-                                            </Border>
-                                        </Grid>
-
-                                        <!-- Spending Stats -->
-                                        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="6">
-                                            <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                                <Label Text="Hạn mức" FontSize="10" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                                <Label Text="{Binding AllocatedAmount, StringFormat='{0:N0} đ'}"
-                                                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="11" FontAttributes="Bold" />
-                                            </VerticalStackLayout>
-                                            <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                                <Label Text="Đã chi" FontSize="10" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                                <Label Text="{Binding CurrentSpent, StringFormat='{0:N0} đ'}"
-                                                       TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" FontSize="11" FontAttributes="Bold" />
-                                            </VerticalStackLayout>
-                                            <VerticalStackLayout Grid.Column="2" Spacing="2">
-                                                <Label Text="Dự kiến" FontSize="10" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                                <Label Text="{Binding ProjectedSpentEnd, StringFormat='{0:N0} đ'}"
-                                                       TextColor="{AppThemeBinding Light=#DC2626, Dark=#F87171}" FontSize="11" FontAttributes="Bold" />
-                                            </VerticalStackLayout>
-                                        </Grid>
-
-                                        <!-- Advice & Exhaustion Date -->
-                                        <Border Grid.Row="2" StrokeThickness="0" StrokeShape="RoundRectangle 8"
-                                                BackgroundColor="{AppThemeBinding Light=#FFFBEB, Dark=#451A03}"
-                                                Padding="10,6">
-                                            <Label Text="{Binding Advice}"
-                                                   TextColor="{AppThemeBinding Light=#B45309, Dark=#FCD34D}"
-                                                   FontSize="11" LineBreakMode="WordWrap" />
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- 7. SECTION 4: WHAT-IF SIMULATION SANDBOX (UC-08.04) -->
-            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 20"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                    Padding="20">
-                <Border.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                            Offset="0,4" Radius="12" 
-                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="14">
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="4. Phòng Thí Nghiệm (What-If)"
-                               FontSize="16" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
-                        <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 8"
-                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                Padding="8,3">
-                            <Label Text="In-Memory 0ms"
-                                   FontSize="10" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}" />
-                        </Border>
-                    </Grid>
-
-                    <!-- Scenario Selectors (4 Scenarios) -->
-                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
-                        <Button Grid.Column="0"
-                                Text="Mua Sắm"
-                                Command="{Binding SelectScenarioCommand}"
-                                CommandParameter="LumpSum"
-                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                FontAttributes="Bold"
-                                HeightRequest="36"
-                                CornerRadius="10"
-                                FontSize="10"
-                                Padding="2,0" />
-
-                        <Button Grid.Column="1"
-                                Text="Trả Góp"
-                                Command="{Binding SelectScenarioCommand}"
-                                CommandParameter="Installment"
-                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                FontAttributes="Bold"
-                                HeightRequest="36"
-                                CornerRadius="10"
-                                FontSize="10"
-                                Padding="2,0" />
-
-                        <Button Grid.Column="2"
-                                Text="Giảm Thu"
-                                Command="{Binding SelectScenarioCommand}"
-                                CommandParameter="IncomeReduction"
-                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                FontAttributes="Bold"
-                                HeightRequest="36"
-                                CornerRadius="10"
-                                FontSize="10"
-                                Padding="2,0" />
-
-                        <Button Grid.Column="3"
-                                Text="Biến Cố"
-                                Command="{Binding SelectScenarioCommand}"
-                                CommandParameter="EmergencyShock"
-                                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#7F1D1D}"
-                                TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
-                                FontAttributes="Bold"
-                                HeightRequest="36"
-                                CornerRadius="10"
-                                FontSize="10"
-                                Padding="2,0" />
-                    </Grid>
-
-                    <!-- Scenario Input Parameters -->
-                    <VerticalStackLayout Spacing="8">
+                    <VerticalStackLayout Spacing="6" Margin="0,6,0,0">
                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                            <Label Grid.Column="0" Text="Số tiền / Mức độ giả định:"
-                                   FontSize="12" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                            <Label Grid.Column="0" Text="Số tiền dự kiến chi:" Style="{StaticResource FintechLabelCaption}" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="{Binding LumpSumAmount, StringFormat='{0:N0} đ'}"
-                                   FontSize="14" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
+                                   FontSize="15" FontAttributes="Bold" TextColor="{StaticResource PrimaryLight}" />
                         </Grid>
 
                         <Slider Minimum="1000000" Maximum="20000000" Value="{Binding LumpSumAmount}"
-                                MinimumTrackColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
-                                MaximumTrackColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                ThumbColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
+                                MinimumTrackColor="{StaticResource PrimaryLight}"
+                                MaximumTrackColor="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}"
+                                ThumbColor="{StaticResource PrimaryLight}" />
 
-                        <Button Text="Chạy Mô Phỏng Tác Động"
+                        <Button Text="Chạy Thử Nghiệm Tác Động"
                                 Command="{Binding RunWhatIfSimulationCommand}"
-                                BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0284C7}"
-                                TextColor="#FFFFFF"
-                                FontAttributes="Bold"
-                                CornerRadius="12"
+                                Style="{StaticResource FintechButtonPrimary}"
                                 HeightRequest="44"
-                                FontSize="13"
-                                Margin="0,4,0,0">
-                            <Button.Shadow>
-                                <Shadow Brush="#0284C7" Offset="0,4" Radius="8" Opacity="0.25" />
-                            </Button.Shadow>
-                        </Button>
+                                Margin="0,4,0,0" />
                     </VerticalStackLayout>
 
-                    <!-- Before vs After Comparison Card -->
-                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 16"
-                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#182234}"
-                            Padding="16">
-                        <VerticalStackLayout Spacing="12">
-                            <Label Text="{Binding WhatIfResult.ScenarioDescription, FallbackValue='Kết quả đối chiếu Trước vs Sau'}"
-                                   FontSize="13" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                    <Border Stroke="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}"
+                            StrokeShape="RoundRectangle 14"
+                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                            Padding="14"
+                            Margin="0,6,0,0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding WhatIfResult.ScenarioDescription, FallbackValue='Kết quả đối chiếu Trước vs Sau khi chi'}"
+                                   Style="{StaticResource FintechLabelBody}" FontAttributes="Bold" />
 
                             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
-                                <!-- DSA Comparison -->
-                                <Border Grid.Column="0"
-                                        StrokeShape="RoundRectangle 10" Padding="10"
-                                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                                <Border Grid.Column="0" Padding="8" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F172A}">
                                     <VerticalStackLayout Spacing="2">
-                                        <Label Text="Hạn Mức DSA" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="10" />
-                                        <Label Text="{Binding WhatIfResult.DsaBefore, StringFormat='{0:N0} đ'}"
-                                               TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}" FontSize="11" />
-                                        <Label Text="{Binding WhatIfResult.DsaAfter, StringFormat='➔ {0:N0} đ'}"
-                                               TextColor="{AppThemeBinding Light=#DC2626, Dark=#F87171}" FontSize="12" FontAttributes="Bold" />
+                                        <Label Text="Hạn Mức Ngày" Style="{StaticResource FintechLabelCaption}" FontSize="10" />
+                                        <Label Text="{Binding WhatIfResult.DsaAfter, StringFormat='→ {0:N0} đ'}"
+                                               FontSize="11" FontAttributes="Bold" TextColor="#EF4444" />
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!-- DTI Ratio Comparison -->
-                                <Border Grid.Column="1"
-                                        StrokeShape="RoundRectangle 10" Padding="10"
-                                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                                <Border Grid.Column="1" Padding="8" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F172A}">
                                     <VerticalStackLayout Spacing="2">
-                                        <Label Text="Tỷ Số DTI" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="10" />
-                                        <Label Text="{Binding WhatIfResult.DtiBefore, StringFormat='{0}%'}"
-                                               TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}" FontSize="11" />
-                                        <Label Text="{Binding WhatIfResult.DtiAfter, StringFormat='➔ {0}%'}"
-                                               TextColor="{AppThemeBinding Light=#D97706, Dark=#FBBF24}" FontSize="12" FontAttributes="Bold" />
+                                        <Label Text="Tỷ Lệ Nợ/Thu" Style="{StaticResource FintechLabelCaption}" FontSize="10" />
+                                        <Label Text="{Binding WhatIfResult.DtiAfter, StringFormat='→ {0}%'}"
+                                               FontSize="11" FontAttributes="Bold" TextColor="#F59E0B" />
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!-- Net Worth Comparison -->
-                                <Border Grid.Column="2"
-                                        StrokeShape="RoundRectangle 10" Padding="10"
-                                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                                <Border Grid.Column="2" Padding="8" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F172A}">
                                     <VerticalStackLayout Spacing="2">
-                                        <Label Text="Tài Sản Ròng" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="10" />
-                                        <Label Text="{Binding WhatIfResult.NetWorthBefore, StringFormat='{0:N0} đ'}"
-                                               TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}" FontSize="11" />
-                                        <Label Text="{Binding WhatIfResult.NetWorthAfter, StringFormat='➔ {0:N0} đ'}"
-                                               TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" FontSize="12" FontAttributes="Bold" />
+                                        <Label Text="Tài Sản Ròng" Style="{StaticResource FintechLabelCaption}" FontSize="10" />
+                                        <Label Text="{Binding WhatIfResult.NetWorthAfter, StringFormat='→ {0:N0} đ'}"
+                                               FontSize="11" FontAttributes="Bold" TextColor="{StaticResource PrimaryLight}" />
                                     </VerticalStackLayout>
                                 </Border>
                             </Grid>
 
-                            <!-- Impact Summary Message -->
-                            <Border Stroke="{AppThemeBinding Light=#C7D2FE, Dark=#4338CA}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 10"
-                                    BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
-                                    Padding="12,10">
+                            <Border BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                    Padding="10" StrokeShape="RoundRectangle 8" Stroke="Transparent">
                                 <Label Text="{Binding WhatIfResult.ImpactSummaryMessage}"
-                                       TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}"
-                                       FontSize="11" LineBreakMode="WordWrap" />
+                                       FontSize="11"
+                                       TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark=#A5B4FC}" />
                             </Border>
 
-                            <!-- Alternate Flow A1: Convert to Savings Goal Action -->
-                            <Border Stroke="{AppThemeBinding Light=#A7F3D0, Dark=#065F46}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 12"
-                                    BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                                    Padding="12">
-                                <VerticalStackLayout Spacing="8">
-                                    <Label Text="💡 Cú hích Thaler: Đừng mua bốc đồng, hãy tích lũy!"
-                                           FontSize="11" FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}" />
-                                    <Button Text="Chuyển Khoản Này Thành Mục Tiêu Tích Lũy"
+                            <Border BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                    Stroke="#A7F3D0" StrokeShape="RoundRectangle 10" Padding="12">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="Lời khuyên: Hãy lập mục tiêu tích lũy thay vì chi tiêu ngay!"
+                                           FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}" />
+                                    <Button Text="Chuyển Thành Mục Tiêu Tích Lũy"
                                             Command="{Binding ConvertToSavingsGoalCommand}"
-                                            BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                                            TextColor="#FFFFFF"
-                                            FontAttributes="Bold"
-                                            CornerRadius="8"
-                                            HeightRequest="36"
-                                            FontSize="11" />
+                                            Style="{StaticResource FintechButtonSecondary}"
+                                            HeightRequest="36" FontSize="11" />
                                     <Label Text="{Binding ConversionFeedbackMessage}"
-                                           FontSize="11"
-                                           TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
-                                           LineBreakMode="WordWrap" />
+                                           FontSize="11" TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}" />
                                 </VerticalStackLayout>
                             </Border>
                         </VerticalStackLayout>

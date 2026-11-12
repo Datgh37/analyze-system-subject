@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             x:Class="ExpenseTracker.Maui.Views.EmergencyFundPage"
+             x:DataType="vm:EmergencyFundViewModel"
+             Title="{Binding Title}"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,14,16,100" Spacing="16" MaximumWidthRequest="640">
+
+            <Border Style="{StaticResource FintechHeroCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                            <Image Source="ic_shield.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                            <Label Text="QUỸ DỰ PHÒNG"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#A5B4FC"
+                                   CharacterSpacing="1.2"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#3730A3"
+                                Padding="8,4"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent">
+                            <Label Text="LÁ CHẮN AN TOÀN"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="#E0E7FF" />
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Quỹ Dự Phòng Khẩn Cấp"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF" />
+
+                    <Label Text="Khoản tiền gửi riêng biệt giúp bạn tự chủ tài chính, an tâm vượt qua rủi ro mất việc, sức khỏe hoặc sự cố bất ngờ mà không phải vay mượn."
+                           FontSize="12"
+                           TextColor="#C7D2FE"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                    Stroke="#A7F3D0"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="14,10"
+                    IsVisible="{Binding FeedbackMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                <HorizontalStackLayout Spacing="10">
+                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
+                    <Label Text="{Binding FeedbackMessage}"
+                           TextColor="{AppThemeBinding Light=#065F46, Dark=#6EE7B7}"
+                           FontAttributes="Bold"
+                           FontSize="13"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}"
+                    Padding="14"
+                    IsVisible="{Binding IsBusy}">
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="{StaticResource PrimaryLight}" WidthRequest="20" HeightRequest="20" />
+                    <Label Text="Đang cập nhật tình trạng quỹ..."
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource PrimaryLight}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Mức Độ Bảo Vệ Hiện Tại" Style="{StaticResource FintechLabelSubtitle}" />
+                        <Border Grid.Column="1"
+                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                Padding="8,3"
+                                StrokeShape="RoundRectangle 6"
+                                Stroke="Transparent">
+                            <Label Text="{Binding Status.Status, FallbackValue='Đang theo dõi'}"
+                                   FontSize="11" FontAttributes="Bold" TextColor="{StaticResource PrimaryLight}" />
+                        </Border>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,4,0,0">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Số tháng sinh tồn dự kiến:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding Status.MonthsCovered, StringFormat='{0:F1} tháng'}"
+                                   FontSize="26" FontAttributes="Bold" TextColor="#10B981" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Chi phí thiết yếu / tháng:" Style="{StaticResource FintechLabelCaption}" />
+                            <Label Text="{Binding Status.MonthlyEssentialExpenses, StringFormat='{0:N0} đ'}"
+                                   FontSize="15" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}" Margin="0,2" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding Status.CurrentAmount, StringFormat='Hiện có: {0:N0} đ'}"
+                               Style="{StaticResource FintechLabelCaption}"
+                               FontAttributes="Bold" />
+                        <Label Grid.Column="1"
+                               Text="{Binding Status.TargetAmount, StringFormat='Mục tiêu: {0:N0} đ'}"
+                               Style="{StaticResource FintechLabelCaption}" />
+                    </Grid>
+
+                    <ProgressBar Progress="{Binding Status.ProgressPercent, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
+                                 ProgressColor="#10B981"
+                                 HeightRequest="8" />
+
+                    <Label Text="{Binding Status.ProgressPercent, StringFormat='Đã hoàn thành {0:F0}% mục tiêu đề ra'}"
+                           Style="{StaticResource FintechLabelCaption}"
+                           HorizontalOptions="End" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}" Padding="18">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Thiết Lập Mục Tiêu Quỹ Khẩn Cấp"
+                           Style="{StaticResource FintechLabelSubtitle}" />
+
+                    <Label Text="Chọn thời gian bạn muốn quỹ có thể bảo bọc gia đình khi không có nguồn thu mới:"
+                           Style="{StaticResource FintechLabelCaption}" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Border Grid.Column="0"
+                                Stroke="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="8"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}">
+                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                                <Label Text="3 Tháng" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" />
+                                <Label Text="{Binding Recommendation.ThreeMonthsAmount, StringFormat='{0:N0} đ'}"
+                                       FontSize="10" TextColor="#64748B" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                Stroke="{StaticResource PrimaryLight}"
+                                StrokeThickness="1.5"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="8"
+                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}">
+                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                                <Label Text="6 Tháng" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource PrimaryLight}" HorizontalOptions="Center" />
+                                <Label Text="{Binding Recommendation.SixMonthsAmount, StringFormat='{0:N0} đ'}"
+                                       FontSize="10" TextColor="{StaticResource PrimaryLight}" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Column="2"
+                                Stroke="{AppThemeBinding Light={StaticResource BorderLight}, Dark={StaticResource BorderDark}}"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="8"
+                                BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}">
+                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                                <Label Text="12 Tháng" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" />
+                                <Label Text="{Binding Recommendation.TwelveMonthsAmount, StringFormat='{0:N0} đ'}"
+                                       FontSize="10" TextColor="#64748B" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <Button Text="Cập Nhật Thiết Lập Quỹ"
+                            Command="{Binding SetupFundCommand}"
+                            Style="{StaticResource FintechButtonSecondary}"
+                            HeightRequest="42"
+                            Margin="0,4,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource FintechCard}" Padding="18">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Tích Lũy Thêm Vào Quỹ" Style="{StaticResource FintechLabelSubtitle}" />
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Số tiền muốn nạp vào quỹ (VND):" Style="{StaticResource FintechLabelCaption}" FontAttributes="Bold" />
+                        <Border Style="{StaticResource FintechInput}">
+                            <Entry Text="{Binding DepositAmount}"
+                                   Placeholder="0 đ"
+                                   Keyboard="Numeric"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="End" />
+                        </Border>
+                    </VerticalStackLayout>
+                    <Button Text="+ Nạp Tiền Vào Quỹ Dự Phòng"
+                            Command="{Binding DepositCommand}"
+                            Style="{StaticResource FintechButtonPrimary}"
+                            HeightRequest="44" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="#FCA5A5"
+                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                    Padding="16"
+                    StrokeShape="RoundRectangle 14">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Rút Tiền Khẩn Cấp (Có Giải Trình)"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="#991B1B" />
+
+                    <Label Text="Khoản quỹ này chỉ được sử dụng khi thực sự gặp biến cố khẩn cấp. Mọi lần rút tiền đều yêu cầu ghi rõ lý do để giữ kỷ luật tài chính."
+                           FontSize="11"
+                           TextColor="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}" />
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Số tiền cần rút (VND):" FontSize="11" FontAttributes="Bold" TextColor="#991B1B" />
+                        <Border Style="{StaticResource FintechInput}">
+                            <Entry Text="{Binding WithdrawAmount}"
+                                   Keyboard="Numeric"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="End" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Lý do giải trình (tối thiểu 10 ký tự):" FontSize="11" FontAttributes="Bold" TextColor="#991B1B" />
+                        <Border Style="{StaticResource FintechInput}">
+                            <Entry Text="{Binding DetailedExplanation}"
+                                   Placeholder="Ví dụ: Thanh toán viện phí cấp cứu, Sửa xe máy đi làm..."
+                                   FontSize="12" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Button Text="Xác Nhận Rút Tiền Khẩn Cấp"
+                            Command="{Binding WithdrawCommand}"
+                            BackgroundColor="#EF4444"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="44" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

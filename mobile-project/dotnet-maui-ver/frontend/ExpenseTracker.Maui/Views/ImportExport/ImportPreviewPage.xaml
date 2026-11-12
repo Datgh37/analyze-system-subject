@@ -11,27 +11,17 @@
 
     <Grid RowDefinitions="Auto, Auto, *, Auto" MaximumWidthRequest="640">
 
-        <!-- 1. Header Summary Card -->
         <Border Grid.Row="0" Margin="20,16,20,10" Padding="18"
-                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 20"
-                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
-            <Border.Shadow>
-                <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                        Offset="0,4" Radius="12" 
-                        Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-            </Border.Shadow>
-
+                Style="{StaticResource FintechCard}">
             <VerticalStackLayout Spacing="10">
                 <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                    <Label Grid.Column="0" Text="Xác Nhận Dữ Liệu Nhập (HITL)"
+                    <Label Grid.Column="0" Text="Xác Nhận Dữ Liệu Nhập"
                            FontAttributes="Bold" FontSize="17"
                            TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
                     <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 8"
                             BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
                             Padding="8,3">
-                        <Label Text="Human-in-the-loop" FontSize="10" FontAttributes="Bold"
+                        <Label Text="XEM TRƯỚC" FontSize="10" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}" />
                     </Border>
                 </Grid>
@@ -41,7 +31,6 @@
                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
                        LineBreakMode="WordWrap" />
 
-                <!-- 3-Column Summary Stats -->
                 <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8" Margin="0,4,0,0">
                     <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
                             StrokeShape="RoundRectangle 12"
@@ -79,12 +68,8 @@
             </VerticalStackLayout>
         </Border>
 
-        <!-- 2. Wallet Selection Card -->
         <Border Grid.Row="1" Margin="20,0,20,10" Padding="14,10"
-                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 14"
-                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
+                Style="{StaticResource FintechCard}">
             <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12" VerticalOptions="Center">
                 <Label Grid.Column="0" Text="Ví đích nhận tiền:"
                        FontAttributes="Bold" FontSize="13" VerticalOptions="Center"
@@ -103,21 +88,16 @@
             </Grid>
         </Border>
 
-        <!-- 3. Transaction Rows CollectionView -->
         <CollectionView Grid.Row="2" Margin="20,0,20,6" ItemsSource="{Binding Rows}">
             <CollectionView.EmptyView>
-                <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 20"
-                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                        Padding="32" Margin="0,10">
+                <Border Style="{StaticResource FintechCard}" Padding="32" Margin="0,10">
                     <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                        <Label Text="📋" FontSize="44" HorizontalOptions="Center" />
+                        <Image Source="ic_rules.svg" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" />
                         <Label Text="Chưa có dữ liệu nhập nào"
                                FontSize="15" FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
                                HorizontalOptions="Center" />
-                        <Label Text="Dữ liệu bóc tách từ file Excel hoặc tin nhắn sao kê sẽ hiển thị tại đây để bạn kiểm tra."
+                        <Label Text="Dữ liệu bóc tách từ bảng tính hoặc nội dung sao kê sẽ hiển thị tại đây để bạn kiểm tra."
                                FontSize="12"
                                TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
                                HorizontalOptions="Center"
@@ -129,24 +109,13 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ParsedImportRowModel">
                     <Border Margin="0,4,0,6" Padding="14,12"
-                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 14"
-                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
-                        <Border.Shadow>
-                            <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                                    Offset="0,2" Radius="6" 
-                                    Opacity="{AppThemeBinding Light=0.03, Dark=0.2}" />
-                        </Border.Shadow>
-
+                            Style="{StaticResource FintechCard}">
                         <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="10">
-                            <!-- CheckBox selector -->
                             <CheckBox Grid.Column="0" Grid.RowSpan="2"
                                       IsChecked="{Binding IsSelected}"
                                       Color="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
                                       VerticalOptions="Center" />
 
-                            <!-- Category and note -->
                             <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding CategoryName}"
                                        FontAttributes="Bold" FontSize="14"
@@ -157,14 +126,12 @@
                                        LineBreakMode="TailTruncation" />
                             </VerticalStackLayout>
 
-                            <!-- Amount -->
                             <Label Grid.Column="2" Grid.Row="0"
                                    Text="{Binding Amount, StringFormat='{0:N0} đ'}"
                                    FontAttributes="Bold" FontSize="14"
                                    TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
                                    HorizontalOptions="End" VerticalOptions="Center" />
 
-                            <!-- Validation Message (if error) -->
                             <Border Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"
                                     StrokeThickness="0" StrokeShape="RoundRectangle 6"
                                     BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
@@ -180,23 +147,14 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 4. Bottom Action Commit Button -->
         <Border Grid.Row="3" Padding="20,14"
                 Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
                 StrokeThickness="1"
                 BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
-            <Button Text="XÁC NHẬN NHẬP TẤT CẢ VÀO SỔ CÁI"
+            <Button Text="XÁC NHẬN NHẬP DỮ LIỆU VÀO SỔ CÁI"
                     Command="{Binding CommitBulkCommand}"
-                    BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                    TextColor="#FFFFFF"
-                    FontAttributes="Bold"
-                    FontSize="14"
-                    CornerRadius="14"
-                    HeightRequest="50">
-                <Button.Shadow>
-                    <Shadow Brush="#4F46E5" Offset="0,4" Radius="12" Opacity="0.3" />
-                </Button.Shadow>
-            </Button>
+                    Style="{StaticResource FintechButtonPrimary}"
+                    HeightRequest="50" />
         </Border>
     </Grid>
 

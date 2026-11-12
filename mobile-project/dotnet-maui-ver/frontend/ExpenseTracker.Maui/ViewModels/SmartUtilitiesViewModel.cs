@@ -65,7 +65,7 @@ public partial class SmartUtilitiesViewModel : BaseViewModel
     {
         _smartUtilityRepo = smartUtilityRepo;
         _walletRepo = walletRepo;
-        Title = "Tiện Ích & Trợ Lý AI";
+        Title = "Tiện Ích Tài Chính";
     }
 
     [RelayCommand]
@@ -166,7 +166,7 @@ public partial class SmartUtilitiesViewModel : BaseViewModel
 
             GeneratedQr = await _smartUtilityRepo.GenerateVietQrAsync(request);
             HasGeneratedQr = true;
-            StatusMessage = "✅ Đã tạo mã VietQR Napas 247 thành công!";
+            StatusMessage = "Đã tạo mã VietQR Napas 247 thành công.";
         }
         catch (Exception ex)
         {

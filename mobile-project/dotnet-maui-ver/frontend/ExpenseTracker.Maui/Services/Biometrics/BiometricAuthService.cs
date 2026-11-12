@@ -65,6 +65,11 @@ public class BiometricAuthService : IBiometricAuthService
                 }
 
                 var executor = ContextCompat.GetMainExecutor(activity);
+                if (executor == null)
+                {
+                    tcs.TrySetResult(new BiometricAuthResult(false, "Không thể lấy MainExecutor của hệ thống", false));
+                    return;
+                }
                 var callback = new InternalBiometricCallback(tcs);
                 var biometricPrompt = new BiometricPrompt(activity, executor, callback);
 
@@ -119,7 +124,14 @@ public class BiometricAuthService : IBiometricAuthService
 
         public override void OnAuthenticationError(int errorCode, ICharSequence? errString)
         {
-            base.OnAuthenticationError(errorCode, errString);
+            if (errString != null)
+            {
+                base.OnAuthenticationError(errorCode, errString);
+            }
+            else
+            {
+                base.OnAuthenticationError(errorCode, new Java.Lang.String(string.Empty));
+            }
             
             // Người dùng chủ động thoát (Chạm ra ngoài modal, bấm nút Hủy / Sử dụng Mật khẩu)
             bool isCanceled = errorCode == BiometricPrompt.ErrorUserCanceled ||

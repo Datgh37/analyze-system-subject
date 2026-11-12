@@ -79,16 +79,16 @@ public partial class SettingsViewModel : BaseViewModel
             switch (capability)
             {
                 case BiometricCapabilityStatus.Available:
-                    BiometricHardwareStatusText = "🟢 Cảm biến vân tay / FaceID sẵn sàng hoạt động.";
+                    BiometricHardwareStatusText = "Cảm biến vân tay / FaceID sẵn sàng hoạt động.";
                     IsBiometricSupported = true;
                     break;
                 case BiometricCapabilityStatus.NotEnrolled:
-                    BiometricHardwareStatusText = "🟡 Máy có cảm biến nhưng chưa cài đặt vân tay trong Android.";
+                    BiometricHardwareStatusText = "Máy có cảm biến nhưng chưa thiết lập vân tay trong hệ điều hành.";
                     IsBiometricSupported = false;
                     break;
                 case BiometricCapabilityStatus.Unsupported:
                 default:
-                    BiometricHardwareStatusText = "⚪ Thiết bị không hỗ trợ phần cứng sinh trắc học.";
+                    BiometricHardwareStatusText = "Thiết bị không hỗ trợ phần cứng sinh trắc học.";
                     IsBiometricSupported = false;
                     break;
             }
@@ -173,18 +173,18 @@ public partial class SettingsViewModel : BaseViewModel
             if (isAlive)
             {
                 PingSuccess = true;
-                PingResult = "🟢 Kết nối máy chủ thành công! (HTTP 200 OK)";
+                PingResult = "Kết nối máy chủ thành công (HTTP 200 OK).";
             }
             else
             {
                 PingSuccess = false;
-                PingResult = "🔴 Không thể kết nối tới máy chủ! Vui lòng kiểm tra lại đường truyền hoặc Tunnel.";
+                PingResult = "Không thể kết nối máy chủ. Vui lòng kiểm tra lại đường truyền hoặc Tunnel.";
             }
         }
         catch (Exception ex)
         {
             PingSuccess = false;
-            PingResult = $"🔴 Lỗi: {ex.Message}";
+            PingResult = $"Lỗi kết nối: {ex.Message}";
         }
         finally
         {
@@ -211,11 +211,11 @@ public partial class SettingsViewModel : BaseViewModel
 
             if (parseResult.IsSuccess)
             {
-                SimulationStatus = $"💳 Đã bắt thành công: -{parseResult.Amount:N0}đ tại Highlands Coffee!";
+                SimulationStatus = $"Đã phát hiện thành công: -{parseResult.Amount:N0} đ tại Highlands Coffee.";
 
                 // Bắn thông báo Native Heads-Up
                 await _nativeNotification.ShowNotificationAsync(
-                    $"💳 Phát hiện chi tiêu: -{parseResult.Amount:N0} đ",
+                    $"Phát hiện chi tiêu: -{parseResult.Amount:N0} đ",
                     $"[Ví MoMo] {parseResult.ExtractedNote}. Chạm để tự động lưu ngay!",
                     NotificationChannelIds.BalanceFluctuation,
                     101,
@@ -249,7 +249,7 @@ public partial class SettingsViewModel : BaseViewModel
         if (Shell.Current?.CurrentPage != null)
         {
             await Shell.Current.CurrentPage.DisplayAlertAsync(
-                "⏰ ĐÃ HẸN GIỜ BÁO THỨC SAU 10 GIÂY!",
+                "Đã Hẹn Giờ Nhắc Nhở Sau 10 Giây",
                 "1. Bạn hãy VUỐT TẮT ỨNG DỤNG HOÀN TOÀN khỏi danh sách đa nhiệm (Killed State) ngay bây giờ.\n2. Đưa điện thoại cho Thầy cầm hoặc đặt lên bàn.\n\nSau đúng 10 giây, Android OS sẽ tự động đánh thức và rung chuông phát thông báo lên màn hình!",
                 "Tôi đã hiểu, vuốt tắt ngay");
         }
@@ -273,7 +273,10 @@ public partial class SettingsViewModel : BaseViewModel
         {
             await _authService.LogoutAsync();
             await _tokenStorage.PurgeSessionOnLogoutAsync();
-            await Shell.Current.GoToAsync("//LoginPage");
+            if (Shell.Current != null)
+            {
+                await Shell.Current.GoToAsync("//LoginPage");
+            }
         }
         catch (Exception ex)
         {

@@ -23,18 +23,7 @@ public class CategoryAllocationInputItem : ObservableObject
         _ => "Phân bổ khác"
     };
 
-    public string DisplayCategoryIcon => (CategoryName?.ToLowerInvariant()) switch
-    {
-        var n when n != null && (n.Contains("ăn") || n.Contains("uống") || n.Contains("thực phẩm") || n.Contains("food")) => "🍜",
-        var n when n != null && (n.Contains("nhà") || n.Contains("tiện ích") || n.Contains("điện") || n.Contains("nước") || n.Contains("home")) => "🏠",
-        var n when n != null && (n.Contains("cà phê") || n.Contains("cafe") || n.Contains("coffee") || n.Contains("giải trí")) => "☕",
-        var n when n != null && (n.Contains("mua") || n.Contains("sắm") || n.Contains("shop")) => "🛍️",
-        var n when n != null && (n.Contains("xe") || n.Contains("xăng") || n.Contains("di chuyển") || n.Contains("grab")) => "🚗",
-        var n when n != null && (n.Contains("học") || n.Contains("sách")) => "📚",
-        var n when n != null && (n.Contains("y tế") || n.Contains("thuốc") || n.Contains("khám")) => "💊",
-        var n when n != null && (n.Contains("tích lũy") || n.Contains("tiết kiệm")) => "💰",
-        _ => !string.IsNullOrWhiteSpace(CategoryIcon) && CategoryIcon.Length <= 2 ? CategoryIcon : "🏷️"
-    };
+    public string DisplayCategoryIcon => "ic_category.svg";
 
     private decimal _allocatedAmount;
     public decimal AllocatedAmount
@@ -256,7 +245,7 @@ public partial class CreateBudgetViewModel : BaseViewModel
 
             await _budgetRepo.CreateBudgetAsync(request);
 
-            StatusMessage = "🎉 Lập kế hoạch ngân sách thành công!";
+            StatusMessage = "Lập kế hoạch ngân sách thành công!";
             await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)

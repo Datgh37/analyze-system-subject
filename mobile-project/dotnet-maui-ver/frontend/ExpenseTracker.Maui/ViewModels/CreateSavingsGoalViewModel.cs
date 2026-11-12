@@ -65,19 +65,19 @@ public partial class CreateSavingsGoalViewModel : BaseViewModel
 
     public List<GoalTypeOption> AvailableTypeOptions { get; } = new()
     {
-        new() { Type = SavingsGoalType.EmergencyFund, DisplayName = "🛡️ Quỹ khẩn cấp (Emergency)" },
-        new() { Type = SavingsGoalType.MajorPurchase, DisplayName = "💻 Mua sắm lớn (Purchase)" },
-        new() { Type = SavingsGoalType.Investment, DisplayName = "📈 Đầu tư & Tích lũy (Invest)" },
-        new() { Type = SavingsGoalType.Education, DisplayName = "🎓 Học tập & Phát triển" },
-        new() { Type = SavingsGoalType.Travel, DisplayName = "✈️ Du lịch & Trải nghiệm" },
-        new() { Type = SavingsGoalType.Other, DisplayName = "🎯 Mục tiêu khác" }
+        new() { Type = SavingsGoalType.EmergencyFund, DisplayName = "Quỹ khẩn cấp" },
+        new() { Type = SavingsGoalType.MajorPurchase, DisplayName = "Tích lũy mua sắm lớn" },
+        new() { Type = SavingsGoalType.Investment, DisplayName = "Đầu tư & Tích lũy" },
+        new() { Type = SavingsGoalType.Education, DisplayName = "Học tập & Phát triển" },
+        new() { Type = SavingsGoalType.Travel, DisplayName = "Du lịch & Trải nghiệm" },
+        new() { Type = SavingsGoalType.Other, DisplayName = "Mục tiêu tài chính khác" }
     };
 
     public List<GoalPriorityOption> AvailablePriorityOptions { get; } = new()
     {
-        new() { Priority = SavingsGoalPriority.High, DisplayName = "🔴 Cao (Ưu tiên hàng đầu)" },
-        new() { Priority = SavingsGoalPriority.Medium, DisplayName = "🟡 Trung bình (Chuẩn)" },
-        new() { Priority = SavingsGoalPriority.Low, DisplayName = "🟢 Thấp (Linh hoạt)" }
+        new() { Priority = SavingsGoalPriority.High, DisplayName = "Cao (Ưu tiên hàng đầu)" },
+        new() { Priority = SavingsGoalPriority.Medium, DisplayName = "Trung bình (Chuẩn)" },
+        new() { Priority = SavingsGoalPriority.Low, DisplayName = "Thấp (Linh hoạt)" }
     };
 
     public List<SavingsGoalType> AvailableTypes { get; } = new()

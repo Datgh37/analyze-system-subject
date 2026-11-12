@@ -1,5 +1,6 @@
 param(
-    [switch]$ForceRebuild
+    [switch]$ForceRebuild,
+    [switch]$Clean
 )
 
 # ==============================================================================
@@ -238,7 +239,17 @@ if ($adbPath) {
         $hasApk = (Test-Path $signedApk)
 
         $needsRebuild = $false
-        if ($ForceRebuild) {
+        if ($Clean) {
+            Write-Host "    [!] Che do DON DEP TOAN DIEN (-Clean):" -ForegroundColor Magenta
+            Write-Host "        - Go cai dat APK cu tren thiet bi / may ao..." -ForegroundColor Yellow
+            & $adbPath uninstall $packageName 2>$null | Out-Null
+            Write-Host "        - Xoa sach bo nho dem bin va obj..." -ForegroundColor Yellow
+            Remove-Item -Path (Join-Path $projectRoot "frontend\ExpenseTracker.Maui\bin\Debug\net10.0-android") -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path (Join-Path $projectRoot "frontend\ExpenseTracker.Maui\obj\Debug\net10.0-android") -Recurse -Force -ErrorAction SilentlyContinue
+            $needsRebuild = $true
+            $hasApk = $false
+            $installed = $false
+        } elseif ($ForceRebuild) {
             $needsRebuild = $true
             Write-Host "    [!] Co yeu cau ep buoc bien dich lai (-ForceRebuild)." -ForegroundColor Yellow
         } elseif (-not $hasApk) {
@@ -258,10 +269,10 @@ if ($adbPath) {
             } else {
                 $needsRebuild = $false
                 if ($installed) {
-                    Write-Host "    [⚡ FAST-LAUNCH] Khong co bat ky thay doi FE nao & App da cai san tren thiet bi!" -ForegroundColor Green
+                    Write-Host "    [FAST-LAUNCH] Khong co bat ky thay doi FE nao & App da cai san tren thiet bi!" -ForegroundColor Green
                     Write-Host "    --> Dang kich hoat truc tiep App len man hinh (0.5 giay, khong ton thoi gian bien dich)..." -ForegroundColor Green
                 } else {
-                    Write-Host "    [⚡ FAST-INSTALL] File APK da san sang va khong co code moi. Cai dat nhanh len thiet bi..." -ForegroundColor Green
+                    Write-Host "    [FAST-INSTALL] File APK da san sang va khong co code moi. Cai dat nhanh len thiet bi..." -ForegroundColor Green
                     & $adbPath install -r "$signedApk" | Out-Null
                 }
             }
@@ -270,10 +281,22 @@ if ($adbPath) {
         if ($needsRebuild) {
             Write-Host "    Dang dong goi APK va cai dat len thiet bi..." -ForegroundColor Yellow
             dotnet build-server shutdown 2>$null | Out-Null
-            dotnet build X:\frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj -f net10.0-android -t:Run -nr:false
+
+            $buildProjectPath = "X:\frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj"
+            if (-not (Test-Path $buildProjectPath)) {
+                $buildProjectPath = Join-Path $projectRoot "frontend\ExpenseTracker.Maui\ExpenseTracker.Maui.csproj"
+            }
+
+            dotnet build $buildProjectPath -f net10.0-android -t:Run -nr:false
             
             if ($LASTEXITCODE -ne 0) {
-                Write-Host "`n[X] Deploy Android that bai! Vui long kiem tra log phia tren." -ForegroundColor Red
+                Write-Host "`n[X] Deploy Android that bai! Vui long kiem tra log bien dich phia tren." -ForegroundColor Red
+                Write-Host "    Meo khac phuc neu gap loi bo nho dem cu:" -ForegroundColor Yellow
+                Write-Host "    1. Xoa thu muc obj: Remove-Item -Path '$projectRoot\frontend\ExpenseTracker.Maui\obj' -Recurse -Force" -ForegroundColor Gray
+                Write-Host "    2. Chay lai RUN_ANDROID.bat de he thong tu dong tao lai cache sach." -ForegroundColor Gray
+                Write-Host "`nNhan phim Enter de dong cua so nay..." -ForegroundColor Gray
+                Read-Host
+                exit 1
             }
         }
 

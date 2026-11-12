@@ -138,7 +138,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
             };
 
             await _savingsGoalRepo.DepositAsync(goal.Id, request);
-            StatusMessage = $"✅ Đã nạp thành công {amount:N0} đ vào mục tiêu '{goal.Name}'.";
+            StatusMessage = $"Đã nạp thành công {amount:N0} đ vào mục tiêu '{goal.Name}'.";
             await LoadGoalsAndJarsAsync();
         }
         catch (Exception ex)
@@ -166,7 +166,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
         {
             // Richard Thaler Cognitive Friction Nudge Alert (UC-06.03)
             bool proceed = await Shell.Current.DisplayAlertAsync(
-                "⚠️ Cú Hích Tâm Lý (Thaler Nudge)",
+                "Cú Hích Tâm Lý (Cân Nhắc Trước Khi Rút)",
                 $"Bạn đang yêu cầu rút tiền khỏi quỹ '{goal.Name}'.\n\n" +
                 $"Việc rút tiền sớm sẽ làm đứt gãy kỷ luật tích lũy và kéo dài thời gian hoàn thành mục tiêu. " +
                 $"Bạn có chắc chắn đây là nhu cầu thực sự cấp bách không?",
@@ -224,7 +224,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
             };
 
             await _savingsGoalRepo.WithdrawAsync(goal.Id, request);
-            StatusMessage = $"✅ Đã rút {amount:N0} đ về ví {selectedWallet.Name}.";
+            StatusMessage = $"Đã rút {amount:N0} đ về ví {selectedWallet.Name}.";
             await LoadGoalsAndJarsAsync();
         }
         catch (Exception ex)
@@ -246,14 +246,14 @@ public partial class SavingsGoalsViewModel : BaseViewModel
         try
         {
             var feasibility = await _savingsGoalRepo.GetGoalFeasibilityAsync(goal.Id);
-            string statusIcon = feasibility.IsFeasible ? "🟢 Khả thi cao" : "🔴 Cần điều chỉnh";
+            string statusIcon = feasibility.IsFeasible ? "Khả thi cao" : "Cần điều chỉnh";
 
             await Shell.Current.DisplayAlertAsync(
                 $"Đánh giá tính khả thi: {feasibility.GoalName}",
                 $"{statusIcon} (Điểm: {feasibility.FeasibilityScorePercent:F0}%)\n\n" +
                 $"• Cần nạp mỗi tháng: {feasibility.FormattedMonthlyRequired}\n" +
                 $"• Quỹ tích lũy ngân sách (20%): {feasibility.FormattedSavingsBudgetPool}\n\n" +
-                $"💡 Lời khuyên:\n{feasibility.AdviceMessage}",
+                $"Lời khuyên:\n{feasibility.AdviceMessage}",
                 "Đóng");
         }
         catch (Exception ex)
@@ -291,7 +291,7 @@ public partial class SavingsGoalsViewModel : BaseViewModel
         try
         {
             await _savingsGoalRepo.DeleteSavingsGoalAsync(goal.Id);
-            StatusMessage = $"✅ Đã xóa mục tiêu '{goal.Name}'.";
+            StatusMessage = $"Đã xóa mục tiêu '{goal.Name}'.";
             await LoadGoalsAndJarsAsync();
         }
         catch (Exception ex)

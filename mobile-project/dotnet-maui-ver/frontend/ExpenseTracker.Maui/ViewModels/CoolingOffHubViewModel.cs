@@ -164,7 +164,7 @@ public partial class CoolingOffHubViewModel : BaseViewModel
             if (ok)
             {
                 PendingTransactions.Remove(item);
-                StatusMessage = $"🎉 CHÚC MỪNG! Bạn đã vượt qua cơn bốc đồng và bảo toàn thành công {item.Amount:N0} đ (tương đương {item.EquivalentWorkHours:N1} giờ lao động) cho ví tiền của mình!";
+                StatusMessage = $"Chúc mừng! Bạn đã vượt qua quyết định bốc đồng và bảo toàn thành công {item.Amount:N0} đ (tương đương {item.EquivalentWorkHours:N1} giờ lao động) cho ví tiền của mình.";
             }
             else
             {

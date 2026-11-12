@@ -136,7 +136,7 @@ public partial class ExpensesViewModel : BaseViewModel, IQueryAttributable
                 if (matchedCat != null)
                 {
                     SelectedCategory = matchedCat;
-                    AutoMatchedHint = $"⚡ Tự động gán danh mục '{matchedCat.Name}' theo từ khóa '{match.MatchedPattern}'";
+                    AutoMatchedHint = $"Tự động gán danh mục '{matchedCat.Name}' theo từ khóa '{match.MatchedPattern}'";
                 }
             }
             else
@@ -329,7 +329,7 @@ public partial class ExpensesViewModel : BaseViewModel, IQueryAttributable
 
         if (hasAutoFill)
         {
-            AutoFillBannerMessage = $"⚡ Đã tự động điền giao dịch {NewAmount:N0} đ từ {(!string.IsNullOrEmpty(detectedBank) ? detectedBank : "Ngân hàng")}. Vui lòng kiểm tra và lưu!";
+            AutoFillBannerMessage = $"Đã tự động điền giao dịch {NewAmount:N0} đ từ {(!string.IsNullOrEmpty(detectedBank) ? detectedBank : "Ngân hàng")}. Vui lòng kiểm tra và lưu!";
         }
     }
 

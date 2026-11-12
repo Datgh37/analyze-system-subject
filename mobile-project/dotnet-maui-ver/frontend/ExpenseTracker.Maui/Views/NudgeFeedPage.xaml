@@ -3,354 +3,171 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.Behavioral"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.NudgeFeedPage"
              x:DataType="vm:NudgeFeedViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
     <Grid>
-        <!-- 1. MAIN CONTENT SCROLLVIEW -->
-        <ScrollView>
-            <VerticalStackLayout Padding="20,16,20,36" Spacing="18" MaximumWidthRequest="640">
+        <Grid RowDefinitions="*, Auto">
+            <ScrollView Grid.Row="0">
+                <VerticalStackLayout Padding="16,12,16,28" Spacing="16" MaximumWidthRequest="640">
 
-                <!-- Header & Action Bar -->
-                <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 20"
-                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                        Padding="18">
-                    <Border.Shadow>
-                        <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                                Offset="0,4" Radius="12" 
-                                Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                    </Border.Shadow>
+                    <!-- 1. HERO CARD: CÚ HÍCH TÀI CHÍNH THALER (BEHAVIORAL NUDGE) -->
+                    <Border Stroke="{AppThemeBinding Light=#4338CA, Dark=#6366F1}"
+                            StrokeThickness="1.5"
+                            StrokeShape="RoundRectangle 24"
+                            Padding="22">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#0F172A" Offset="0.0" />
+                                <GradientStop Color="#1E1B4B" Offset="0.5" />
+                                <GradientStop Color="#312E81" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow>
+                            <Shadow Brush="#312E81" Offset="0,6" Radius="20" Opacity="0.35" />
+                        </Border.Shadow>
 
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
-                        <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
-                            <Label Text="Trợ Lý Gợi Ý Tài Chính Thông Minh"
-                                   FontSize="17"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            <Label Text="Gợi ý điều chỉnh chi tiêu dựa trên dữ liệu thực tế"
-                                   FontSize="11"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                   LineBreakMode="TailTruncation" />
-                        </VerticalStackLayout>
-
-                        <Border Grid.Column="1"
-                                StrokeShape="RoundRectangle 10"
-                                StrokeThickness="0"
-                                BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                                HeightRequest="36"
-                                Padding="12,0"
-                                VerticalOptions="Center">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding LoadNudgesCommand}" />
-                            </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
-                                <Label Grid.Column="1" Text="Làm Mới" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                    <Image Source="ic_nudge.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                    <Label Text="CÚ HÍCH TÀI CHÍNH THÔNG MINH" FontSize="11" FontAttributes="Bold" TextColor="#A5B4FC" CharacterSpacing="1" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <Border Grid.Column="1" BackgroundColor="#4338CA" Padding="8,3" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                                    <Label Text="KINH TẾ HÀNH VI" FontSize="10" FontAttributes="Bold" TextColor="#E0E7FF" />
+                                </Border>
                             </Grid>
-                        </Border>
+
+                            <Label Text="Gợi Ý Điều Chỉnh Dòng Tiền" FontSize="20" FontAttributes="Bold" TextColor="#FFFFFF" />
+                            <Label Text="Hệ thống tự động phát hiện thâm hụt và đưa ra cú hích tâm lý học giúp bạn tái cân bằng ngân sách mà không cảm thấy gò bó."
+                                   FontSize="12" TextColor="#C7D2FE" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- THÔNG BÁO TRẠNG THÁI & LỖI -->
+                    <Border Stroke="#86EFAC" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                            Padding="14"
+                            IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding StatusMessage}" TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Border Stroke="#FCA5A5" StrokeThickness="1" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                            Padding="14" IsVisible="{Binding HasError}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding ErrorMessage}" TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- 2. DANH SÁCH GỢI Ý ĐANG HOẠT ĐỘNG -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="2,6,2,0" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="GỢI Ý TÀI CHÍNH HIỆN HỮU" Style="{StaticResource FintechSectionTitleStyle}" />
+                        <Label Grid.Column="1" Text="Theo thời gian thực" FontSize="11" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
                     </Grid>
-                </Border>
 
-                <!-- Status / Success Banner -->
-                <Border Stroke="#86EFAC"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 12"
-                        BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
-                        Padding="14"
-                        IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="{Binding StatusMessage}"
-                               TextColor="{AppThemeBinding Light=#047857, Dark=#A7F3D0}"
-                               FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                    </Grid>
-                </Border>
+                    <CollectionView ItemsSource="{Binding Nudges}" SelectionMode="None">
+                        <CollectionView.EmptyView>
+                            <Border Style="{StaticResource FintechCardStyle}" Padding="32">
+                                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                                    <Image Source="ic_check.svg" WidthRequest="36" HeightRequest="36" HorizontalOptions="Center" />
+                                    <Label Text="Tuyệt vời! Không có cảnh báo thâm hụt nào." Style="{StaticResource FintechCardTitleStyle}" HorizontalOptions="Center" />
+                                    <Label Text="Bạn đang duy trì tốc độ chi tiêu an toàn trong hạn mức kế hoạch."
+                                           Style="{StaticResource FintechCaptionStyle}" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </CollectionView.EmptyView>
 
-                <!-- Error Banner -->
-                <Border Stroke="#FCA5A5"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 12"
-                        BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                        Padding="14"
-                        IsVisible="{Binding HasError}">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <BoxView Grid.Column="0" WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="{Binding ErrorMessage}"
-                               TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
-                               FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                    </Grid>
-                </Border>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:FinancialNudgeModel">
+                                <Border Style="{StaticResource FintechCardStyle}" Margin="0,0,0,12">
+                                    <VerticalStackLayout Spacing="12">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                                            <Label Grid.Column="0" Text="{Binding Title}" Style="{StaticResource FintechCardTitleStyle}" />
+                                            <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                                    BackgroundColor="{Binding NudgeBadgeColor}" Padding="8,3">
+                                                <Label Text="{Binding NudgeTypeDisplay}" TextColor="#FFFFFF" FontSize="11" FontAttributes="Bold" />
+                                            </Border>
+                                        </Grid>
 
-                <!-- Loading Indicator -->
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   IsVisible="{Binding IsBusy}"
-                                   Color="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                                   HorizontalOptions="Center" />
+                                        <Label Text="{Binding Message}" FontSize="13" LineHeight="1.3"
+                                               TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
 
-                <!-- Nudge Feed Section Header -->
-                <Grid ColumnDefinitions="*,Auto" Margin="4,4,4,0" VerticalOptions="Center">
-                    <Label Grid.Column="0" Text="Gợi Ý Tài Chính Đang Hoạt Động"
-                           FontSize="16" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                    <Label Grid.Column="1" Text="Hỗ trợ quyết định"
-                           FontSize="11"
-                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                </Grid>
-
-                <!-- CollectionView of Nudges -->
-                <CollectionView ItemsSource="{Binding Nudges}" SelectionMode="None">
-                    <CollectionView.EmptyView>
-                        <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 20"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                                Padding="32" Margin="0,8">
-                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                                <Image Source="ic_check.png" WidthRequest="36" HeightRequest="36" HorizontalOptions="Center" />
-                                <Label Text="Tuyệt vời! Không có cảnh báo thâm hụt nào."
-                                       FontSize="15" FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
-                                       HorizontalOptions="Center" />
-                                <Label Text="Bạn đang duy trì tốc độ chi tiêu an toàn trong hạn mức kế hoạch."
-                                       FontSize="12"
-                                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                       HorizontalOptions="Center"
-                                       HorizontalTextAlignment="Center" />
-                            </VerticalStackLayout>
-                        </Border>
-                    </CollectionView.EmptyView>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:FinancialNudgeModel">
-                            <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1E293B}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 20"
-                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                                    Padding="18" Margin="0,0,0,12">
-                                <Border.Shadow>
-                                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
-                                            Offset="0,4" Radius="12" 
-                                            Opacity="{AppThemeBinding Light=0.04, Dark=0.25}" />
-                                </Border.Shadow>
-
-                                <VerticalStackLayout Spacing="12">
-                                    <!-- Header Badge and Title -->
-                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
-                                        <Label Grid.Column="0" Text="{Binding Title}"
-                                               FontSize="15" FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                                        <Border Grid.Column="1"
-                                                StrokeThickness="0"
-                                                StrokeShape="RoundRectangle 8"
-                                                BackgroundColor="{Binding NudgeBadgeColor}"
-                                                Padding="8,3">
-                                            <Label Text="{Binding NudgeTypeDisplay}"
-                                                   TextColor="#FFFFFF" FontSize="11" FontAttributes="Bold" />
+                                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                                StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="12,8"
+                                                IsVisible="{Binding TriggerContext, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                                <BoxView WidthRequest="6" HeightRequest="6" CornerRadius="3" Color="#64748B" VerticalOptions="Center" />
+                                                <Label Text="{Binding TriggerContext, StringFormat='Kích hoạt: {0}'}" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                            </HorizontalStackLayout>
                                         </Border>
-                                    </Grid>
 
-                                    <!-- Message Body -->
-                                    <Label Text="{Binding Message}"
-                                           FontSize="13" LineHeight="1.3"
-                                           TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,4,0,0">
+                                            <Button Grid.Column="0" Text="Xem Phân Tích"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ViewXaiRationaleCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="#0284C7" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" CornerRadius="10" HeightRequest="38" />
 
-                                    <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                            StrokeShape="RoundRectangle 10"
-                                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                            Padding="12,8"
-                                            IsVisible="{Binding TriggerContext, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                            <BoxView WidthRequest="6" HeightRequest="6" CornerRadius="3" Color="#64748B" VerticalOptions="Center" />
-                                            <Label Text="{Binding TriggerContext, StringFormat='Kích hoạt: {0}'}"
-                                                   FontSize="11"
-                                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                        </HorizontalStackLayout>
-                                    </Border>
+                                            <Button Grid.Column="1" Text="Đồng Ý"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ApproveNudgeCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="{StaticResource FintechIncome}" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" CornerRadius="10" HeightRequest="38"
+                                                    IsVisible="{Binding HasRebalanceProposal}" />
 
-                                     <!-- Actions Row -->
-                                     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,4,0,0">
-                                         <!-- XAI Rationale Button -->
-                                         <Border Grid.Column="0"
-                                                 StrokeShape="RoundRectangle 10"
-                                                 StrokeThickness="0"
-                                                 BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0369A1}"
-                                                 HeightRequest="38"
-                                                 Padding="12,0"
-                                                 VerticalOptions="Center">
-                                             <Border.GestureRecognizers>
-                                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ViewXaiRationaleCommand}"
-                                                                       CommandParameter="{Binding .}" />
-                                             </Border.GestureRecognizers>
-                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                                                 <Image Grid.Column="0" Source="ic_xai.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
-                                                 <Label Grid.Column="1" Text="Xem Phân Tích" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
-                                             </Grid>
-                                         </Border>
+                                            <Button Grid.Column="2" Text="Bỏ Qua"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=DismissNudgeCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                                    TextColor="{StaticResource FintechTextMuted}" CornerRadius="10" HeightRequest="38" FontSize="12" FontAttributes="Bold" Padding="14,0" />
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
-                                         <!-- Approve / Apply Rebalance Button -->
-                                         <Border Grid.Column="1"
-                                                 StrokeShape="RoundRectangle 10"
-                                                 StrokeThickness="0"
-                                                 BackgroundColor="{AppThemeBinding Light=#059669, Dark=#10B981}"
-                                                 HeightRequest="38"
-                                                 Padding="14,0"
-                                                 VerticalOptions="Center"
-                                                 IsVisible="{Binding HasRebalanceProposal}">
-                                             <Border.GestureRecognizers>
-                                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=ApproveNudgeCommand}"
-                                                                       CommandParameter="{Binding .}" />
-                                             </Border.GestureRecognizers>
-                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                                                 <Image Grid.Column="0" Source="ic_check.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
-                                                 <Label Grid.Column="1" Text="Đồng Ý" TextColor="#FFFFFF" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" />
-                                             </Grid>
-                                         </Border>
+                </VerticalStackLayout>
+            </ScrollView>
 
-                                         <!-- Dismiss Button -->
-                                         <Button Grid.Column="2"
-                                                 Text="Bỏ Qua"
-                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NudgeFeedViewModel}}, Path=DismissNudgeCommand}"
-                                                 CommandParameter="{Binding .}"
-                                                 BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                                 TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                                 CornerRadius="10"
-                                                 HeightRequest="38"
-                                                 FontSize="12"
-                                                 FontAttributes="Bold"
-                                                 Padding="14,0" />
-                                     </Grid>
-                                 </VerticalStackLayout>
-                             </Border>
-                         </DataTemplate>
-                     </CollectionView.ItemTemplate>
-                 </CollectionView>
+            <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
+            <components:BottomNavDockView Grid.Row="1" ActiveTab="Home" />
+        </Grid>
 
-             </VerticalStackLayout>
-         </ScrollView>
+        <!-- XAI RATIONALE MODAL -->
+        <Border BackgroundColor="#99000000" IsVisible="{Binding IsXaiModalVisible}" ZIndex="99" Padding="20">
+            <Border Stroke="{StaticResource FintechPrimary}" StrokeThickness="1" StrokeShape="RoundRectangle 24"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                    Padding="22" VerticalOptions="Center" MaximumHeightRequest="560" MaximumWidthRequest="560">
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Giải Trình Khoa Học (XAI Rationale)" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource FintechPrimary}" />
+                        <Button Grid.Column="1" Text="✕" Command="{Binding CloseXaiModalCommand}"
+                                BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                TextColor="{StaticResource FintechTextMuted}" FontSize="14" FontAttributes="Bold"
+                                CornerRadius="18" WidthRequest="36" HeightRequest="36" Padding="0" />
+                    </Grid>
 
-         <!-- 2. XAI EXPLANATION MODAL POPUP (Frosted Elevated Overlay) -->
-         <Border BackgroundColor="#99000000"
-                 IsVisible="{Binding IsXaiModalVisible}"
-                 ZIndex="99"
-                 Padding="20">
-             <Border Stroke="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
-                     StrokeThickness="1"
-                     StrokeShape="RoundRectangle 24"
-                     BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
-                     Padding="22"
-                     VerticalOptions="Center"
-                     MaximumHeightRequest="580"
-                     MaximumWidthRequest="580">
-                 <Border.Shadow>
-                     <Shadow Brush="#000000" Offset="0,10" Radius="30" Opacity="0.4" />
-                 </Border.Shadow>
+                    <Label Text="Hệ thống sử dụng các nguyên lý Kinh tế học hành vi đã được kiểm chứng để giải thích nguyên nhân đằng sau khuyến nghị này:"
+                           Style="{StaticResource FintechCaptionStyle}" />
 
-                 <ScrollView>
-                     <VerticalStackLayout Spacing="14">
-                         <!-- Modal Header -->
-                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                             <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
-                                 <Image Source="ic_xai.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
-                                 <Label Text="Chi Tiết Phân Tích Tài Chính"
-                                        FontSize="16" FontAttributes="Bold"
-                                        TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}"
-                                        VerticalOptions="Center" />
-                             </HorizontalStackLayout>
-                             <Button Grid.Column="1" Text="✕"
-                                     Command="{Binding CloseXaiModalCommand}"
-                                     BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
-                                     TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
-                                     FontSize="14" FontAttributes="Bold"
-                                     CornerRadius="18"
-                                     WidthRequest="36" HeightRequest="36" Padding="0" />
-                         </Grid>
+                    <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}" StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="{Binding SelectedNudge.XaiPrinciple, StringFormat='Nguyên lý: {0}'}" FontAttributes="Bold" FontSize="13" TextColor="{StaticResource FintechPrimary}" />
+                            <Label Text="{Binding SelectedNudge.XaiRationale}" FontSize="12" LineHeight="1.3" TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                        </VerticalStackLayout>
+                    </Border>
 
-                         <Label Text="{Binding SelectedNudge.Title}"
-                                FontSize="15" FontAttributes="Bold"
-                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-
-                         <!-- Context Trigger Box -->
-                         <Border Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                                 StrokeShape="RoundRectangle 14"
-                                 BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
-                                 Padding="12">
-                             <VerticalStackLayout Spacing="4">
-                                 <Label Text="Nguyên Nhân Kích Hoạt:" FontSize="11" FontAttributes="Bold"
-                                        TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                                 <Label Text="{Binding ActiveXaiRationale.TriggerContext}"
-                                        FontSize="13"
-                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                             </VerticalStackLayout>
-                         </Border>
-
-                         <!-- Mathematical Formula Box -->
-                         <Border Stroke="{AppThemeBinding Light=#FDE68A, Dark=#78350F}"
-                                 StrokeThickness="1"
-                                 StrokeShape="RoundRectangle 14"
-                                 BackgroundColor="{AppThemeBinding Light=#FFFBEB, Dark=#451A03}"
-                                 Padding="12">
-                             <VerticalStackLayout Spacing="4">
-                                 <Label Text="Công Thức Tính Toán:" FontSize="11" FontAttributes="Bold"
-                                        TextColor="{AppThemeBinding Light=#B45309, Dark=#FBBF24}" />
-                                 <Label Text="{Binding ActiveXaiRationale.MathematicalFormula}"
-                                        FontSize="12" FontFamily="Consolas"
-                                        TextColor="{AppThemeBinding Light=#78350F, Dark=#FDE68A}" />
-                             </VerticalStackLayout>
-                         </Border>
-
-                         <!-- Empirical Evidence Box -->
-                         <Border Stroke="{AppThemeBinding Light=#BAE6FD, Dark=#0369A1}"
-                                 StrokeThickness="1"
-                                 StrokeShape="RoundRectangle 14"
-                                 BackgroundColor="{AppThemeBinding Light=#F0F9FF, Dark=#082F49}"
-                                 Padding="12">
-                             <VerticalStackLayout Spacing="4">
-                                 <Label Text="Số Liệu Thực Tế:" FontSize="11" FontAttributes="Bold"
-                                        TextColor="{AppThemeBinding Light=#0284C7, Dark=#38BDF8}" />
-                                 <Label Text="{Binding ActiveXaiRationale.EmpiricalEvidence}"
-                                        FontSize="13"
-                                        TextColor="{AppThemeBinding Light=#0C4A6E, Dark=#E0F2FE}" />
-                             </VerticalStackLayout>
-                         </Border>
-
-                         <!-- Projected Consequences Box -->
-                         <Border Stroke="{AppThemeBinding Light=#FECACA, Dark=#991B1B}"
-                                 StrokeThickness="1"
-                                 StrokeShape="RoundRectangle 14"
-                                 BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                                 Padding="12">
-                             <VerticalStackLayout Spacing="4">
-                                 <Label Text="Dự Báo Xu Hướng:" FontSize="11" FontAttributes="Bold"
-                                        TextColor="{AppThemeBinding Light=#E11D48, Dark=#FB7185}" />
-                                 <Label Text="{Binding ActiveXaiRationale.ProjectedConsequences}"
-                                        FontSize="13"
-                                        TextColor="{AppThemeBinding Light=#881337, Dark=#FECDD3}" />
-                                 <Label Text="{Binding ActiveXaiRationale.ProjectedDailyDsaAfter, StringFormat='Hạn mức đề xuất mỗi ngày: {0:N0} đ/ngày'}"
-                                        FontSize="12" FontAttributes="Bold"
-                                        TextColor="{AppThemeBinding Light=#BE123C, Dark=#FDA4AF}"
-                                        Margin="0,4,0,0" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- Close Modal Button -->
-                        <Button Text="Đã Hiểu &amp; Quay Lại"
-                                Command="{Binding CloseXaiModalCommand}"
-                                BackgroundColor="{AppThemeBinding Light=#0284C7, Dark=#0284C7}"
-                                TextColor="#FFFFFF"
-                                FontAttributes="Bold"
-                                CornerRadius="12"
-                                HeightRequest="44"
-                                Margin="0,6,0,0">
-                            <Button.Shadow>
-                                <Shadow Brush="#0284C7" Offset="0,4" Radius="8" Opacity="0.25" />
-                            </Button.Shadow>
-                        </Button>
-                    </VerticalStackLayout>
-                </ScrollView>
+                    <Button Text="Đã Hiểu" Command="{Binding CloseXaiModalCommand}"
+                            Style="{StaticResource FintechPrimaryBtnStyle}" HeightRequest="44" Margin="0,8,0,0" />
+                </VerticalStackLayout>
             </Border>
         </Border>
     </Grid>

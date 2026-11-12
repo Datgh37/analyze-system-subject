@@ -7,446 +7,314 @@
              x:Class="ExpenseTracker.Maui.Views.BudgetsPage"
              x:DataType="vm:BudgetsViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
     <Grid RowDefinitions="*, Auto">
+        <!-- VÙNG CUỘN NỘI DUNG CHÍNH -->
         <ScrollView Grid.Row="0">
-        <VerticalStackLayout Padding="16,12,16,24" Spacing="18" MaximumWidthRequest="720">
+            <VerticalStackLayout Padding="16,12,16,28" Spacing="16" MaximumWidthRequest="640">
 
-            <!-- Error Banner -->
-            <Border BackgroundColor="#FEF2F2"
-                    Stroke="#FECACA"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="12,10"
-                    IsVisible="{Binding HasError}">
-                <HorizontalStackLayout Spacing="8">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
-                    <Label Text="{Binding ErrorMessage}"
-                           TextColor="#B91C1C"
-                           FontAttributes="Bold"
-                           FontSize="12"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Border>
-
-            <!-- Success / Info Status Banner -->
-            <Border BackgroundColor="#ECFDF5"
-                    Stroke="#A7F3D0"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="12,10"
-                    IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
-                <HorizontalStackLayout Spacing="8">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
-                    <Label Text="{Binding StatusMessage}"
-                           TextColor="#065F46"
-                           FontAttributes="Bold"
-                           FontSize="12"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Border>
-
-            <!-- Loading Indicator -->
-            <Border Style="{StaticResource ModernCard}"
-                    Padding="14"
-                    IsVisible="{Binding IsBusy}">
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#4F46E5" />
-                    <Label Text="Đang cập nhật tiến độ ngân sách..."
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="#4F46E5"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Border>
-
-            <!-- TOP ACTION BAR: Refresh & New Budget Buttons -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                <Button Grid.Column="0"
-                        Text="+ Lập Ngân Sách Mới"
-                        BackgroundColor="#4F46E5"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        FontSize="13"
-                        CornerRadius="10"
-                        HeightRequest="44"
-                        Command="{Binding NavigateToCreateBudgetCommand}" />
-
-                <Border Grid.Column="1"
-                        StrokeShape="RoundRectangle 10"
-                        StrokeThickness="0"
-                        BackgroundColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
-                        HeightRequest="44"
-                        Padding="16,0"
-                        VerticalOptions="Center">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LoadActiveBudgetProgressCommand}" />
-                    </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="Tải lại" TextColor="#FFFFFF" FontSize="13" FontAttributes="Bold" VerticalOptions="Center" />
-                    </Grid>
-                </Border>
-            </Grid>
-
-            <!-- EMPTY STATE: When No Active Budget Exists -->
-            <Border IsVisible="{Binding HasActiveBudget, Converter={StaticResource InvertedBoolConverter}}"
-                    Style="{StaticResource ModernCard}"
-                    Padding="28">
-                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Image Source="ic_budget.png" WidthRequest="44" HeightRequest="44" Opacity="0.5" HorizontalOptions="Center" />
-                    <Label Text="Chưa có kế hoạch ngân sách đang hoạt động"
-                           FontSize="17"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}"
-                           HorizontalTextAlignment="Center" />
-                    <Label Text="Thiết lập kế hoạch theo quy tắc 50/30/20, phương pháp số dư bằng không hoặc Kakeibo để kích hoạt tính toán hạn mức chi tiêu mỗi ngày và cảnh báo sớm tốc độ chi tiêu."
-                           FontSize="12"
-                           TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
-                           HorizontalTextAlignment="Center"
-                           LineHeight="1.3" />
-                    <Button Text="Bắt đầu thiết lập ngân sách ngay"
-                            BackgroundColor="#10B981"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            FontSize="13"
-                            CornerRadius="10"
-                            HeightRequest="44"
-                            Command="{Binding NavigateToCreateBudgetCommand}"
-                            Margin="0,8,0,0" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- ACTIVE BUDGET SECTION -->
-            <VerticalStackLayout Spacing="16" IsVisible="{Binding HasActiveBudget}">
-
-                <!-- ========================================== -->
-                <!-- 1. OVERALL BUDGET HEADER CARD              -->
-                <!-- ========================================== -->
-                <Border StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20"
-                        Padding="22"
-                        Shadow="{Shadow Brush='#4F46E5', Offset='0,10', Radius=20, Opacity=0.25}">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#1E1B4B" Offset="0.0" />
-                            <GradientStop Color="#312E81" Offset="0.5" />
-                            <GradientStop Color="#4338CA" Offset="1.0" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <VerticalStackLayout Spacing="12">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Grid.Column="0"
-                                   Text="{Binding ActiveBudget.Name}"
-                                   FontSize="20"
-                                   FontAttributes="Bold"
-                                   TextColor="#FFFFFF" />
-                            <Border Grid.Column="1"
-                                    BackgroundColor="#3730A3"
-                                    Padding="10,4"
-                                    StrokeShape="RoundRectangle 8"
-                                    Stroke="Transparent">
-                                <Label Text="{Binding ActiveBudget.MethodName}"
-                                       FontSize="11"
-                                       FontAttributes="Bold"
-                                       TextColor="#E0E7FF" />
-                            </Border>
-                        </Grid>
-
-                        <Label Text="{Binding ActiveBudget.PeriodSummary}"
-                               FontSize="12"
-                               TextColor="#A5B4FC" />
-
-                        <BoxView HeightRequest="1" Color="#4338CA" Margin="0,2" />
-
-                        <!-- Key Metrics Grid -->
-                        <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="2">
-                            <Label Grid.Row="0" Grid.Column="0" Text="TỔNG HẠN MỨC" FontSize="10" FontAttributes="Bold" TextColor="#A5B4FC" />
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="{Binding ActiveBudget.TotalAllocatedAmount, StringFormat='{0:N0} đ'}"
-                                   FontSize="14" FontAttributes="Bold" TextColor="#FFFFFF" />
-
-                            <Label Grid.Row="0" Grid.Column="1" Text="ĐÃ CHI TIÊU" FontSize="10" FontAttributes="Bold" TextColor="#FCA5A5" />
-                            <Label Grid.Row="1" Grid.Column="1"
-                                   Text="{Binding ActiveBudget.TotalSpentAmount, StringFormat='{0:N0} đ'}"
-                                   FontSize="14" FontAttributes="Bold" TextColor="#FDA4AF" />
-
-                            <Label Grid.Row="0" Grid.Column="2" Text="CÒN LẠI" FontSize="10" FontAttributes="Bold" TextColor="#86EFAC" />
-                            <Label Grid.Row="1" Grid.Column="2"
-                                   Text="{Binding ActiveBudget.TotalRemainingAmount, StringFormat='{0:N0} đ'}"
-                                   FontSize="14" FontAttributes="Bold" TextColor="#6EE7B7" />
-                        </Grid>
-
-                        <!-- Overall Progress Bar -->
-                        <VerticalStackLayout Spacing="4" Margin="0,6,0,0">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0"
-                                       Text="{Binding DaysPassed, StringFormat='Tiến độ chu kỳ: Ngày {0}'}"
-                                       FontSize="11" TextColor="#C7D2FE" />
-                                <Label Grid.Column="1"
-                                       Text="{Binding ActiveBudget.OverallSpentPercent, StringFormat='Đã giải ngân: {0:F1}%'}"
-                                       FontSize="11" FontAttributes="Bold" TextColor="#FFFFFF" />
-                            </Grid>
-                            <ProgressBar Progress="{Binding ActiveBudget.ProgressFraction}"
-                                         ProgressColor="#38BDF8"
-                                         HeightRequest="8" />
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
+                <!-- 1. BẢNG THÔNG BÁO LỖI HOẶC THÀNH CÔNG -->
+                <Border BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                        Stroke="#FECACA" StrokeShape="RoundRectangle 12" Padding="14,10"
+                        IsVisible="{Binding HasError}">
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#EF4444" VerticalOptions="Center" />
+                        <Label Text="{Binding ErrorMessage}" TextColor="#B91C1C" FontAttributes="Bold" FontSize="13" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
                 </Border>
 
-                <!-- ========================================== -->
-                <!-- 2. ADAPTIVE DSA WIDGET (UC-05.05)          -->
-                <!-- ========================================== -->
-                <Border Stroke="{Binding DsaStatus.DsaColor}"
-                        StrokeThickness="1.5"
-                        Style="{StaticResource ModernCard}"
-                        Padding="18"
-                        Shadow="{Shadow Brush='Black', Offset='0,3', Radius=8, Opacity=0.08}">
-                    <VerticalStackLayout Spacing="10">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <HorizontalStackLayout Spacing="6">
-                                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding DsaStatus.DsaColor}" VerticalOptions="Center" />
-                                    <Label Text="HẠN MỨC CHI TIÊU HÔM NAY"
-                                           FontSize="11"
-                                           FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
-                                           VerticalOptions="Center" />
-                                </HorizontalStackLayout>
-                                <Label Text="{Binding DsaStatus.DailyAllowance, StringFormat='{0:N0} đ'}"
-                                       FontSize="24"
-                                       FontAttributes="Bold"
-                                       TextColor="{Binding DsaStatus.DsaColor}" />
-                            </VerticalStackLayout>
-
-                            <Border Grid.Column="1"
-                                    BackgroundColor="{AppThemeBinding Light='#F1F5F9', Dark='#1E293B'}"
-                                    Padding="12,8"
-                                    StrokeShape="RoundRectangle 10"
-                                    Stroke="Transparent"
-                                    VerticalOptions="Center">
-                                <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                                    <Label Text="Khả dụng hôm nay" FontSize="10" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" HorizontalOptions="Center" />
-                                    <Label Text="{Binding DsaStatus.RemainingToday, StringFormat='{0:N0} đ'}"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           TextColor="{Binding DsaStatus.DsaColor}"
-                                           HorizontalOptions="Center" />
-                                </VerticalStackLayout>
-                            </Border>
-                        </Grid>
-
-                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}" Margin="0,2" />
-
-                        <!-- Today details and explanation -->
-                        <Grid ColumnDefinitions="*,*">
-                            <Label Grid.Column="0"
-                                   Text="{Binding DsaStatus.TodaySpent, StringFormat='Đã chi hôm nay: {0:N0} đ'}"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                            <Label Grid.Column="1"
-                                   Text="{Binding DsaStatus.RemainingDays, StringFormat='Số ngày còn lại: {0} ngày'}"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="End"
-                                   TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        </Grid>
-
-                        <Label Text="{Binding DsaStatus.Note}"
-                               FontSize="11"
-                               TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
-                               FontAttributes="Italic" />
-                    </VerticalStackLayout>
+                <Border BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                        Stroke="#A7F3D0" StrokeShape="RoundRectangle 12" Padding="14,10"
+                        IsVisible="{Binding StatusMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#10B981" VerticalOptions="Center" />
+                        <Label Text="{Binding StatusMessage}" TextColor="#065F46" FontAttributes="Bold" FontSize="13" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
                 </Border>
 
-                <!-- ========================================== -->
-                <!-- 3. SPENDING VELOCITY & FORECAST (UC-05.06)  -->
-                <!-- ========================================== -->
-                <Border Stroke="{Binding VelocityStatus.VelocityColor}"
-                        StrokeThickness="1.5"
-                        Style="{StaticResource ModernCard}"
-                        Padding="18"
-                        Shadow="{Shadow Brush='Black', Offset='0,3', Radius=8, Opacity=0.08}">
-                    <VerticalStackLayout Spacing="10">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <HorizontalStackLayout Spacing="6">
-                                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding VelocityStatus.VelocityColor}" VerticalOptions="Center" />
-                                    <Label Text="TỐC ĐỘ CHI TIÊU BÌNH QUÂN"
-                                           FontSize="11"
-                                           FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
-                                           VerticalOptions="Center" />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Spacing="8">
-                                    <Label Text="{Binding VelocityStatus.VelocityIndex, StringFormat='{0:F2}x'}"
-                                           FontSize="22"
-                                           FontAttributes="Bold"
-                                           TextColor="{Binding VelocityStatus.VelocityColor}" />
-                                    <Label Text="{Binding VelocityStatus.StatusText}"
-                                           FontSize="13"
-                                           FontAttributes="Bold"
-                                           TextColor="{Binding VelocityStatus.VelocityColor}"
-                                           VerticalOptions="Center" />
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
+                <!-- NÚT TÁC VỤ ĐẦU TRANG -->
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <Button Grid.Column="0"
+                            Text="+ Lập Kế Hoạch Ngân Sách Mới"
+                            Style="{StaticResource FintechPrimaryBtnStyle}"
+                            HeightRequest="46"
+                            Command="{Binding NavigateToCreateBudgetCommand}" />
 
-                            <Label Grid.Column="1"
-                                   Text="{Binding VelocityStatus.BurnRateDescription}"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}"
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                            HeightRequest="46"
+                            Padding="14,0"
+                            VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoadActiveBudgetProgressCommand}" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Image Source="ic_refresh.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                            <Label Text="Tải lại"
+                                   FontSize="12" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
                                    VerticalOptions="Center" />
-                        </Grid>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
 
-                        <!-- Velocity Comparison -->
-                        <Grid ColumnDefinitions="*,*">
-                            <Label Grid.Column="0"
-                                   Text="{Binding VelocityStatus.ActualDailyBurnRate, StringFormat='Thực tế: {0:N0} đ/ngày'}"
-                                   FontSize="12"
-                                   TextColor="#F43F5E"
-                                   FontAttributes="Bold" />
-                            <Label Grid.Column="1"
-                                   Text="{Binding VelocityStatus.TargetDailyBurnRate, StringFormat='Mục tiêu: {0:N0} đ/ngày'}"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="End"
-                                   TextColor="#10B981"
-                                   FontAttributes="Bold" />
-                        </Grid>
-
-                        <!-- CRITICAL ALERT: Out-of-Money Date Forecast if Burn Rate is dangerous -->
-                        <Border IsVisible="{Binding VelocityStatus.IsCritical}"
-                                Stroke="#F43F5E"
-                                BackgroundColor="#FEF2F2"
-                                Padding="12"
-                                StrokeShape="RoundRectangle 8">
-                            <VerticalStackLayout Spacing="4">
-                                <Label Text="CẢNH BÁO NGUY CƠ VƯỢT HẠN MỨC SỚM"
-                                       FontSize="12"
-                                       FontAttributes="Bold"
-                                       TextColor="#991B1B" />
-                                <Label Text="{Binding VelocityStatus.ForecastMessage}"
-                                       FontSize="12"
-                                       TextColor="#B91C1C" />
-                            </VerticalStackLayout>
+                <!-- TRẠNG THÁI CHƯA CÓ NGÂN SÁCH -->
+                <Border IsVisible="{Binding HasActiveBudget, Converter={StaticResource InvertedBoolConverter}}"
+                        Style="{StaticResource FintechCardStyle}"
+                        Padding="28,24">
+                    <VerticalStackLayout Spacing="14" HorizontalOptions="Center">
+                        <Border WidthRequest="64" HeightRequest="64"
+                                StrokeShape="RoundRectangle 20"
+                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                StrokeThickness="0"
+                                HorizontalOptions="Center">
+                            <Image Source="ic_budget.svg" WidthRequest="32" HeightRequest="32" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
+                        <Label Text="Chưa có kế hoạch ngân sách đang hoạt động"
+                               Style="{StaticResource FintechCardTitleStyle}"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Thiết lập kế hoạch theo phương pháp 50/30/20, Zero-Based hoặc Kakeibo để kiểm soát chi tiêu mỗi ngày và nhận cảnh báo sớm tốc độ tiêu tiền."
+                               Style="{StaticResource FintechCaptionStyle}"
+                               HorizontalTextAlignment="Center" />
+                        <Button Text="Bắt đầu thiết lập ngay"
+                                Style="{StaticResource FintechPrimaryBtnStyle}"
+                                HeightRequest="44"
+                                Command="{Binding NavigateToCreateBudgetCommand}"
+                                Margin="0,8,0,0" />
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- ========================================== -->
-                <!-- 4. CATEGORY ALLOCATIONS & 3-BAND PROGRESS  -->
-                <!-- ========================================== -->
-                <VerticalStackLayout Spacing="10">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0"
-                               Text="Tiến Độ Chi Tiêu Từng Danh Mục"
-                               FontSize="15"
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
-                        <Border Grid.Column="1"
-                                Style="{StaticResource PillBadge}">
-                            <Label Text="Theo dõi tự động" FontSize="10" FontAttributes="Bold" TextColor="#4F46E5" />
-                        </Border>
-                    </Grid>
+                <!-- 2. KHI ĐÃ CÓ NGÂN SÁCH ĐANG HOẠT ĐỘNG -->
+                <VerticalStackLayout Spacing="16" IsVisible="{Binding HasActiveBudget}">
 
-                    <CollectionView ItemsSource="{Binding Allocations}">
-                        <CollectionView.EmptyView>
-                            <Label Text="Chưa có danh mục nào được phân bổ trong kế hoạch này."
-                                   TextColor="Gray"
-                                   HorizontalOptions="Center"
-                                   Margin="0,16" />
-                        </CollectionView.EmptyView>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:BudgetAllocationModel">
-                                <Border Style="{StaticResource ModernCard}"
-                                        Padding="14"
-                                        Margin="0,4">
-                                    <VerticalStackLayout Spacing="6">
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                                                <Label Text="{Binding DisplayCategoryIcon}" FontSize="16" VerticalOptions="Center" />
-                                                <Label Text="{Binding CategoryName}" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" VerticalOptions="Center" />
-                                            </HorizontalStackLayout>
+                    <!-- HERO BUDGET CARD -->
+                    <Border Stroke="{AppThemeBinding Light=#4338CA, Dark=#6366F1}"
+                            StrokeThickness="1.5"
+                            StrokeShape="RoundRectangle 24"
+                            Padding="22">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#0F172A" Offset="0.0" />
+                                <GradientStop Color="#1E1B4B" Offset="0.5" />
+                                <GradientStop Color="#312E81" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow>
+                            <Shadow Brush="#312E81" Offset="0,6" Radius="20" Opacity="0.35" />
+                        </Border.Shadow>
 
-                                            <!-- Micro-Alert Badge (UC-05.04) -->
-                                            <Border Grid.Column="1"
-                                                    IsVisible="{Binding IsAlertTriggered}"
-                                                    BackgroundColor="#FEE2E2"
-                                                    Padding="6,2"
-                                                    StrokeShape="RoundRectangle 4"
-                                                    Stroke="Transparent">
-                                                <Label Text="Cảnh báo &gt;=80%"
-                                                       FontSize="10"
-                                                       FontAttributes="Bold"
-                                                       TextColor="#DC2626" />
-                                            </Border>
-                                        </Grid>
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <Label Grid.Column="0"
+                                       Text="{Binding ActiveBudget.Name}"
+                                       FontSize="20" FontAttributes="Bold" TextColor="#FFFFFF" />
+                                <Border Grid.Column="1" BackgroundColor="#4338CA" Padding="10,4" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                                    <Label Text="{Binding ActiveBudget.MethodName}" FontSize="11" FontAttributes="Bold" TextColor="#E0E7FF" />
+                                </Border>
+                            </Grid>
 
-                                        <!-- Amounts Summary -->
-                                        <Grid ColumnDefinitions="*,*,*">
-                                            <Label Grid.Column="0"
-                                                   Text="{Binding AllocatedAmount, StringFormat='Hạn mức: {0:N0} đ'}"
-                                                   FontSize="11" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding CurrentSpent, StringFormat='Đã tiêu: {0:N0} đ'}"
-                                                   FontSize="11" TextColor="#F43F5E" FontAttributes="Bold" />
-                                            <Label Grid.Column="2"
-                                                   Text="{Binding RemainingAmount, StringFormat='Còn lại: {0:N0} đ'}"
-                                                   FontSize="11" TextColor="#10B981" FontAttributes="Bold" HorizontalTextAlignment="End" />
-                                        </Grid>
+                            <Label Text="{Binding ActiveBudget.PeriodSummary}" FontSize="12" TextColor="#A5B4FC" />
 
-                                        <!-- Ergonomic 3-band Color Progress Bar -->
-                                        <ProgressBar Progress="{Binding ProgressFraction}"
-                                                     ProgressColor="{Binding ProgressBarColor}"
-                                                     HeightRequest="8" />
+                            <BoxView HeightRequest="1" Color="#4338CA" Margin="0,2" />
 
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <Label Grid.Column="0"
-                                                   Text="{Binding RuleName}"
-                                                   FontSize="10" TextColor="{AppThemeBinding Light='#94A3B8', Dark='#64748B'}" />
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding SpentPercent, StringFormat='{0:F1}%'}"
-                                                   FontSize="11" FontAttributes="Bold"
-                                                   TextColor="{Binding ProgressBarColor}" />
-                                        </Grid>
+                            <!-- 3 CỘT: HẠN MỨC, ĐÃ TIÊU, CÒN LẠI -->
+                            <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Text="TỔNG HẠN MỨC" FontSize="10" FontAttributes="Bold" TextColor="#A5B4FC" />
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       Text="{Binding ActiveBudget.TotalAllocatedAmount, StringFormat='{0:N0} đ'}"
+                                       FontSize="14" FontAttributes="Bold" TextColor="#FFFFFF" />
+
+                                <Label Grid.Row="0" Grid.Column="1" Text="ĐÃ CHI TIÊU" FontSize="10" FontAttributes="Bold" TextColor="#FCA5A5" />
+                                <Label Grid.Row="1" Grid.Column="1"
+                                       Text="{Binding ActiveBudget.TotalSpentAmount, StringFormat='{0:N0} đ'}"
+                                       FontSize="14" FontAttributes="Bold" TextColor="#FDA4AF" />
+
+                                <Label Grid.Row="0" Grid.Column="2" Text="CÒN LẠI" FontSize="10" FontAttributes="Bold" TextColor="#86EFAC" />
+                                <Label Grid.Row="1" Grid.Column="2"
+                                       Text="{Binding ActiveBudget.TotalRemainingAmount, StringFormat='{0:N0} đ'}"
+                                       FontSize="14" FontAttributes="Bold" TextColor="#6EE7B7" />
+                            </Grid>
+
+                            <VerticalStackLayout Spacing="6" Margin="0,6,0,0">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Text="{Binding DaysPassed, StringFormat='Tiến độ chu kỳ: Ngày {0}'}" FontSize="11" TextColor="#C7D2FE" />
+                                    <Label Grid.Column="1" Text="{Binding ActiveBudget.OverallSpentPercent, StringFormat='Đã giải ngân: {0:F1}%'}" FontSize="11" FontAttributes="Bold" TextColor="#FFFFFF" />
+                                </Grid>
+                                <ProgressBar Progress="{Binding ActiveBudget.ProgressFraction}" ProgressColor="#38BDF8" HeightRequest="8" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- HẠN MỨC CHI TIÊU AN TOÀN HÔM NAY (DSA CARD) -->
+                    <Border Stroke="{Binding DsaStatus.DsaColor}"
+                            StrokeThickness="1.5"
+                            Style="{StaticResource FintechCardStyle}"
+                            Padding="18">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding DsaStatus.DsaColor}" VerticalOptions="Center" />
+                                        <Label Text="HẠN MỨC CHI TIÊU AN TOÀN HÔM NAY"
+                                               FontSize="11" FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource FintechTextMuted}, Dark={StaticResource FintechTextMuted}}"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding DsaStatus.DailyAllowance, StringFormat='{0:N0} đ'}"
+                                           FontSize="24" FontAttributes="Bold" TextColor="{Binding DsaStatus.DsaColor}" />
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="1"
+                                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                        Padding="12,8" StrokeShape="RoundRectangle 10" StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                                        <Label Text="Khả dụng hôm nay" FontSize="10" TextColor="{StaticResource FintechTextMuted}" HorizontalOptions="Center" />
+                                        <Label Text="{Binding DsaStatus.RemainingToday, StringFormat='{0:N0} đ'}"
+                                               FontSize="15" FontAttributes="Bold" TextColor="{Binding DsaStatus.DsaColor}" HorizontalOptions="Center" />
                                     </VerticalStackLayout>
                                 </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}" Margin="0,2" />
+
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Grid.Column="0" Text="{Binding DsaStatus.TodaySpent, StringFormat='Đã chi hôm nay: {0:N0} đ'}" Style="{StaticResource FintechCaptionStyle}" />
+                                <Label Grid.Column="1" Text="{Binding DsaStatus.RemainingDays, StringFormat='Số ngày còn lại: {0} ngày'}" Style="{StaticResource FintechCaptionStyle}" HorizontalTextAlignment="End" />
+                            </Grid>
+
+                            <Label Text="{Binding DsaStatus.Note}" FontSize="11" TextColor="{StaticResource FintechTextMuted}" FontAttributes="Italic" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- TỐC ĐỘ TIÊU TIỀN (SPENDING VELOCITY) -->
+                    <Border Stroke="{Binding VelocityStatus.VelocityColor}"
+                            StrokeThickness="1.5"
+                            Style="{StaticResource FintechCardStyle}"
+                            Padding="18">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding VelocityStatus.VelocityColor}" VerticalOptions="Center" />
+                                        <Label Text="TỐC ĐỘ TIÊU TIỀN BÌNH QUÂN"
+                                               FontSize="11" FontAttributes="Bold"
+                                               TextColor="{StaticResource FintechTextMuted}"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                        <Label Text="{Binding VelocityStatus.VelocityIndex, StringFormat='{0:F2}x'}"
+                                               FontSize="22" FontAttributes="Bold" TextColor="{Binding VelocityStatus.VelocityColor}" />
+                                        <Label Text="{Binding VelocityStatus.StatusText}"
+                                               FontSize="13" FontAttributes="Bold" TextColor="{Binding VelocityStatus.VelocityColor}" VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Label Grid.Column="1" Text="{Binding VelocityStatus.BurnRateDescription}" Style="{StaticResource FintechCaptionStyle}" VerticalOptions="Center" />
+                            </Grid>
+
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Grid.Column="0" Text="{Binding VelocityStatus.ActualDailyBurnRate, StringFormat='Thực tế: {0:N0} đ/ngày'}"
+                                       FontSize="12" TextColor="{StaticResource FintechExpense}" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Text="{Binding VelocityStatus.TargetDailyBurnRate, StringFormat='Mục tiêu: {0:N0} đ/ngày'}"
+                                       FontSize="12" HorizontalTextAlignment="End" TextColor="{StaticResource FintechIncome}" FontAttributes="Bold" />
+                            </Grid>
+
+                            <Border IsVisible="{Binding VelocityStatus.IsCritical}"
+                                    Stroke="{StaticResource FintechExpense}"
+                                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                                    Padding="12" StrokeShape="RoundRectangle 10">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="CẢNH BÁO NGUY CƠ CẠN HẠN MỨC SỚM" FontSize="12" FontAttributes="Bold" TextColor="#991B1B" />
+                                    <Label Text="{Binding VelocityStatus.ForecastMessage}" FontSize="12" TextColor="#B91C1C" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- TIẾN ĐỘ TỪNG DANH MỤC -->
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="TIẾN ĐỘ THEO TỪNG DANH MỤC" Style="{StaticResource FintechSectionTitleStyle}" />
+                            <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}" Padding="10,4" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                                <Label Text="Thời gian thực" FontSize="11" FontAttributes="Bold" TextColor="{StaticResource FintechPrimary}" />
+                            </Border>
+                        </Grid>
+
+                        <CollectionView ItemsSource="{Binding Allocations}" SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <Label Text="Chưa có danh mục nào được phân bổ trong kế hoạch này."
+                                       Style="{StaticResource FintechCaptionStyle}"
+                                       HorizontalOptions="Center" Margin="0,16" />
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:BudgetAllocationModel">
+                                    <Border Style="{StaticResource FintechCardStyle}" Padding="14" Margin="0,0,0,8">
+                                        <VerticalStackLayout Spacing="8">
+                                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                                <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                                    <Border WidthRequest="32" HeightRequest="32"
+                                                            StrokeShape="RoundRectangle 8"
+                                                            BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}"
+                                                            StrokeThickness="0"
+                                                            VerticalOptions="Center">
+                                                        <Image Source="ic_category.svg" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center" />
+                                                    </Border>
+                                                    <Label Text="{Binding CategoryName}"
+                                                           Style="{StaticResource FintechCardTitleStyle}"
+                                                           VerticalOptions="Center" />
+                                                </HorizontalStackLayout>
+
+                                                <Border Grid.Column="1"
+                                                        IsVisible="{Binding IsAlertTriggered}"
+                                                        BackgroundColor="#FEE2E2" Padding="8,3" StrokeShape="RoundRectangle 6" StrokeThickness="0">
+                                                    <Label Text="Cảnh báo ≥80%" FontSize="10" FontAttributes="Bold" TextColor="#DC2626" />
+                                                </Border>
+                                            </Grid>
+
+                                            <Grid ColumnDefinitions="*,*,*">
+                                                <Label Grid.Column="0" Text="{Binding AllocatedAmount, StringFormat='Hạn mức: {0:N0} đ'}" Style="{StaticResource FintechCaptionStyle}" />
+                                                <Label Grid.Column="1" Text="{Binding CurrentSpent, StringFormat='Đã tiêu: {0:N0} đ'}" FontSize="11" TextColor="{StaticResource FintechExpense}" FontAttributes="Bold" />
+                                                <Label Grid.Column="2" Text="{Binding RemainingAmount, StringFormat='Còn lại: {0:N0} đ'}" FontSize="11" TextColor="{StaticResource FintechIncome}" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                                            </Grid>
+
+                                            <ProgressBar Progress="{Binding ProgressFraction}" ProgressColor="{Binding ProgressBarColor}" HeightRequest="8" />
+
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Grid.Column="0" Text="{Binding RuleName}" Style="{StaticResource FintechCaptionStyle}" />
+                                                <Label Grid.Column="1" Text="{Binding SpentPercent, StringFormat='{0:F1}%'}" FontSize="11" FontAttributes="Bold" TextColor="{Binding ProgressBarColor}" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- NÚT ĐÓNG KẾ HOẠCH NGÂN SÁCH -->
+                    <Border Stroke="#FCA5A5" BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                            Padding="16" StrokeShape="RoundRectangle 14" Margin="0,8,0,16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Đóng Kế Hoạch Ngân Sách Hiện Tại" FontAttributes="Bold" FontSize="13" TextColor="#991B1B" />
+                            <Label Text="Khi đóng kế hoạch, hệ thống sẽ lưu trữ và hoàn tất chu kỳ ngân sách này. Bạn có thể tạo kế hoạch mới bất cứ lúc nào."
+                                   FontSize="12" TextColor="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}" />
+                            <Button Text="Đóng Ngân Sách Này"
+                                    BackgroundColor="#EF4444" TextColor="White"
+                                    FontAttributes="Bold" FontSize="13" CornerRadius="10" HeightRequest="44"
+                                    Command="{Binding CloseActiveBudgetCommand}" />
+                        </VerticalStackLayout>
+                    </Border>
+
                 </VerticalStackLayout>
 
-                <!-- ========================================== -->
-                <!-- 5. DANGER ZONE: Close Budget Action        -->
-                <!-- ========================================== -->
-                <Border Stroke="#FCA5A5"
-                        BackgroundColor="{AppThemeBinding Light='#FEF2F2', Dark='#450A0A'}"
-                        Padding="16"
-                        StrokeShape="RoundRectangle 12"
-                        Margin="0,8,0,16">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Đóng Kế Hoạch Ngân Sách Hiện Tại"
-                               FontAttributes="Bold"
-                               FontSize="13"
-                               TextColor="#991B1B" />
-                        <Label Text="Khi đóng kế hoạch, hệ thống sẽ lưu trữ và hoàn tất chu kỳ ngân sách này. Bạn có thể tạo kế hoạch mới bất cứ lúc nào."
-                               FontSize="12"
-                               TextColor="{AppThemeBinding Light='#7F1D1D', Dark='#FCA5A5'}" />
-                        <Button Text="Đóng Ngân Sách Này"
-                                BackgroundColor="#EF4444"
-                                TextColor="White"
-                                FontAttributes="Bold"
-                                FontSize="13"
-                                CornerRadius="8"
-                                HeightRequest="42"
-                                Command="{Binding CloseActiveBudgetCommand}" />
-                    </VerticalStackLayout>
-                </Border>
-
             </VerticalStackLayout>
+        </ScrollView>
 
-        </VerticalStackLayout>
-    </ScrollView>
-
-        <!-- Bottom Navigation Bar (Center Docked Voice Mic FAB) -->
+        <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
         <components:BottomNavDockView Grid.Row="1" ActiveTab="Budgets" />
     </Grid>
 </ContentPage>
-

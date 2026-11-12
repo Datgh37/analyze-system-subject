@@ -24,7 +24,7 @@ public class MainActivity : MauiAppCompatActivity
 
     private void RequestStartupPermissions()
     {
-        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+        if (OperatingSystem.IsAndroidVersionAtLeast(33))
         {
             const string prefKey = "has_requested_startup_notification_permission";
             bool alreadyRequested = Microsoft.Maui.Storage.Preferences.Default.Get(prefKey, false);

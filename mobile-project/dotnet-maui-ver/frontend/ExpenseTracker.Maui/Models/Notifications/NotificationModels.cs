@@ -11,6 +11,15 @@ public class InAppNotificationModel
     public DateTime? ReadAt { get; set; }
     public DateTime CreatedAt { get; set; }
 
+        public string TypeSvgIcon => Type switch
+    {
+        "BudgetAlert" => "ic_budget.svg",
+        "BalanceUpdate" => "ic_wallet.svg",
+        "AiReceiptProcessed" => "ic_ocr.svg",
+        "DailyReminder" => "ic_bell.svg",
+        _ => "ic_bell.svg"
+    };
+
     // Visual formatting properties for UI presentation
     public string TypeIcon => Type switch
     {

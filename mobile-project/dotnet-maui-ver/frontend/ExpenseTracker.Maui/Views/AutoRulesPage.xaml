@@ -3,278 +3,210 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
              xmlns:models="clr-namespace:ExpenseTracker.Maui.Models.AutoRules"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.AutoRulesPage"
              x:DataType="vm:AutoRulesViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20,16,20,32" Spacing="18" MaximumWidthRequest="720">
+    <Grid RowDefinitions="*, Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="16,12,16,28" Spacing="16" MaximumWidthRequest="640">
 
-            <!-- ========================================== -->
-            <!-- 1. HERO BANNER: AUTO-RULES ENGINE          -->
-            <!-- ========================================== -->
-            <Border StrokeThickness="0"
-                    StrokeShape="RoundRectangle 20"
-                    Padding="22"
-                    Shadow="{Shadow Brush='#4F46E5', Offset='0,10', Radius=20, Opacity=0.25}">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#1E1B4B" Offset="0.0" />
-                        <GradientStop Color="#312E81" Offset="0.5" />
-                        <GradientStop Color="#4338CA" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Background>
-                <VerticalStackLayout Spacing="10">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                            <Label Text="🤖" FontSize="18" VerticalOptions="Center" />
-                            <Label Text="CONTINUOUS LEARNING RULES"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   TextColor="#A5B4FC"
-                                   CharacterSpacing="1.2"
-                                   VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                        <Border Grid.Column="1"
-                                BackgroundColor="#3730A3"
-                                Padding="8,4"
-                                StrokeShape="RoundRectangle 8"
-                                Stroke="Transparent">
-                            <Label Text="SMART AI"
-                                   FontSize="10"
-                                   FontAttributes="Bold"
-                                   TextColor="#E0E7FF" />
-                        </Border>
-                    </Grid>
+                <!-- 1. HERO CARD: QUY TẮC TỰ ĐỘNG PHÂN LOẠI THÔNG MINH -->
+                <Border Stroke="{AppThemeBinding Light=#4338CA, Dark=#6366F1}"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 24"
+                        Padding="22">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#0F172A" Offset="0.0" />
+                            <GradientStop Color="#1E1B4B" Offset="0.5" />
+                            <GradientStop Color="#312E81" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#312E81" Offset="0,6" Radius="20" Opacity="0.35" />
+                    </Border.Shadow>
 
-                    <Label Text="Quy Tắc Phân Loại Tự Động"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="#FFFFFF" />
-
-                    <Label Text="Hệ thống tự động so khớp từ khóa (WinMart, Grab, Highlands...) hoặc biểu thức chính quy (Regex) để tự động gán danh mục cho giao dịch mới."
-                           FontSize="12"
-                           TextColor="#C7D2FE"
-                           LineHeight="1.3" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Error Banner -->
-            <Border IsVisible="{Binding HasError}"
-                    BackgroundColor="#FEF2F2"
-                    Stroke="#FECACA"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="12,10">
-                <HorizontalStackLayout Spacing="8">
-                    <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
-                    <Label Text="{Binding ErrorMessage}"
-                           TextColor="#B91C1C"
-                           FontAttributes="Bold"
-                           FontSize="12"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Border>
-
-            <!-- Loading Indicator -->
-            <Border Style="{StaticResource ModernCard}"
-                    Padding="14"
-                    IsVisible="{Binding IsBusy}">
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#4F46E5" />
-                    <Label Text="Đang cập nhật quy tắc tự động..."
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextColor="#4F46E5"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Border>
-
-            <!-- ========================================== -->
-            <!-- 2. ADD RULE FORM                           -->
-            <!-- ========================================== -->
-            <Border Style="{StaticResource ModernCard}" Padding="18">
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="Thiết Lập Quy Tắc Từ Khóa Mới"
-                           FontAttributes="Bold"
-                           FontSize="16"
-                           TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}" />
-
-                    <!-- Keyword Pattern -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Từ khóa so khớp (Pattern) (*):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8"
-                                Padding="10,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
-                            <Entry Placeholder="Ví dụ: WinMart, GrabFood, Highlands..."
-                                   Text="{Binding NewKeywordPattern}"
-                                   FontSize="13" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Target Category Picker -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Danh mục tự động gán (*):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8"
-                                Padding="8,0"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
-                            <Picker Title="-- Chọn danh mục đích --"
-                                    ItemsSource="{Binding AvailableCategories}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    SelectedItem="{Binding SelectedCategory}"
-                                    FontSize="13" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Priority Order -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Thứ tự ưu tiên (Priority):" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        <Border Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8"
-                                Padding="10,2"
-                                BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}">
-                            <Entry Placeholder="Số nguyên (ví dụ: 1, 2, 3)"
-                                   Text="{Binding PriorityOrder}"
-                                   Keyboard="Numeric"
-                                   FontSize="13" />
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Regex & Case Sensitive Checkboxes -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,4,0,0">
-                        <Grid Grid.Column="0" ColumnDefinitions="Auto,*" ColumnSpacing="6" VerticalOptions="Center">
-                            <CheckBox Grid.Column="0" IsChecked="{Binding IsRegex}" Color="#4F46E5" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="Biểu thức Regex" VerticalOptions="Center" FontSize="12" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                <Image Source="ic_rules.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Label Text="TỰ ĐỘNG HÓA DANH MỤC" FontSize="11" FontAttributes="Bold" TextColor="#A5B4FC" CharacterSpacing="1" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Grid.Column="1" BackgroundColor="#4338CA" Padding="8,3" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                                <Label Text="MATCH TỪ KHÓA" FontSize="10" FontAttributes="Bold" TextColor="#E0E7FF" />
+                            </Border>
                         </Grid>
 
-                        <Grid Grid.Column="1" ColumnDefinitions="Auto,*" ColumnSpacing="6" VerticalOptions="Center">
-                            <CheckBox Grid.Column="0" IsChecked="{Binding IsCaseSensitive}" Color="#4F46E5" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="Phân biệt hoa/thường" VerticalOptions="Center" FontSize="12" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light='#475569', Dark='#CBD5E1'}" />
-                        </Grid>
-                    </Grid>
+                        <Label Text="Phân Loại Giao Dịch Tự Động" FontSize="20" FontAttributes="Bold" TextColor="#FFFFFF" />
+                        <Label Text="Nhận diện các từ khóa quen thuộc (Grab, Highlands, Siêu thị WinMart...) để tự động gán đúng danh mục thu chi ngay khi phát sinh giao dịch."
+                               FontSize="12" TextColor="#C7D2FE" />
+                    </VerticalStackLayout>
+                </Border>
 
-                    <Button Text="+ Lưu Quy Tắc Thông Minh"
-                            Command="{Binding CreateRuleCommand}"
-                            BackgroundColor="#4F46E5"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            FontSize="13"
-                            CornerRadius="10"
-                            HeightRequest="44"
-                            Margin="0,6,0,0" />
-                </VerticalStackLayout>
-            </Border>
+                <!-- THÔNG BÁO LỖI (NẾU CÓ) -->
+                <Border IsVisible="{Binding HasError}"
+                        BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                        Stroke="#FECACA" StrokeShape="RoundRectangle 12" Padding="14,10">
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="#DC2626" VerticalOptions="Center" />
+                        <Label Text="{Binding ErrorMessage}" TextColor="#B91C1C" FontAttributes="Bold" FontSize="13" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
 
-            <!-- ========================================== -->
-            <!-- 3. RULES LIST                              -->
-            <!-- ========================================== -->
-            <Label Text="Danh Sách Quy Tắc Hiện Tại"
-                   FontAttributes="Bold"
-                   FontSize="15"
-                   TextColor="{AppThemeBinding Light='#0F172A', Dark='#F8FAFC'}"
-                   Margin="0,6,0,0" />
+                <!-- 2. FORM THIẾT LẬP QUY TẮC MỚI -->
+                <Border Style="{StaticResource FintechCardStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="THIẾT LẬP QUY TẮC MỚI" Style="{StaticResource FintechCardTitleStyle}" />
 
-            <CollectionView ItemsSource="{Binding Rules}">
-                <CollectionView.EmptyView>
-                    <Border Style="{StaticResource ModernCard}" Padding="20">
-                        <Label Text="Chưa có quy tắc tự động nào được thiết lập."
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" />
-                    </Border>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:AutoRuleModel">
-                        <Border Style="{StaticResource ModernCard}"
-                                Padding="14"
-                                Margin="0,4">
-                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
-                                <!-- Row 0: Priority Badge, Tags & Delete Action -->
-                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
-                                    <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
-                                        <Border BackgroundColor="{AppThemeBinding Light='#EEF2FF', Dark='#1E1B4B'}"
-                                                Stroke="{AppThemeBinding Light='#C7D2FE', Dark='#3730A3'}"
-                                                StrokeThickness="1"
-                                                Padding="8,2"
-                                                StrokeShape="RoundRectangle 6"
-                                                VerticalOptions="Center">
-                                            <Label Text="{Binding PriorityOrder, StringFormat='Ưu tiên #{0}'}"
-                                                   FontSize="11"
-                                                   FontAttributes="Bold"
-                                                   TextColor="#4F46E5" />
-                                        </Border>
+                        <!-- TỪ KHÓA -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Từ khóa nhận diện (*)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="14,4">
+                                <Entry Placeholder="Ví dụ: WinMart, GrabFood, Highlands, Shopee..."
+                                       Text="{Binding NewKeywordPattern}"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </VerticalStackLayout>
 
-                                        <Border BackgroundColor="{AppThemeBinding Light='#FEF3C7', Dark='#78350F'}"
-                                                Padding="6,2"
-                                                StrokeShape="RoundRectangle 6"
-                                                Stroke="Transparent"
-                                                IsVisible="{Binding IsRegex}"
-                                                VerticalOptions="Center">
-                                            <Label Text="REGEX" FontSize="10" FontAttributes="Bold" TextColor="#D97706" />
-                                        </Border>
+                        <!-- DANH MỤC TỰ ĐỘNG GÁN -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Danh mục tự động gán (*)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="10,2">
+                                <Picker Title="-- Chọn danh mục đích --"
+                                        ItemsSource="{Binding AvailableCategories}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding SelectedCategory}"
+                                        FontSize="13"
+                                        TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                            </Border>
+                        </VerticalStackLayout>
 
-                                        <Border BackgroundColor="{AppThemeBinding Light='#F3E8FF', Dark='#581C87'}"
-                                                Padding="6,2"
-                                                StrokeShape="RoundRectangle 6"
-                                                Stroke="Transparent"
-                                                IsVisible="{Binding IsCaseSensitive}"
-                                                VerticalOptions="Center">
-                                            <Label Text="Aa" FontSize="10" FontAttributes="Bold" TextColor="#9333EA" />
-                                        </Border>
-                                    </HorizontalStackLayout>
-
-                                    <Button Grid.Column="1"
-                                            Text="Xóa"
-                                            TextColor="#EF4444"
-                                            BackgroundColor="{AppThemeBinding Light='#FEE2E2', Dark='#450A0A'}"
-                                            FontAttributes="Bold"
-                                            FontSize="11"
-                                            HeightRequest="30"
-                                            Padding="12,0"
-                                            CornerRadius="6"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AutoRulesViewModel}}, Path=DeleteRuleCommand}"
-                                            CommandParameter="{Binding .}" />
-                                </Grid>
-
-                                <!-- Row 1: Keyword Pattern Container -->
-                                <Border Grid.Row="1"
-                                        BackgroundColor="{AppThemeBinding Light='#F8FAFC', Dark='#0F172A'}"
-                                        Stroke="{AppThemeBinding Light='#E2E8F0', Dark='#334155'}"
-                                        StrokeThickness="1"
-                                        StrokeShape="RoundRectangle 8"
-                                        Padding="10,6">
-                                    <Label Text="{Binding KeywordPattern}"
-                                           FontAttributes="Bold"
+                        <!-- ĐỘ ƯU TIÊN VÀ TÙY CHỌN -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                                <Label Text="Thứ tự ưu tiên" Style="{StaticResource FintechCaptionStyle}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                        Padding="12,4">
+                                    <Entry Placeholder="Ví dụ: 1"
+                                           Text="{Binding PriorityOrder}"
+                                           Keyboard="Numeric"
                                            FontSize="13"
-                                           LineBreakMode="WordWrap"
-                                           TextColor="{AppThemeBinding Light='#1E293B', Dark='#F1F5F9'}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                           BackgroundColor="Transparent" />
                                 </Border>
+                            </VerticalStackLayout>
 
-                                <!-- Row 2: Target Category Destination -->
-                                <HorizontalStackLayout Grid.Row="2" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="➔ Tự động gán:" FontSize="12" TextColor="{AppThemeBinding Light='#64748B', Dark='#94A3B8'}" VerticalOptions="Center" />
-                                    <Border BackgroundColor="{AppThemeBinding Light='#ECFDF5', Dark='#064E3B'}"
-                                            Stroke="{AppThemeBinding Light='#A7F3D0', Dark='#047857'}"
-                                            StrokeThickness="1"
-                                            StrokeShape="RoundRectangle 6"
-                                            Padding="8,2"
-                                            VerticalOptions="Center">
-                                        <Label Text="{Binding TargetCategoryName}"
-                                               TextColor="{AppThemeBinding Light='#047857', Dark='#6EE7B7'}"
-                                               FontAttributes="Bold"
-                                               FontSize="12" />
-                                    </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Tùy chọn khớp" Style="{StaticResource FintechCaptionStyle}" />
+                                <HorizontalStackLayout Spacing="10" VerticalOptions="Center" HeightRequest="44">
+                                    <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                        <CheckBox IsChecked="{Binding IsRegex}" Color="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                                        <Label Text="Regex" FontSize="12" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                        <CheckBox IsChecked="{Binding IsCaseSensitive}" Color="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                                        <Label Text="Hoa/Thường" FontSize="12" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
                                 </HorizontalStackLayout>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                            </VerticalStackLayout>
+                        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <Button Text="+ Thêm Quy Tắc Tự Động"
+                                Command="{Binding CreateRuleCommand}"
+                                Style="{StaticResource FintechPrimaryBtnStyle}"
+                                HeightRequest="48"
+                                Margin="0,4,0,0" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 3. DANH SÁCH QUY TẮC HIỆN TẠI -->
+                <Grid ColumnDefinitions="*,Auto" Margin="2,6,2,0" VerticalOptions="Center">
+                    <Label Grid.Column="0" Text="QUY TẮC ĐANG KÍCH HOẠT" Style="{StaticResource FintechSectionTitleStyle}" />
+                    <Label Grid.Column="1" Text="Tự động áp dụng" FontSize="11" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding Rules}" SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <Border Style="{StaticResource FintechCardStyle}" Padding="24">
+                            <Label Text="Chưa có quy tắc tự động nào được thiết lập."
+                                   HorizontalOptions="Center"
+                                   Style="{StaticResource FintechCaptionStyle}" />
+                        </Border>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:AutoRuleModel">
+                            <Border Style="{StaticResource FintechCardStyle}" Margin="0,0,0,10">
+                                <VerticalStackLayout Spacing="10">
+                                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                        <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                                            <Border BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                                    Padding="8,3" StrokeShape="RoundRectangle 6" StrokeThickness="0">
+                                                <Label Text="{Binding PriorityOrder, StringFormat='Ưu tiên #{0}'}"
+                                                       FontSize="11" FontAttributes="Bold" TextColor="{StaticResource FintechPrimary}" />
+                                            </Border>
+                                            <Border BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}"
+                                                    Padding="6,2" StrokeShape="RoundRectangle 6" StrokeThickness="0" IsVisible="{Binding IsRegex}">
+                                                <Label Text="REGEX" FontSize="10" FontAttributes="Bold" TextColor="#D97706" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+
+                                        <Button Grid.Column="1"
+                                                Text="Xóa"
+                                                TextColor="#EF4444"
+                                                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#450A0A}"
+                                                FontAttributes="Bold"
+                                                FontSize="11"
+                                                HeightRequest="30"
+                                                Padding="12,0"
+                                                CornerRadius="8"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AutoRulesViewModel}}, Path=DeleteRuleCommand}"
+                                                CommandParameter="{Binding .}" />
+                                    </Grid>
+
+                                    <!-- THẺ THÔNG MINH: NẾU TỪ KHÓA -> GÁN DANH MỤC -->
+                                    <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                            Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                            StrokeThickness="1"
+                                            StrokeShape="RoundRectangle 10"
+                                            Padding="12,8">
+                                        <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                                            <Label Grid.Column="0" Text="Nếu có:" FontSize="12" TextColor="{StaticResource FintechTextMuted}" VerticalOptions="Center" />
+                                            <Label Grid.Column="1" Text="{Binding KeywordPattern}" FontAttributes="Bold" FontSize="13"
+                                                   TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                                   LineBreakMode="TailTruncation" VerticalOptions="Center" />
+
+                                            <Label Grid.Column="2" Text="➔" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+
+                                            <Border Grid.Column="3" BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                                                    Padding="8,3" StrokeShape="RoundRectangle 6" StrokeThickness="0" VerticalOptions="Center" HorizontalOptions="Start">
+                                                <Label Text="{Binding TargetCategoryName}" TextColor="{StaticResource FintechIncome}" FontAttributes="Bold" FontSize="12" LineBreakMode="TailTruncation" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
+        <components:BottomNavDockView Grid.Row="1" ActiveTab="Home" />
+    </Grid>
 </ContentPage>

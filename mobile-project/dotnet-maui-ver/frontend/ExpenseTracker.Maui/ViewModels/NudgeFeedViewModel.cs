@@ -34,7 +34,7 @@ public partial class NudgeFeedViewModel : BaseViewModel
     public NudgeFeedViewModel(INudgeRepository repository)
     {
         _repository = repository;
-        Title = "Cú Hích Tài Chính & Trợ Lý XAI";
+        Title = "Cú Hích & Trợ Lý Tài Chính";
 
         // Listen for realtime Nudge alerts
         WeakReferenceMessenger.Default.Register<NudgeAlertReceivedMessage>(this, (r, m) =>

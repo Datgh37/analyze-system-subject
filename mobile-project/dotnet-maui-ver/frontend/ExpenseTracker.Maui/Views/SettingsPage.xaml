@@ -2,268 +2,194 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExpenseTracker.Maui.ViewModels"
+             xmlns:components="clr-namespace:ExpenseTracker.Maui.Views.Components"
              x:Class="ExpenseTracker.Maui.Views.SettingsPage"
              x:DataType="vm:SettingsViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource FintechBackgroundLight}, Dark={StaticResource FintechBackgroundDark}}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+    <Grid RowDefinitions="*, Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="16,12,16,28" Spacing="16" MaximumWidthRequest="640">
 
-            <!-- BANNER TIÊU ĐỀ & CHẾ ĐỘ -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="8">
-                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                        <Image Source="ic_settings.png" WidthRequest="26" HeightRequest="26" VerticalOptions="Center" />
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Trung Tâm Điều Khiển Hạ Tầng" FontSize="18" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            <Label Text="Cấu hình nguồn dữ liệu &amp; công cụ kiểm thử demo" FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                        </VerticalStackLayout>
-                    </HorizontalStackLayout>
+                <!-- 1. HERO CARD: TRUNG TÂM CÀI ĐẶT & BẢO MẬT -->
+                <Border Stroke="{AppThemeBinding Light=#4338CA, Dark=#6366F1}"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 24"
+                        Padding="22">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#0F172A" Offset="0.0" />
+                            <GradientStop Color="#1E1B4B" Offset="0.5" />
+                            <GradientStop Color="#312E81" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#312E81" Offset="0,6" Radius="20" Opacity="0.35" />
+                    </Border.Shadow>
 
-                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#E2E8F0, Dark=#334155}" Margin="0,6" />
-
-                    <!-- Trạng Thái Hiện Tại -->
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Text="Trạng thái kết nối:" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"
-                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
-                        <Border Grid.Column="1" Padding="10,4" StrokeShape="RoundRectangle 8"
-                                BackgroundColor="#3B82F6">
-                            <Label Text="{Binding ConnectionStatusText}" FontSize="11" FontAttributes="Bold" TextColor="#FFFFFF" />
-                        </Border>
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- CARD 1: CÔNG TẮC NGUỒN DỮ LIỆU -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="16">
-                    <Label Text="1. Lựa Chọn Nguồn Dữ Liệu (Data Source)" FontSize="15" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
-
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <VerticalStackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="Chế độ Backend Web API Thật" FontSize="14" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            <Label Text="Bật để gọi API thật từ máy chủ (Render/Cloudflare Tunnel)" FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                        </VerticalStackLayout>
-                        <Switch Grid.Column="1" IsToggled="{Binding IsLiveApiMode}"
-                                OnColor="#4F46E5" ThumbColor="#FFFFFF" />
-                    </Grid>
-
-                    <Label Text="* Lưu ý: Khi tắt công tắc, ứng dụng lập tức chuyển sang Chế độ Demo Ngoại Tuyến (Offline Mock Mode 0ms) với đầy đủ dữ liệu mẫu cho 20 màn hình mà không cần máy chủ."
-                           FontSize="11" FontAttributes="Italic" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- CARD 2: CẤU HÌNH SERVER URL -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="14">
-                    <Label Text="2. Địa Chỉ Máy Chủ (Server Base URL)" FontSize="15" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
-
-                    <Label Text="Nhập URL Cloudflare Tunnel (https://...trycloudflare.com) hoặc IP LAN Hotspot:"
-                           FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-
-                    <Border Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 10"
-                            Padding="12,4"
-                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
-                        <Entry Text="{Binding ServerUrl}"
-                               Placeholder="http://10.0.2.2:5018 hoặc https://..."
-                               FontSize="13"
-                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                    </Border>
-
-                    <!-- Các nút chọn nhanh máy chủ 1-chạm -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <Button Grid.Column="0"
-                                Text="Chọn Localhost"
-                                Command="{Binding UseLocalhostCommand}"
-                                BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
-                                TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}"
-                                CornerRadius="8"
-                                HeightRequest="38"
-                                FontSize="12"
-                                FontAttributes="Bold" />
-
-                        <Button Grid.Column="1"
-                                Text="Chọn Tunnel (Live)"
-                                Command="{Binding UseTunnelCommand}"
-                                BackgroundColor="{AppThemeBinding Light=#FAF5FF, Dark=#3B0764}"
-                                TextColor="{AppThemeBinding Light=#7E22CE, Dark=#E9D5FF}"
-                                CornerRadius="8"
-                                HeightRequest="38"
-                                FontSize="12"
-                                FontAttributes="Bold" />
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <Button Grid.Column="0"
-                                Text="Lưu URL"
-                                Command="{Binding SaveServerUrlCommand}"
-                                BackgroundColor="#3B82F6"
-                                TextColor="#FFFFFF"
-                                CornerRadius="10"
-                                HeightRequest="44"
-                                FontAttributes="Bold" />
-
-                        <Button Grid.Column="1"
-                                Text="Ping Server"
-                                Command="{Binding PingServerCommand}"
-                                BackgroundColor="#10B981"
-                                TextColor="#FFFFFF"
-                                CornerRadius="10"
-                                HeightRequest="44"
-                                FontAttributes="Bold" />
-                    </Grid>
-
-                    <!-- Kết Quả Ping -->
-                    <Label Text="{Binding PingResult}"
-                           IsVisible="{Binding PingResult, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
-                           FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center"
-                           TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}" />
-
-                    <Border StrokeShape="RoundRectangle 8"
-                            StrokeThickness="0"
-                            BackgroundColor="Transparent"
-                            HeightRequest="36">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ResetDefaultsCommand}" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                            <Image Grid.Column="0" Source="ic_refresh.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="Khôi Phục Mặc Định" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" FontSize="12" VerticalOptions="Center" />
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                <Image Source="ic_settings.svg" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Label Text="TRUNG TÂM CÀI ĐẶT" FontSize="11" FontAttributes="Bold" TextColor="#A5B4FC" CharacterSpacing="1" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Grid.Column="1" BackgroundColor="#064E3B" Padding="8,3" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                                <Label Text="AES-256 GCM" FontSize="10" FontAttributes="Bold" TextColor="#6EE7B7" />
+                            </Border>
                         </Grid>
-                    </Border>
-                </VerticalStackLayout>
-            </Border>
 
-            <!-- CARD 3: KIỂM CHỨNG BANK NOTIFICATION DETECTION (KILLED STATE) -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="14">
-                    <Label Text="3. Kiểm Chứng Bóc Tách Thông Báo Ngân Hàng" FontSize="15" FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" />
+                        <Label Text="Thiết Lập Ứng Dụng &amp; Hạ Tầng" FontSize="20" FontAttributes="Bold" TextColor="#FFFFFF" />
 
-                    <Label Text="Bấm nút bên dưới để mô phỏng tức thì một thông báo trừ tiền từ Ví MoMo (-75.000đ tại Highlands Coffee) để kiểm tra luồng bóc tách tự động và đẩy Native Heads-Up Notification:"
-                           FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center" Margin="0,4,0,0">
+                            <Label Grid.Column="0" Text="Trạng thái máy chủ:" FontSize="12" TextColor="#C7D2FE" VerticalOptions="Center" />
+                            <Border Grid.Column="1" Padding="10,4" StrokeShape="RoundRectangle 8" BackgroundColor="#4F46E5" StrokeThickness="0">
+                                <Label Text="{Binding ConnectionStatusText}" FontSize="11" FontAttributes="Bold" TextColor="#FFFFFF" />
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
-                    <Button Text="Giả Lập Biến Động MoMo (-75.000đ)"
-                            Command="{Binding SimulateBankNotificationCommand}"
-                            BackgroundColor="#8B5CF6"
-                            TextColor="#FFFFFF"
-                            CornerRadius="10"
-                            HeightRequest="46"
-                            FontAttributes="Bold" />
+                <!-- 2. BẢO MẬT SINH TRẮC HỌC (BIOMETRICS) -->
+                <Border Style="{StaticResource FintechCardStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                <Image Source="ic_shield.svg" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                                <Label Text="BẢO MẬT SINH TRẮC HỌC" Style="{StaticResource FintechCardTitleStyle}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}" Padding="8,3" StrokeShape="RoundRectangle 6" StrokeThickness="0">
+                                <Label Text="Vân tay / Khuôn mặt" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource FintechIncome}" />
+                            </Border>
+                        </Grid>
 
-                    <Label Text="{Binding SimulationStatus}"
-                           IsVisible="{Binding SimulationStatus, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
-                           FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="#8B5CF6" />
-                </VerticalStackLayout>
-            </Border>
+                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Đăng nhập nhanh bằng Sinh trắc học" FontSize="13" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                    <Label Text="Mở khóa app bằng vân tay hoặc nhận diện khuôn mặt" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding IsBiometricQuickLoginEnabled}"
+                                        IsEnabled="{Binding IsBiometricSupported}" OnColor="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
 
-            <!-- CARD 4: KIỂM CHỨNG BÁO THỨC ĐÁNH THỨC KHI APP BỊ ĐÓNG HOÀN TOÀN (KILLED STATE) -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="14">
-                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Image Source="ic_bell.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
-                        <Label Text="4. Kiểm Thử Thông Báo Khi Đã Tắt App (Killed State)" FontSize="15" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
+                        <Label Text="{Binding BiometricHardwareStatusText}"
+                               FontSize="11" FontAttributes="Italic" TextColor="{StaticResource FintechPrimary}" />
+                    </VerticalStackLayout>
+                </Border>
 
-                    <Label Text="Kịch bản Demo trực tiếp không cần máy tính: Bấm nút bên dưới để hẹn giờ qua Android AlarmManager, sau đó bạn vuốt tắt app hoàn toàn khỏi đa nhiệm. Sau đúng 10 giây, Android OS sẽ tự động rung chuông và đẩy thông báo nhắc nhở 21:00 lên màn hình!"
-                           FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                <!-- 3. CẤU HÌNH KẾT NỐI MÁY CHỦ & ĐỒNG BỘ -->
+                <Border Style="{StaticResource FintechCardStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="KẾT NỐI MÁY CHỦ &amp; API" Style="{StaticResource FintechCardTitleStyle}" />
 
-                    <Button Text="Hẹn Giờ 10 Giây &amp; Vuốt Tắt App (Demo)"
-                            Command="{Binding ScheduleTestReminderCommand}"
-                            BackgroundColor="#F59E0B"
-                            TextColor="#FFFFFF"
-                            CornerRadius="10"
-                            HeightRequest="46"
-                            FontAttributes="Bold" />
-                </VerticalStackLayout>
-            </Border>
+                        <!-- LIVE API TOGGLE -->
+                        <Border BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Chế độ Trực tuyến (Live API Server)" FontSize="13" FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}" />
+                                    <Label Text="Tắt để chuyển sang chế độ Ngoại Tuyến (Offline Demo)" FontSize="11" TextColor="{StaticResource FintechTextMuted}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding IsLiveApiMode}" OnColor="{StaticResource FintechPrimary}" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
 
-                    <!-- CARD 5: BẢO MẬT & ĐĂNG NHẬP NHANH (BIOMETRICS) -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
-                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="16">
-                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Image Source="ic_security.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
-                        <Label Text="5. Bảo Mật Sinh Trắc Học (Vân Tay / FaceID)" FontSize="15" FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-
-                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <VerticalStackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="Đăng Nhập Nhanh 1-Chạm" FontSize="14" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
-                            <Label Text="Bật để vào app 0.1s bằng vân tay khi mở lại app" FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                        <!-- SERVER URL ENTRY -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Địa chỉ máy chủ (Base URL)" Style="{StaticResource FintechCaptionStyle}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource FintechBorderLight}, Dark={StaticResource FintechBorderDark}}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource FintechSurfaceLight}, Dark={StaticResource FintechSurfaceDark}}"
+                                    Padding="14,4">
+                                <Entry Text="{Binding ServerUrl}"
+                                       Placeholder="http://10.0.2.2:5018 hoặc https://..."
+                                       FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource FintechTextPrimaryLight}, Dark={StaticResource FintechTextPrimaryDark}}"
+                                       BackgroundColor="Transparent" />
+                            </Border>
                         </VerticalStackLayout>
-                        <Switch Grid.Column="1" 
-                                IsToggled="{Binding IsBiometricQuickLoginEnabled}"
-                                IsEnabled="{Binding IsBiometricSupported}"
-                                OnColor="#4F46E5" ThumbColor="#FFFFFF" />
-                    </Grid>
 
-                    <Label Text="{Binding BiometricHardwareStatusText}"
-                           FontSize="12" FontAttributes="Italic"
-                           TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}" />
+                        <!-- PRESET BUTTONS -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Grid.Column="0" Text="Máy Ảo (10.0.2.2)"
+                                    Command="{Binding UseLocalhostCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}"
+                                    TextColor="{StaticResource FintechPrimary}"
+                                    CornerRadius="10" HeightRequest="38" FontSize="12" FontAttributes="Bold" />
 
-                    <Label Text="* Lưu ý: Tính năng này chỉ kích hoạt khi bạn thoát/tắt app. Nếu bạn chủ động bấm nút Đăng xuất bên dưới, tính năng sẽ tự động khóa an toàn và bắt buộc nhập Mật khẩu ở lần mở tiếp theo."
-                           FontSize="11" FontAttributes="Italic" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
-                </VerticalStackLayout>
-            </Border>
+                            <Button Grid.Column="1" Text="Đường Hầm (Cloudflare)"
+                                    Command="{Binding UseTunnelCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#FAF5FF, Dark=#3B0764}"
+                                    TextColor="#9333EA"
+                                    CornerRadius="10" HeightRequest="38" FontSize="12" FontAttributes="Bold" />
+                        </Grid>
 
-            <!-- CARD 6: KHU VỰC ĐĂNG XUẤT AN TOÀN (DANGER ZONE) -->
-            <Border BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
-                    Stroke="#EF4444"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="20">
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="Khu Vực Tài Khoản" FontSize="15" FontAttributes="Bold" TextColor="#EF4444" />
-                    <Label Text="Đăng xuất khỏi thiết bị này sẽ xóa sạch phiên làm việc trên máy và vô hiệu hóa chế độ Đăng nhập nhanh."
-                           FontSize="12" TextColor="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Grid.Column="0" Text="Lưu Địa Chỉ"
+                                    Command="{Binding SaveServerUrlCommand}"
+                                    Style="{StaticResource FintechPrimaryBtnStyle}"
+                                    HeightRequest="44" />
 
-                    <Button Text="Đăng Xuất Khỏi Tài Khoản"
-                            Command="{Binding LogoutCommand}"
-                            BackgroundColor="#EF4444"
-                            TextColor="#FFFFFF"
-                            CornerRadius="10"
-                            HeightRequest="46"
-                            FontAttributes="Bold" />
-                </VerticalStackLayout>
-            </Border>
+                            <Button Grid.Column="1" Text="Kiểm Tra Kết Nối"
+                                    Command="{Binding PingServerCommand}"
+                                    BackgroundColor="{StaticResource FintechIncome}" TextColor="#FFFFFF"
+                                    CornerRadius="12" HeightRequest="44" FontAttributes="Bold" />
+                        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <Label Text="{Binding PingResult}"
+                               IsVisible="{Binding PingResult, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
+                               FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource FintechIncome}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 4. KHU VỰC THỬ NGHIỆM HỆ THỐNG -->
+                <Border Style="{StaticResource FintechCardStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="CÔNG CỤ KIỂM THỬ HỆ THỐNG" Style="{StaticResource FintechCardTitleStyle}" />
+
+                        <Button Text="🔔 Mô Phỏng Thông Báo Biến Động Số Dư"
+                                Command="{Binding SimulateBankNotificationCommand}"
+                                BackgroundColor="#8B5CF6" TextColor="#FFFFFF"
+                                CornerRadius="12" HeightRequest="44" FontAttributes="Bold" />
+
+                        <Label Text="{Binding SimulationStatus}"
+                               IsVisible="{Binding SimulationStatus, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
+                               FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="#8B5CF6" />
+
+                        <Button Text="⏰ Hẹn Giờ Thông Báo Ngầm (10 Giây)"
+                                Command="{Binding ScheduleTestReminderCommand}"
+                                BackgroundColor="#F59E0B" TextColor="#FFFFFF"
+                                CornerRadius="12" HeightRequest="44" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 5. VÙNG NGUY HIỂM: ĐĂNG XUẤT TÀI KHOẢN -->
+                <Border Stroke="{StaticResource FintechExpense}" StrokeThickness="1"
+                        BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#450A0A}"
+                        StrokeShape="RoundRectangle 16" Padding="18">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="VÙNG QUẢN TRỊ TÀI KHOẢN" FontSize="13" FontAttributes="Bold" TextColor="{StaticResource FintechExpense}" />
+                        <Label Text="Đăng xuất sẽ xóa sạch phiên làm việc trên thiết bị này và yêu cầu đăng nhập lại bằng mật khẩu."
+                               FontSize="12" TextColor="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}" />
+
+                        <Button Text="Đăng Xuất Khỏi Thiết Bị"
+                                Command="{Binding LogoutCommand}"
+                                BackgroundColor="{StaticResource FintechExpense}" TextColor="#FFFFFF"
+                                CornerRadius="12" HeightRequest="46" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- DUY NHẤT 1 THANH BOTTOM BAR BỒNG BỀNH -->
+        <components:BottomNavDockView Grid.Row="1" ActiveTab="Home" />
+    </Grid>
 </ContentPage>
